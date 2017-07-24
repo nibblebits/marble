@@ -3,6 +3,32 @@
 #include "splitter.h"
 #include "statics.h"
 
+void data_descriptor::update()
+{
+	this->size = this->end - this->start;
+}
+
+split::split()
+{
+	this->output.split = this;
+	this->code.split = this;
+	this->has_data = false;
+	this->has_code = false;
+	this->is_last = false;
+}
+
+void output_data::update()
+{
+	data_descriptor::update();
+	this->split->has_data = this->size != 0;
+}
+
+void marble_code::update()
+{
+	data_descriptor::update();
+	this->split->has_code = this->size != 0;
+}
+
 Splitter::Splitter()
 {
 	this->data = 0;
@@ -56,54 +82,57 @@ int Splitter::getPositionOfNextMarbleClosingTag(int current_pos)
 
 bool Splitter::split(struct split* split)
 {
-	struct marble_code* marble_code = &split->code;
-	int start = 0;
-	if (this->previous != 0)
+	// Nothing to do here if this split is already the last split.
+	if (split->is_last)
 	{
-		start = this->previous->end;
-	}
-	
-	// Some defaults. 
-	split->has_code = true;
-	split->is_last = false;
-
-	// Lets check if we have marble code
-	int next_marble_code_start_tag_pos = getPositionOfNextMarbleTag(start);
-	int next_marble_code_pos = next_marble_code_start_tag_pos + strlen(MARBLE_OPEN_TAG);
-	if (next_marble_code_start_tag_pos == -1)
-	{
-		// No marble tag was found.
-		split->is_last = true;
-		split->has_code = false;
 		return false;
 	}
 
-    int next_marble_code_closing_tag_pos = getPositionOfNextMarbleClosingTag(next_marble_code_pos);
-	int next_marble_code_pos_end = next_marble_code_closing_tag_pos;
+	struct marble_code* marble_code = &split->code;
+	struct output_data* output_data = &split->output;
 
-	marble_code->start = next_marble_code_pos;
-
-	// If we do not have a closing tag or the end of the marble code is the end of the document then we are done
-	if (next_marble_code_closing_tag_pos == -1 || next_marble_code_pos_end == this->length)
+	split->has_data = false;
+	split->has_code = false;
+	int start = 0;	
+	if (this->previous != 0)
 	{
-    	marble_code->end = this->length;
-	}
-	else
-	{
-		marble_code->end = next_marble_code_pos_end;
-
-		// Is this the last marble tag?
-		if(getPositionOfNextMarbleTag(next_marble_code_pos_end) == -1)
-		{
-			// OK this is the last marble tag
-			split->is_last = true;
-		}
-
+		// At the end of the marble code will be a marble closing tag.
+		start = this->previous->end + strlen(MARBLE_CLOSING_TAG);
 	}
 
+	int pos_to_next_marble_tag = getPositionOfNextMarbleTag(start);
+	if (pos_to_next_marble_tag == -1)
+	{
+		// There is no more marble tags
+		output_data->start = start;
+		output_data->end = this->length;
+		output_data->data = this->data+start;
+		output_data->update();
+		split->is_last = true;
+		return true;
+	}
+
+	// We have a marble tag lets deal with it
+	int pos_to_marble_code = pos_to_next_marble_tag + strlen(MARBLE_OPEN_TAG);
+	int pos_to_marble_closing_tag = getPositionOfNextMarbleClosingTag(pos_to_marble_code);
+	if (pos_to_marble_closing_tag == -1)
+	{
+		// Handle an error here, a marble tag without a closing tag has been identified.
+	}
+	marble_code->start = pos_to_marble_code;
+	marble_code->end = pos_to_marble_closing_tag;
 	marble_code->data = this->data+marble_code->start;
-	marble_code->size = marble_code->end-marble_code->start;
+	marble_code->update();
 
+	if (pos_to_next_marble_tag != start)
+	{
+		// We have standard output data lets deal with it
+		int pos_of_data = start;
+		output_data->start = pos_of_data;
+		output_data->end = pos_to_next_marble_tag;
+		output_data->data = this->data+output_data->start;
+		output_data->update();
+	}
 	this->previous = marble_code;
 	return true;
 }

@@ -1,29 +1,37 @@
 #ifndef SPLITTER_H
 #define SPLITTER_H
 
-struct output_data
+struct split;
+struct data_descriptor
 {
 	int start;
 	int end;
 	int size;
 	const char* data;
-}
+	struct split* split;	
 
-struct marble_code
+	virtual void update();
+};
+
+struct output_data : public data_descriptor
 {
-	int start;
-	int end;
-	int size;
-	const char* data;
+	void update();
+};
+
+struct marble_code : public data_descriptor
+{
+	void update();
 };
 
 struct split
 {
+	split();
 	struct output_data output;
 	struct marble_code code;
 	bool has_code;
+	bool has_data;
 	bool is_last;
-}
+};
 
 class Splitter
 {
