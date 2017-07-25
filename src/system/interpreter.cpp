@@ -2,10 +2,12 @@
 #include <stdio.h>
 #include "interpreter.h"
 #include "splitter.h"
+#include "lexer.h"
 #include "exceptions/IOException.h"
 #include <memory.h>
+#include <memory>
 #include <string>
-
+#include <vector>
 Interpreter::Interpreter()
 {
 
@@ -25,7 +27,13 @@ void Interpreter::output(const char* data)
 
 void Interpreter::run(const char* code)
 {
-    
+    Lexer lexer;
+    lexer.setInput(code, strlen(code));
+    std::vector<std::shared_ptr<Token>> tokens = lexer.lex();
+	for (std::shared_ptr<Token> token : tokens)
+	{
+		
+	}
 }
 
 void Interpreter::runScript(const char* filename)
