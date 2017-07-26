@@ -26,6 +26,7 @@ class Lexer
 	bool is_number(char c);
 	bool is_number(std::string number);
 	bool is_string_seperator(char c);
+	bool is_symbol(char c);
 	std::string get_operator(const char** ptr);
 	std::string get_number(const char** ptr);
 	std::string get_string(const char** ptr);

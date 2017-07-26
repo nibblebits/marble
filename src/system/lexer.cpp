@@ -7,7 +7,8 @@
 #include "statics.h"
 #include "config.h"
 const char keywords[][MAX_KEYWORD_SIZE] = {"public", "private", "protected"};
-const char valid_operators[][MAX_OPERATORS_SIZE] = {"+", "-", "*", "/", "++", "--", "+=", "-=", "/=", "*=", "-=", "="}; 
+const char valid_operators[][MAX_OPERATORS_SIZE] = {"+", "-", "*", "/", "++", "--", "+=", "-=", "/=", "*=", "-=", "="};
+const char symbols[] = {';',',','(', ')', '{', '}','[',']'};
 Lexer::Lexer()
 {
 
@@ -93,6 +94,21 @@ bool Lexer::is_string_seperator(char c)
 	return c == '"';
 }
 
+
+bool Lexer::is_symbol(char c)
+{
+	int total_symbols = sizeof(symbols);
+	for (int i = 0; i < total_symbols; i++)
+	{
+		if (c == symbols[i])
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 std::string Lexer::get_operator(const char** ptr)
 {
 	const char* our_ptr = *ptr;
@@ -176,6 +192,10 @@ int Lexer::get_token_type_for_value(std::string token_value)
 	else if(is_string_seperator(token_value.at(0)))
 	{
 		return TOKEN_TYPE_STRING;
+	}
+	else if(is_symbol(token_value.at(0)))
+	{
+		return TOKEN_TYPE_SYMBOL;
 	}
 	return -1;
 }
