@@ -32,7 +32,7 @@ void Interpreter::run(const char* code)
     std::vector<std::shared_ptr<Token>> tokens = lexer.lex();
 	for (std::shared_ptr<Token> token : tokens)
 	{
-		
+		std::cout << token->getType() << ": " << token->getValue().svalue << std::endl;
 	}
 }
 
@@ -78,7 +78,7 @@ void Interpreter::runScript(const char* filename)
 	    memcpy(code_data, split.code.data, split.code.size);
 	    code_data[split.code.size] = 0;
 	    run(code_data);
-        delete code_data;
+	    delete code_data;
     }
    }
 

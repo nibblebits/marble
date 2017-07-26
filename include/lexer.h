@@ -21,8 +21,13 @@ class Lexer
 	bool bounds_safe(const char* ptr);
 	bool is_keyword(std::string value);
 	bool is_whitespace(char c);
+	bool is_operator(char c);
+	bool is_operator(std::string str);
+	bool is_number(char c);
+	bool is_number(std::string number);
 
-	Token process_keyword(const char** ptr);
-	Token process_identifier(const char** identifier);
+	int get_token_type_for_value(std::string token_value);
+	std::string handle_stackables(int token_type, std::string token_value, const char** ptr);
+
 };
 #endif
