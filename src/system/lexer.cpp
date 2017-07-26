@@ -6,7 +6,7 @@
 #include <memory>
 #include "statics.h"
 #include "config.h"
-const char keywords[][MAX_KEYWORD_SIZE] = {"public", "private", "protected"};
+const char keywords[][MAX_KEYWORD_SIZE] = {"public", "private", "protected", "number", "char", "string", "bool", "function", "class", "return", "continue", "break", "void"};
 const char valid_operators[][MAX_OPERATORS_SIZE] = {"+", "-", "*", "/", "++", "--", "+=", "-=", "/=", "*=", "-=", "="};
 const char symbols[] = {';',',','(', ')', '{', '}','[',']'};
 Lexer::Lexer()
@@ -109,6 +109,16 @@ bool Lexer::is_symbol(char c)
 	return false;
 }
 
+int Lexer::is_character(char c)
+{
+	return !is_operator(c) && !is_symbol(c) && !is_number(c) && !is_whitespace(c);
+}
+
+bool Lexer::is_stackable(int token_type)
+{
+	return token_type == TOKEN_TYPE_OPERATOR || token_type == TOKEN_TYPE_NUMBER || token_type == TOKEN_TYPE_STRING;
+}
+
 std::string Lexer::get_operator(const char** ptr)
 {
 	const char* our_ptr = *ptr;
@@ -175,6 +185,7 @@ std::string Lexer::get_string(const char** ptr)
 	return value;
 }
 
+
 int Lexer::get_token_type_for_value(std::string token_value)
 {
 	if (is_keyword(token_value))
@@ -197,7 +208,9 @@ int Lexer::get_token_type_for_value(std::string token_value)
 	{
 		return TOKEN_TYPE_SYMBOL;
 	}
-	return -1;
+
+	// We will assume this is an identifier
+	return TOKEN_TYPE_IDENTIFIER;
 }
 
 std::string Lexer::handle_stackables(int token_type, std::string token_value, const char** ptr)
@@ -234,46 +247,53 @@ void Lexer::stage1(std::vector<std::shared_ptr<Token>>* tokens)
 {
 	std::shared_ptr<Token> token = NULL;
 	const char* ptr = this->buf;
-	std::string token_value = "";
 	// We will loop through the whole thing and when we reach a whitespace a token has been completed
 	while (ptr < this->end)
 	{
+		std::string token_value = "";
 		char c = *ptr;
 		if (!is_whitespace(c))
 		{
-			token_value += c;
-			int token_type = get_token_type_for_value(token_value);
-			if (token_type != -1)
+			int token_type = -1;
+			if(is_character(c))
 			{
-				token = std::shared_ptr<Token>(new Token(token_type));
-				// Lets attempt to stack the token value if its non-stackable the original token value will be returned
-				token_value = handle_stackables(token_type, token_value, &ptr);			
+				const char* c_ptr = ptr;
+				while(is_character(c))
+				{
+					token_value += c;
+					c_ptr+=1;
+					c = *c_ptr;					
+				}
+				token_type = get_token_type_for_value(token_value);
+				ptr += token_value.size();
 			}
-			
-		}
-		else if (token_value != "" && token == NULL)
-		{
-			// This must be an identifier as the token value is present and we have reached a whitespace but no token has been set yet
-			token = std::shared_ptr<Token>(new Token(TOKEN_TYPE_IDENTIFIER));
-		}
-		
+			else
+			{
+				token_value += c;
+				token_type = get_token_type_for_value(token_value);
+				if (is_stackable(token_type))
+				{
+					// Handle the stackables, ptr is automatically adjusted correctly
+					token_value = handle_stackables(token_type, token_value, &ptr);
+				}
+				else
+				{
+					// This token type is non-stackable so lets just proceed further
+					ptr += 1;
+				}
+			}
 
-		// If the token is not NULL then we are ready to set its token value.
-		if (token != NULL)
-		{
+			std::shared_ptr<Token> token = std::shared_ptr<Token>(new Token(token_type));
 			token->setValue(token_value);
 			tokens->push_back(token);
-			token_value = "";
-			token = NULL;		
 		}
-		ptr++;	
+		else
+		{
+			// Ignore all whitespace.
+			ptr += 1;
+		}
 	}
 
-	// We have reached the end now. If we still have a token value at this point there is an error
-	if (token_value != "")
-	{
-		throw std::logic_error("Invalid input");
-	}
 }
 
 /**
