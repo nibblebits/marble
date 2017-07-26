@@ -88,6 +88,77 @@ bool Lexer::is_number(std::string number)
 	return true;
 }
 
+bool Lexer::is_string_seperator(char c)
+{
+	return c == '"';
+}
+
+std::string Lexer::get_operator(const char** ptr)
+{
+	const char* our_ptr = *ptr;
+	char c = *our_ptr;
+	std::string value = "";	
+	while(is_operator(c))
+	{
+		value += c;
+		our_ptr++;
+		c = *our_ptr; 
+	}
+
+	if (value != "")
+	{
+		*ptr += value.length();
+	}
+	return value;
+}
+
+std::string Lexer::get_number(const char** ptr)
+{
+	const char* our_ptr = *ptr;
+	char c = *our_ptr;
+	std::string value = "";
+	while(is_number(c))
+	{
+		value += c;
+		our_ptr++;
+		c = *our_ptr;
+	}
+
+	if (value != "")
+	{
+		*ptr += value.length();
+	}
+	return value;
+}
+
+std::string Lexer::get_string(const char** ptr)
+{
+	if (!is_string_seperator(**ptr))
+	{
+		throw std::logic_error("Expecting a string seperator for a string");
+	}
+
+	// Ok this appears to be a valid string so far, lets move the pointer forward to ignore the string seperator
+	*ptr+=1;
+	// our_ptr will now point at the start of the string
+ 	const char* our_ptr = *ptr;
+	char c = *our_ptr;
+	std::string value = "";	
+
+	// Lets loop until we find an ending string seperator.
+	while(!is_string_seperator(c))
+	{
+		value += c;
+		our_ptr++;
+		c = *our_ptr;
+	}
+
+
+	// Lets readjust the real pointer for the caller, we +1 due to the ending string seperator.
+	*ptr += value.length() + 1;
+	return value;
+}
+
 int Lexer::get_token_type_for_value(std::string token_value)
 {
 	if (is_keyword(token_value))
@@ -102,50 +173,37 @@ int Lexer::get_token_type_for_value(std::string token_value)
 	{
 		return TOKEN_TYPE_NUMBER;
 	}
+	else if(is_string_seperator(token_value.at(0)))
+	{
+		return TOKEN_TYPE_STRING;
+	}
 	return -1;
 }
 
 std::string Lexer::handle_stackables(int token_type, std::string token_value, const char** ptr)
 {
 	const char* our_ptr = *ptr;
-	char c = *our_ptr;
-	bool did_stack = false;
 	switch (token_type)
 	{
 		case TOKEN_TYPE_OPERATOR:
 		{
-			token_value = "";
-			while(is_operator(c))
-			{
-				token_value += c;
-				our_ptr++;
-				c = *our_ptr; 
-			}
-
-			did_stack = true;
+			token_value = get_operator(ptr);
 		}
 		break;
 
 		case TOKEN_TYPE_NUMBER:
 		{
-			token_value = "";
-			while(is_number(c))
-			{
-				token_value += c;
-				our_ptr++;
-				c = *our_ptr;
-			}
-			did_stack = true;
+			token_value = get_number(ptr);
+		}
+		break;
+
+		case TOKEN_TYPE_STRING:
+		{
+			token_value = get_string(ptr);
 		}
 		break;
 	}
 
-	// If we did stack a token value then lets readjust the pointer so that its valid for when we leave.
-	if (did_stack)
-	{
-		// Ok lets readjust the real pointer now so that execution can continue properly after leaving this method
-		*ptr += token_value.size();
-	}
 
 	return token_value;
 }

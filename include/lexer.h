@@ -25,7 +25,10 @@ class Lexer
 	bool is_operator(std::string str);
 	bool is_number(char c);
 	bool is_number(std::string number);
-
+	bool is_string_seperator(char c);
+	std::string get_operator(const char** ptr);
+	std::string get_number(const char** ptr);
+	std::string get_string(const char** ptr);
 	int get_token_type_for_value(std::string token_value);
 	std::string handle_stackables(int token_type, std::string token_value, const char** ptr);
 
