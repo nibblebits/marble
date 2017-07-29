@@ -6,7 +6,7 @@
 #include <memory>
 #include "statics.h"
 #include "config.h"
-const char keywords[][MAX_KEYWORD_SIZE] = {"public", "private", "protected", "number", "char", "string", "bool", "function", "class", "return", "continue", "break", "void"};
+const char keywords[][MAX_KEYWORD_SIZE] = {"public", "private", "protected", "number", "char", "string", "bool", "class", "return", "continue", "break", "void"};
 const char valid_operators[][MAX_OPERATORS_SIZE] = {"+", "-", "*", "/", "++", "--", "+=", "-=", "/=", "*=", "-=", "="};
 const char symbols[] = {';',',','(', ')', '{', '}','[',']'};
 Lexer::Lexer()
@@ -243,9 +243,10 @@ std::string Lexer::handle_stackables(int token_type, std::string token_value, co
 /**
  * Stage 1 will remove all comments, and create tokens based on the input
 */
-void Lexer::stage1(std::vector<std::shared_ptr<Token>>* tokens)
+std::shared_ptr<Token> Lexer::stage1()
 {
-	std::shared_ptr<Token> token = NULL;
+	std::shared_ptr<Token> root_token = NULL;
+	std::shared_ptr<Token> last_token = NULL;
 	const char* ptr = this->buf;
 	// We will loop through the whole thing and when we reach a whitespace a token has been completed
 	while (ptr < this->end)
@@ -283,9 +284,18 @@ void Lexer::stage1(std::vector<std::shared_ptr<Token>>* tokens)
 				}
 			}
 
-			std::shared_ptr<Token> token = std::shared_ptr<Token>(new Token(token_type));
-			token->setValue(token_value);
-			tokens->push_back(token);
+			std::shared_ptr<Token> new_token = std::shared_ptr<Token>(new Token(token_type));
+			new_token->setValue(token_value);
+			if (root_token == NULL)
+			{
+				root_token = new_token;
+				last_token = new_token;
+			}
+			else
+			{
+				last_token->next = new_token;
+				last_token = new_token;
+			}
 		}
 		else
 		{
@@ -294,17 +304,18 @@ void Lexer::stage1(std::vector<std::shared_ptr<Token>>* tokens)
 		}
 	}
 
+	return root_token;
 }
 
 /**
  * Stage 2 will ensure that the tokens values are valid.
  * Such as a stacked value is correct, e.g a stacked operator value "++--" is clearly illegal.
 */
-void Lexer::stage2(std::vector<std::shared_ptr<Token>>* tokens)
+void Lexer::stage2(std::shared_ptr<Token> root_token)
 {
-	for (int i = 0; i < tokens->size(); i++)
+	std::shared_ptr<Token> token = root_token;
+	while(token != NULL)
 	{
-		std::shared_ptr<Token> token = tokens->at(i);
 		int token_type = token->getType();
 		struct token_value token_value = token->getValue();
 		std::string token_svalue = token_value.svalue;
@@ -319,17 +330,17 @@ void Lexer::stage2(std::vector<std::shared_ptr<Token>>* tokens)
 			}
 			break;
 		}
+
+		token = token->next;
 	}
 }
 
-const std::vector<std::shared_ptr<Token>> Lexer::lex()
+std::shared_ptr<Token> Lexer::lex()
 {
-	std::vector<std::shared_ptr<Token>> tokens;
-	
 	// Stage 1 - Remove comments; Create tokens
-	stage1(&tokens);
+	std::shared_ptr<Token> root_token = stage1();
 	// Stage 2 - Identify errors such as illegal operators
-	stage2(&tokens);
+	stage2(root_token);
 
-	return tokens;
+	return root_token;
 }

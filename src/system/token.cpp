@@ -3,6 +3,7 @@
 Token::Token(int type)
 {
     this->type = type;
+    this->next = NULL;
 }
 
 Token::~Token()

@@ -9,15 +9,15 @@ class Lexer
 	Lexer();
 	virtual ~Lexer();
         void setInput(const char* buf, int size);
-        const std::vector<std::shared_ptr<Token>> lex();
+        std::shared_ptr<Token> lex();
 	
     private:
         const char* buf;
 	const char* end;
 	int size;
 	
-	void stage1(std::vector<std::shared_ptr<Token>>* tokens);
-	void stage2(std::vector<std::shared_ptr<Token>>* tokens);
+	std::shared_ptr<Token> stage1();
+	void stage2(std::shared_ptr<Token> root_token);
 	bool bounds_safe(const char* ptr);
 	bool is_keyword(std::string value);
 	bool is_whitespace(char c);

@@ -1,13 +1,15 @@
 #include <iostream>
-#include <stdio.h>
-#include "interpreter.h"
-#include "splitter.h"
-#include "lexer.h"
-#include "exceptions/IOException.h"
 #include <memory.h>
 #include <memory>
 #include <string>
 #include <vector>
+#include <stdio.h>
+#include "interpreter.h"
+#include "splitter.h"
+#include "lexer.h"
+#include "parser.h"
+#include "nodes.h"
+#include "exceptions/IOException.h"
 Interpreter::Interpreter()
 {
 
@@ -29,10 +31,24 @@ void Interpreter::run(const char* code)
 {
     Lexer lexer;
     lexer.setInput(code, strlen(code));
-    std::vector<std::shared_ptr<Token>> tokens = lexer.lex();
-	for (std::shared_ptr<Token> token : tokens)
+    std::shared_ptr<Token> root_token = lexer.lex();
+	std::shared_ptr<Token> token = root_token;
+	while(token != NULL)
 	{
 		std::cout << token->getType() << ": " << token->getValue().svalue << std::endl;
+		token = token->next;	
+	}
+
+	Parser parser;
+	std::shared_ptr<Node> current_node = parser.parse(root_token);
+	while(current_node != NULL)
+	{
+		if (current_node->getType() == NODE_TYPE_VARIABLE_DECLARATION)
+		{
+			std::shared_ptr<Varnode> vnode = std::dynamic_pointer_cast<Varnode>(current_node);
+			std::cout << "NODE_VARIABLE_DECLARATION: " << vnode->var_type->getValue().svalue << " : " << vnode->var_name->getValue().svalue << std::endl;
+		}
+		current_node = current_node->next;
 	}
 }
 

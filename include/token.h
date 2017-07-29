@@ -1,6 +1,8 @@
 #ifndef TOKEN_H
 #define TOKEN_H
+
 #include <string>
+#include <memory>
 
 struct token_value
 {
@@ -18,6 +20,9 @@ class Token
 		int getType();
 		void setValue(std::string svalue);
 		struct token_value getValue();
+
+		// The next token after this one
+		std::shared_ptr<Token> next;
 	private:
 		int type;
 		struct token_value value;
