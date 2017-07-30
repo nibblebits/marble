@@ -3,4 +3,6 @@
 #include "node.h"
 #include "expnode.h"
 #include "varnode.h"
+#include "literalnode.h"
+#include "identifiernode.h"
 #endif

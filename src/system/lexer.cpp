@@ -317,7 +317,7 @@ void Lexer::stage2(std::shared_ptr<Token> root_token)
 	while(token != NULL)
 	{
 		int token_type = token->getType();
-		struct token_value token_value = token->getValue();
+		struct value token_value = token->getValue();
 		std::string token_svalue = token_value.svalue;
 		switch(token_type)
 		{

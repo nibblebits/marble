@@ -4,13 +4,7 @@
 #include <string>
 #include <memory>
 
-struct token_value
-{
-	// By default all numbers are doubles
-	double dvalue;
-	std::string svalue;
-};
-
+#include "value.h"
 class Token
 {
     public:
@@ -19,13 +13,26 @@ class Token
 		void setType(int type);
 		int getType();
 		void setValue(std::string svalue);
-		struct token_value getValue();
+		struct value getValue();
+
+		bool isString();
+		bool isString(std::string value);
+		bool isSymbol();
+		bool isSymbol(std::string value);
+		bool isIdentifier();
+		bool isIdentifier(std::string value);
+		bool isKeyword();
+		bool isKeyword(std::string value);
+		bool isOperator();
+		bool isOperator(std::string value);
+		bool isNumber();
+		bool isNumber(std::string value);
+		bool isLiteral();
 
 		// The next token after this one
 		std::shared_ptr<Token> next;
-	private:
 		int type;
-		struct token_value value;
+		struct value value;
 		
 };
 #endif

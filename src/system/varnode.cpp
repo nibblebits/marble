@@ -2,8 +2,9 @@
 
 Varnode::Varnode() : Node(NODE_TYPE_VARIABLE_DECLARATION)
 {
-	this->var_type = NULL;	
-	this->var_name = NULL;
+	this->type = NULL;	
+	this->name = NULL;
+	this->value = NULL;
 }
 
 Varnode::~Varnode()

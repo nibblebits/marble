@@ -46,7 +46,7 @@ void Interpreter::run(const char* code)
 		if (current_node->getType() == NODE_TYPE_VARIABLE_DECLARATION)
 		{
 			std::shared_ptr<Varnode> vnode = std::dynamic_pointer_cast<Varnode>(current_node);
-			std::cout << "NODE_VARIABLE_DECLARATION: " << vnode->var_type->getValue().svalue << " : " << vnode->var_name->getValue().svalue << std::endl;
+			std::cout << "NODE_VARIABLE_DECLARATION: " << vnode->type->getValue().svalue << " : " << vnode->name->getValue().svalue << std::endl;
 		}
 		current_node = current_node->next;
 	}

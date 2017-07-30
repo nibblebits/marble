@@ -9,8 +9,9 @@ class Varnode : public Node
 	public:
 		Varnode();
 		virtual ~Varnode();
-		std::shared_ptr<Token> var_type;
-		std::shared_ptr<Token> var_name;
+		std::shared_ptr<Token> type;
+		std::shared_ptr<Token> name;
+		std::shared_ptr<Node> value;
 	private:
 };
 
