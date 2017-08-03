@@ -9,7 +9,7 @@ class Node
 		virtual ~Node();
 		int getType();
 		std::shared_ptr<Node> next;
-	private:
+
 		int type;
 };
 
