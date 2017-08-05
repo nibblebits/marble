@@ -379,11 +379,6 @@ std::shared_ptr<Node> Parser::parse(std::shared_ptr<Token> root_token)
 			default:
 				parse_error("Unexpected token");
 		}
-
-		if (this->current_token != NULL)
-		{
-			this->current_token = this->current_token->next;
-		}
 	}
 	return this->root_node;
 }
