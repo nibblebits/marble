@@ -145,6 +145,30 @@ std::shared_ptr<Token> Parser::peek(std::shared_ptr<Token> token, int ahead)
 
 }
 
+bool Parser::first_op_has_priority(std::string op1, std::string op2)
+{
+	int op1_priority = get_priority_for_op(op1);
+	int op2_priority = get_priority_for_op(op2);
+
+	return op1_priority >= op2_priority;	
+}
+
+int Parser::get_priority_for_op(std::string op)
+{
+	int size = sizeof (o_of_operation) / sizeof (struct order_of_operation);
+	for (int i = 0; i < size; i++)
+	{
+		struct order_of_operation ooo = o_of_operation[i];
+		if (ooo.op == op)
+		{
+			return ooo.priority;
+		}
+	}
+
+	// Priority is not registered for this opcode? Lets just return the default priority.
+	return 0;
+}
+
 std::shared_ptr<Token> Parser::next()
 {
 	std::shared_ptr<Token> next_token = this->current_token;
@@ -239,6 +263,46 @@ std::shared_ptr<Node> Parser::pop_node()
 }
 
 void Parser::parse_expression()
+{
+	parse_expression_part();
+	std::shared_ptr<Token> peeked_token = peek();
+	if (peeked_token != NULL && peeked_token->isOperator())
+	{
+		// Lets remove the operator from the token stream
+		std::string op = next()->value.svalue;
+
+		// We now need the last expression as it needs to become our left parameter
+		std::shared_ptr<Node> left = pop_node();
+		std::shared_ptr<ExpNode> left_exp = std::dynamic_pointer_cast<ExpNode>(left);
+
+		// We got more to go!
+		parse_expression();
+
+		std::shared_ptr<Node> right = pop_node();
+		if (right->type != NODE_TYPE_EXPRESSION)
+		{
+			if (!first_op_has_priority(left_exp->op, op))
+			{
+				std::shared_ptr<Node> right_of_left = left_exp->right;
+				std::shared_ptr<ExpNode> exp_node = std::shared_ptr<ExpNode>(new ExpNode());
+				exp_node->left = right_of_left;
+				exp_node->right = right;
+				exp_node->op = op;
+				left = left_exp->left;
+				right = exp_node;
+				op = left_exp->op;
+			}
+		}
+
+		std::shared_ptr<ExpNode> exp_node = std::shared_ptr<ExpNode>(new ExpNode());
+		exp_node->left = left;
+		exp_node->right = right;
+		exp_node->op = op;
+		push_node(exp_node);
+	}
+}
+
+void Parser::parse_expression_part()
 {
 	// Parse the left value
 	parse_value();

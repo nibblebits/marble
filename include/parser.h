@@ -21,6 +21,7 @@ class Parser
 		void ensure_type(std::shared_ptr<Token> token, int expected_type);
 		void parse_variable_declaration();
 		void parse_expression();
+		void parse_expression_part();
 		void parse_value();
 		void push_node(std::shared_ptr<Node> node);
 		std::shared_ptr<Node> pop_node();
@@ -33,6 +34,9 @@ class Parser
 		std::shared_ptr<Token> peek(int ahead);
 		std::shared_ptr<Token> peek();
 		std::shared_ptr<Token> peek(std::shared_ptr<Token> token, int ahead);
+
+		bool first_op_has_priority(std::string op1, std::string op2);
+		int get_priority_for_op(std::string op);
 
 		std::shared_ptr<Token> current_token;
 		std::shared_ptr<Node> root_node;

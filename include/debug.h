@@ -9,7 +9,8 @@ class Debug {
 public:
 	Debug();
 	virtual ~Debug();
-	static void PrintValueForNode(std::shared_ptr<Node> value_node);
+	static void OutputTabbing(int amount);
+	static void PrintValueForNode(std::shared_ptr<Node> value_node, int tabbing=0);
 };
 #endif
 
