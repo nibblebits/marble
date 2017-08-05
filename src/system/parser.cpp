@@ -172,6 +172,11 @@ int Parser::get_priority_for_op(std::string op)
 std::shared_ptr<Token> Parser::next()
 {
 	std::shared_ptr<Token> next_token = this->current_token;
+	if (next_token == NULL)
+	{
+		return NULL;
+	}
+
 	this->current_token = next_token->next;
 	return next_token;
 }
@@ -199,6 +204,8 @@ void Parser::parse_variable_declaration()
 		var_node->value = pop_node();
 	}
 	push_node(var_node);
+
+	parse_semicolon();
 
 }
 
@@ -231,6 +238,16 @@ void Parser::parse_value()
 	}
 
 	push_node(node);
+}
+
+
+void Parser::parse_semicolon()
+{
+	std::shared_ptr<Token> token = next();
+	if (token == NULL || !token->isSymbol(";"))
+	{
+		parse_error("Expecting a semicolon");
+	}
 }
 
 std::shared_ptr<Node> Parser::get_node_before_last()

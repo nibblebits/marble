@@ -23,6 +23,7 @@ class Parser
 		void parse_expression();
 		void parse_expression_part();
 		void parse_value();
+		void parse_semicolon();
 		void push_node(std::shared_ptr<Node> node);
 		std::shared_ptr<Node> pop_node();
 		std::shared_ptr<Node> get_node_before_last();
