@@ -1,5 +1,47 @@
 #include "parser.h"
 #include <iostream>
+
+struct order_of_operation
+{
+	const char* op;
+	int priority;
+};
+
+
+/* The order of operations for operators and their priorities 
+ * Seek here: http://www.difranco.net/compsci/C_Operator_Precedence_Table.htm
+ * The same order of operations to C will be used.*/
+
+struct order_of_operation o_of_operation[] = {
+    "<<", 0,
+    ">>", 0,
+    "<", 1,
+    ">", 1, 
+    "<=", 1,
+    ">=", 1,
+    "==", 2,
+    "!=", 2,
+    "&", 3,
+    "^", 4,
+    "|", 5,
+    "+", 6,
+    "-", 6,
+    "*", 7,
+    "/", 7,
+    "%", 7,
+    "=", 8,
+    "+=", 8,
+    "-=", 8,
+    "*=", 8,
+    "/=", 8,
+    "%=", 8,
+    "^=", 8,
+    "&=", 8, 
+    "<<=", 8,
+    ">>=", 8,
+};
+
+
 Parser::Parser()
 {
 	this->root_node = NULL;	
@@ -139,12 +181,32 @@ void Parser::parse_variable_declaration()
 void Parser::parse_value()
 {
 	std::shared_ptr<Token> token = next();
-	if (!legal_value(token))
+	std::shared_ptr<Node> node = NULL;
+	// Do we have a nested expression here?
+	if (token->isSymbol("("))
 	{
-		parse_error("Expecting a legal value");
+		// Yes we have an expression lets process it
+		parse_expression();
+
+		// Now we must get rid of the expression terminator ")"
+		token = next();
+		if (!token->isSymbol(")"))
+		{
+			parse_error("Expecting an expression terminator for the given expression");
+		}
+
+		node = pop_node();	
 	}
-	std::shared_ptr<Node> value_node = convertToNode(token);
-	push_node(value_node);
+	else
+	{
+		if (!legal_value(token))
+		{
+			parse_error("Expecting a legal value");
+		}
+		node = convertToNode(token);
+	}
+
+	push_node(node);
 }
 
 std::shared_ptr<Node> Parser::get_node_before_last()
@@ -181,12 +243,22 @@ void Parser::parse_expression()
 	// Parse the left value
 	parse_value();
 	std::shared_ptr<Node> exp_left = pop_node();
-	push_node(exp_left);
-	//std::shared_ptr<Expnode> exp_node = std::shared_ptr<Expnode>(new Expnode());
-	//exp_node->left = left_node;
-	//exp_node->right = right_node;
-	//push_node(exp_node);
-
+	std::shared_ptr<Node> node = exp_left;
+	std::shared_ptr<Token> peeked_token = peek();
+	if (peeked_token != NULL && peeked_token->isOperator())
+	{
+		// We have a right part of the expression "l + r"
+		std::string op = next()->value.svalue;
+		// Lets parse the right value
+		parse_value();
+		std::shared_ptr<Node> exp_right = pop_node();
+		std::shared_ptr<ExpNode> exp_node = std::shared_ptr<ExpNode>(new ExpNode());
+		exp_node->left = exp_left;
+		exp_node->right = exp_right;
+		exp_node->op = op;
+		node = exp_node;
+	}
+	push_node(node);
 }
 
 void Parser::global_parse_keyword()

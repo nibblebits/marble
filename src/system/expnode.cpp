@@ -1,11 +1,13 @@
 #include "expnode.h"
 
-Expnode::Expnode() : Node(NODE_TYPE_EXPRESSION)
+ExpNode::ExpNode() : Node(NODE_TYPE_EXPRESSION)
 {
-
+	this->left = NULL;
+	this->right = NULL;
+	this->op = "";
 }
 
-Expnode::~Expnode()
+ExpNode::~ExpNode()
 {
 
 }

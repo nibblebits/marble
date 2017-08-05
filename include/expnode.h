@@ -4,13 +4,14 @@
 #include <memory>
 #include "node.h"
 #include "statics.h"
-class Expnode : public Node
+class ExpNode : public Node
 {
 	public:
-		Expnode();
-		virtual ~Expnode();
+		ExpNode();
+		virtual ~ExpNode();
 		std::shared_ptr<Node> left;
 		std::shared_ptr<Node> right;
+		std::string op;
 	private:
 };
 #endif
