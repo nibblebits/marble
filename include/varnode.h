@@ -4,11 +4,11 @@
 #include "node.h"
 #include "token.h"
 #include "statics.h"
-class Varnode : public Node
+class VarNode : public Node
 {
 	public:
-		Varnode();
-		virtual ~Varnode();
+		VarNode();
+		virtual ~VarNode();
 		Token* type;
 		Token* name;
 		Node* value;

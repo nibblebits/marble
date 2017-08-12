@@ -193,7 +193,7 @@ void Parser::parse_variable_declaration()
 	}
 
 	ensure_type(var_name_token, TOKEN_TYPE_IDENTIFIER);
-	Varnode* var_node = new Varnode();
+	VarNode* var_node = new VarNode();
 	var_node->type = data_type_token;
 	var_node->name = var_name_token;
 	Token* token_ahead = peek();

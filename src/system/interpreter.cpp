@@ -10,6 +10,8 @@
 #include "parser.h"
 #include "nodes.h"
 #include "debug.h"
+#include "scope.h"
+#include "variable.h"
 #include "exceptions/IOException.h"
 Interpreter::Interpreter()
 {
@@ -41,17 +43,40 @@ void Interpreter::run(const char* code)
 	}
 
 	Parser parser;
-	Node* current_node = parser.parse(root_token);
+	Node* root_node = parser.parse(root_token);
+	Node* current_node = root_node;
+
+	// Awesome now lets interpret!
 	while(current_node != NULL)
 	{
 		if (current_node->getType() == NODE_TYPE_VARIABLE_DECLARATION)
 		{
-			Varnode* vnode = (Varnode*)(current_node);
-			Node* value_node = vnode->value;
-			// Ok lets output this value node
-			Debug::PrintValueForNode(value_node);
+			interpret_variable_node((VarNode*) current_node);
+		
 		}
 		current_node = current_node->next;
+	}
+
+	for (Variable* variable : root_scope.getVariables())
+	{
+		std::cout << "Variable: " << variable->name << " = " << variable->dvalue << std::endl;
+	}
+}
+
+
+void Interpreter::interpret_variable_node(VarNode* var_node)
+{
+	Token* type_token = var_node->type;
+	Token* name_token = var_node->name;
+	Node* value_node = var_node->value;
+
+	Variable* variable = new Variable();
+	variable->name = name_token->value;
+	if (type_token->isKeyword("number"))
+	{
+		variable->type == VARIABLE_TYPE_NUMBER;
+		variable->dvalue = 55;
+		root_scope.registerVariable(variable);
 	}
 }
 
