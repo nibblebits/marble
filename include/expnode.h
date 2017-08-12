@@ -9,8 +9,9 @@ class ExpNode : public Node
 	public:
 		ExpNode();
 		virtual ~ExpNode();
-		std::shared_ptr<Node> left;
-		std::shared_ptr<Node> right;
+	
+		Node* left;
+		Node* right;
 		std::string op;
 	private:
 };

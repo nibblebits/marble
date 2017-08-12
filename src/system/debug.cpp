@@ -21,14 +21,14 @@ void Debug::OutputTabbing(int amount)
 		std::cout << "\t";
 	}
 }
-void Debug::PrintValueForNode(std::shared_ptr<Node> value_node, int tabbing)
+void Debug::PrintValueForNode(Node* value_node, int tabbing)
 {
 	if (value_node != NULL)
 	{
 		
 			if (value_node->type == NODE_TYPE_LITERAL)
 			{
-				std::shared_ptr<LiteralNode> literal_value_node = std::dynamic_pointer_cast<LiteralNode>(value_node);
+				LiteralNode* literal_value_node = (LiteralNode*)(value_node);
 				OutputTabbing(tabbing);
 				std::cout << "VALUE IS LITERAL" << std::endl;
 				OutputTabbing(tabbing);
@@ -36,7 +36,7 @@ void Debug::PrintValueForNode(std::shared_ptr<Node> value_node, int tabbing)
 			}
 			else if(value_node->type == NODE_TYPE_EXPRESSION)
 			{
-				std::shared_ptr<ExpNode> exp_node = std::dynamic_pointer_cast<ExpNode>(value_node);
+				ExpNode* exp_node = (ExpNode*)(value_node);
 				OutputTabbing(tabbing);
 				std::cout << "VALUE IS EXPRESSION" << std::endl;
 				OutputTabbing(tabbing);

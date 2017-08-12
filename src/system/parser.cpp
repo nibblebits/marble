@@ -58,7 +58,7 @@ bool Parser::is_datatype(std::string str)
 	return str == "number" || str == "char" || str == "string" || str == "bool";
 }
 
-bool Parser::legal_value(std::shared_ptr<Token> token)
+bool Parser::legal_value(Token* token)
 {
 	int token_type = token->getType();
 	return token != NULL && (token_type == TOKEN_TYPE_IDENTIFIER || token_type == TOKEN_TYPE_STRING || token_type == TOKEN_TYPE_NUMBER);
@@ -70,7 +70,7 @@ void Parser::parse_error(std::string message)
 	throw std::logic_error(message);
 }
 
-void Parser::ensure_type(std::shared_ptr<Token> token, int expected_type)
+void Parser::ensure_type(Token* token, int expected_type)
 {
 	int token_type = token->getType();
 	if (token_type != expected_type)
@@ -79,7 +79,7 @@ void Parser::ensure_type(std::shared_ptr<Token> token, int expected_type)
 	}
 }
 
-void Parser::push_node(std::shared_ptr<Node> node)
+void Parser::push_node(Node* node)
 {
 	if (this->current_node == NULL)
 	{
@@ -93,19 +93,20 @@ void Parser::push_node(std::shared_ptr<Node> node)
 	}
 }
 
-std::shared_ptr<Node> Parser::getLiteralNode(std::shared_ptr<Token> token)
+Node* Parser::getLiteralNode(Token* token)
 {
-	std::shared_ptr<LiteralNode> literal_node = std::shared_ptr<LiteralNode>(new LiteralNode());
+	LiteralNode* literal_node = new LiteralNode();
 	literal_node->value = token->value;
 	return literal_node;
 }
 
-std::shared_ptr<Node> Parser::getIdentifierNode(std::shared_ptr<Token> token)
+Node* Parser::getIdentifierNode(Token* token)
 {
-	std::shared_ptr<IdentifierNode> literal_node = std::shared_ptr<IdentifierNode>(new IdentifierNode());
+	IdentifierNode* identifier_node = new IdentifierNode();
+	return identifier_node;
 }
 
-std::shared_ptr<Node> Parser::convertToNode(std::shared_ptr<Token> token)
+Node* Parser::convertToNode(Token* token)
 {
 	int tokenType = token->getType();
 	if (token->isLiteral())
@@ -120,20 +121,20 @@ std::shared_ptr<Node> Parser::convertToNode(std::shared_ptr<Token> token)
 	throw std::logic_error("The single \"token\" provided cannot be converted to a node");
 }
 
-std::shared_ptr<Token> Parser::peek(int ahead)
+Token* Parser::peek(int ahead)
 {
 	return peek(this->current_token, ahead);
 }
 
-std::shared_ptr<Token> Parser::peek()
+Token* Parser::peek()
 {
 	return this->current_token;
 }
 
-std::shared_ptr<Token> Parser::peek(std::shared_ptr<Token> token, int ahead)
+Token* Parser::peek(Token* token, int ahead)
 {
 	// Ok lets peek ahead and return the node, we will return NULL if there is nothing to peak ahead to.
-	std::shared_ptr<Token> token_to_return = token;	
+	Token* token_to_return = token;	
 	for (int i = 0; i < ahead; i++)
 	{
 		if (token_to_return->next == NULL)
@@ -169,9 +170,9 @@ int Parser::get_priority_for_op(std::string op)
 	return 0;
 }
 
-std::shared_ptr<Token> Parser::next()
+Token* Parser::next()
 {
-	std::shared_ptr<Token> next_token = this->current_token;
+	Token* next_token = this->current_token;
 	if (next_token == NULL)
 	{
 		return NULL;
@@ -184,18 +185,18 @@ std::shared_ptr<Token> Parser::next()
 
 void Parser::parse_variable_declaration()
 {
-	std::shared_ptr<Token> data_type_token = next();
-	std::shared_ptr<Token> var_name_token = next(); 
+	Token* data_type_token = next();
+	Token* var_name_token = next(); 
 	if (var_name_token == NULL)
 	{
 		parse_error("Variable declaration keyword provided but no variable name");
 	}
 
 	ensure_type(var_name_token, TOKEN_TYPE_IDENTIFIER);
-	std::shared_ptr<Varnode> var_node = std::shared_ptr<Varnode>(new Varnode());
+	Varnode* var_node = new Varnode();
 	var_node->type = data_type_token;
 	var_node->name = var_name_token;
-	std::shared_ptr<Token> token_ahead = peek();
+	Token* token_ahead = peek();
 	if (token_ahead->isOperator("="))
 	{
 		// We don't need the equals operator anymore
@@ -211,8 +212,8 @@ void Parser::parse_variable_declaration()
 
 void Parser::parse_value()
 {
-	std::shared_ptr<Token> token = next();
-	std::shared_ptr<Node> node = NULL;
+	Token* token = next();
+	Node* node = NULL;
 	// Do we have a nested expression here?
 	if (token->isSymbol("("))
 	{
@@ -243,16 +244,16 @@ void Parser::parse_value()
 
 void Parser::parse_semicolon()
 {
-	std::shared_ptr<Token> token = next();
+	Token*  token = next();
 	if (token == NULL || !token->isSymbol(";"))
 	{
 		parse_error("Expecting a semicolon");
 	}
 }
 
-std::shared_ptr<Node> Parser::get_node_before_last()
+Node* Parser::get_node_before_last()
 {
-	std::shared_ptr<Node> node = this->root_node;
+	Node* node = this->root_node;
 	while(node != NULL)
 	{
 		if (node->next != NULL && node->next->next == NULL)
@@ -266,10 +267,10 @@ std::shared_ptr<Node> Parser::get_node_before_last()
 	return NULL;
 }
 
-std::shared_ptr<Node> Parser::pop_node()
+Node* Parser::pop_node()
 {
-	std::shared_ptr<Node> node = get_node_before_last();
-	std::shared_ptr<Node> node_to_return = this->current_node;
+	Node* node = get_node_before_last();
+	Node* node_to_return = this->current_node;
 	if (node != NULL)
     {
 		node->next = NULL;
@@ -282,26 +283,26 @@ std::shared_ptr<Node> Parser::pop_node()
 void Parser::parse_expression()
 {
 	parse_expression_part();
-	std::shared_ptr<Token> peeked_token = peek();
+	Token* peeked_token = peek();
 	if (peeked_token != NULL && peeked_token->isOperator())
 	{
 		// Lets remove the operator from the token stream
 		std::string op = next()->value.svalue;
 
 		// We now need the last expression as it needs to become our left parameter
-		std::shared_ptr<Node> left = pop_node();
-		std::shared_ptr<ExpNode> left_exp = std::dynamic_pointer_cast<ExpNode>(left);
+		Node* left = pop_node();
+		ExpNode* left_exp = (ExpNode*)(left);
 
 		// We got more to go!
 		parse_expression();
 
-		std::shared_ptr<Node> right = pop_node();
+		Node* right = pop_node();
 		if (right->type != NODE_TYPE_EXPRESSION)
 		{
 			if (!first_op_has_priority(left_exp->op, op))
 			{
-				std::shared_ptr<Node> right_of_left = left_exp->right;
-				std::shared_ptr<ExpNode> exp_node = std::shared_ptr<ExpNode>(new ExpNode());
+				Node* right_of_left = left_exp->right;
+				ExpNode* exp_node = new ExpNode();
 				exp_node->left = right_of_left;
 				exp_node->right = right;
 				exp_node->op = op;
@@ -311,7 +312,7 @@ void Parser::parse_expression()
 			}
 		}
 
-		std::shared_ptr<ExpNode> exp_node = std::shared_ptr<ExpNode>(new ExpNode());
+		ExpNode* exp_node = new ExpNode();
 		exp_node->left = left;
 		exp_node->right = right;
 		exp_node->op = op;
@@ -323,23 +324,24 @@ void Parser::parse_expression_part()
 {
 	// Parse the left value
 	parse_value();
-	std::shared_ptr<Node> exp_left = pop_node();
-	std::shared_ptr<Node> node = exp_left;
-	std::shared_ptr<Token> peeked_token = peek();
+	Node* exp_left = pop_node();
+	Node* node = exp_left;
+	Token* peeked_token = peek();
 	if (peeked_token != NULL && peeked_token->isOperator())
 	{
 		// We have a right part of the expression "l + r"
 		std::string op = next()->value.svalue;
 		// Lets parse the right value
 		parse_value();
-		std::shared_ptr<Node> exp_right = pop_node();
-		std::shared_ptr<ExpNode> exp_node = std::shared_ptr<ExpNode>(new ExpNode());
+		Node* exp_right = pop_node();
+		ExpNode* exp_node = new ExpNode();
 		exp_node->left = exp_left;
 		exp_node->right = exp_right;
 		exp_node->op = op;
 		node = exp_node;
 	}
 	push_node(node);
+
 }
 
 void Parser::global_parse_keyword()
@@ -348,7 +350,7 @@ void Parser::global_parse_keyword()
 	if (is_datatype(keyword_name))
 	{
 		// Either this is a function or a variable declaration
-		std::shared_ptr<Token> peeked_token = peek(this->current_token, 2);
+		Token* peeked_token = peek(this->current_token, 2);
 		// If the peeked token is a symbol then this must be a function, e.g number a() { } otherwise its a variable declaration
 		if (peeked_token != NULL && peeked_token->isSymbol("("))
 		{
@@ -361,7 +363,7 @@ void Parser::global_parse_keyword()
 	}
 }
 
-std::shared_ptr<Node> Parser::parse(std::shared_ptr<Token> root_token)
+Node* Parser::parse(Token* root_token)
 {
 	this->root_node = NULL;	
 	this->current_node = NULL;

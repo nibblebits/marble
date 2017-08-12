@@ -2,7 +2,6 @@
 #define TOKEN_H
 
 #include <string>
-#include <memory>
 
 #include "value.h"
 class Token
@@ -30,7 +29,7 @@ class Token
 		bool isLiteral();
 
 		// The next token after this one
-		std::shared_ptr<Token> next;
+		Token* next;
 		int type;
 		struct value value;
 		

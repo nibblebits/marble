@@ -11,13 +11,26 @@ const char valid_operators[][MAX_OPERATORS_SIZE] = {"+", "-", "*", "/", "++", "-
 const char symbols[] = {';',',','(', ')', '{', '}','[',']'};
 Lexer::Lexer()
 {
-
+	this->root = NULL;
 }
 Lexer::~Lexer()
 {
-
+	cleanup();
 }
 
+void Lexer::cleanup()
+{
+	if (this->root != NULL)
+	{
+		Token* current = this->root;
+		do
+		{
+			Token* next = current->next;
+			delete current;
+			current = next;
+		} while(current != NULL);
+	}
+}
 void Lexer::setInput(const char* buf, int size)
 {
 	this->buf = buf;
@@ -243,10 +256,10 @@ std::string Lexer::handle_stackables(int token_type, std::string token_value, co
 /**
  * Stage 1 will remove all comments, and create tokens based on the input
 */
-std::shared_ptr<Token> Lexer::stage1()
+Token* Lexer::stage1()
 {
-	std::shared_ptr<Token> root_token = NULL;
-	std::shared_ptr<Token> last_token = NULL;
+	Token* root_token = NULL;
+	Token* last_token = NULL;
 	const char* ptr = this->buf;
 	// We will loop through the whole thing and when we reach a whitespace a token has been completed
 	while (ptr < this->end)
@@ -284,7 +297,7 @@ std::shared_ptr<Token> Lexer::stage1()
 				}
 			}
 
-			std::shared_ptr<Token> new_token = std::shared_ptr<Token>(new Token(token_type));
+			Token* new_token = new Token(token_type);
 			new_token->setValue(token_value);
 			if (root_token == NULL)
 			{
@@ -311,9 +324,9 @@ std::shared_ptr<Token> Lexer::stage1()
  * Stage 2 will ensure that the tokens values are valid.
  * Such as a stacked value is correct, e.g a stacked operator value "++--" is clearly illegal.
 */
-void Lexer::stage2(std::shared_ptr<Token> root_token)
+void Lexer::stage2(Token* root_token)
 {
-	std::shared_ptr<Token> token = root_token;
+	Token* token = root_token;
 	while(token != NULL)
 	{
 		int token_type = token->getType();
@@ -335,12 +348,16 @@ void Lexer::stage2(std::shared_ptr<Token> root_token)
 	}
 }
 
-std::shared_ptr<Token> Lexer::lex()
+Token* Lexer::lex()
 {
+	if (this->root != NULL)
+	{
+		throw std::logic_error("Token* Lexer::lex(): You must call \"cleanup()\" before calling \"lex()\" again");
+	}
 	// Stage 1 - Remove comments; Create tokens
-	std::shared_ptr<Token> root_token = stage1();
+	this->root = stage1();
 	// Stage 2 - Identify errors such as illegal operators
-	stage2(root_token);
+	stage2(this->root);
 
-	return root_token;
+	return this->root;
 }

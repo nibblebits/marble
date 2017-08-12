@@ -12,35 +12,35 @@ class Parser
 	public:
 		Parser();
 		virtual ~Parser();
-		std::shared_ptr<Node> parse(std::shared_ptr<Token> root_token);
+		Node* parse(Token* root_token);
 	private:
 		void global_parse_keyword();
 		bool is_datatype(std::string str);
-		bool legal_value(std::shared_ptr<Token> token);
+		bool legal_value(Token* token);
 		void parse_error(std::string message);
-		void ensure_type(std::shared_ptr<Token> token, int expected_type);
+		void ensure_type(Token* token, int expected_type);
 		void parse_variable_declaration();
 		void parse_expression();
 		void parse_expression_part();
 		void parse_value();
 		void parse_semicolon();
-		void push_node(std::shared_ptr<Node> node);
-		std::shared_ptr<Node> pop_node();
-		std::shared_ptr<Node> get_node_before_last();
-		std::shared_ptr<Node> convertToNode(std::shared_ptr<Token> token);
-		std::shared_ptr<Node> getLiteralNode(std::shared_ptr<Token> token);
-		std::shared_ptr<Node> getIdentifierNode(std::shared_ptr<Token> token);
+		void push_node(Node* node);
+		Node* pop_node();
+		Node* get_node_before_last();
+		Node* convertToNode(Token* token);
+		Node* getLiteralNode(Token* token);
+		Node* getIdentifierNode(Token*token);
 
-		std::shared_ptr<Token> next();
-		std::shared_ptr<Token> peek(int ahead);
-		std::shared_ptr<Token> peek();
-		std::shared_ptr<Token> peek(std::shared_ptr<Token> token, int ahead);
+		Token* next();
+		Token* peek(int ahead);
+		Token* peek();
+		Token* peek(Token* token, int ahead);
 
 		bool first_op_has_priority(std::string op1, std::string op2);
 		int get_priority_for_op(std::string op);
 
-		std::shared_ptr<Token> current_token;
-		std::shared_ptr<Node> root_node;
-		std::shared_ptr<Node> current_node;
+		Token* current_token;
+		Node* root_node;
+		Node* current_node;
 };
 #endif

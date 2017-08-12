@@ -8,7 +8,7 @@ class Node
 		Node(int type);
 		virtual ~Node();
 		int getType();
-		std::shared_ptr<Node> next;
+		Node* next;
 
 		int type;
 };

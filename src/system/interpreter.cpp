@@ -32,8 +32,8 @@ void Interpreter::run(const char* code)
 {
     Lexer lexer;
     lexer.setInput(code, strlen(code));
-    std::shared_ptr<Token> root_token = lexer.lex();
-	std::shared_ptr<Token> token = root_token;
+    Token* root_token = lexer.lex();
+	Token* token = root_token;
 	while(token != NULL)
 	{
 		std::cout << token->getType() << ": " << token->getValue().svalue << std::endl;
@@ -41,13 +41,13 @@ void Interpreter::run(const char* code)
 	}
 
 	Parser parser;
-	std::shared_ptr<Node> current_node = parser.parse(root_token);
+	Node* current_node = parser.parse(root_token);
 	while(current_node != NULL)
 	{
 		if (current_node->getType() == NODE_TYPE_VARIABLE_DECLARATION)
 		{
-			std::shared_ptr<Varnode> vnode = std::dynamic_pointer_cast<Varnode>(current_node);
-			std::shared_ptr<Node> value_node = vnode->value;
+			Varnode* vnode = (Varnode*)(current_node);
+			Node* value_node = vnode->value;
 			// Ok lets output this value node
 			Debug::PrintValueForNode(value_node);
 		}
