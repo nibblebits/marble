@@ -3,7 +3,6 @@
 
 #include <string>
 
-#include "value.h"
 class Token
 {
     public:
@@ -12,7 +11,7 @@ class Token
 		void setType(int type);
 		int getType();
 		void setValue(std::string svalue);
-		struct value getValue();
+		std::string getValue();
 
 		bool isString();
 		bool isString(std::string value);
@@ -31,7 +30,7 @@ class Token
 		// The next token after this one
 		Token* next;
 		int type;
-		struct value value;
+		std::string value;
 		
 };
 #endif

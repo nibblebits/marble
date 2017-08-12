@@ -24,11 +24,10 @@ int Token::getType()
 
 void Token::setValue(std::string svalue)
 {
-	this->value.dvalue = atof(svalue.c_str());
-	this->value.svalue = svalue;
+	this->value = svalue.c_str();
 }
 
-struct value Token::getValue()
+std::string Token::getValue()
 {
 	return this->value;
 }
@@ -41,7 +40,7 @@ bool Token::isString()
 
 bool Token::isString(std::string value)
 {
-	return getType() == TOKEN_TYPE_STRING && getValue().svalue == value;
+	return getType() == TOKEN_TYPE_STRING && getValue() == value;
 }
 
 bool Token::isSymbol()
@@ -51,7 +50,7 @@ bool Token::isSymbol()
 
 bool Token::isSymbol(std::string value)
 {
-	return getType() == TOKEN_TYPE_SYMBOL && getValue().svalue == value;
+	return getType() == TOKEN_TYPE_SYMBOL && getValue() == value;
 }
 
 bool Token::isIdentifier()
@@ -61,7 +60,7 @@ bool Token::isIdentifier()
 
 bool Token::isIdentifier(std::string value)
 {
-	return getType() == TOKEN_TYPE_IDENTIFIER && getValue().svalue == value;
+	return getType() == TOKEN_TYPE_IDENTIFIER && getValue() == value;
 }
 
 bool Token::isKeyword()
@@ -71,7 +70,7 @@ bool Token::isKeyword()
 
 bool Token::isKeyword(std::string value)
 {
-	return getType() == TOKEN_TYPE_KEYWORD && getValue().svalue == value;
+	return getType() == TOKEN_TYPE_KEYWORD && getValue() == value;
 }
 
 bool Token::isOperator()
@@ -81,7 +80,7 @@ bool Token::isOperator()
 
 bool Token::isOperator(std::string value)
 {
-	return getType() == TOKEN_TYPE_OPERATOR && getValue().svalue == value;
+	return getType() == TOKEN_TYPE_OPERATOR && getValue() == value;
 }
 
 bool Token::isNumber()
@@ -91,7 +90,7 @@ bool Token::isNumber()
 
 bool Token::isNumber(std::string value)
 {
-	return getType() == TOKEN_TYPE_NUMBER && getValue().svalue == value;
+	return getType() == TOKEN_TYPE_NUMBER && getValue() == value;
 }
 
 bool Token::isLiteral()

@@ -287,7 +287,7 @@ void Parser::parse_expression()
 	if (peeked_token != NULL && peeked_token->isOperator())
 	{
 		// Lets remove the operator from the token stream
-		std::string op = next()->value.svalue;
+		std::string op = next()->value;
 
 		// We now need the last expression as it needs to become our left parameter
 		Node* left = pop_node();
@@ -330,7 +330,7 @@ void Parser::parse_expression_part()
 	if (peeked_token != NULL && peeked_token->isOperator())
 	{
 		// We have a right part of the expression "l + r"
-		std::string op = next()->value.svalue;
+		std::string op = next()->value;
 		// Lets parse the right value
 		parse_value();
 		Node* exp_right = pop_node();
@@ -346,7 +346,7 @@ void Parser::parse_expression_part()
 
 void Parser::global_parse_keyword()
 {
-	std::string keyword_name = this->current_token->getValue().svalue;
+	std::string keyword_name = this->current_token->getValue();
 	if (is_datatype(keyword_name))
 	{
 		// Either this is a function or a variable declaration

@@ -32,7 +32,7 @@ void Debug::PrintValueForNode(Node* value_node, int tabbing)
 				OutputTabbing(tabbing);
 				std::cout << "VALUE IS LITERAL" << std::endl;
 				OutputTabbing(tabbing);
-				std::cout << literal_value_node->value.svalue << std::endl;
+				std::cout << literal_value_node->value << std::endl;
 			}
 			else if(value_node->type == NODE_TYPE_EXPRESSION)
 			{

@@ -330,13 +330,12 @@ void Lexer::stage2(Token* root_token)
 	while(token != NULL)
 	{
 		int token_type = token->getType();
-		struct value token_value = token->getValue();
-		std::string token_svalue = token_value.svalue;
+		std::string token_value = token->getValue();
 		switch(token_type)
 		{
 			case TOKEN_TYPE_OPERATOR:
 			{
-				if (!is_operator(token_svalue))
+				if (!is_operator(token_value))
 				{
 					throw std::logic_error("Invalid operator");
 				}

@@ -36,7 +36,7 @@ void Interpreter::run(const char* code)
 	Token* token = root_token;
 	while(token != NULL)
 	{
-		std::cout << token->getType() << ": " << token->getValue().svalue << std::endl;
+		std::cout << token->getType() << ": " << token->getValue() << std::endl;
 		token = token->next;	
 	}
 
