@@ -74,12 +74,60 @@ void Interpreter::interpret_variable_node(VarNode* var_node)
 	variable->name = name_token->value;
 	if (type_token->isKeyword("number"))
 	{
-		variable->type == VARIABLE_TYPE_NUMBER;
-		variable->dvalue = 55;
+		variable->type = VARIABLE_TYPE_NUMBER;
+		variable->dvalue = evaluate_expression_get_number(value_node);
 		root_scope.registerVariable(variable);
 	}
 }
 
+double Interpreter::evaluate_expression_get_number(Node* node)
+{
+	Node* current_node = node;
+	switch(current_node->type)
+	{
+		case NODE_TYPE_LITERAL:
+		{
+			LiteralNode* literal_node = (LiteralNode*) node;
+			return std::stod(literal_node->value);
+		}
+		break;
+
+		case NODE_TYPE_EXPRESSION:
+		{
+			ExpNode* exp_node = (ExpNode*) node;
+			Node* left = exp_node->left;
+			Node* right = exp_node->right;
+			double l_value = evaluate_expression_get_number(left);
+			double r_value = evaluate_expression_get_number(right);
+			return op_on_values(l_value, r_value, exp_node->op);
+		}
+		break;
+	}
+}
+
+double Interpreter::op_on_values(double value1, double value2, std::string op)
+{
+	if (op == "+")
+	{
+		return value1 + value2;
+	}
+	else if(op == "-")
+	{
+		return value1 - value2;
+	}
+	else if(op == "*")
+	{
+		return value1 * value2;
+	}
+	else if(op == "/")
+	{
+		return value1 / value2;
+	}
+	else
+	{
+		throw std::logic_error("Unexpected operator: " + op);
+	}
+}
 void Interpreter::runScript(const char* filename)
 {
    // Lets load this script
