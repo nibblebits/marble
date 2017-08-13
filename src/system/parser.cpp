@@ -344,9 +344,10 @@ void Parser::parse_expression_part()
 
 }
 
-void Parser::global_parse_keyword()
+void Parser::global_parse()
 {
-	std::string keyword_name = this->current_token->getValue();
+	std::string keyword_name = this->current_token->getValue();	
+	// Temporary solution, this wont cut it.
 	if (is_datatype(keyword_name))
 	{
 		// Either this is a function or a variable declaration
@@ -361,6 +362,16 @@ void Parser::global_parse_keyword()
 			parse_variable_declaration();
 		}
 	}
+	else if(this->current_token->isIdentifier())
+	{
+		/* The token is an identifier so this can be treated as an expression as it is one of the following 
+		 * 1. Representing a variable
+		 * 2. An assignment
+		 * 3. A function call
+		 */
+		parse_expression();
+		parse_semicolon();
+	}
 }
 
 Node* Parser::parse(Token* root_token)
@@ -370,17 +381,7 @@ Node* Parser::parse(Token* root_token)
 	this->current_token = root_token;
 	while(this->current_token != NULL)
 	{
-		int type = this->current_token->getType();
-		switch(type)
-		{
-			case TOKEN_TYPE_KEYWORD:
-			{
-				global_parse_keyword();
-			}
-			break;
-			default:
-				parse_error("Unexpected token");
-		}
+		global_parse();
 	}
 	return this->root_node;
 }

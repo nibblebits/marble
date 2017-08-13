@@ -49,11 +49,21 @@ void Interpreter::run(const char* code)
 	// Awesome now lets interpret!
 	while(current_node != NULL)
 	{
-		if (current_node->getType() == NODE_TYPE_VARIABLE_DECLARATION)
+		int type = current_node->getType();
+		switch (type)
 		{
-			interpret_variable_node((VarNode*) current_node);
-		
+			case NODE_TYPE_VARIABLE_DECLARATION:
+			{
+				interpret_variable_node((VarNode*) current_node);
+			}
+			break;
+			case NODE_TYPE_EXPRESSION:
+			{
+				interpret_expression((ExpNode*)current_node);
+			}
+			break;			
 		}
+	
 		current_node = current_node->next;
 	}
 
@@ -63,6 +73,33 @@ void Interpreter::run(const char* code)
 	}
 }
 
+
+void Interpreter::interpret_assignment_expression(ExpNode* exp_node)
+{
+	IdentifierNode* dest_node = (IdentifierNode*) exp_node->left;
+	Node* value_node = exp_node->right;	
+	Variable* variable = root_scope.getVariable(dest_node->value);
+	if (variable->type == VARIABLE_TYPE_NUMBER)
+	{
+		variable->dvalue = evaluate_expression_get_number(value_node);
+	}
+
+}
+
+void Interpreter::interpret_expression(ExpNode* exp_node)
+{
+	Node* left = exp_node->left;
+	Node* right = exp_node->right;
+	
+	if (exp_node->isAssignmentOperator())
+	{
+		// We have an assignment expression
+		interpret_assignment_expression(exp_node);
+		return;
+	}
+
+	// There is no need to interpret anything other than assignments as we do not return a value. We wont throw an error but just let it be
+}
 
 void Interpreter::interpret_variable_node(VarNode* var_node)
 {

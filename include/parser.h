@@ -14,7 +14,7 @@ class Parser
 		virtual ~Parser();
 		Node* parse(Token* root_token);
 	private:
-		void global_parse_keyword();
+		void global_parse();
 		bool is_datatype(std::string str);
 		bool legal_value(Token* token);
 		void parse_error(std::string message);

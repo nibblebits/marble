@@ -14,3 +14,8 @@ ExpNode::~ExpNode()
 
 
 
+
+bool ExpNode::isAssignmentOperator()
+{
+	return this->op == "=" || this->op == "+=" || this->op == "-=" || this->op == "*=" || this->op == "/=";
+}

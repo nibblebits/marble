@@ -13,6 +13,7 @@ class ExpNode : public Node
 		Node* left;
 		Node* right;
 		std::string op;
+		bool isAssignmentOperator();
 	private:
 };
 #endif
