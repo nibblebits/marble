@@ -5,4 +5,6 @@
 #include "varnode.h"
 #include "literalnode.h"
 #include "identifiernode.h"
+#include "keywordnode.h"
+#include "fcnode.h"
 #endif

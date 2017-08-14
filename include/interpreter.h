@@ -16,7 +16,9 @@ class Interpreter
 	private:
 		void interpret_assignment_expression(ExpNode* exp_node);
 		void interpret_expression(ExpNode* exp_node);
+		void interpret_variable_node_for_primitive(VarNode* var_node);
 		void interpret_variable_node(VarNode* var_node);
+		void fail();
 		double evaluate_expression_get_number(Node* node);
 		double op_on_values(double value1, double value2, std::string op);
 		Scope root_scope;

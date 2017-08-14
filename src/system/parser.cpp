@@ -103,10 +103,18 @@ Node* Parser::getLiteralNode(Token* token)
 Node* Parser::getIdentifierNode(Token* token)
 {
 	IdentifierNode* identifier_node = new IdentifierNode();
+	identifier_node->value = token->value;
 	return identifier_node;
 }
 
-Node* Parser::convertToNode(Token* token)
+Node* Parser::getKeywordNode(Token* token)
+{
+	KeywordNode* keyword_node = new KeywordNode();
+	keyword_node->value = token->value;
+	return keyword_node;
+}
+
+Node* Parser::convertToSingleNode(Token* token)
 {
 	int tokenType = token->getType();
 	if (token->isLiteral())
@@ -116,6 +124,10 @@ Node* Parser::convertToNode(Token* token)
 	else if(token->isIdentifier())
 	{
 		return getIdentifierNode(token);
+	}
+	else if(token->isKeyword())
+	{
+		return getKeywordNode(token);
 	}
 
 	throw std::logic_error("The single \"token\" provided cannot be converted to a node");
@@ -185,16 +197,17 @@ Token* Parser::next()
 
 void Parser::parse_variable_declaration()
 {
-	Token* data_type_token = next();
+	// Types should be treated as an expression due to the senario "class.other_class var_name"
+	parse_expression();
+	Node* data_type_node = pop_node(); 
 	Token* var_name_token = next(); 
-	if (var_name_token == NULL)
+	if (!var_name_token->isIdentifier())
 	{
-		parse_error("Variable declaration keyword provided but no variable name");
+		parse_error("Expecting a variable name");
 	}
 
-	ensure_type(var_name_token, TOKEN_TYPE_IDENTIFIER);
 	VarNode* var_node = new VarNode();
-	var_node->type = data_type_token;
+	var_node->type = data_type_node;
 	var_node->name = var_name_token;
 	Token* token_ahead = peek();
 	if (token_ahead->isOperator("="))
@@ -206,17 +219,50 @@ void Parser::parse_variable_declaration()
 	}
 	push_node(var_node);
 
-	parse_semicolon();
+}
 
+void Parser::parse_function_call()
+{
+	FunctionCallNode* func_call_node = new FunctionCallNode();
+	// The function call destination should be treated as an expression as imagine the senario obj.method();
+	parse_expression();
+	Node* dest_node = pop_node();
+	// Now that we have the node lets parse the arguments
+	parse_arguments();
+}
+
+void Parser::parse_arguments()
+{
+	// Ok lets ignore the "(" bracket
+	if(!next()->isSymbol("("))
+	{
+		parse_error("Expecting a \"(\" symbol for arguments");
+	}
+
+	// Parse the arguments
+		
+
+	// and ignore the ")" bracket
+	if(!next()->isSymbol(")"))
+	{
+		parse_error("Expecting a \")\" symbol for arguments");
+	}
+}
+void Parser::parse_single_token()
+{
+	Node* node = convertToSingleNode(next());
+	push_node(node);
 }
 
 void Parser::parse_value()
 {
-	Token* token = next();
+	Token* token = peek();
 	Node* node = NULL;
 	// Do we have a nested expression here?
 	if (token->isSymbol("("))
 	{
+		// Let's get rid of the "(" symbol ready for parse_expression
+		next();
 		// Yes we have an expression lets process it
 		parse_expression();
 
@@ -231,11 +277,18 @@ void Parser::parse_value()
 	}
 	else
 	{
-		if (!legal_value(token))
+
+		if (token->isIdentifier() && peek(1)->isSymbol("("))
 		{
-			parse_error("Expecting a legal value");
+			// We have a function call
+			parse_function_call();
+			node = pop_node();	
 		}
-		node = convertToNode(token);
+		else
+		{
+			parse_single_token();
+			node = pop_node();
+		}	
 	}
 
 	push_node(node);
@@ -360,6 +413,7 @@ void Parser::global_parse()
 		else
 		{
 			parse_variable_declaration();
+			parse_semicolon();
 		}
 	}
 	else if(this->current_token->isIdentifier())

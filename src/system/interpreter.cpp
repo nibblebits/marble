@@ -1,3 +1,7 @@
+/*
+ No validation is done in this interpreter class as the interpreter will pass the AST(Abstract Syntax Tree) through a semantic validator to ensure validity.
+ In other words its completely safe not to validate in this file.
+*/
 #include <iostream>
 #include <memory.h>
 #include <memory>
@@ -101,19 +105,53 @@ void Interpreter::interpret_expression(ExpNode* exp_node)
 	// There is no need to interpret anything other than assignments as we do not return a value. We wont throw an error but just let it be
 }
 
-void Interpreter::interpret_variable_node(VarNode* var_node)
+void Interpreter::fail()
 {
-	Token* type_token = var_node->type;
+	throw std::logic_error("Something has gone terribly wrong, semantic validation has clearly messed up. Please report this");
+}
+
+
+void Interpreter::interpret_variable_node_for_primitive(VarNode* var_node)
+{
+	Node* type_node = var_node->type;
 	Token* name_token = var_node->name;
 	Node* value_node = var_node->value;
 
 	Variable* variable = new Variable();
-	variable->name = name_token->value;
-	if (type_token->isKeyword("number"))
+	try
 	{
-		variable->type = VARIABLE_TYPE_NUMBER;
-		variable->dvalue = evaluate_expression_get_number(value_node);
-		root_scope.registerVariable(variable);
+		KeywordNode* type_node_keyword = (KeywordNode*) type_node;
+		std::cout << type_node_keyword->value << std::endl;
+		if (type_node_keyword->value == "number")
+		{
+			variable->type = VARIABLE_TYPE_NUMBER;
+			variable->dvalue = evaluate_expression_get_number(value_node);
+			root_scope.registerVariable(variable);
+		}
+		else
+		{
+			fail();
+		}
+		variable->name = name_token->value;
+	}
+	catch(...)
+	{
+		//variable->destroy();
+		throw;
+	}
+	
+}
+
+void Interpreter::interpret_variable_node(VarNode* var_node)
+{
+	Node* type_node = var_node->type;
+	switch (type_node->type)
+	{
+		case NODE_TYPE_KEYWORD:
+		{
+			interpret_variable_node_for_primitive(var_node);
+		}
+		break;	
 	}
 }
 

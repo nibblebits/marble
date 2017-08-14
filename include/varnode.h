@@ -9,7 +9,7 @@ class VarNode : public Node
 	public:
 		VarNode();
 		virtual ~VarNode();
-		Token* type;
+		Node* type;
 		Token* name;
 		Node* value;
 	private:
