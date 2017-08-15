@@ -1,6 +1,7 @@
 #include "token.h"
 #include "statics.h"
 #include <stdlib.h>
+#include <iostream>
 Token::Token(int type)
 {
     this->type = type;
@@ -9,7 +10,7 @@ Token::Token(int type)
 
 Token::~Token()
 {
-
+   std::cout << "Destructor called" << std::endl;
 }
 
 void Token::setType(int type)
@@ -32,6 +33,11 @@ std::string Token::getValue()
 	return this->value;
 }
 
+void Token::setNext(Token* next_token)
+{
+	this->smart_next = std::unique_ptr<Token>(next_token);
+	this->next = next_token;
+}
 
 bool Token::isString()
 {

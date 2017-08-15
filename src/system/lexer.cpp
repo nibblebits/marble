@@ -15,22 +15,9 @@ Lexer::Lexer()
 }
 Lexer::~Lexer()
 {
-	cleanup();
+
 }
 
-void Lexer::cleanup()
-{
-	if (this->root != NULL)
-	{
-		Token* current = this->root;
-		do
-		{
-			Token* next = current->next;
-			delete current;
-			current = next;
-		} while(current != NULL);
-	}
-}
 void Lexer::setInput(const char* buf, int size)
 {
 	this->buf = buf;
@@ -306,7 +293,7 @@ Token* Lexer::stage1()
 			}
 			else
 			{
-				last_token->next = new_token;
+				last_token->setNext(new_token);			
 				last_token = new_token;
 			}
 		}
@@ -354,9 +341,9 @@ Token* Lexer::lex()
 		throw std::logic_error("Token* Lexer::lex(): You must call \"cleanup()\" before calling \"lex()\" again");
 	}
 	// Stage 1 - Remove comments; Create tokens
-	this->root = stage1();
+	this->root = std::unique_ptr<Token>(stage1());
 	// Stage 2 - Identify errors such as illegal operators
-	stage2(this->root);
+	stage2(this->root.get());
 
-	return this->root;
+	return this->root.get();
 }

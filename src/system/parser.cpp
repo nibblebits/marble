@@ -83,12 +83,12 @@ void Parser::push_node(Node* node)
 {
 	if (this->current_node == NULL)
 	{
-		this->root_node = node;
+		this->root_node = std::unique_ptr<Node>(node);
 		this->current_node = node;
 	}
 	else
 	{
-		this->current_node->next = node;
+		this->current_node->setNext(node);
 		this->current_node = node;
 	}
 }
@@ -306,7 +306,7 @@ void Parser::parse_semicolon()
 
 Node* Parser::get_node_before_last()
 {
-	Node* node = this->root_node;
+	Node* node = this->root_node.get();
 	while(node != NULL)
 	{
 		if (node->next != NULL && node->next->next == NULL)
@@ -320,17 +320,18 @@ Node* Parser::get_node_before_last()
 	return NULL;
 }
 
-Node* Parser::pop_node()
+std::unique_ptr<Node> Parser::pop_node()
 {
 	Node* node = get_node_before_last();
-	Node* node_to_return = this->current_node;
 	if (node != NULL)
     {
-		node->next = NULL;
+		std::unique_ptr<Node> node_to_return = std::move(node->smart_next);
+		node->setNext(NULL);
+		this->current_node = node;	
+		return node_to_return;	
 	}
-	
-	this->current_node = node;	
-	return node_to_return;
+
+	throw std::logic_error("You cannot pop the last node");
 }
 
 void Parser::parse_expression()
@@ -437,7 +438,7 @@ Node* Parser::parse(Token* root_token)
 	{
 		global_parse();
 	}
-	return this->root_node;
+	return this->root_node.get();
 }
 
 

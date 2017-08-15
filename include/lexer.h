@@ -1,6 +1,7 @@
 #ifndef LEXER_H
 #define LEXER_H
 #include <vector>
+#include <memory>
 #include "token.h"
 class Lexer
 {
@@ -11,7 +12,7 @@ class Lexer
         Token* lex();
 	
     private:
-	Token* root;
+	std::unique_ptr<Token> root;
         const char* buf;
 	const char* end;
 	int size;
@@ -34,7 +35,5 @@ class Lexer
 	std::string get_string(const char** ptr);
 	int get_token_type_for_value(std::string token_value);
 	std::string handle_stackables(int token_type, std::string token_value, const char** ptr);
-	void cleanup();
-
 };
 #endif

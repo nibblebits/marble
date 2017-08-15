@@ -26,7 +26,7 @@ class Parser
 		void parse_value();
 		void parse_semicolon();
 		void push_node(Node* node);
-		Node* pop_node();
+		std::unique_ptr<Node> pop_node();
 		Node* get_node_before_last();
 		Node* convertToSingleNode(Token* token);
 		Node* getLiteralNode(Token* token);
@@ -44,7 +44,7 @@ class Parser
 		int get_priority_for_op(std::string op);
 
 		Token* current_token;
-		Node* root_node;
+		std::unique_ptr<Node> root_node;
 		Node* current_node;
 };
 #endif

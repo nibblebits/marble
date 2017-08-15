@@ -4,8 +4,14 @@
 #include <memory.h>
 #include "interpreter.h"
 
-int main(int argc, char** argv) 
+void interpret()
 {
     Interpreter interpreter;
-    interpreter.runScript("./test.marble");   
+    interpreter.runScript("./test.marble");  
+}
+int main(int argc, char** argv) 
+{
+   interpret();
+   std::cout << "Program terminated" << std::endl; 
+   return 0; 
 }

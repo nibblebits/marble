@@ -2,7 +2,7 @@
 #define TOKEN_H
 
 #include <string>
-
+#include <memory>
 class Token
 {
     public:
@@ -12,6 +12,7 @@ class Token
 		int getType();
 		void setValue(std::string svalue);
 		std::string getValue();
+		void setNext(Token* next_token);
 
 		bool isString();
 		bool isString(std::string value);
@@ -31,6 +32,8 @@ class Token
 		Token* next;
 		int type;
 		std::string value;
-		
+	private:
+		// A unique_ptr that points to the same address as "next"
+		std::unique_ptr<Token> smart_next;
 };
 #endif
