@@ -1,12 +1,11 @@
 #ifndef PARSER_H
 #define PARSER_H
 #include <vector>
-#include <memory>
 #include <string>
 #include "nodes.h"
 #include "statics.h"
 #include "token.h"
-
+#include "nodefactory.h"
 class Parser
 {
 	public:
@@ -26,7 +25,7 @@ class Parser
 		void parse_value();
 		void parse_semicolon();
 		void push_node(Node* node);
-		std::unique_ptr<Node> pop_node();
+		Node* pop_node();
 		Node* get_node_before_last();
 		Node* convertToSingleNode(Token* token);
 		Node* getLiteralNode(Token* token);
@@ -43,8 +42,9 @@ class Parser
 		bool first_op_has_priority(std::string op1, std::string op2);
 		int get_priority_for_op(std::string op);
 
+		NodeFactory factory;
 		Token* current_token;
-		std::unique_ptr<Node> root_node;
+		Node* root_node;
 		Node* current_node;
 };
 #endif

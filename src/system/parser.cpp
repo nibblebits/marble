@@ -1,11 +1,11 @@
 #include "parser.h"
-#include <iostream>
 
 struct order_of_operation
 {
 	const char* op;
 	int priority;
 };
+
 
 
 /* The order of operations for operators and their priorities 
@@ -83,33 +83,33 @@ void Parser::push_node(Node* node)
 {
 	if (this->current_node == NULL)
 	{
-		this->root_node = std::unique_ptr<Node>(node);
+		this->root_node = node;
 		this->current_node = node;
 	}
 	else
 	{
-		this->current_node->setNext(node);
+		this->current_node->next = node;
 		this->current_node = node;
 	}
 }
 
 Node* Parser::getLiteralNode(Token* token)
 {
-	LiteralNode* literal_node = new LiteralNode();
+	LiteralNode* literal_node = (LiteralNode*) factory.createNode(NODE_TYPE_LITERAL);
 	literal_node->value = token->value;
 	return literal_node;
 }
 
 Node* Parser::getIdentifierNode(Token* token)
 {
-	IdentifierNode* identifier_node = new IdentifierNode();
+	IdentifierNode* identifier_node = (IdentifierNode*) factory.createNode(NODE_TYPE_IDENTIFIER);
 	identifier_node->value = token->value;
 	return identifier_node;
 }
 
 Node* Parser::getKeywordNode(Token* token)
 {
-	KeywordNode* keyword_node = new KeywordNode();
+	KeywordNode* keyword_node = (KeywordNode*) factory.createNode(NODE_TYPE_KEYWORD);
 	keyword_node->value = token->value;
 	return keyword_node;
 }
@@ -206,7 +206,7 @@ void Parser::parse_variable_declaration()
 		parse_error("Expecting a variable name");
 	}
 
-	VarNode* var_node = new VarNode();
+	VarNode* var_node = (VarNode*) factory.createNode(NODE_TYPE_VARIABLE_DECLARATION);
 	var_node->type = data_type_node;
 	var_node->name = var_name_token;
 	Token* token_ahead = peek();
@@ -223,7 +223,7 @@ void Parser::parse_variable_declaration()
 
 void Parser::parse_function_call()
 {
-	FunctionCallNode* func_call_node = new FunctionCallNode();
+	FunctionCallNode* func_call_node = (FunctionCallNode*) factory.createNode(NODE_TYPE_FUNCTION_CALL);
 	// The function call destination should be treated as an expression as imagine the senario obj.method();
 	parse_expression();
 	Node* dest_node = pop_node();
@@ -306,7 +306,7 @@ void Parser::parse_semicolon()
 
 Node* Parser::get_node_before_last()
 {
-	Node* node = this->root_node.get();
+	Node* node = this->root_node;
 	while(node != NULL)
 	{
 		if (node->next != NULL && node->next->next == NULL)
@@ -320,18 +320,17 @@ Node* Parser::get_node_before_last()
 	return NULL;
 }
 
-std::unique_ptr<Node> Parser::pop_node()
+Node* Parser::pop_node()
 {
 	Node* node = get_node_before_last();
+	Node* node_to_return = this->current_node;
 	if (node != NULL)
     {
-		std::unique_ptr<Node> node_to_return = std::move(node->smart_next);
-		node->setNext(NULL);
-		this->current_node = node;	
-		return node_to_return;	
+		node->next = NULL;
 	}
-
-	throw std::logic_error("You cannot pop the last node");
+	
+	this->current_node = node;	
+	return node_to_return;
 }
 
 void Parser::parse_expression()
@@ -356,7 +355,7 @@ void Parser::parse_expression()
 			if (!first_op_has_priority(left_exp->op, op))
 			{
 				Node* right_of_left = left_exp->right;
-				ExpNode* exp_node = new ExpNode();
+				ExpNode* exp_node = (ExpNode*) factory.createNode(NODE_TYPE_EXPRESSION);
 				exp_node->left = right_of_left;
 				exp_node->right = right;
 				exp_node->op = op;
@@ -366,7 +365,7 @@ void Parser::parse_expression()
 			}
 		}
 
-		ExpNode* exp_node = new ExpNode();
+		ExpNode* exp_node = (ExpNode*) factory.createNode(NODE_TYPE_EXPRESSION);
 		exp_node->left = left;
 		exp_node->right = right;
 		exp_node->op = op;
@@ -388,7 +387,7 @@ void Parser::parse_expression_part()
 		// Lets parse the right value
 		parse_value();
 		Node* exp_right = pop_node();
-		ExpNode* exp_node = new ExpNode();
+		ExpNode* exp_node = (ExpNode*) factory.createNode(NODE_TYPE_EXPRESSION);
 		exp_node->left = exp_left;
 		exp_node->right = exp_right;
 		exp_node->op = op;
@@ -438,7 +437,7 @@ Node* Parser::parse(Token* root_token)
 	{
 		global_parse();
 	}
-	return this->root_node.get();
+	return this->root_node;
 }
 
 

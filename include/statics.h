@@ -29,4 +29,6 @@ enum
 	VARIABLE_TYPE_STRING,
 	VARIABLE_TYPE_OBJECT
 };
+
+typedef int NODE_TYPE;
 #endif

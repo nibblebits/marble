@@ -8,10 +8,8 @@ class Node
 		Node(int type);
 		virtual ~Node();
 		int getType();
-		void setNext(Node* node);
 		Node* next;
-		std::unique_ptr<Node> smart_next;
-		int type;
+		int const type;
 };
 
 #endif
