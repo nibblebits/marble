@@ -28,7 +28,13 @@ Interpreter::Interpreter()
             {
                 std::cout << "OUTPUT: " << v.dvalue << std::endl;
             }
+            else if(v.type == VALUE_TYPE_STRING)
+            {
+               std::cout << "OUTPUT: " << v.svalue << std::endl;
+            }
         }
+        return_value->type = VALUE_TYPE_NUMBER;
+        return_value->dvalue = 1;
     });
 }
 

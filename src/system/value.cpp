@@ -14,10 +14,22 @@ Value Value::operator+(const Value& other)
 	ensure_same_type(type, other.type);
 	Value value;
 	value.type = type;
-    if (type == VALUE_TYPE_NUMBER)
-	{
-        value.dvalue = dvalue + other.dvalue;
-	}
+
+    switch(type)
+    {
+        case VALUE_TYPE_NUMBER:
+        {
+            value.dvalue = dvalue + other.dvalue;
+        }
+        break;
+        case VALUE_TYPE_STRING:
+        {
+            value.svalue = svalue + other.svalue;    
+        }
+        break;
+    }
+
+    
 
     return value;
 }

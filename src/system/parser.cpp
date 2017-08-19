@@ -110,6 +110,13 @@ Node* Parser::getKeywordNode(Token* token)
     return keyword_node;
 }
 
+Node* Parser::getStringNode(Token* token)
+{
+    StringNode* string_node = (StringNode*) factory.createNode(NODE_TYPE_STRING);
+    string_node->value = token->value;
+    return string_node;
+}
+
 Node* Parser::convertToSingleNode(Token* token)
 {
     int tokenType = token->getType();
@@ -127,7 +134,7 @@ Node* Parser::convertToSingleNode(Token* token)
     }
     else if(token->isString())
     {
-        throw std::logic_error("String nodes are not yet implemented");
+        return getStringNode(token);
     }
 
     throw std::logic_error("The single \"token\" provided cannot be converted to a node");

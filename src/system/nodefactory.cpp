@@ -38,6 +38,12 @@ Node* NodeFactory::createNode(NODE_TYPE node_type)
     }
     break;
 
+    case NODE_TYPE_STRING:
+    {
+        node = new StringNode();
+    }
+    break;
+
     case NODE_TYPE_KEYWORD:
     {
         node = new KeywordNode();

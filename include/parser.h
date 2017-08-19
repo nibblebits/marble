@@ -31,6 +31,7 @@ private:
     Node* getLiteralNode(Token* token);
     Node* getIdentifierNode(Token*token);
     Node* getKeywordNode(Token* token);
+    Node* getStringNode(Token* token);
     void parse_function_call(ExpressionInterpretableNode* dest_node);
     void parse_arguments(std::vector<ExpressionInterpretableNode*>* argument_nodes);
 
