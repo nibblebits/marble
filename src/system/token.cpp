@@ -90,6 +90,6 @@ bool Token::isNumber(std::string value)
 
 bool Token::isLiteral()
 {
-    return this->type == TOKEN_TYPE_NUMBER || this->type == TOKEN_TYPE_IDENTIFIER;
+    return this->type == TOKEN_TYPE_NUMBER;
 }
 
