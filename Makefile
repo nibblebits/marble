@@ -22,9 +22,9 @@ system:
 	g++ -I ./include ./src/system/tokenfactory.cpp -o ./build/system/tokenfactory.o ${OBJECT_FILE_FLAGS}
 	g++ -I ./include ./src/system/einode.cpp -o ./build/system/einode.o ${OBJECT_FILE_FLAGS}
 	g++ -I ./include ./src/system/value.cpp -o ./build/system/value.o ${OBJECT_FILE_FLAGS}
-	g++ ${SYSTEM_OBJECT_FILES} -g -o ${SYSTEM_LIB_FILE_LOCATION}  -shared -Wl,-rpath,'./lib'-export-dynamic
+	g++ ${SYSTEM_OBJECT_FILES} -g -o ${SYSTEM_LIB_FILE_LOCATION} -shared -Wl,-rpath,'./lib'-export-dynamic
 standalone: system
 	cd bin; \
-	g++ -g -I ../include ../src/standalone/main.cpp ./${SYSTEM_LIB_LOCAL_FILENAME} -o ./marble;
+	g++ -g -I ../include ../src/standalone/main.cpp ./${SYSTEM_LIB_LOCAL_FILENAME}  -std=c++11 -o ./marble;
 clean:
 	rm ${SYSTEM_OBJECT_FILES}

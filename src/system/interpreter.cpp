@@ -95,14 +95,14 @@ Variable* Interpreter::getVariableByName(std::string name)
 void Interpreter::interpret_variable_node_for_primitive(VarNode* var_node)
 {
     Node* type_node = var_node->type;
-    Token* name_token = var_node->name;
+    std::string name = var_node->name;
     ExpressionInterpretableNode* value_node = (ExpressionInterpretableNode*)var_node->value;
 
-    Variable* variable = new Variable();
+    Variable* variable = current_scope->createVariable();
     KeywordNode* type_node_keyword = (KeywordNode*) type_node;
     variable->value = value_node->interpret(this);
     variable->value.holder = variable;
-    variable->name = name_token->value;
+    variable->name = name;
     current_scope->registerVariable(variable);
 }
 

@@ -1,6 +1,7 @@
 #include "fcnode.h"
 #include "statics.h"
-FunctionCallNode::FunctionCallNode() : Node(NODE_TYPE_FUNCTION_CALL)
+#include "interpreter.h"
+FunctionCallNode::FunctionCallNode() : ExpressionInterpretableNode(NODE_TYPE_FUNCTION_CALL)
 {
     this->dest = NULL;
 }
@@ -8,4 +9,10 @@ FunctionCallNode::FunctionCallNode() : Node(NODE_TYPE_FUNCTION_CALL)
 FunctionCallNode::~FunctionCallNode()
 {
 
+}
+
+Value FunctionCallNode::interpret(Interpreter* interpreter)
+{
+    Value value;
+    return value;
 }

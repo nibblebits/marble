@@ -1,16 +1,11 @@
 #include "parser.h"
-
+#include <iostream>
 struct order_of_operation
 {
     const char* op;
     int priority;
 };
 
-
-
-/* The order of operations for operators and their priorities
- * Seek here: http://www.difranco.net/compsci/C_Operator_Precedence_Table.htm
- * The same order of operations to C will be used.*/
 
 struct order_of_operation o_of_operation[] =
 {
@@ -130,6 +125,10 @@ Node* Parser::convertToSingleNode(Token* token)
     {
         return getKeywordNode(token);
     }
+    else if(token->isString())
+    {
+        throw std::logic_error("String nodes are not yet implemented");
+    }
 
     throw std::logic_error("The single \"token\" provided cannot be converted to a node");
 }
@@ -209,7 +208,7 @@ void Parser::parse_variable_declaration()
 
     VarNode* var_node = (VarNode*) factory.createNode(NODE_TYPE_VARIABLE_DECLARATION);
     var_node->type = data_type_node;
-    var_node->name = var_name_token;
+    var_node->name = var_name_token->value;
     Token* token_ahead = peek();
     if (token_ahead->isOperator("="))
     {
@@ -222,17 +221,16 @@ void Parser::parse_variable_declaration()
 
 }
 
-void Parser::parse_function_call()
+void Parser::parse_function_call(ExpressionInterpretableNode* dest_node)
 {
     FunctionCallNode* func_call_node = (FunctionCallNode*) factory.createNode(NODE_TYPE_FUNCTION_CALL);
-    // The function call destination should be treated as an expression as imagine the senario obj.method();
-    parse_expression();
-    Node* dest_node = pop_node();
+    func_call_node->dest = dest_node;
     // Now that we have the node lets parse the arguments
-    parse_arguments();
+    parse_arguments(&func_call_node->arguments);
+    push_node(func_call_node);
 }
 
-void Parser::parse_arguments()
+void Parser::parse_arguments(std::vector<ExpressionInterpretableNode*>* argument_nodes)
 {
     // Ok lets ignore the "(" bracket
     if(!next()->isSymbol("("))
@@ -241,7 +239,17 @@ void Parser::parse_arguments()
     }
 
     // Parse the arguments
-
+    while(1)
+    {    
+        parse_expression();
+        ExpressionInterpretableNode* argument = (ExpressionInterpretableNode*) pop_node();
+        argument_nodes->push_back(argument);
+        
+        if (!peek()->isSymbol(","))
+            break;
+        // Ignore the comma
+        next();
+    }
 
     // and ignore the ")" bracket
     if(!next()->isSymbol(")"))
@@ -278,18 +286,8 @@ void Parser::parse_value()
     }
     else
     {
-
-        if (token->isIdentifier() && peek(1)->isSymbol("("))
-        {
-            // We have a function call
-            parse_function_call();
-            node = pop_node();
-        }
-        else
-        {
-            parse_single_token();
-            node = pop_node();
-        }
+        parse_single_token();
+        node = pop_node();
     }
 
     push_node(node);
@@ -381,18 +379,27 @@ void Parser::parse_expression_part()
     ExpressionInterpretableNode* exp_left = (ExpressionInterpretableNode*) pop_node();
     ExpressionInterpretableNode* node = (ExpressionInterpretableNode*) exp_left;
     Token* peeked_token = peek();
-    if (peeked_token != NULL && peeked_token->isOperator())
+    if (peeked_token != NULL)
     {
-        // We have a right part of the expression "l + r"
-        std::string op = next()->value;
-        // Lets parse the right value
-        parse_value();
-        ExpressionInterpretableNode* exp_right = (ExpressionInterpretableNode*) pop_node();
-        ExpNode* exp_node = (ExpNode*) factory.createNode(NODE_TYPE_EXPRESSION);
-        exp_node->left = exp_left;
-        exp_node->right = exp_right;
-        exp_node->op = op;
-        node = exp_node;
+        if (peeked_token->isOperator())
+        {
+            // We have a right part of the expression "l + r"
+            std::string op = next()->value;
+            // Lets parse the right value
+            parse_value();
+            ExpressionInterpretableNode* exp_right = (ExpressionInterpretableNode*) pop_node();
+            ExpNode* exp_node = (ExpNode*) factory.createNode(NODE_TYPE_EXPRESSION);
+            exp_node->left = exp_left;
+            exp_node->right = exp_right;
+            exp_node->op = op;
+            node = exp_node;
+        }
+        else if(peeked_token->isSymbol("("))
+        {
+            // We don't have an operator but we have a left bracket, this has to be a function or method call
+            parse_function_call(exp_left);
+            node = (ExpressionInterpretableNode*) pop_node();
+        }
     }
     push_node(node);
 
@@ -426,6 +433,10 @@ void Parser::global_parse()
          */
         parse_expression();
         parse_semicolon();
+    }
+    else
+    {
+        parse_error("That is not legal");
     }
 }
 

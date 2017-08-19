@@ -3,7 +3,7 @@
 VarNode::VarNode() : Node(NODE_TYPE_VARIABLE_DECLARATION)
 {
     this->type = NULL;
-    this->name = NULL;
+    this->name = "";
     this->value = NULL;
 }
 

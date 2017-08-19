@@ -10,7 +10,7 @@ public:
     VarNode();
     virtual ~VarNode();
     Node* type;
-    Token* name;
+    std::string name;
     Node* value;
 private:
 };
