@@ -2,7 +2,7 @@
 #include "statics.h"
 FunctionCallNode::FunctionCallNode() : Node(NODE_TYPE_FUNCTION_CALL)
 {
-	this->dest = NULL;
+    this->dest = NULL;
 }
 
 FunctionCallNode::~FunctionCallNode()

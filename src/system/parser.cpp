@@ -2,21 +2,22 @@
 
 struct order_of_operation
 {
-	const char* op;
-	int priority;
+    const char* op;
+    int priority;
 };
 
 
 
-/* The order of operations for operators and their priorities 
+/* The order of operations for operators and their priorities
  * Seek here: http://www.difranco.net/compsci/C_Operator_Precedence_Table.htm
  * The same order of operations to C will be used.*/
 
-struct order_of_operation o_of_operation[] = {
+struct order_of_operation o_of_operation[] =
+{
     "<<", 0,
     ">>", 0,
     "<", 1,
-    ">", 1, 
+    ">", 1,
     "<=", 1,
     ">=", 1,
     "==", 2,
@@ -36,7 +37,7 @@ struct order_of_operation o_of_operation[] = {
     "/=", 8,
     "%=", 8,
     "^=", 8,
-    "&=", 8, 
+    "&=", 8,
     "<<=", 8,
     ">>=", 8,
 };
@@ -44,9 +45,9 @@ struct order_of_operation o_of_operation[] = {
 
 Parser::Parser()
 {
-	this->root_node = NULL;	
-	this->current_node = NULL;
-	this->current_token = NULL;
+    this->root_node = NULL;
+    this->current_node = NULL;
+    this->current_token = NULL;
 }
 Parser::~Parser()
 {
@@ -55,389 +56,389 @@ Parser::~Parser()
 
 bool Parser::is_datatype(std::string str)
 {
-	return str == "number" || str == "char" || str == "string" || str == "bool";
+    return str == "number" || str == "char" || str == "string" || str == "bool";
 }
 
 bool Parser::legal_value(Token* token)
 {
-	int token_type = token->getType();
-	return token != NULL && (token_type == TOKEN_TYPE_IDENTIFIER || token_type == TOKEN_TYPE_STRING || token_type == TOKEN_TYPE_NUMBER);
+    int token_type = token->getType();
+    return token != NULL && (token_type == TOKEN_TYPE_IDENTIFIER || token_type == TOKEN_TYPE_STRING || token_type == TOKEN_TYPE_NUMBER);
 }
 
 
 void Parser::parse_error(std::string message)
 {
-	throw std::logic_error(message);
+    throw std::logic_error(message);
 }
 
 void Parser::ensure_type(Token* token, int expected_type)
 {
-	int token_type = token->getType();
-	if (token_type != expected_type)
-	{
-		parse_error("Expecting a " + std::to_string(expected_type) + " but a " + std::to_string(token_type) + " was provided");
-	}
+    int token_type = token->getType();
+    if (token_type != expected_type)
+    {
+        parse_error("Expecting a " + std::to_string(expected_type) + " but a " + std::to_string(token_type) + " was provided");
+    }
 }
 
 void Parser::push_node(Node* node)
 {
-	if (this->current_node == NULL)
-	{
-		this->root_node = node;
-		this->current_node = node;
-	}
-	else
-	{
-		this->current_node->next = node;
-		this->current_node = node;
-	}
+    if (this->current_node == NULL)
+    {
+        this->root_node = node;
+        this->current_node = node;
+    }
+    else
+    {
+        this->current_node->next = node;
+        this->current_node = node;
+    }
 }
 
 Node* Parser::getLiteralNode(Token* token)
 {
-	LiteralNode* literal_node = (LiteralNode*) factory.createNode(NODE_TYPE_LITERAL);
-	literal_node->value = token->value;
-	return literal_node;
+    LiteralNode* literal_node = (LiteralNode*) factory.createNode(NODE_TYPE_LITERAL);
+    literal_node->value = std::atof(token->value.c_str());
+    return literal_node;
 }
 
 Node* Parser::getIdentifierNode(Token* token)
 {
-	IdentifierNode* identifier_node = (IdentifierNode*) factory.createNode(NODE_TYPE_IDENTIFIER);
-	identifier_node->value = token->value;
-	return identifier_node;
+    IdentifierNode* identifier_node = (IdentifierNode*) factory.createNode(NODE_TYPE_IDENTIFIER);
+    identifier_node->value = token->value;
+    return identifier_node;
 }
 
 Node* Parser::getKeywordNode(Token* token)
 {
-	KeywordNode* keyword_node = (KeywordNode*) factory.createNode(NODE_TYPE_KEYWORD);
-	keyword_node->value = token->value;
-	return keyword_node;
+    KeywordNode* keyword_node = (KeywordNode*) factory.createNode(NODE_TYPE_KEYWORD);
+    keyword_node->value = token->value;
+    return keyword_node;
 }
 
 Node* Parser::convertToSingleNode(Token* token)
 {
-	int tokenType = token->getType();
-	if (token->isLiteral())
-	{
-		return getLiteralNode(token);
-	}
-	else if(token->isIdentifier())
-	{
-		return getIdentifierNode(token);
-	}
-	else if(token->isKeyword())
-	{
-		return getKeywordNode(token);
-	}
+    int tokenType = token->getType();
+    if (token->isLiteral())
+    {
+        return getLiteralNode(token);
+    }
+    else if(token->isIdentifier())
+    {
+        return getIdentifierNode(token);
+    }
+    else if(token->isKeyword())
+    {
+        return getKeywordNode(token);
+    }
 
-	throw std::logic_error("The single \"token\" provided cannot be converted to a node");
+    throw std::logic_error("The single \"token\" provided cannot be converted to a node");
 }
 
 Token* Parser::peek(int ahead)
 {
-	return peek(this->current_token, ahead);
+    return peek(this->current_token, ahead);
 }
 
 Token* Parser::peek()
 {
-	return this->current_token;
+    return this->current_token;
 }
 
 Token* Parser::peek(Token* token, int ahead)
 {
-	// Ok lets peek ahead and return the node, we will return NULL if there is nothing to peak ahead to.
-	Token* token_to_return = token;	
-	for (int i = 0; i < ahead; i++)
-	{
-		if (token_to_return->next == NULL)
-			return NULL;
+    // Ok lets peek ahead and return the node, we will return NULL if there is nothing to peak ahead to.
+    Token* token_to_return = token;
+    for (int i = 0; i < ahead; i++)
+    {
+        if (token_to_return->next == NULL)
+            return NULL;
 
-		token_to_return = token_to_return->next;
-	}
-	return token_to_return;
+        token_to_return = token_to_return->next;
+    }
+    return token_to_return;
 
 }
 
 bool Parser::first_op_has_priority(std::string op1, std::string op2)
 {
-	int op1_priority = get_priority_for_op(op1);
-	int op2_priority = get_priority_for_op(op2);
+    int op1_priority = get_priority_for_op(op1);
+    int op2_priority = get_priority_for_op(op2);
 
-	return op1_priority >= op2_priority;	
+    return op1_priority >= op2_priority;
 }
 
 int Parser::get_priority_for_op(std::string op)
 {
-	int size = sizeof (o_of_operation) / sizeof (struct order_of_operation);
-	for (int i = 0; i < size; i++)
-	{
-		struct order_of_operation ooo = o_of_operation[i];
-		if (ooo.op == op)
-		{
-			return ooo.priority;
-		}
-	}
+    int size = sizeof (o_of_operation) / sizeof (struct order_of_operation);
+    for (int i = 0; i < size; i++)
+    {
+        struct order_of_operation ooo = o_of_operation[i];
+        if (ooo.op == op)
+        {
+            return ooo.priority;
+        }
+    }
 
-	// Priority is not registered for this opcode? Lets just return the default priority.
-	return 0;
+    // Priority is not registered for this opcode? Lets just return the default priority.
+    return 0;
 }
 
 Token* Parser::next()
 {
-	Token* next_token = this->current_token;
-	if (next_token == NULL)
-	{
-		return NULL;
-	}
+    Token* next_token = this->current_token;
+    if (next_token == NULL)
+    {
+        return NULL;
+    }
 
-	this->current_token = next_token->next;
-	return next_token;
+    this->current_token = next_token->next;
+    return next_token;
 }
 
 
 void Parser::parse_variable_declaration()
 {
-	// Types should be treated as an expression due to the senario "class.other_class var_name"
-	parse_expression();
-	Node* data_type_node = pop_node(); 
-	Token* var_name_token = next(); 
-	if (!var_name_token->isIdentifier())
-	{
-		parse_error("Expecting a variable name");
-	}
+    // Types should be treated as an expression due to the senario "class.other_class var_name"
+    parse_expression();
+    Node* data_type_node = pop_node();
+    Token* var_name_token = next();
+    if (!var_name_token->isIdentifier())
+    {
+        parse_error("Expecting a variable name");
+    }
 
-	VarNode* var_node = (VarNode*) factory.createNode(NODE_TYPE_VARIABLE_DECLARATION);
-	var_node->type = data_type_node;
-	var_node->name = var_name_token;
-	Token* token_ahead = peek();
-	if (token_ahead->isOperator("="))
-	{
-		// We don't need the equals operator anymore
-		next();
-		parse_expression();
-		var_node->value = pop_node();
-	}
-	push_node(var_node);
+    VarNode* var_node = (VarNode*) factory.createNode(NODE_TYPE_VARIABLE_DECLARATION);
+    var_node->type = data_type_node;
+    var_node->name = var_name_token;
+    Token* token_ahead = peek();
+    if (token_ahead->isOperator("="))
+    {
+        // We don't need the equals operator anymore
+        next();
+        parse_expression();
+        var_node->value = pop_node();
+    }
+    push_node(var_node);
 
 }
 
 void Parser::parse_function_call()
 {
-	FunctionCallNode* func_call_node = (FunctionCallNode*) factory.createNode(NODE_TYPE_FUNCTION_CALL);
-	// The function call destination should be treated as an expression as imagine the senario obj.method();
-	parse_expression();
-	Node* dest_node = pop_node();
-	// Now that we have the node lets parse the arguments
-	parse_arguments();
+    FunctionCallNode* func_call_node = (FunctionCallNode*) factory.createNode(NODE_TYPE_FUNCTION_CALL);
+    // The function call destination should be treated as an expression as imagine the senario obj.method();
+    parse_expression();
+    Node* dest_node = pop_node();
+    // Now that we have the node lets parse the arguments
+    parse_arguments();
 }
 
 void Parser::parse_arguments()
 {
-	// Ok lets ignore the "(" bracket
-	if(!next()->isSymbol("("))
-	{
-		parse_error("Expecting a \"(\" symbol for arguments");
-	}
+    // Ok lets ignore the "(" bracket
+    if(!next()->isSymbol("("))
+    {
+        parse_error("Expecting a \"(\" symbol for arguments");
+    }
 
-	// Parse the arguments
-		
+    // Parse the arguments
 
-	// and ignore the ")" bracket
-	if(!next()->isSymbol(")"))
-	{
-		parse_error("Expecting a \")\" symbol for arguments");
-	}
+
+    // and ignore the ")" bracket
+    if(!next()->isSymbol(")"))
+    {
+        parse_error("Expecting a \")\" symbol for arguments");
+    }
 }
 void Parser::parse_single_token()
 {
-	Node* node = convertToSingleNode(next());
-	push_node(node);
+    Node* node = convertToSingleNode(next());
+    push_node(node);
 }
 
 void Parser::parse_value()
 {
-	Token* token = peek();
-	Node* node = NULL;
-	// Do we have a nested expression here?
-	if (token->isSymbol("("))
-	{
-		// Let's get rid of the "(" symbol ready for parse_expression
-		next();
-		// Yes we have an expression lets process it
-		parse_expression();
+    Token* token = peek();
+    Node* node = NULL;
+    // Do we have a nested expression here?
+    if (token->isSymbol("("))
+    {
+        // Let's get rid of the "(" symbol ready for parse_expression
+        next();
+        // Yes we have an expression lets process it
+        parse_expression();
 
-		// Now we must get rid of the expression terminator ")"
-		token = next();
-		if (!token->isSymbol(")"))
-		{
-			parse_error("Expecting an expression terminator for the given expression");
-		}
+        // Now we must get rid of the expression terminator ")"
+        token = next();
+        if (!token->isSymbol(")"))
+        {
+            parse_error("Expecting an expression terminator for the given expression");
+        }
 
-		node = pop_node();	
-	}
-	else
-	{
+        node = pop_node();
+    }
+    else
+    {
 
-		if (token->isIdentifier() && peek(1)->isSymbol("("))
-		{
-			// We have a function call
-			parse_function_call();
-			node = pop_node();	
-		}
-		else
-		{
-			parse_single_token();
-			node = pop_node();
-		}	
-	}
+        if (token->isIdentifier() && peek(1)->isSymbol("("))
+        {
+            // We have a function call
+            parse_function_call();
+            node = pop_node();
+        }
+        else
+        {
+            parse_single_token();
+            node = pop_node();
+        }
+    }
 
-	push_node(node);
+    push_node(node);
 }
 
 
 void Parser::parse_semicolon()
 {
-	Token*  token = next();
-	if (token == NULL || !token->isSymbol(";"))
-	{
-		parse_error("Expecting a semicolon");
-	}
+    Token*  token = next();
+    if (token == NULL || !token->isSymbol(";"))
+    {
+        parse_error("Expecting a semicolon");
+    }
 }
 
 Node* Parser::get_node_before_last()
 {
-	Node* node = this->root_node;
-	while(node != NULL)
-	{
-		if (node->next != NULL && node->next->next == NULL)
-		{
-			return node;
-		}
+    Node* node = this->root_node;
+    while(node != NULL)
+    {
+        if (node->next != NULL && node->next->next == NULL)
+        {
+            return node;
+        }
 
-		node = node->next;
-	}
+        node = node->next;
+    }
 
-	return NULL;
+    return NULL;
 }
 
 Node* Parser::pop_node()
 {
-	Node* node = get_node_before_last();
-	Node* node_to_return = this->current_node;
-	if (node != NULL)
+    Node* node = get_node_before_last();
+    Node* node_to_return = this->current_node;
+    if (node != NULL)
     {
-		node->next = NULL;
-	}
-	
-	this->current_node = node;	
-	return node_to_return;
+        node->next = NULL;
+    }
+
+    this->current_node = node;
+    return node_to_return;
 }
 
 void Parser::parse_expression()
 {
-	parse_expression_part();
-	Token* peeked_token = peek();
-	if (peeked_token != NULL && peeked_token->isOperator())
-	{
-		// Lets remove the operator from the token stream
-		std::string op = next()->value;
+    parse_expression_part();
+    Token* peeked_token = peek();
+    if (peeked_token != NULL && peeked_token->isOperator())
+    {
+        // Lets remove the operator from the token stream
+        std::string op = next()->value;
 
-		// We now need the last expression as it needs to become our left parameter
-		Node* left = pop_node();
-		ExpNode* left_exp = (ExpNode*)(left);
+        // We now need the last expression as it needs to become our left parameter
+        ExpressionInterpretableNode* left = (ExpressionInterpretableNode*) pop_node();
+        ExpNode* left_exp = (ExpNode*)(left);
 
-		// We got more to go!
-		parse_expression();
+        // We got more to go!
+        parse_expression();
 
-		Node* right = pop_node();
-		if (right->type != NODE_TYPE_EXPRESSION)
-		{
-			if (!first_op_has_priority(left_exp->op, op))
-			{
-				Node* right_of_left = left_exp->right;
-				ExpNode* exp_node = (ExpNode*) factory.createNode(NODE_TYPE_EXPRESSION);
-				exp_node->left = right_of_left;
-				exp_node->right = right;
-				exp_node->op = op;
-				left = left_exp->left;
-				right = exp_node;
-				op = left_exp->op;
-			}
-		}
+        ExpressionInterpretableNode* right = (ExpressionInterpretableNode*) pop_node();
+        if (right->type != NODE_TYPE_EXPRESSION)
+        {
+            if (!first_op_has_priority(left_exp->op, op))
+            {
+                ExpressionInterpretableNode* right_of_left = left_exp->right;
+                ExpNode* exp_node = (ExpNode*) factory.createNode(NODE_TYPE_EXPRESSION);
+                exp_node->left = right_of_left;
+                exp_node->right = right;
+                exp_node->op = op;
+                left = left_exp->left;
+                right = exp_node;
+                op = left_exp->op;
+            }
+        }
 
-		ExpNode* exp_node = (ExpNode*) factory.createNode(NODE_TYPE_EXPRESSION);
-		exp_node->left = left;
-		exp_node->right = right;
-		exp_node->op = op;
-		push_node(exp_node);
-	}
+        ExpNode* exp_node = (ExpNode*) factory.createNode(NODE_TYPE_EXPRESSION);
+        exp_node->left = left;
+        exp_node->right = right;
+        exp_node->op = op;
+        push_node(exp_node);
+    }
 }
 
 void Parser::parse_expression_part()
 {
-	// Parse the left value
-	parse_value();
-	Node* exp_left = pop_node();
-	Node* node = exp_left;
-	Token* peeked_token = peek();
-	if (peeked_token != NULL && peeked_token->isOperator())
-	{
-		// We have a right part of the expression "l + r"
-		std::string op = next()->value;
-		// Lets parse the right value
-		parse_value();
-		Node* exp_right = pop_node();
-		ExpNode* exp_node = (ExpNode*) factory.createNode(NODE_TYPE_EXPRESSION);
-		exp_node->left = exp_left;
-		exp_node->right = exp_right;
-		exp_node->op = op;
-		node = exp_node;
-	}
-	push_node(node);
+    // Parse the left value
+    parse_value();
+    ExpressionInterpretableNode* exp_left = (ExpressionInterpretableNode*) pop_node();
+    ExpressionInterpretableNode* node = (ExpressionInterpretableNode*) exp_left;
+    Token* peeked_token = peek();
+    if (peeked_token != NULL && peeked_token->isOperator())
+    {
+        // We have a right part of the expression "l + r"
+        std::string op = next()->value;
+        // Lets parse the right value
+        parse_value();
+        ExpressionInterpretableNode* exp_right = (ExpressionInterpretableNode*) pop_node();
+        ExpNode* exp_node = (ExpNode*) factory.createNode(NODE_TYPE_EXPRESSION);
+        exp_node->left = exp_left;
+        exp_node->right = exp_right;
+        exp_node->op = op;
+        node = exp_node;
+    }
+    push_node(node);
 
 }
 
 void Parser::global_parse()
 {
-	std::string keyword_name = this->current_token->getValue();	
-	// Temporary solution, this wont cut it.
-	if (is_datatype(keyword_name))
-	{
-		// Either this is a function or a variable declaration
-		Token* peeked_token = peek(this->current_token, 2);
-		// If the peeked token is a symbol then this must be a function, e.g number a() { } otherwise its a variable declaration
-		if (peeked_token != NULL && peeked_token->isSymbol("("))
-		{
-		//	parse_function();
-		}
-		else
-		{
-			parse_variable_declaration();
-			parse_semicolon();
-		}
-	}
-	else if(this->current_token->isIdentifier())
-	{
-		/* The token is an identifier so this can be treated as an expression as it is one of the following 
-		 * 1. Representing a variable
-		 * 2. An assignment
-		 * 3. A function call
-		 */
-		parse_expression();
-		parse_semicolon();
-	}
+    std::string keyword_name = this->current_token->getValue();
+    // Temporary solution, this wont cut it.
+    if (is_datatype(keyword_name))
+    {
+        // Either this is a function or a variable declaration
+        Token* peeked_token = peek(this->current_token, 2);
+        // If the peeked token is a symbol then this must be a function, e.g number a() { } otherwise its a variable declaration
+        if (peeked_token != NULL && peeked_token->isSymbol("("))
+        {
+            //	parse_function();
+        }
+        else
+        {
+            parse_variable_declaration();
+            parse_semicolon();
+        }
+    }
+    else if(this->current_token->isIdentifier())
+    {
+        /* The token is an identifier so this can be treated as an expression as it is one of the following
+         * 1. Representing a variable
+         * 2. An assignment
+         * 3. A function call
+         */
+        parse_expression();
+        parse_semicolon();
+    }
 }
 
 Node* Parser::parse(Token* root_token)
 {
-	this->root_node = NULL;	
-	this->current_node = NULL;
-	this->current_token = root_token;
-	while(this->current_token != NULL)
-	{
-		global_parse();
-	}
-	return this->root_node;
+    this->root_node = NULL;
+    this->current_node = NULL;
+    this->current_token = root_token;
+    while(this->current_token != NULL)
+    {
+        global_parse();
+    }
+    return this->root_node;
 }
 
 

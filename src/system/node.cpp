@@ -11,6 +11,6 @@ Node::~Node()
 
 int Node::getType()
 {
-	return this->type;
+    return this->type;
 }
 

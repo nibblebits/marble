@@ -1,6 +1,6 @@
 #include "literalnode.h"
 #include "statics.h"
-LiteralNode::LiteralNode() : Node(NODE_TYPE_LITERAL)
+LiteralNode::LiteralNode() : ExpressionInterpretableNode(NODE_TYPE_LITERAL)
 {
 
 }
@@ -8,4 +8,12 @@ LiteralNode::LiteralNode() : Node(NODE_TYPE_LITERAL)
 LiteralNode::~LiteralNode()
 {
 
+}
+
+Value LiteralNode::interpret()
+{
+    Value v;
+    v.type = VALUE_TYPE_NUMBER;
+    v.dvalue = this->value;
+    return v;
 }

@@ -7,12 +7,12 @@
 class Scope
 {
 public:
-	Scope();
-	virtual ~Scope();
-	void registerVariable(Variable* variable);
-	Variable* getVariable(std::string variable_name);
-	std::vector<Variable*> getVariables();
+    Scope();
+    virtual ~Scope();
+    void registerVariable(Variable* variable);
+    Variable* getVariable(std::string variable_name);
+    std::vector<Variable*> getVariables();
 private:
-	std::vector<Variable*> variables;
+    std::vector<Variable*> variables;
 };
 #endif

@@ -11,12 +11,12 @@
 class Node;
 class NodeFactory
 {
-	public:
-		NodeFactory();
-		virtual ~NodeFactory();
-		Node* createNode(NODE_TYPE node_type);
-	private:
-		std::vector<std::unique_ptr<Node>> nodes;
+public:
+    NodeFactory();
+    virtual ~NodeFactory();
+    Node* createNode(NODE_TYPE node_type);
+private:
+    std::vector<std::unique_ptr<Node>> nodes;
 };
 
 #endif

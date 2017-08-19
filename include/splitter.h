@@ -4,49 +4,49 @@
 struct split;
 struct data_descriptor
 {
-	int start;
-	int end;
-	int size;
-	const char* data;
-	struct split* split;	
+    int start;
+    int end;
+    int size;
+    const char* data;
+    struct split* split;
 
-	virtual void update();
+    virtual void update();
 };
 
 struct output_data : public data_descriptor
 {
-	void update();
+    void update();
 };
 
 struct marble_code : public data_descriptor
 {
-	void update();
+    void update();
 };
 
 struct split
 {
-	split();
-	struct output_data output;
-	struct marble_code code;
-	bool has_code;
-	bool has_data;
-	bool is_last;
+    split();
+    struct output_data output;
+    struct marble_code code;
+    bool has_code;
+    bool has_data;
+    bool is_last;
 };
 
 class Splitter
 {
-  public:
-		  Splitter();
-		  virtual ~Splitter();
-		  void setData(const char* data, int length);
-          bool split(struct split* marble_code);
-  private:
-		  bool isSafeRange(int position);
-		  int findPositionOfMemoryInData(int position, const char* memory, int memory_size);
-		  int getPositionOfNextMarbleTag(int position);
-		  int getPositionOfNextMarbleClosingTag(int current_pos);
-		  const char* data;
-		  int length;
-		  struct marble_code* previous;
+public:
+    Splitter();
+    virtual ~Splitter();
+    void setData(const char* data, int length);
+    bool split(struct split* marble_code);
+private:
+    bool isSafeRange(int position);
+    int findPositionOfMemoryInData(int position, const char* memory, int memory_size);
+    int getPositionOfNextMarbleTag(int position);
+    int getPositionOfNextMarbleClosingTag(int current_pos);
+    const char* data;
+    int length;
+    struct marble_code* previous;
 };
 #endif

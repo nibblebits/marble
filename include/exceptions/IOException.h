@@ -4,8 +4,8 @@
 #include "exception.h"
 class IOException : public Exception
 {
-  public:
-  	IOException(std::string message) : Exception(message) {}
+public:
+    IOException(std::string message) : Exception(message) {}
 };
 
 #endif

@@ -7,11 +7,11 @@
 void interpret()
 {
     Interpreter interpreter;
-    interpreter.runScript("./test.marble");  
+    interpreter.runScript("./test.marble");
 }
-int main(int argc, char** argv) 
+int main(int argc, char** argv)
 {
-   interpret();
-   std::cout << "Program terminated" << std::endl; 
-   return 0; 
+    interpret();
+    std::cout << "Program terminated" << std::endl;
+    return 0;
 }

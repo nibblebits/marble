@@ -4,12 +4,12 @@
 
 class Node
 {
-	public:
-		Node(int type);
-		virtual ~Node();
-		int getType();
-		Node* next;
-		int const type;
+public:
+    Node(int type);
+    virtual ~Node();
+    int getType();
+    Node* next;
+    int const type;
 };
 
 #endif

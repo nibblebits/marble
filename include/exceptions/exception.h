@@ -5,9 +5,9 @@
 #include <string>
 class Exception : public std::logic_error
 {
-	public:
-		Exception(std::string message) : std::logic_error(message) {}
-		virtual ~Exception() throw() {}
+public:
+    Exception(std::string message) : std::logic_error(message) {}
+    virtual ~Exception() throw() {}
 };
 
 #endif

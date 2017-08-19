@@ -1,13 +1,14 @@
 #ifndef LITERALNODE_H
 #define LITERALNODE_H
 
-#include "node.h"
-class LiteralNode : public Node
+#include "einode.h"
+class LiteralNode : public ExpressionInterpretableNode
 {
-	public:
-		LiteralNode();
-		virtual ~LiteralNode();
-		std::string value;
-	private:
+public:
+    LiteralNode();
+    virtual ~LiteralNode();
+    double value;
+    virtual Value interpret();
+private:
 };
 #endif

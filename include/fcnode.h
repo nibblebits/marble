@@ -5,10 +5,10 @@
 #include <vector>
 class FunctionCallNode : public Node
 {
-	public:
-		FunctionCallNode();
-		virtual ~FunctionCallNode();
-		Node* dest;
-		std::vector<Node*> arguments;
+public:
+    FunctionCallNode();
+    virtual ~FunctionCallNode();
+    Node* dest;
+    std::vector<Node*> arguments;
 };
 #endif

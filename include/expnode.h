@@ -2,18 +2,20 @@
 #define EXPNODE_H
 
 #include <memory>
-#include "node.h"
 #include "statics.h"
-class ExpNode : public Node
+#include "einode.h"
+class ExpNode : public ExpressionInterpretableNode
 {
-	public:
-		ExpNode();
-		virtual ~ExpNode();
-	
-		Node* left;
-		Node* right;
-		std::string op;
-		bool isAssignmentOperator();
-	private:
+public:
+    ExpNode();
+    virtual ~ExpNode();
+
+    ExpressionInterpretableNode* left;
+    ExpressionInterpretableNode* right;
+    std::string op;
+    bool isAssignmentOperator();
+
+    virtual Value interpret();
+private:
 };
 #endif

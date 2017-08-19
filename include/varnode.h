@@ -6,13 +6,13 @@
 #include "statics.h"
 class VarNode : public Node
 {
-	public:
-		VarNode();
-		virtual ~VarNode();
-		Node* type;
-		Token* name;
-		Node* value;
-	private:
+public:
+    VarNode();
+    virtual ~VarNode();
+    Node* type;
+    Token* name;
+    Node* value;
+private:
 };
 
 #endif
