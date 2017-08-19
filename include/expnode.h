@@ -15,7 +15,8 @@ public:
     std::string op;
     bool isAssignmentOperator();
 
-    virtual Value interpret();
+    virtual Value interpret(Interpreter* intrerpreter);
 private:
+    Value mathify(Value& value1, Value& value2, std::string op);
 };
 #endif

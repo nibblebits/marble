@@ -8,7 +8,7 @@ public:
     LiteralNode();
     virtual ~LiteralNode();
     double value;
-    virtual Value interpret();
+    virtual Value interpret(Interpreter* interpreter);
 private:
 };
 #endif

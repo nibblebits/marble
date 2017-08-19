@@ -3,10 +3,11 @@
 
 #include "statics.h"
 #include "value.h"
+class Interpreter;
 class Interpretable
 {
 public:
-    virtual Value interpret() = 0;
+    virtual Value interpret(Interpreter* interpreter) = 0;
 };
 
 #endif

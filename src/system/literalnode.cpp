@@ -10,7 +10,7 @@ LiteralNode::~LiteralNode()
 
 }
 
-Value LiteralNode::interpret()
+Value LiteralNode::interpret(Interpreter* interpreter)
 {
     Value v;
     v.type = VALUE_TYPE_NUMBER;

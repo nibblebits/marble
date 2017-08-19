@@ -1,5 +1,7 @@
 #include "identifiernode.h"
 #include "statics.h"
+#include "interpreter.h"
+#include <iostream>
 
 IdentifierNode::IdentifierNode() : ExpressionInterpretableNode(NODE_TYPE_IDENTIFIER)
 {
@@ -11,9 +13,8 @@ IdentifierNode::~IdentifierNode()
 
 }
 
-Value IdentifierNode::interpret()
+Value IdentifierNode::interpret(Interpreter* interpreter)
 {
-    Value v;
-// Remember we are not returning the identifier as a string but instead what the identifier is pointing to
+    Value v = interpreter->getVariableByName(this->value)->value;
     return v;
 }

@@ -7,7 +7,7 @@ class IdentifierNode : public ExpressionInterpretableNode
 public:
     IdentifierNode();
     virtual ~IdentifierNode();
-    virtual Value interpret();
+    virtual Value interpret(Interpreter* interpreter);
     std::string value;
 };
 

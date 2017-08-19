@@ -19,7 +19,7 @@
 #include "exceptions/IOException.h"
 Interpreter::Interpreter()
 {
-
+    this->current_scope = &root_scope;
 }
 
 Interpreter::~Interpreter()
@@ -64,7 +64,7 @@ void Interpreter::run(const char* code)
         case NODE_TYPE_EXPRESSION:
         {
             ExpNode* exp_node = (ExpNode*)  current_node;
-            exp_node->interpret();
+            exp_node->interpret(this);
         }
         break;
         }
@@ -72,7 +72,7 @@ void Interpreter::run(const char* code)
         current_node = current_node->next;
     }
 
-    for (Variable* variable : root_scope.getVariables())
+    for (Variable* variable : current_scope->getVariables())
     {
         std::cout << "Variable: " << variable->name << " = " << variable->value.dvalue << std::endl;
     }
@@ -85,6 +85,13 @@ void Interpreter::fail()
 }
 
 
+Variable* Interpreter::getVariableByName(std::string name)
+{
+    // Let's not worry about other nested scopes at the moment. We will just check the current scope and implement the rest another time. Don't run before you can walk.
+    Variable* variable = current_scope->getVariable(name);
+    return variable;
+}
+
 void Interpreter::interpret_variable_node_for_primitive(VarNode* var_node)
 {
     Node* type_node = var_node->type;
@@ -93,9 +100,10 @@ void Interpreter::interpret_variable_node_for_primitive(VarNode* var_node)
 
     Variable* variable = new Variable();
     KeywordNode* type_node_keyword = (KeywordNode*) type_node;
-    variable->value = value_node->interpret();
+    variable->value = value_node->interpret(this);
+    variable->value.holder = variable;
     variable->name = name_token->value;
-    root_scope.registerVariable(variable);
+    current_scope->registerVariable(variable);
 }
 
 void Interpreter::interpret_variable_node(VarNode* var_node)

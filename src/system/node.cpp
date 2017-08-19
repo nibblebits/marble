@@ -2,6 +2,7 @@
 #include <iostream>
 Node::Node(int type) : type(type)
 {
+    this->next = NULL;
 }
 
 Node::~Node()
