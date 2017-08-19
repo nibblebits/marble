@@ -1,4 +1,4 @@
-SYSTEM_OBJECT_FILES = ./build/system/token.o ./build/system/splitter.o ./build/system/interpreter.o ./build/system/lexer.o ./build/system/parser.o ./build/system/node.o ./build/system/expnode.o ./build/system/varnode.o ./build/system/literalnode.o ./build/system/identifiernode.o ./build/system/debug.o ./build/system/scope.o ./build/system/variable.o ./build/system/fcnode.o ./build/system/keywordnode.o ./build/system/nodefactory.o ./build/system/tokenfactory.o ./build/system/einode.o ./build/system/value.o
+SYSTEM_OBJECT_FILES = ./build/system/token.o ./build/system/splitter.o ./build/system/interpreter.o ./build/system/lexer.o ./build/system/parser.o ./build/system/node.o ./build/system/expnode.o ./build/system/varnode.o ./build/system/literalnode.o ./build/system/identifiernode.o ./build/system/debug.o ./build/system/scope.o ./build/system/variable.o ./build/system/fcnode.o ./build/system/keywordnode.o ./build/system/nodefactory.o ./build/system/tokenfactory.o ./build/system/einode.o ./build/system/value.o ./build/system/function.o ./build/system/nativefunction.o ./build/system/functionsystem.o
 OBJECT_FILE_FLAGS = -c -g -fPIC -std=c++11 -g
 SYSTEM_LIB_LOCAL_FILENAME = marblelib.so
 SYSTEM_LIB_FILE_LOCATION = ./bin/${SYSTEM_LIB_LOCAL_FILENAME}
@@ -22,6 +22,9 @@ system:
 	g++ -I ./include ./src/system/tokenfactory.cpp -o ./build/system/tokenfactory.o ${OBJECT_FILE_FLAGS}
 	g++ -I ./include ./src/system/einode.cpp -o ./build/system/einode.o ${OBJECT_FILE_FLAGS}
 	g++ -I ./include ./src/system/value.cpp -o ./build/system/value.o ${OBJECT_FILE_FLAGS}
+	g++ -I ./include ./src/system/function.cpp -o ./build/system/function.o ${OBJECT_FILE_FLAGS}
+	g++ -I ./include ./src/system/nativefunction.cpp -o ./build/system/nativefunction.o ${OBJECT_FILE_FLAGS}
+	g++ -I ./include ./src/system/functionsystem.cpp -o ./build/system/functionsystem.o ${OBJECT_FILE_FLAGS}
 	g++ ${SYSTEM_OBJECT_FILES} -g -o ${SYSTEM_LIB_FILE_LOCATION} -shared -Wl,-rpath,'./lib'-export-dynamic
 standalone: system
 	cd bin; \

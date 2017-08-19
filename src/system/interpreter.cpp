@@ -20,6 +20,16 @@
 Interpreter::Interpreter()
 {
     this->current_scope = &root_scope;
+
+    getFunctionSystem()->registerFunction("print", [&](std::vector<Value> arguments, Value* return_value) {
+        for (Value v : arguments)
+        {
+            if (v.type == VALUE_TYPE_NUMBER)
+            {
+                std::cout << "OUTPUT: " << v.dvalue << std::endl;
+            }
+        }
+    });
 }
 
 Interpreter::~Interpreter()
@@ -56,17 +66,24 @@ void Interpreter::run(const char* code)
         int type = current_node->getType();
         switch (type)
         {
-        case NODE_TYPE_VARIABLE_DECLARATION:
-        {
-            interpret_variable_node((VarNode*) current_node);
-        }
-        break;
-        case NODE_TYPE_EXPRESSION:
-        {
-            ExpNode* exp_node = (ExpNode*)  current_node;
-            exp_node->interpret(this);
-        }
-        break;
+            case NODE_TYPE_VARIABLE_DECLARATION:
+            {
+                interpret_variable_node((VarNode*) current_node);
+            }
+            break;
+            case NODE_TYPE_EXPRESSION:
+            {
+                ExpNode* exp_node = (ExpNode*)  current_node;
+                exp_node->interpret(this);
+            }
+            break;
+
+            case NODE_TYPE_FUNCTION_CALL:
+            {
+                FunctionCallNode* func_call_node = (FunctionCallNode*) current_node;
+                func_call_node->interpret(this);
+            }
+            break;
         }
 
         current_node = current_node->next;
@@ -82,6 +99,12 @@ void Interpreter::run(const char* code)
 void Interpreter::fail()
 {
     throw std::logic_error("Something has gone terribly wrong, semantic validation has clearly messed up. Please report this");
+}
+
+
+FunctionSystem* Interpreter::getFunctionSystem()
+{
+    return &this->functionSystem;
 }
 
 
