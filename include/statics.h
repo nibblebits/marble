@@ -37,6 +37,16 @@ enum
     VALUE_TYPE_OBJECT
 };
 
+// For the lexer
+enum
+{
+    IS_CHARACTER,
+    IS_NUMBER,
+    IS_OPERATOR,
+    IS_SYMBOL,
+    IS_WHITESPACE
+};
+
 typedef int TOKEN_TYPE;
 typedef int NODE_TYPE;
 typedef int VALUE_TYPE;

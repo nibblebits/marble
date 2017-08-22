@@ -4,6 +4,8 @@
 #include <memory>
 #include "tokenfactory.h"
 #include "token.h"
+
+
 class Lexer
 {
 public:
@@ -31,9 +33,11 @@ private:
     bool is_symbol(char c);
     int is_character(char c);
     bool is_stackable(int token_type);
+    int get_type_of_char(char c);
     std::string get_operator(const char** ptr);
     std::string get_number(const char** ptr);
     std::string get_string(const char** ptr);
+    std::string get_while(const char** ptr, int expected);
     int get_token_type_for_value(std::string token_value);
     std::string handle_stackables(int token_type, std::string token_value, const char** ptr);
 

@@ -119,6 +119,37 @@ bool Lexer::is_stackable(int token_type)
     return token_type == TOKEN_TYPE_OPERATOR || token_type == TOKEN_TYPE_NUMBER || token_type == TOKEN_TYPE_STRING;
 }
 
+int Lexer::get_type_of_char(char c)
+{
+    int type = -1;
+    if (is_character(c))
+    {
+        type = IS_CHARACTER;
+    }
+    else if(is_operator(c))
+    {
+        type = IS_OPERATOR;
+    }
+    else if(is_number(c))
+    {
+        type = IS_NUMBER;
+    }
+    else if(is_whitespace(c))
+    {
+        type = IS_WHITESPACE;
+    }
+    else if(is_symbol(c))
+    {
+        type = IS_SYMBOL;
+    }
+    else
+    {
+        throw std::logic_error("Unexpected type for character " + std::to_string(c) + " in method get_type_of_char");
+    }
+
+    return type;
+}
+
 std::string Lexer::get_operator(const char** ptr)
 {
     const char* our_ptr = *ptr;
@@ -180,8 +211,8 @@ std::string Lexer::get_string(const char** ptr)
     }
 
 
-    // Lets readjust the real pointer for the caller, we +1 due to the ending string seperator.
-    *ptr += value.length() + 1;
+    // Lets re-adjust the real pointer for the caller, we +1 due to the ending string seperator.
+    *ptr += value.length();
     return value;
 }
 
@@ -240,6 +271,33 @@ std::string Lexer::handle_stackables(int token_type, std::string token_value, co
 
     return token_value;
 }
+
+std::string Lexer::get_while(const char** ptr, int expected)
+{
+    std::string tokenValue = "";
+    char c = **ptr;
+    int type = get_type_of_char(c);
+    if (type != expected)
+    {
+        throw std::logic_error("While calling \"get_while\" the first character must be of the expected type");
+    }
+    while(*ptr < this->end)
+    {
+        c = **ptr;
+        type = get_type_of_char(c);
+        if (type != expected)
+        {
+            // Restore the pointer to previous state
+            *ptr-=1;
+            break;
+        }
+        tokenValue += c;
+        *ptr+=1;
+    }
+
+    return tokenValue;
+}
+
 /**
  * Stage 1 will remove all comments, and create tokens based on the input
 */
@@ -248,60 +306,71 @@ Token* Lexer::stage1()
     Token* root_token = NULL;
     Token* last_token = NULL;
     const char* ptr = this->buf;
+    int token_type = -1;
+    std::string token_value = "";
     // We will loop through the whole thing and when we reach a whitespace a token has been completed
     while (ptr < this->end)
     {
-        std::string token_value = "";
         char c = *ptr;
-        if (!is_whitespace(c))
+        if (is_whitespace(c))
         {
-            int token_type = -1;
-            if(is_character(c))
-            {
-                const char* c_ptr = ptr;
-                while(is_character(c))
-                {
-                    token_value += c;
-                    c_ptr+=1;
-                    c = *c_ptr;
-                }
-                token_type = get_token_type_for_value(token_value);
-                ptr += token_value.size();
-            }
-            else
-            {
-                token_value += c;
-                token_type = get_token_type_for_value(token_value);
-                if (is_stackable(token_type))
-                {
-                    // Handle the stackables, ptr is automatically adjusted correctly
-                    token_value = handle_stackables(token_type, token_value, &ptr);
-                }
-                else
-                {
-                    // This token type is non-stackable so lets just proceed further
-                    ptr += 1;
-                }
-            }
+            ptr++;
+            continue;
+        }
 
-            Token* new_token = tokenFactory.createToken(token_type);
-            new_token->setValue(token_value);
-            if (root_token == NULL)
-            {
-                root_token = new_token;
-                last_token = new_token;
-            }
-            else
-            {
-                last_token->next = new_token;
-                last_token = new_token;
-            }
+        if (is_string_seperator(c))
+        {
+            token_type = TOKEN_TYPE_STRING;
+            token_value = get_string(&ptr);
         }
         else
         {
-            // Ignore all whitespace.
-            ptr += 1;
+            int c_type = get_type_of_char(c);
+            switch(c_type)
+            {
+                case IS_OPERATOR:
+                    token_type = TOKEN_TYPE_OPERATOR;
+                    token_value = get_while(&ptr, IS_OPERATOR);
+                break;
+                case IS_CHARACTER:
+                    token_value = get_while(&ptr, IS_CHARACTER);
+                    if (is_keyword(token_value))
+                    {
+                        token_type = TOKEN_TYPE_KEYWORD;
+                    }
+                    else
+                    {
+                        token_type = TOKEN_TYPE_IDENTIFIER;
+                    }
+                break;
+                case IS_NUMBER:
+                    token_type = TOKEN_TYPE_NUMBER;
+                    token_value = get_while(&ptr, IS_NUMBER);
+                break;
+                case IS_SYMBOL:
+                    token_type = TOKEN_TYPE_SYMBOL;
+                    token_value += c;
+                break;
+            }
         }
+
+        Token* new_token = tokenFactory.createToken(token_type);
+        new_token->setValue(token_value);
+        if (root_token == NULL)
+        {
+            root_token = new_token;
+            last_token = new_token;
+        }
+        else
+        {
+            last_token->next = new_token;
+            last_token = new_token;
+        }
+        
+        token_type = -1;
+        token_value = "";
+        // Increment the pointer
+        ptr++;
     }
 
     return root_token;
@@ -324,7 +393,7 @@ void Lexer::stage2(Token* root_token)
         {
             if (!is_operator(token_value))
             {
-                throw std::logic_error("Invalid operator");
+                throw std::logic_error("Invalid operator: " + token_value);
             }
         }
         break;
