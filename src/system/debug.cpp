@@ -34,6 +34,14 @@ void Debug::PrintValueForNode(Node* value_node, int tabbing)
             OutputTabbing(tabbing);
             std::cout << literal_value_node->value << std::endl;
         }
+        else if(value_node->type == NODE_TYPE_IDENTIFIER)
+        {
+            IdentifierNode* identifier_node = (IdentifierNode*)(value_node);
+            OutputTabbing(tabbing);
+            std::cout << "VALUE IS IDENTIFIER" << std::endl;
+            OutputTabbing(tabbing);
+            std::cout << identifier_node->value << std::endl;
+        }
         else if(value_node->type == NODE_TYPE_EXPRESSION)
         {
             ExpNode* exp_node = (ExpNode*)(value_node);

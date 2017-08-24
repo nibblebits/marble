@@ -80,6 +80,7 @@ void Interpreter::run(const char* code)
             case NODE_TYPE_EXPRESSION:
             {
                 ExpNode* exp_node = (ExpNode*)  current_node;
+                Debug::PrintValueForNode(exp_node);
                 exp_node->interpret(this);
             }
             break;

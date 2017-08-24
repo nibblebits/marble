@@ -43,6 +43,10 @@ Value ExpNode::mathify(Value& value1, Value& value2, std::string op)
     {
         result = value1 / value2;
     }
+    else if(op == "=")
+    {
+        result = value2;
+    }
     else
     {
         throw std::logic_error("Value ExpNode::mathify(Value value1, Value2 value2, std::string op): Invalid operator provided");
@@ -54,6 +58,7 @@ Value ExpNode::mathify(Value& value1, Value& value2, std::string op)
 Value ExpNode::interpret(Interpreter* interpreter)
 {
     Value result;
+/*
     if (isAssignmentOperator())
     {
         // This is to be an assignment. We must interpret the left node and then we will have the variable we need to assign to the right node
@@ -74,7 +79,7 @@ Value ExpNode::interpret(Interpreter* interpreter)
         var_to_assign->value = result;
         return result;        
     }
-
+*/
 
     Value left = this->left->interpret(interpreter);
     Value right = this->right->interpret(interpreter);
