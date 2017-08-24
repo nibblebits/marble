@@ -217,61 +217,6 @@ std::string Lexer::get_string(const char** ptr)
 }
 
 
-int Lexer::get_token_type_for_value(std::string token_value)
-{
-    if (is_keyword(token_value))
-    {
-        return TOKEN_TYPE_KEYWORD;
-    }
-    else if(is_operator(token_value))
-    {
-        return TOKEN_TYPE_OPERATOR;
-    }
-    else if(is_number(token_value))
-    {
-        return TOKEN_TYPE_NUMBER;
-    }
-    else if(is_string_seperator(token_value.at(0)))
-    {
-        return TOKEN_TYPE_STRING;
-    }
-    else if(is_symbol(token_value.at(0)))
-    {
-        return TOKEN_TYPE_SYMBOL;
-    }
-
-    // We will assume this is an identifier
-    return TOKEN_TYPE_IDENTIFIER;
-}
-
-std::string Lexer::handle_stackables(int token_type, std::string token_value, const char** ptr)
-{
-    const char* our_ptr = *ptr;
-    switch (token_type)
-    {
-    case TOKEN_TYPE_OPERATOR:
-    {
-        token_value = get_operator(ptr);
-    }
-    break;
-
-    case TOKEN_TYPE_NUMBER:
-    {
-        token_value = get_number(ptr);
-    }
-    break;
-
-    case TOKEN_TYPE_STRING:
-    {
-        token_value = get_string(ptr);
-    }
-    break;
-    }
-
-
-    return token_value;
-}
-
 std::string Lexer::get_while(const char** ptr, int expected)
 {
     std::string tokenValue = "";

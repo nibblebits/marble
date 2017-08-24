@@ -38,8 +38,6 @@ private:
     std::string get_number(const char** ptr);
     std::string get_string(const char** ptr);
     std::string get_while(const char** ptr, int expected);
-    int get_token_type_for_value(std::string token_value);
-    std::string handle_stackables(int token_type, std::string token_value, const char** ptr);
 
 private:
     TokenFactory tokenFactory;
