@@ -37,6 +37,13 @@ enum
     VALUE_TYPE_OBJECT
 };
 
+enum
+{
+    LEFT_TO_RIGHT,
+    RIGHT_TO_LEFT,
+    NON_ASSOCIATIVE
+};
+
 // For the lexer
 enum
 {

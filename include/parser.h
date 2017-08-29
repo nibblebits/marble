@@ -6,6 +6,14 @@
 #include "statics.h"
 #include "token.h"
 #include "nodefactory.h"
+
+struct order_of_operation
+{
+    const char* op;
+    int priority;
+    int associativity;
+};
+
 class Parser
 {
 public:
@@ -25,6 +33,10 @@ private:
     void parse_value();
     void parse_semicolon();
     void push_node(Node* node);
+
+    struct order_of_operation* get_order_of_operation(std::string op);
+    void handle_priority(ExpressionInterpretableNode** left_pp, ExpressionInterpretableNode** right_pp, std::string& op);
+    void do_roltl(ExpressionInterpretableNode** left_pp, ExpressionInterpretableNode** right_pp, std::string& op);
     Node* pop_node();
     Node* get_node_before_last();
     Node* convertToSingleNode(Token* token);

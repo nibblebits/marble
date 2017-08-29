@@ -1,40 +1,33 @@
 #include "parser.h"
 #include <iostream>
-struct order_of_operation
-{
-    const char* op;
-    int priority;
-};
-
-
 struct order_of_operation o_of_operation[] =
 {
-    "=", 0,
-    "+=", 0,
-    "-=", 0,
-    "*=", 0,
-    "/=", 0,
-    "%=", 0,
-    "^=", 0,
-    "&=", 0,
-    "<<=", 0,
-    ">>=", 0,
-    "<<", 0,
-    ">>", 0,
-    "<", 1,
-    ">", 1,
-    "<=", 1,
-    ">=", 1,
-    "==", 2,
-    "!=", 2,
-    "&", 3,
-    "^", 4,
-    "|", 5,
-    "+", 6,
-    "-", 6,
-    "*", 7,
-    "/", 7,
-    "%", 7,
+    "=", 0, RIGHT_TO_LEFT,
+    "+=", 0, RIGHT_TO_LEFT,
+    "-=", 0, RIGHT_TO_LEFT,
+    "*=", 0, RIGHT_TO_LEFT,
+    "/=", 0, RIGHT_TO_LEFT,
+    "%=", 0, RIGHT_TO_LEFT,
+    "^=", 0, RIGHT_TO_LEFT,
+    "&=", 0, RIGHT_TO_LEFT,
+    "<<=", 0, RIGHT_TO_LEFT,
+    ">>=", 0, RIGHT_TO_LEFT,
+    "<<", 0, LEFT_TO_RIGHT,
+    ">>", 0, LEFT_TO_RIGHT,
+    "<", 1, NON_ASSOCIATIVE,
+    ">", 1, NON_ASSOCIATIVE,
+    "<=", 1, NON_ASSOCIATIVE,
+    ">=", 1, NON_ASSOCIATIVE,
+    "==", 2, NON_ASSOCIATIVE,
+    "!=", 2, NON_ASSOCIATIVE,
+    "&", 3, LEFT_TO_RIGHT,
+    "^", 4, LEFT_TO_RIGHT,
+    "|", 5, LEFT_TO_RIGHT,
+    "+", 6, LEFT_TO_RIGHT,
+    "-", 6, LEFT_TO_RIGHT,
+    "*", 7, LEFT_TO_RIGHT,
+    "/", 7, LEFT_TO_RIGHT,
+    "%", 7, LEFT_TO_RIGHT
 };
 
 
@@ -175,17 +168,11 @@ bool Parser::first_op_has_priority(std::string op1, std::string op2)
 
 int Parser::get_priority_for_op(std::string op)
 {
-    int size = sizeof (o_of_operation) / sizeof (struct order_of_operation);
-    for (int i = 0; i < size; i++)
+    struct order_of_operation* operation = get_order_of_operation(op);
+    if (operation != NULL)
     {
-        struct order_of_operation ooo = o_of_operation[i];
-        if (ooo.op == op)
-        {
-            return ooo.priority;
-        }
+        return operation->priority;
     }
-
-    // Priority is not registered for this opcode? Lets just return the default priority.
     return 0;
 }
 
@@ -339,6 +326,74 @@ Node* Parser::pop_node()
     return node_to_return;
 }
 
+struct order_of_operation* Parser::get_order_of_operation(std::string op)
+{
+    int size = sizeof (o_of_operation) / sizeof (struct order_of_operation);
+    for (int i = 0; i < size; i++)
+    {
+        struct order_of_operation* ooo = &o_of_operation[i];
+        if (ooo->op == op)
+        {
+            return ooo;
+        }
+    }
+
+    // Priority is not registered for this operator? Lets just return the default priority.
+    return 0;
+}
+
+
+void Parser::do_roltl(ExpressionInterpretableNode** left_pp, ExpressionInterpretableNode** right_pp, std::string& op)
+{
+    ExpNode* left_exp = (ExpNode*) *left_pp;
+    ExpressionInterpretableNode* right = *right_pp;
+
+    ExpressionInterpretableNode* right_of_left = left_exp->right;
+    ExpNode* exp_node = (ExpNode*) factory.createNode(NODE_TYPE_EXPRESSION);
+    exp_node->left = right_of_left;
+    exp_node->right = right;
+    exp_node->op = op;
+    *left_pp = left_exp->left;
+    *right_pp = exp_node;
+    op = left_exp->op;
+}
+
+void Parser::handle_priority(ExpressionInterpretableNode** left_pp, ExpressionInterpretableNode** right_pp, std::string& op)
+{
+    ExpressionInterpretableNode* left = *left_pp;
+    ExpNode* left_exp = (ExpNode*) *left_pp;
+    ExpressionInterpretableNode* right = *right_pp;
+//   if (right->type != NODE_TYPE_EXPRESSION)
+  // {
+      struct order_of_operation* left_op = get_order_of_operation(left_exp->op);
+      switch(left_op->associativity)
+      {
+          case LEFT_TO_RIGHT:
+          {
+              if (!first_op_has_priority(left_exp->op, op))
+              {
+                do_roltl(left_pp, right_pp, op);
+              }
+          }
+          break;
+          case RIGHT_TO_LEFT:
+          {
+            do_roltl(left_pp, right_pp, op);
+          }
+          break;
+          case NON_ASSOCIATIVE:
+          {
+
+          }
+          break;
+          default:
+             throw std::logic_error("void Parser::parse_expression(): Unexpected associativity for order of operation");
+      }
+   //}
+   
+
+}
+
 void Parser::parse_expression()
 {
     parse_expression_part();
@@ -356,20 +411,7 @@ void Parser::parse_expression()
         parse_expression();
 
         ExpressionInterpretableNode* right = (ExpressionInterpretableNode*) pop_node();
-        if (right->type != NODE_TYPE_EXPRESSION)
-        {
-            if (!first_op_has_priority(left_exp->op, op))
-            {
-                ExpressionInterpretableNode* right_of_left = left_exp->right;
-                ExpNode* exp_node = (ExpNode*) factory.createNode(NODE_TYPE_EXPRESSION);
-                exp_node->left = right_of_left;
-                exp_node->right = right;
-                exp_node->op = op;
-                left = left_exp->left;
-                right = exp_node;
-                op = left_exp->op;
-            }
-        }
+        handle_priority(&left, &right, op);
 
         ExpNode* exp_node = (ExpNode*) factory.createNode(NODE_TYPE_EXPRESSION);
         exp_node->left = left;
