@@ -363,8 +363,6 @@ void Parser::handle_priority(ExpressionInterpretableNode** left_pp, ExpressionIn
     ExpressionInterpretableNode* left = *left_pp;
     ExpNode* left_exp = (ExpNode*) *left_pp;
     ExpressionInterpretableNode* right = *right_pp;
-//   if (right->type != NODE_TYPE_EXPRESSION)
-  // {
       struct order_of_operation* left_op = get_order_of_operation(left_exp->op);
       switch(left_op->associativity)
       {
@@ -376,22 +374,9 @@ void Parser::handle_priority(ExpressionInterpretableNode** left_pp, ExpressionIn
               }
           }
           break;
-          case RIGHT_TO_LEFT:
-          {
-            do_roltl(left_pp, right_pp, op);
-          }
-          break;
-          case NON_ASSOCIATIVE:
-          {
-
-          }
-          break;
           default:
-             throw std::logic_error("void Parser::parse_expression(): Unexpected associativity for order of operation");
+             throw std::logic_error("void Parser::parse_expression(): Unexpected associativity for handle_priority; Only LEFT_TO_RIGHT is handled here.");
       }
-   //}
-   
-
 }
 
 void Parser::parse_expression()
@@ -434,8 +419,17 @@ void Parser::parse_expression_part()
         {
             // We have a right part of the expression "l + r"
             std::string op = next()->value;
-            // Lets parse the right value
-            parse_value();
+            struct order_of_operation* operation = get_order_of_operation(op);
+            // Left to right associativity should be treated as an expression a = 5 * 5, a = (5 * 5)
+            if (operation->associativity == RIGHT_TO_LEFT)
+            {
+                parse_expression();
+            } 
+            else 
+            {
+                // We are non RIGHT_TO_LEFT associativity therefore we expect only a value
+                parse_value();
+            }
             ExpressionInterpretableNode* exp_right = (ExpressionInterpretableNode*) pop_node();
             ExpNode* exp_node = (ExpNode*) factory.createNode(NODE_TYPE_EXPRESSION);
             exp_node->left = exp_left;

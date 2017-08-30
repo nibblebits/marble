@@ -131,6 +131,7 @@ void Interpreter::interpret_variable_node_for_primitive(VarNode* var_node)
     Variable* variable = current_scope->createVariable();
     KeywordNode* type_node_keyword = (KeywordNode*) type_node;
     variable->value = value_node->interpret(this);
+    Debug::PrintValueForNode(value_node);
     variable->value.holder = variable;
     variable->name = name;
     current_scope->registerVariable(variable);
