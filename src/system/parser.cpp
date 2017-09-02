@@ -283,7 +283,15 @@ void Parser::parse_value()
     }
     else if(token->isIdentifier() && peek(1)->isSymbol("("))
     {
+        /* We only care if there is an identifier and a left bracket rather than a full expression such as a.b.c(); The reason
+         * for this is that this method "parse_value" should only handle single entity values and not expressions. */
         parse_function_call();
+        node = pop_node();
+    }
+    else if(token->isOperator("-"))
+    {
+        // We are handling a negative here, e.g number a = -b; number b = -50;
+        parse_negated_expression();
         node = pop_node();
     }
     else
@@ -448,6 +456,25 @@ void Parser::parse_expression_part()
     push_node(node);
 
 }
+
+void Parser::parse_negated_expression()
+{
+    // Lets get rid of the negative operator we don't want it anymore
+    if(!next()->isOperator("-"))
+    {
+        parse_error("Expecting a negation symbol for negated expressions. This is a bug and should be reported thank you.");
+    }
+    
+    // The negated expression
+    parse_expression();
+    
+    ExpressionInterpretableNode* node = (ExpressionInterpretableNode*) pop_node();
+    
+    NegNode* neg_node = (NegNode*) factory.createNode(NODE_TYPE_NEGATIVE);
+    neg_node->node = node;
+    push_node(neg_node);
+}
+
 
 void Parser::global_parse()
 {

@@ -29,6 +29,7 @@ private:
     void parse_variable_declaration();
     void parse_expression();
     void parse_expression_part();
+    void parse_negated_expression();
     void parse_single_token();
     void parse_value();
     void parse_semicolon();

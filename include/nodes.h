@@ -8,4 +8,5 @@
 #include "stringnode.h"
 #include "keywordnode.h"
 #include "fcnode.h"
+#include "negnode.h"
 #endif
