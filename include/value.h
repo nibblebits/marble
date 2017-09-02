@@ -24,6 +24,14 @@ public:
     Value operator-(const Value& other);
     Value operator*(const Value& other);
     Value operator/(const Value& other);
+    Value operator>(const Value& other);
+    Value operator<(const Value& other);
+    Value operator>=(const Value& other);
+    Value operator<=(const Value& other);
+    Value operator==(const Value& other);
+    Value operator!=(const Value& other);
+    Value operator&&(const Value& other);
+    Value operator||(const Value& other);
     bool hasHolder();
 private:
     void ensure_same_type(int type1, int type2);

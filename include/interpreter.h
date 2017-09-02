@@ -18,6 +18,7 @@ public:
     Variable* getVariableByName(std::string name);
     FunctionSystem* getFunctionSystem();
 private:
+    int  get_variable_type_for_string(std::string str);
     void interpret_variable_node_for_primitive(VarNode* var_node);
     void interpret_variable_node(VarNode* var_node);
     void fail();

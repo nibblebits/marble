@@ -64,6 +64,115 @@ Value Value::operator/(const Value& other)
     return value;
 }
 
+
+Value Value::operator>(const Value& other)
+{
+    ensure_valid_type(type, {VALUE_TYPE_NUMBER});
+    ensure_valid_type(other.type, {VALUE_TYPE_NUMBER});
+    Value value;
+    value.type = VALUE_TYPE_NUMBER;
+    value.dvalue = dvalue > other.dvalue;
+    return value;
+}
+
+Value Value::operator<(const Value& other)
+{
+    ensure_valid_type(type, {VALUE_TYPE_NUMBER});
+    ensure_valid_type(other.type, {VALUE_TYPE_NUMBER});
+    Value value;
+    value.type = VALUE_TYPE_NUMBER;
+    value.dvalue = dvalue < other.dvalue;
+    return value;
+}
+
+Value Value::operator>=(const Value& other)
+{
+    ensure_valid_type(type, {VALUE_TYPE_NUMBER});
+    ensure_valid_type(other.type, {VALUE_TYPE_NUMBER});
+    Value value;
+    value.type = VALUE_TYPE_NUMBER;
+    value.dvalue = dvalue >= other.dvalue;
+    return value;
+}
+
+Value Value::operator<=(const Value& other)
+{
+    ensure_valid_type(type, {VALUE_TYPE_NUMBER});
+    ensure_valid_type(other.type, {VALUE_TYPE_NUMBER});
+    Value value;
+    value.type = VALUE_TYPE_NUMBER;
+    value.dvalue = dvalue <= other.dvalue;
+    return value;
+}
+
+Value Value::operator==(const Value& other)
+{
+	ensure_same_type(type, other.type);
+	Value value;
+	value.type = VALUE_TYPE_NUMBER;
+
+    switch(type)
+    {
+        case VALUE_TYPE_NUMBER:
+        {
+            value.dvalue = dvalue == other.dvalue;
+        }
+        break;
+        case VALUE_TYPE_STRING:
+        {
+            value.dvalue = svalue == other.svalue;    
+        }
+        break;
+        default:
+            throw std::logic_error("Unexpected issue when compareing strings, this is a bug please report this");
+    }
+    
+    return value;
+}
+Value Value::operator!=(const Value& other)
+{
+	ensure_same_type(type, other.type);
+	Value value;
+	value.type = VALUE_TYPE_NUMBER;
+
+    switch(type)
+    {
+        case VALUE_TYPE_NUMBER:
+        {
+            value.dvalue = dvalue != other.dvalue;
+        }
+        break;
+        case VALUE_TYPE_STRING:
+        {
+            value.dvalue = svalue != other.svalue;    
+        }
+        break;
+        default:
+            throw std::logic_error("Unexpected issue when compareing strings, this is a bug please report this");
+    }
+    
+    return value;
+}
+Value Value::operator&&(const Value& other)
+{
+    ensure_valid_type(type, {VALUE_TYPE_NUMBER});
+    ensure_valid_type(other.type, {VALUE_TYPE_NUMBER});
+    Value value;
+    value.type = VALUE_TYPE_NUMBER;
+    value.dvalue = dvalue && other.dvalue;
+    return value;
+}
+
+Value Value::operator||(const Value& other)
+{
+    ensure_valid_type(type, {VALUE_TYPE_NUMBER});
+    ensure_valid_type(other.type, {VALUE_TYPE_NUMBER});
+    Value value;
+    value.type = VALUE_TYPE_NUMBER;
+    value.dvalue = dvalue || other.dvalue;
+    return value;
+}
+
 bool Value::hasHolder()
 {
     return this->holder != NULL;

@@ -43,6 +43,38 @@ Value ExpNode::mathify(Value& value1, Value& value2, std::string op)
     {
         result = value1 / value2;
     }
+    else if(op == ">")
+    {
+        result = value1 > value2;
+    }
+    else if(op == ">=")
+    {
+        result = value1 >= value2;
+    }
+    else if(op == "<=")
+    {
+        result == value1 <= value2;
+    }
+    else if(op == "<")
+    {
+        result = value1 < value2;
+    }
+    else if(op == "==")
+    {
+        result = value1 == value2;
+    }
+    else if(op == "!=")
+    {
+        result = value1 != value2;
+    }
+    else if(op == "&&")
+    {
+        result = value1 && value2;
+    }
+    else if(op == "||")
+    {
+        result = value1 || value2;
+    }
     else if(op == "=")
     {
         result = value2;

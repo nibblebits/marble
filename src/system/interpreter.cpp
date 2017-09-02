@@ -26,15 +26,20 @@ Interpreter::Interpreter()
         {
             if (v.type == VALUE_TYPE_NUMBER)
             {
-                std::cout << "OUTPUT: " << v.dvalue << std::endl;
+                std::cout << v.dvalue << std::endl;
             }
             else if(v.type == VALUE_TYPE_STRING)
             {
-               std::cout << "OUTPUT: " << v.svalue << std::endl;
+               std::cout << v.svalue << std::endl;
             }
         }
         return_value->type = VALUE_TYPE_NUMBER;
         return_value->dvalue = 1;
+    });
+    
+     getFunctionSystem()->registerFunction("input_string", [&](std::vector<Value> arguments, Value* return_value) {
+        return_value->type = VALUE_TYPE_STRING;
+        std::cin >> return_value->svalue;
     });
 }
 
@@ -96,10 +101,6 @@ void Interpreter::run(const char* code)
         current_node = current_node->next;
     }
 
-    for (Variable* variable : current_scope->getVariables())
-    {
-        std::cout << "Variable: " << variable->name << " = " << variable->value.dvalue << std::endl;
-    }
 }
 
 
@@ -122,9 +123,24 @@ Variable* Interpreter::getVariableByName(std::string name)
     return variable;
 }
 
+int Interpreter::get_variable_type_for_string(std::string str)
+{
+    int type = VARIABLE_TYPE_OBJECT;
+    if (str == "number")
+    {
+        type = VARIABLE_TYPE_NUMBER;
+    }
+    else if(str == "string")
+    {
+        type = VARIABLE_TYPE_STRING;
+    }
+    return type;
+}
 void Interpreter::interpret_variable_node_for_primitive(VarNode* var_node)
 {
-    Node* type_node = var_node->type;
+    int type = -1;
+    KeywordNode* type_node = (KeywordNode*)var_node->type;
+    
     std::string name = var_node->name;
     ExpressionInterpretableNode* value_node = (ExpressionInterpretableNode*)var_node->value;
 
@@ -134,6 +150,7 @@ void Interpreter::interpret_variable_node_for_primitive(VarNode* var_node)
     Debug::PrintValueForNode(value_node);
     variable->value.holder = variable;
     variable->name = name;
+    variable->type = get_variable_type_for_string(type_node->value);
     current_scope->registerVariable(variable);
 }
 
