@@ -237,17 +237,20 @@ void Parser::parse_arguments(std::vector<ExpressionInterpretableNode*>* argument
         parse_error("Expecting a \"(\" symbol for arguments");
     }
 
-    // Parse the arguments
-    while(1)
-    {    
-        parse_expression();
-        ExpressionInterpretableNode* argument = (ExpressionInterpretableNode*) pop_node();
-        argument_nodes->push_back(argument);
-        
-        if (!peek()->isSymbol(","))
-            break;
-        // Ignore the comma
-        next();
+    // Parse the arguments (if any)
+    if (!peek()->isSymbol(")"))
+    {
+        while(1)
+        {   
+            parse_expression();
+            ExpressionInterpretableNode* argument = (ExpressionInterpretableNode*) pop_node();
+            argument_nodes->push_back(argument);
+            
+            if (!peek()->isSymbol(","))
+                break;
+            // Ignore the comma
+            next();
+        }
     }
 
     // and ignore the ")" bracket
