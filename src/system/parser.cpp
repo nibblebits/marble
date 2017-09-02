@@ -215,8 +215,11 @@ void Parser::parse_variable_declaration()
 
 }
 
-void Parser::parse_function_call(ExpressionInterpretableNode* dest_node)
-{
+void Parser::parse_function_call()
+{  
+    // Let's parse the function name
+    parse_single_token();
+    ExpressionInterpretableNode* dest_node = (ExpressionInterpretableNode*) pop_node();
     FunctionCallNode* func_call_node = (FunctionCallNode*) factory.createNode(NODE_TYPE_FUNCTION_CALL);
     func_call_node->dest = dest_node;
     // Now that we have the node lets parse the arguments
@@ -278,12 +281,16 @@ void Parser::parse_value()
 
         node = pop_node();
     }
+    else if(token->isIdentifier() && peek(1)->isSymbol("("))
+    {
+        parse_function_call();
+        node = pop_node();
+    }
     else
     {
         parse_single_token();
         node = pop_node();
     }
-
     push_node(node);
 }
 
@@ -436,12 +443,6 @@ void Parser::parse_expression_part()
             exp_node->right = exp_right;
             exp_node->op = op;
             node = exp_node;
-        }
-        else if(peeked_token->isSymbol("("))
-        {
-            // We don't have an operator but we have a left bracket, this has to be a function or method call
-            parse_function_call(exp_left);
-            node = (ExpressionInterpretableNode*) pop_node();
         }
     }
     push_node(node);
