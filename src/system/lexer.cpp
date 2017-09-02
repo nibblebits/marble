@@ -7,7 +7,7 @@
 #include "statics.h"
 #include "config.h"
 const char keywords[][MAX_KEYWORD_SIZE] = {"public", "private", "protected", "number", "char", "string", "bool", "class", "return", "continue", "break", "void"};
-const char valid_operators[][MAX_OPERATORS_SIZE] = {"+", "-", "*", "/", "++", "--", "+=", "-=", "/=", "*=", "-=", "="};
+const char valid_operators[][MAX_OPERATORS_SIZE] = {"+", "-", "*", "/", "++", "--", "+=", "-=", "/=", "*=", "-=", "=", "."};
 const char symbols[] = {';',',','(', ')', '{', '}','[',']'};
 Lexer::Lexer()
 {
@@ -232,10 +232,17 @@ std::string Lexer::get_while(const char** ptr, int expected)
         type = get_type_of_char(c);
         if (type != expected)
         {
+            // Numbers can have decimal points which is seen as an operator
+            if (expected == IS_NUMBER && type == IS_OPERATOR && c == '.')
+            {
+                // This is a floating point number so allow it
+                goto next;
+            }
             // Restore the pointer to previous state
             *ptr-=1;
             break;
         }
+next:
         tokenValue += c;
         *ptr+=1;
     }

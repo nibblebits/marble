@@ -17,7 +17,7 @@ public:
     std::string svalue;
     union
     {
-        int dvalue;
+        double dvalue;
         Variable* vvalue;    
     };
     Value operator+(const Value& other);
