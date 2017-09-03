@@ -3,7 +3,7 @@
 
 Scope::Scope()
 {
-
+    this->prev = NULL;
 }
 Scope::~Scope()
 {

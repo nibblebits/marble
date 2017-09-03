@@ -21,7 +21,9 @@ enum
     NODE_TYPE_STRING,
     NODE_TYPE_KEYWORD,
     NODE_TYPE_FUNCTION_CALL,
-    NODE_TYPE_NEGATIVE
+    NODE_TYPE_NEGATIVE,
+    NODE_TYPE_IF_STMT,
+    NODE_TYPE_BODY
 };
 
 enum
@@ -38,12 +40,14 @@ enum
     VALUE_TYPE_OBJECT
 };
 
+
 enum
 {
     LEFT_TO_RIGHT,
     RIGHT_TO_LEFT,
     NON_ASSOCIATIVE
 };
+
 
 // For the lexer
 enum

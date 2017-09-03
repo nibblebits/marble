@@ -14,6 +14,7 @@ public:
     Variable* createVariable();
     Variable* getVariable(std::string variable_name);
     std::vector<Variable*> getVariables();
+    Scope* prev;
 private:
     std::vector<Variable*> variables;
     // Holds unique pointers for anyone that called createVariable. Memory will be freed when the scope object leaves its scope

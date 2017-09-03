@@ -61,6 +61,18 @@ Node* NodeFactory::createNode(NODE_TYPE node_type)
         node = new NegNode();
     }
     break;
+    
+    case NODE_TYPE_IF_STMT:
+    {
+        node = new IfStatementNode();
+    }
+    break;
+    
+    case NODE_TYPE_BODY:
+    {
+        node = new BodyNode();
+    }
+    break;
     default:
         throw std::logic_error("Invalid node type provided to NodeFactory::createNode");
     }

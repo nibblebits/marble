@@ -21,7 +21,7 @@ public:
     virtual ~Parser();
     Node* parse(Token* root_token);
 private:
-    void global_parse();
+    void global_parse_next();
     bool is_datatype(std::string str);
     bool legal_value(Token* token);
     void parse_error(std::string message);
@@ -29,8 +29,11 @@ private:
     void parse_variable_declaration();
     void parse_expression();
     void parse_expression_part();
-    void parse_negated_expression();
+    void parse_negative_expression();
     void parse_single_token();
+    void parse_if_stmt();
+    void parse_body();
+    void parse_body_next();
     void parse_value();
     void parse_semicolon();
     void push_node(Node* node);

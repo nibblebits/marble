@@ -296,7 +296,7 @@ void Parser::parse_value()
     else if(token->isOperator("-"))
     {
         // We are handling a negative here, e.g number a = -b; number b = -50;
-        parse_negated_expression();
+        parse_negative_expression();
         node = pop_node();
     }
     else
@@ -462,7 +462,7 @@ void Parser::parse_expression_part()
 
 }
 
-void Parser::parse_negated_expression()
+void Parser::parse_negative_expression()
 {
     // Lets get rid of the negative operator we don't want it anymore
     if(!next()->isOperator("-"))
@@ -480,12 +480,59 @@ void Parser::parse_negated_expression()
     push_node(neg_node);
 }
 
-
-void Parser::global_parse()
+void Parser::parse_if_stmt()
 {
-    std::string keyword_name = this->current_token->getValue();
-    // Temporary solution, this wont cut it.
-    if (is_datatype(keyword_name))
+    if (!next()->isKeyword("if"))
+    {
+        parse_error("Expecting an \"if\" for parsing \"if\" statements. Please report this as it is a bug");
+    }
+    
+    // We are expecting a left bracket
+    if (!next()->isSymbol("("))
+    {
+        parse_error("Expecting an expression for \"if\" statements.");
+    }
+   
+    parse_expression();
+    ExpressionInterpretableNode* exp = (ExpressionInterpretableNode*) pop_node();
+    
+    if (!next()->isSymbol(")"))
+    {
+        parse_error("Expecting a right bracket to end the \"if\" statement expression");
+    }
+    
+    parse_body();
+    BodyNode* body = (BodyNode*) pop_node();
+    
+    IfStatementNode* if_stmt = (IfStatementNode*) factory.createNode(NODE_TYPE_IF_STMT);
+    if_stmt->exp = exp;
+    if_stmt->body = body;
+    push_node(if_stmt);
+}
+
+void Parser::parse_body()
+{
+    if (!next()->isSymbol("{"))
+    {
+        parse_error("Expecting a left bracket \"{\" for given body");
+    }
+    
+    BodyNode* body_node = (BodyNode*) factory.createNode(NODE_TYPE_BODY);
+    while(!peek()->isSymbol("}"))
+    {
+        parse_body_next();
+        body_node->addChild(pop_node());
+    }
+    
+    // Lets remove the "}" symbol
+    next();
+    
+    push_node(body_node);
+}
+void Parser::parse_body_next()
+{
+    std::string token_value = this->current_token->getValue();
+    if (this->current_token->isKeyword() && is_datatype(token_value))
     {
         // Either this is a function or a variable declaration
         Token* peeked_token = peek(this->current_token, 2);
@@ -500,6 +547,10 @@ void Parser::global_parse()
             parse_semicolon();
         }
     }
+    else if(this->current_token->isKeyword("if"))
+    {
+        parse_if_stmt();
+    }
     else if(this->current_token->isIdentifier())
     {
         /* The token is an identifier so this can be treated as an expression as it is one of the following
@@ -512,8 +563,12 @@ void Parser::global_parse()
     }
     else
     {
-        parse_error("That is not legal");
+        parse_error("That is not legal: " + token_value);
     }
+}
+void Parser::global_parse_next()
+{
+    parse_body_next();
 }
 
 Node* Parser::parse(Token* root_token)
@@ -523,7 +578,7 @@ Node* Parser::parse(Token* root_token)
     this->current_token = root_token;
     while(this->current_token != NULL)
     {
-        global_parse();
+        global_parse_next();
     }
     return this->root_node;
 }

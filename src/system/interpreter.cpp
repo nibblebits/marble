@@ -26,13 +26,18 @@ Interpreter::Interpreter()
         {
             if (v.type == VALUE_TYPE_NUMBER)
             {
-                std::cout << v.dvalue << std::endl;
+                std::cout << v.dvalue;
             }
             else if(v.type == VALUE_TYPE_STRING)
             {
-               std::cout << v.svalue << std::endl;
+               std::cout << v.svalue;
             }
+            else
+            {
+                std::cout << "Invalid value type: " << v.type;
+            } 
         }
+        std::cout << std::endl;
         return_value->type = VALUE_TYPE_NUMBER;
         return_value->dvalue = 1;
     });
@@ -55,6 +60,59 @@ void Interpreter::output(const char* data)
     std::cout << data << std::endl;
 }
 
+void Interpreter::interpret_body_node(Node* node)
+{
+    int type = node->getType();
+    switch (type)
+    {
+        case NODE_TYPE_VARIABLE_DECLARATION:
+        {
+            interpret_variable_node((VarNode*) node);
+        }
+        break;
+        case NODE_TYPE_EXPRESSION:
+        {
+            ExpNode* exp_node = (ExpNode*)  node;
+            exp_node->interpret(this);
+        }
+        break;
+
+        case NODE_TYPE_FUNCTION_CALL:
+        {
+            FunctionCallNode* func_call_node = (FunctionCallNode*) node;
+            func_call_node->interpret(this);
+        }
+        break;
+        
+        case NODE_TYPE_IF_STMT:
+        {
+            IfStatementNode* if_stmt_node = (IfStatementNode*) node;
+            if_stmt_node->interpret(this);
+        }
+        break;
+        default:
+            throw std::logic_error("void Interpreter::interpret_body_node(Node* node): Unsure how to interpret node");
+    }
+}
+
+void Interpreter::interpret_body(BodyNode* node)
+{
+    // Let's create a new parented scope for this
+    new_parented_scope();
+    
+    Node* current_node = node->child;
+
+    // Awesome now lets interpret!
+    while(current_node != NULL)
+    {
+        interpret_body_node(current_node);
+        current_node = current_node->next;
+    }
+    
+    // We are done with this cope
+    finish_parented_scope();
+}
+
 void Interpreter::run(const char* code)
 {
     Lexer lexer;
@@ -70,34 +128,10 @@ void Interpreter::run(const char* code)
     Parser parser;
     Node* root_node = parser.parse(root_token);
     Node* current_node = root_node;
-
     // Awesome now lets interpret!
     while(current_node != NULL)
     {
-        int type = current_node->getType();
-        switch (type)
-        {
-            case NODE_TYPE_VARIABLE_DECLARATION:
-            {
-                interpret_variable_node((VarNode*) current_node);
-            }
-            break;
-            case NODE_TYPE_EXPRESSION:
-            {
-                ExpNode* exp_node = (ExpNode*)  current_node;
-                Debug::PrintValueForNode(exp_node);
-                exp_node->interpret(this);
-            }
-            break;
-
-            case NODE_TYPE_FUNCTION_CALL:
-            {
-                FunctionCallNode* func_call_node = (FunctionCallNode*) current_node;
-                func_call_node->interpret(this);
-            }
-            break;
-        }
-
+        interpret_body_node(current_node);
         current_node = current_node->next;
     }
 
@@ -118,9 +152,34 @@ FunctionSystem* Interpreter::getFunctionSystem()
 
 Variable* Interpreter::getVariableByName(std::string name)
 {
-    // Let's not worry about other nested scopes at the moment. We will just check the current scope and implement the rest another time. Don't run before you can walk.
-    Variable* variable = current_scope->getVariable(name);
+    Variable* variable = NULL;
+    Scope* scope = current_scope;
+    while(scope != NULL)
+    {
+        variable = scope->getVariable(name);
+        if (variable != NULL)
+        {
+            break;
+        }
+        
+        scope = scope->prev;
+    }
+
     return variable;
+}
+
+void Interpreter::new_parented_scope()
+{
+    Scope* new_prev = current_scope;
+    current_scope = new Scope();
+    current_scope->prev = new_prev;
+}
+
+void Interpreter::finish_parented_scope()
+{
+    Scope* old_current = current_scope;
+    current_scope = old_current->prev;
+    delete old_current;
 }
 
 int Interpreter::get_variable_type_for_string(std::string str)
@@ -147,7 +206,6 @@ void Interpreter::interpret_variable_node_for_primitive(VarNode* var_node)
     Variable* variable = current_scope->createVariable();
     KeywordNode* type_node_keyword = (KeywordNode*) type_node;
     variable->value = value_node->interpret(this);
-    Debug::PrintValueForNode(value_node);
     variable->value.holder = variable;
     variable->name = name;
     variable->type = get_variable_type_for_string(type_node->value);

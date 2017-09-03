@@ -9,4 +9,6 @@
 #include "keywordnode.h"
 #include "fcnode.h"
 #include "negnode.h"
+#include "ifstmtnode.h"
+#include "bodynode.h"
 #endif
