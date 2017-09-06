@@ -3,7 +3,7 @@
 #include "identifiernode.h"
 #include "literalnode.h"
 #include "statics.h"
-
+#include <iostream>
 ExpNode::ExpNode() : ExpressionInterpretableNode(NODE_TYPE_EXPRESSION)
 {
     this->left = NULL;
@@ -90,7 +90,6 @@ Value ExpNode::mathify(Value& value1, Value& value2, std::string op)
 Value ExpNode::interpret(Interpreter* interpreter)
 {
     Value result;
-
     if (isAssignmentOperator())
     {
         // This is to be an assignment. We must interpret the left node and then we will have the variable we need to assign to the right node
@@ -113,8 +112,8 @@ Value ExpNode::interpret(Interpreter* interpreter)
     }
 
 
-    Value left = this->left->interpret(interpreter);
-    Value right = this->right->interpret(interpreter);
-    result = mathify(left, right, this->op);
+    Value left_v = this->left->interpret(interpreter);
+    Value right_v = this->right->interpret(interpreter);
+    result = mathify(left_v, right_v, this->op);
     return result;
 }

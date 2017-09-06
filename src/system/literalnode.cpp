@@ -1,5 +1,6 @@
 #include "literalnode.h"
 #include "statics.h"
+#include <iostream>
 LiteralNode::LiteralNode() : ExpressionInterpretableNode(NODE_TYPE_LITERAL)
 {
 

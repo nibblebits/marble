@@ -1,5 +1,6 @@
 #include "negnode.h"
 #include "nodes.h"
+#include <iostream>
 NegNode::NegNode() : ExpressionInterpretableNode(NODE_TYPE_NEGATIVE)
 {
     this->node = NULL;
@@ -16,4 +17,5 @@ Value NegNode::interpret(Interpreter* interpreter)
     v.type = VALUE_TYPE_NUMBER;
     v.dvalue = -this->node->interpret(interpreter).dvalue;
     return v;
+
 }

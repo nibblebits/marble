@@ -296,7 +296,7 @@ void Parser::parse_value()
     else if(token->isOperator("-"))
     {
         // We are handling a negative here, e.g number a = -b; number b = -50;
-        parse_negative_expression();
+	    parse_negative_expression();
         node = pop_node();
     }
     else
@@ -471,7 +471,7 @@ void Parser::parse_negative_expression()
     }
     
     // The negated expression
-    parse_expression();
+    parse_value();
     
     ExpressionInterpretableNode* node = (ExpressionInterpretableNode*) pop_node();
     

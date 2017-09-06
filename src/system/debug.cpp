@@ -58,6 +58,13 @@ void Debug::PrintValueForNode(Node* value_node, int tabbing)
             OutputTabbing(tabbing);
             std::cout << "operator: " << exp_node->op << std::endl;
         }
+	else if(value_node->type == NODE_TYPE_NEGATIVE)
+	{
+	   NegNode* neg_node = (NegNode*)(value_node);
+	   OutputTabbing(tabbing);
+	   std::cout << "NEG NODE" << std::endl;
+           PrintValueForNode(neg_node->node, tabbing+1); 
+	}
     }
 }
-#endif
+#endif 
