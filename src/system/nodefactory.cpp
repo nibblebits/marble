@@ -73,6 +73,12 @@ Node* NodeFactory::createNode(NODE_TYPE node_type)
         node = new BodyNode();
     }
     break;
+    
+    case NODE_TYPE_CAST:
+    {
+        node = new CastNode();
+    }
+    break;
     default:
         throw std::logic_error("Invalid node type provided to NodeFactory::createNode");
     }

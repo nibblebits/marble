@@ -27,6 +27,7 @@ private:
     void parse_error(std::string message);
     void ensure_type(Token* token, int expected_type);
     void parse_variable_declaration();
+    void parse_expression_for_value();
     void parse_expression();
     void parse_expression_part();
     void parse_negative_expression();
@@ -35,6 +36,7 @@ private:
     void parse_body();
     void parse_body_next();
     void parse_value();
+    void parse_cast(Node* casting_to);
     void parse_semicolon();
     void push_node(Node* node);
 

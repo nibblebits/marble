@@ -128,6 +128,7 @@ void Interpreter::run(const char* code)
 
     Parser parser;
     Node* root_node = parser.parse(root_token);
+    
     Node* current_node = root_node;
     // Awesome now lets interpret!
     while(current_node != NULL)

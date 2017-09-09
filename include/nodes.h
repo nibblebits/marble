@@ -11,4 +11,5 @@
 #include "negnode.h"
 #include "ifstmtnode.h"
 #include "bodynode.h"
+#include "castnode.h"
 #endif

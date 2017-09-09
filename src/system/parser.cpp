@@ -131,8 +131,8 @@ Node* Parser::convertToSingleNode(Token* token)
     {
         return getStringNode(token);
     }
-
-    throw std::logic_error("The single \"token\" provided cannot be converted to a node");
+    
+    throw std::logic_error("The single \"token\" provided cannot be converted to a node. Type: " + std::to_string(token->type));
 }
 
 Token* Parser::peek(int ahead)
@@ -210,7 +210,7 @@ void Parser::parse_variable_declaration()
     {
         // We don't need the equals operator anymore
         next();
-        parse_expression();
+        parse_expression_for_value();
         var_node->value = pop_node();
     }
     push_node(var_node);
@@ -242,7 +242,7 @@ void Parser::parse_arguments(std::vector<ExpressionInterpretableNode*>* argument
     {
         while(1)
         {   
-            parse_expression();
+            parse_expression_for_value();
             ExpressionInterpretableNode* argument = (ExpressionInterpretableNode*) pop_node();
             argument_nodes->push_back(argument);
             
@@ -275,7 +275,7 @@ void Parser::parse_value()
         // Let's get rid of the "(" symbol ready for parse_expression
         next();
         // Yes we have an expression lets process it
-        parse_expression();
+        parse_expression_for_value();
 
         // Now we must get rid of the expression terminator ")"
         token = next();
@@ -307,6 +307,17 @@ void Parser::parse_value()
     push_node(node);
 }
 
+void Parser::parse_cast(Node* casting_to)
+{   
+    // Ok now lets get what we are casting from
+    parse_expression_for_value();
+    ExpressionInterpretableNode* to_cast = (ExpressionInterpretableNode*) pop_node();
+    
+    CastNode* node = (CastNode*) factory.createNode(NODE_TYPE_CAST);
+    node->casting_to = casting_to;
+    node->to_cast = to_cast;
+    push_node(node);
+}
 
 void Parser::parse_semicolon()
 {
@@ -399,11 +410,25 @@ void Parser::handle_priority(ExpressionInterpretableNode** left_pp, ExpressionIn
       }
 }
 
+void Parser::parse_expression_for_value()
+{
+    parse_expression();
+    // Casting may have happend, e.g (int)(5.32) or (int) 5.32;
+    if (!peek()->isSymbol() || peek()->isSymbol("("))
+    {
+        // Casting is occuring here lets parse the cast
+        parse_cast(pop_node());
+    }
+}
+
 void Parser::parse_expression()
 {
     parse_expression_part();
     Token* peeked_token = peek();
-    if (peeked_token != NULL && peeked_token->isOperator())
+    if (peeked_token == NULL)
+        return;
+        
+    if (peeked_token->isOperator())
     {
         // Lets remove the operator from the token stream
         std::string op = next()->value;
@@ -413,7 +438,7 @@ void Parser::parse_expression()
         ExpNode* left_exp = (ExpNode*)(left);
 
         // We got more to go!
-        parse_expression();
+        parse_expression_for_value();
 
         ExpressionInterpretableNode* right = (ExpressionInterpretableNode*) pop_node();
         handle_priority(&left, &right, op);
