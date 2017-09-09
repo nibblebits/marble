@@ -299,6 +299,12 @@ void Parser::parse_value()
 	    parse_negative_expression();
         node = pop_node();
     }
+    else if(token->isSymbol("["))
+    {
+        // We have an array
+        parse_array();
+        node = pop_node();
+    }
     else
     {
         parse_single_token();
@@ -317,6 +323,36 @@ void Parser::parse_cast(Node* casting_to)
     node->casting_to = casting_to;
     node->to_cast = to_cast;
     push_node(node);
+}
+
+/**
+* The parse_array method will pop off the node prior to its self and that will become its next node.
+* E.g func()[0] would be
+* ARRAY
+*      0
+*      func()
+*/
+void Parser::parse_array()
+{
+    ExpressionInterpretableNode* related_node = (ExpressionInterpretableNode*) pop_node();
+    if (!next()->isSymbol("["))
+    {
+        parse_error("Expecting a left bracket");
+    }
+    
+    parse_expression();
+    
+    ExpressionInterpretableNode* node = (ExpressionInterpretableNode*) pop_node();
+    
+    if (!next()->isSymbol("]"))
+    {
+        parse_error("Expecting a right bracket");
+    }
+    
+    ArrayNode* array_node = (ArrayNode*)factory.createNode(NODE_TYPE_ARRAY);
+    array_node->node = node;
+    array_node->next_element = related_node;
+    push_node(array_node);
 }
 
 void Parser::parse_semicolon()
@@ -468,7 +504,7 @@ void Parser::parse_expression_part()
             // Left to right associativity should be treated as an expression a = 5 * 5, a = (5 * 5)
             if (operation->associativity == RIGHT_TO_LEFT)
             {
-                parse_expression();
+                parse_expression_for_value();
             } 
             else 
             {
@@ -518,7 +554,7 @@ void Parser::parse_if_stmt()
         parse_error("Expecting an expression for \"if\" statements.");
     }
    
-    parse_expression();
+    parse_expression_for_value();
     ExpressionInterpretableNode* exp = (ExpressionInterpretableNode*) pop_node();
     
     if (!next()->isSymbol(")"))

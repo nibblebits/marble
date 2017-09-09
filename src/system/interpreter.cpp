@@ -74,7 +74,7 @@ void Interpreter::interpret_body_node(Node* node)
         {
             ExpNode* exp_node = (ExpNode*)  node;
             Debug::PrintValueForNode(exp_node);
-	    exp_node->interpret(this);
+	        exp_node->interpret(this);
         }
         break;
 
@@ -92,7 +92,7 @@ void Interpreter::interpret_body_node(Node* node)
         }
         break;
         default:
-            throw std::logic_error("void Interpreter::interpret_body_node(Node* node): Unsure how to interpret node");
+            throw std::logic_error("void Interpreter::interpret_body_node(Node* node): Unsure how to interpret node: " + std::to_string(type));
     }
 }
 

@@ -12,4 +12,5 @@
 #include "ifstmtnode.h"
 #include "bodynode.h"
 #include "castnode.h"
+#include "arraynode.h"
 #endif
