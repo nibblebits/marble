@@ -10,6 +10,11 @@ Value::~Value()
 
 }
 
+bool Value::isObjectOrArray()
+{
+    return this->type == VALUE_TYPE_OBJECT || this->type == VALUE_TYPE_ARRAY;
+}
+
 Value Value::operator+(const Value& other)
 {
 	ensure_same_type(type, other.type);
