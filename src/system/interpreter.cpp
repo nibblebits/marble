@@ -184,7 +184,7 @@ void Interpreter::finish_parented_scope()
     delete old_current;
 }
 
-int Interpreter::get_variable_type_for_string(std::string str)
+int Interpreter::getVariableTypeForString(std::string str)
 {
     int type = VARIABLE_TYPE_OBJECT;
     if (str == "number")
@@ -207,11 +207,11 @@ void Interpreter::interpret_variable_node_for_primitive(VarNode* var_node)
 
     Variable* variable = current_scope->createVariable();
     KeywordNode* type_node_keyword = (KeywordNode*) type_node;
-    variable->value = value_node->interpret(this);
     Debug::PrintValueForNode(value_node);
+    variable->value = value_node->interpret(this);
     variable->value.holder = variable;
     variable->name = name;
-    variable->type = get_variable_type_for_string(type_node->value);
+    variable->type = getVariableTypeForString(type_node->value);
     current_scope->registerVariable(variable);
 }
 

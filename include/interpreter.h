@@ -18,12 +18,12 @@ public:
     void runScript(const char* filename);
     Variable* getVariableByName(std::string name);
     FunctionSystem* getFunctionSystem();
+    int getVariableTypeForString(std::string str);
     void interpret_body_node(Node* node);
     void interpret_body(BodyNode* node);
+private:
     void new_parented_scope();
     void finish_parented_scope();
-private:
-    int get_variable_type_for_string(std::string str);
     void interpret_variable_node_for_primitive(VarNode* var_node);
     void interpret_variable_node(VarNode* var_node);
     void fail();

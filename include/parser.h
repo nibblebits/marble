@@ -26,18 +26,20 @@ private:
     bool legal_value(Token* token);
     void parse_error(std::string message);
     void ensure_type(Token* token, int expected_type);
+    Token* get_identifier_token(std::string error_msg);
     void parse_variable_declaration();
-    void parse_expression_for_value();
-    void parse_expression();
-    void parse_expression_part();
+    void parse_expression_for_value(int extra_rules=0);
+    void parse_expression(int rules=0);
+    void parse_expression_part(int rules=0);
     void parse_negative_expression();
     void parse_single_token();
     void parse_if_stmt();
     void parse_body();
     void parse_body_next();
-    void parse_value();
+    void parse_value(int rules=0);
     void parse_cast(Node* casting_to);
-    void parse_array();
+    void parse_array(Node* related_node);
+    void parse_new();
     void parse_semicolon();
     void push_node(Node* node);
 

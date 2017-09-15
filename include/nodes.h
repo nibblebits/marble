@@ -13,4 +13,5 @@
 #include "bodynode.h"
 #include "castnode.h"
 #include "arraynode.h"
+#include "newnode.h"
 #endif

@@ -132,7 +132,7 @@ Node* Parser::convertToSingleNode(Token* token)
         return getStringNode(token);
     }
     
-    throw std::logic_error("The single \"token\" provided cannot be converted to a node. Type: " + std::to_string(token->type));
+    throw std::logic_error("The single \"token\" provided cannot be converted to a node. Type: " + std::to_string(token->type) + " = " + token->value);
 }
 
 Token* Parser::peek(int ahead)
@@ -190,21 +190,37 @@ Token* Parser::next()
     return next_token;
 }
 
+Token* Parser::get_identifier_token(std::string error_msg)
+{
+     Token* token = next();
+     if (!token->isIdentifier())
+     {
+        parse_error(error_msg);
+     }
+     return token;
+}
 
 void Parser::parse_variable_declaration()
 {
     // Types should be treated as an expression due to the senario "class.other_class var_name"
     parse_expression();
     Node* data_type_node = pop_node();
-    Token* var_name_token = next();
-    if (!var_name_token->isIdentifier())
+    int array_dimensions = 0;
+    while (peek()->isSymbol("["))
     {
-        parse_error("Expecting a variable name");
+        // This variable declaration is an array
+        next();
+        if (!next()->isSymbol("]"))
+        {
+            parse_error("symbol \"[\" was provided but failed to provide symbol \"]\"");
+        }
+        array_dimensions+=1;
     }
-
+    Token* var_name_token = get_identifier_token("Expecting a variable name for variable declaration");
     VarNode* var_node = (VarNode*) factory.createNode(NODE_TYPE_VARIABLE_DECLARATION);
     var_node->type = data_type_node;
     var_node->name = var_name_token->value;
+    var_node->dimensions = array_dimensions;
     Token* token_ahead = peek();
     if (token_ahead->isOperator("="))
     {
@@ -265,7 +281,7 @@ void Parser::parse_single_token()
     push_node(node);
 }
 
-void Parser::parse_value()
+void Parser::parse_value(int rules)
 {
     Token* token = peek();
     Node* node = NULL;
@@ -275,7 +291,7 @@ void Parser::parse_value()
         // Let's get rid of the "(" symbol ready for parse_expression
         next();
         // Yes we have an expression lets process it
-        parse_expression_for_value();
+        parse_expression(rules);
 
         // Now we must get rid of the expression terminator ")"
         token = next();
@@ -285,6 +301,13 @@ void Parser::parse_value()
         }
 
         node = pop_node();
+        
+        if ((rules & RULE_PARSE_CASTING) && peek()->isCastableType())
+        {
+            // This expression is actually a cast
+            parse_cast(node);
+            node = pop_node();
+        }
     }
     else if(token->isIdentifier() && peek(1)->isSymbol("("))
     {
@@ -299,10 +322,10 @@ void Parser::parse_value()
 	    parse_negative_expression();
         node = pop_node();
     }
-    else if(token->isSymbol("["))
+    else if(token->isKeyword("new"))
     {
-        // We have an array
-        parse_array();
+        // This is for a new statement e.g new number[20];
+        parse_new();
         node = pop_node();
     }
     else
@@ -310,13 +333,24 @@ void Parser::parse_value()
         parse_single_token();
         node = pop_node();
     }
+    
+    if (rules & RULE_PARSE_ARRAY)
+    {
+        if (peek()->isSymbol("["))
+        {
+            std::cout << "ARRAY ACCESS" << std::endl;
+            // Ok we have array access here
+            parse_array(node);
+            node = pop_node();
+        }
+    }
     push_node(node);
 }
 
 void Parser::parse_cast(Node* casting_to)
 {   
     // Ok now lets get what we are casting from
-    parse_expression_for_value();
+    parse_value(RULE_PARSE_CASTING | RULE_PARSE_ARRAY);
     ExpressionInterpretableNode* to_cast = (ExpressionInterpretableNode*) pop_node();
     
     CastNode* node = (CastNode*) factory.createNode(NODE_TYPE_CAST);
@@ -326,21 +360,20 @@ void Parser::parse_cast(Node* casting_to)
 }
 
 /**
-* The parse_array method will pop off the node prior to its self and that will become its next node.
+* The parse_array method will pop off the node prior to its self and that will become its next element.
 * E.g func()[0] would be
 * ARRAY
 *      0
 *      func()
 */
-void Parser::parse_array()
+void Parser::parse_array(Node* related_node)
 {
-    ExpressionInterpretableNode* related_node = (ExpressionInterpretableNode*) pop_node();
     if (!next()->isSymbol("["))
     {
         parse_error("Expecting a left bracket");
     }
     
-    parse_expression();
+    parse_expression_for_value();
     
     ExpressionInterpretableNode* node = (ExpressionInterpretableNode*) pop_node();
     
@@ -350,9 +383,24 @@ void Parser::parse_array()
     }
     
     ArrayNode* array_node = (ArrayNode*)factory.createNode(NODE_TYPE_ARRAY);
-    array_node->node = node;
+    array_node->index_node = node;
     array_node->next_element = related_node;
     push_node(array_node);
+}
+
+void Parser::parse_new()
+{
+    if(!next()->isKeyword("new"))
+    {
+        parse_error("Expecting a new keyword for creating new instances. This is a interpreter bug please report this");
+    }
+    
+    parse_expression_for_value();
+    ExpressionInterpretableNode* node = (ExpressionInterpretableNode*) pop_node();
+    
+    NewNode* new_node = (NewNode*) factory.createNode(NODE_TYPE_NEW);
+    new_node->exp = node;
+    push_node(new_node);
 }
 
 void Parser::parse_semicolon()
@@ -446,20 +494,14 @@ void Parser::handle_priority(ExpressionInterpretableNode** left_pp, ExpressionIn
       }
 }
 
-void Parser::parse_expression_for_value()
+void Parser::parse_expression_for_value(int extra_rules)
 {
-    parse_expression();
-    // Casting may have happend, e.g (int)(5.32) or (int) 5.32;
-    if (!peek()->isSymbol() || peek()->isSymbol("("))
-    {
-        // Casting is occuring here lets parse the cast
-        parse_cast(pop_node());
-    }
+    parse_expression(RULE_PARSE_CASTING | RULE_PARSE_ARRAY | extra_rules);
 }
 
-void Parser::parse_expression()
+void Parser::parse_expression(int rules)
 {
-    parse_expression_part();
+    parse_expression_part(rules);
     Token* peeked_token = peek();
     if (peeked_token == NULL)
         return;
@@ -487,10 +529,10 @@ void Parser::parse_expression()
     }
 }
 
-void Parser::parse_expression_part()
+void Parser::parse_expression_part(int rules)
 {
     // Parse the left value
-    parse_value();
+    parse_value(rules);
     ExpressionInterpretableNode* exp_left = (ExpressionInterpretableNode*) pop_node();
     ExpressionInterpretableNode* node = (ExpressionInterpretableNode*) exp_left;
     Token* peeked_token = peek();
@@ -509,7 +551,7 @@ void Parser::parse_expression_part()
             else 
             {
                 // We are non RIGHT_TO_LEFT associativity therefore we expect only a value
-                parse_value();
+                parse_value(rules);
             }
             ExpressionInterpretableNode* exp_right = (ExpressionInterpretableNode*) pop_node();
             ExpNode* exp_node = (ExpNode*) factory.createNode(NODE_TYPE_EXPRESSION);
@@ -619,7 +661,7 @@ void Parser::parse_body_next()
          * 2. An assignment
          * 3. A function call
          */
-        parse_expression();
+        parse_expression_for_value();
         parse_semicolon();
     }
     else

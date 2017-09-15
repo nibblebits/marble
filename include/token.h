@@ -17,6 +17,8 @@ public:
     bool isString(std::string value);
     bool isSymbol();
     bool isSymbol(std::string value);
+    bool isTerminatingSymbol();
+    bool isCastableType();
     bool isIdentifier();
     bool isIdentifier(std::string value);
     bool isKeyword();

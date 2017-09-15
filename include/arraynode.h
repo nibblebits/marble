@@ -6,10 +6,10 @@ class ArrayNode : public ExpressionInterpretableNode
 public:
     ArrayNode();
     virtual ~ArrayNode();
-    ExpressionInterpretableNode* node;
-    ExpressionInterpretableNode* next_element;
+    ExpressionInterpretableNode* index_node;
+    Node* next_element;
     
-    virtual Value interpret(Interpreter* intrerpreter);
+    virtual Value interpret(Interpreter* interpreter);
 };
 
 #endif

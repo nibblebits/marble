@@ -48,6 +48,21 @@ bool Token::isSymbol(std::string value)
     return getType() == TOKEN_TYPE_SYMBOL && getValue() == value;
 }
 
+/*
+* Determines if this token is a terminating symbol.
+* A terminating symbol is a symbol that terminates a particular statement expression such as a semicolon. Or a function calls comma to seperate the function arguments.
+*/
+bool Token::isTerminatingSymbol()
+{
+    return isSymbol(";") || isSymbol(",");
+}
+
+bool Token::isCastableType()
+{
+    // The reason for that "(" is also a castable type is because of nested casting (int)(string) 32;
+    return isString() || isKeyword() || isIdentifier() || isNumber() || isSymbol("(");
+}
+
 bool Token::isIdentifier()
 {
     return getType() == TOKEN_TYPE_IDENTIFIER;

@@ -12,6 +12,9 @@ public:
     Node* type;
     std::string name;
     Node* value;
+    
+    // The array dimensions. Zero if this is not an array
+    int dimensions;
 private:
 };
 

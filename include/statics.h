@@ -25,7 +25,8 @@ enum
     NODE_TYPE_IF_STMT,
     NODE_TYPE_BODY,
     NODE_TYPE_CAST,
-    NODE_TYPE_ARRAY
+    NODE_TYPE_ARRAY,
+    NODE_TYPE_NEW
 };
 
 enum
@@ -39,7 +40,8 @@ enum
 {
     VALUE_TYPE_NUMBER,
     VALUE_TYPE_STRING,
-    VALUE_TYPE_OBJECT
+    VALUE_TYPE_OBJECT,
+    VALUE_TYPE_ARRAY
 };
 
 
@@ -59,6 +61,13 @@ enum
     IS_OPERATOR,
     IS_SYMBOL,
     IS_WHITESPACE
+};
+
+// Rules for the parser
+enum
+{
+    RULE_PARSE_CASTING = 0x01,
+    RULE_PARSE_ARRAY = 0x02
 };
 
 typedef int TOKEN_TYPE;

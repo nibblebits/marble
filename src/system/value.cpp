@@ -193,6 +193,6 @@ void Value::ensure_same_type(int type1, int type2)
 {
 	if (type1 != type2)
 	{
-	   throw std::logic_error("void Value::ensure_same_type(int type1, int type2): Cannot preform mathematical operator as the values provided differ in type");
+	   throw std::logic_error("void Value::ensure_same_type(int type1, int type2): Cannot preform mathematical operator as the values provided differ in type: " + std::to_string(type1) + ":" + std::to_string(type2));
 	}
 }
