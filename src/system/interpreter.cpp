@@ -19,6 +19,7 @@
 #include "exceptions/IOException.h"
 Interpreter::Interpreter()
 {
+    this->objectManager = std::make_unique<ObjectManager>(this);
     this->current_scope = &root_scope;
 
     getFunctionSystem()->registerFunction("print", [&](std::vector<Value> arguments, Value* return_value) {
@@ -112,6 +113,7 @@ void Interpreter::interpret_body(BodyNode* node)
     
     // We are done with this cope
     finish_parented_scope();
+   
 }
 
 void Interpreter::run(const char* code)
@@ -151,6 +153,20 @@ FunctionSystem* Interpreter::getFunctionSystem()
     return &this->functionSystem;
 }
 
+ObjectManager* Interpreter::getObjectManager()
+{
+    return this->objectManager.get();
+}
+
+Scope* Interpreter::getCurrentScope()
+{
+    return this->current_scope;
+}
+
+Scope* Interpreter::getRootScope()
+{
+    return &this->root_scope;
+}
 
 Variable* Interpreter::getVariableByName(std::string name)
 {
@@ -181,6 +197,8 @@ void Interpreter::finish_parented_scope()
 {
     Scope* old_current = current_scope;
     current_scope = old_current->prev;
+    // Clean the objects (basically garbage collection)
+    objectManager->clean(old_current);
     delete old_current;
 }
 

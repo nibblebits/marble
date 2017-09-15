@@ -1,4 +1,6 @@
 #include "scope.h"
+#include "object.h"
+#include "array.h"
 #include <stdexcept>
 
 Scope::Scope()
@@ -7,7 +9,6 @@ Scope::Scope()
 }
 Scope::~Scope()
 {
-
 }
 
 void Scope::registerVariable(Variable* variable)
@@ -42,4 +43,26 @@ Variable* Scope::getVariable(std::string variable_name)
 std::vector<Variable*> Scope::getVariables()
 {
     return this->variables;
+}
+
+std::vector<Variable*> Scope::getObjectVariablesFor(Object* object)
+{
+    std::vector<Variable*> variables;
+    for (Variable* variable : getVariables())
+    {
+        Value value = variable->value;
+        if (value.type == VALUE_TYPE_OBJECT 
+            || value.type == VALUE_TYPE_ARRAY)
+        {
+            Object* v_obj = value.avalue;
+            if (value.type == VALUE_TYPE_OBJECT)
+            {
+                throw std::logic_error("OBJECTS NOT YET SUPPORTED");
+            }
+            
+            if(object == v_obj)
+                variables.push_back(variable);
+        }
+    }
+    return variables;
 }

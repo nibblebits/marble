@@ -1,4 +1,5 @@
 #include "variable.h"
+#include <iostream>
 Variable::Variable()
 {
     this->name = "";

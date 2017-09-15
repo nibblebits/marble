@@ -25,7 +25,6 @@ Value NewNode::interpret(Interpreter* interpreter)
         ArrayNode* array_node = (ArrayNode*) this->exp;
         // Lets evaluate the index of the array node
         Value index_value = array_node->index_node->interpret(interpreter);
-        std::cout << array_node->next_element->type << std::endl;
         int var_type = VARIABLE_TYPE_OBJECT;
         Node* type_node = array_node->next_element;
         if (type_node->type == NODE_TYPE_KEYWORD)
@@ -44,6 +43,7 @@ Value NewNode::interpret(Interpreter* interpreter)
             var->value.holder = var;
         }
         v.avalue = new Array(variables, total_elements);
+        interpreter->getObjectManager()->registerObject(v.avalue);
     }
     return v;
 }

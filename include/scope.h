@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include "variable.h"
+class Object;
 class Scope
 {
 public:
@@ -14,6 +15,7 @@ public:
     Variable* createVariable();
     Variable* getVariable(std::string variable_name);
     std::vector<Variable*> getVariables();
+    std::vector<Variable*> getObjectVariablesFor(Object* object);
     Scope* prev;
 private:
     std::vector<Variable*> variables;
