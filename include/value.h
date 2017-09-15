@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 class Variable;
+class Array;
 class Value
 {
 public:
@@ -19,6 +20,7 @@ public:
     {
         double dvalue;
         Variable* vvalue;
+        Array* avalue;
     };
     Value operator+(const Value& other);
     Value operator-(const Value& other);

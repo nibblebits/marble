@@ -1,4 +1,5 @@
 #include "value.h"
+#include "array.h"
 #include <stdexcept>
 Value::Value()
 {

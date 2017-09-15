@@ -1,6 +1,7 @@
 #include "newnode.h"
 #include "nodes.h"
 #include "variable.h"
+#include "array.h"
 #include "interpreter.h"
 #include <iostream>
 NewNode::NewNode() : ExpressionInterpretableNode(NODE_TYPE_NEW)
@@ -18,6 +19,8 @@ Value NewNode::interpret(Interpreter* interpreter)
     Value v;
     if (this->exp->type == NODE_TYPE_ARRAY)
     {
+        v.type = VALUE_TYPE_ARRAY;
+        
         /* NOTE HERE ONLY ONE DIMENSIONAL ARRAYS ARE SUPPORTED, IMPROVE THIS*/
         ArrayNode* array_node = (ArrayNode*) this->exp;
         // Lets evaluate the index of the array node
@@ -32,6 +35,7 @@ Value NewNode::interpret(Interpreter* interpreter)
         }
         // The index_value holds how many elements we need to create
         int total_elements = index_value.dvalue;
+        
         Variable* variables = new Variable[total_elements];
         for (int i = 0; i < total_elements; i++)
         {
@@ -39,7 +43,7 @@ Value NewNode::interpret(Interpreter* interpreter)
             var->type = var_type;
             var->value.holder = var;
         }
-        v.vvalue = variables;
+        v.avalue = new Array(variables, total_elements);
     }
     return v;
 }

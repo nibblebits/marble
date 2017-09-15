@@ -338,7 +338,6 @@ void Parser::parse_value(int rules)
     {
         if (peek()->isSymbol("["))
         {
-            std::cout << "ARRAY ACCESS" << std::endl;
             // Ok we have array access here
             parse_array(node);
             node = pop_node();
