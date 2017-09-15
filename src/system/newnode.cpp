@@ -43,7 +43,9 @@ Value NewNode::interpret(Interpreter* interpreter)
             var->value.holder = var;
         }
         v.avalue = new Array(variables, total_elements);
-        interpreter->getObjectManager()->registerObject(v.avalue);
+        // Arrays are also objects so lets make the ovalue an alias for when you dont care if its an object or an array as long as its one of them.
+        v.ovalue = v.avalue;
+        interpreter->getObjectManager()->incrementUseage(v.avalue);
     }
     return v;
 }
