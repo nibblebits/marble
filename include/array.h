@@ -1,7 +1,8 @@
 #ifndef ARRAY_H
 #define ARRAY_H
+#include "object.h"
 class Variable;
-class Array
+class Array : public Object
 {
 public:
     Array(Variable* variables, int count);
