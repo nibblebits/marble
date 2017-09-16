@@ -12,7 +12,6 @@ class Value
 {
 public:
     Value();
-    Value(const Value& value);
     virtual ~Value();
     VALUE_TYPE type;
     // The variable who holds this value (NULL if the value stands without a variable)

@@ -8,17 +8,6 @@ Value::Value()
     this->holder = NULL;
 }
 
-Value::Value(const Value& value)
-{ 
-    this->type = value.type;
-    this->holder = value.holder;
-    this->svalue = value.svalue;
-    this->dvalue = value.dvalue;
-    this->ovalue = value.ovalue;
-    this->avalue = value.avalue;
-}
-
-
 Value::~Value()
 {
 
