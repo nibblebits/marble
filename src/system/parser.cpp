@@ -385,6 +385,14 @@ void Parser::parse_array(Node* related_node)
     array_node->index_node = node;
     array_node->next_element = related_node;
     push_node(array_node);
+    
+    // Before returning lets see if we have anymore arrays we can process
+    if (peek()->isSymbol("["))
+    {
+        // This is a nested array
+        parse_array(pop_node());
+    }
+    
 }
 
 void Parser::parse_new()
