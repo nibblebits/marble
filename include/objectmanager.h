@@ -9,9 +9,10 @@ class ObjectManager
 public:
     ObjectManager(Interpreter* interpreter);
     virtual ~ObjectManager();
-    bool isSafeToDelete(Object* object, Scope* ignored_scope);
     void registerObject(Object* object);
-    void clean(Scope* scope);
+    void incrementUsage(Object* object);
+    void decrementUsage(Object* object);
+    void clean();
 private:
     Interpreter* interpreter;
     std::vector<Object*> objects;

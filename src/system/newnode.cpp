@@ -42,10 +42,10 @@ Value NewNode::interpret(Interpreter* interpreter)
             var->type = var_type;
             var->value.holder = var;
         }
-        v.avalue = new Array(variables, total_elements);
+        v.avalue = new Array(interpreter->getObjectManager(), variables, total_elements);
         // Arrays are also objects so lets make the ovalue an alias for when you dont care if its an object or an array as long as its one of them.
         v.ovalue = v.avalue;
-        interpreter->getObjectManager()->incrementUseage(v.avalue);
+        v.activate();
     }
     return v;
 }

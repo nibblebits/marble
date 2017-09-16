@@ -1,7 +1,8 @@
 #include "array.h"
 #include "variable.h"
+#include "objectmanager.h"
 
-Array::Array(Variable* variables, int count)
+Array::Array(ObjectManager* objectManager, Variable* variables, int count) : Object(objectManager)
 {
     this->variables = variables;
     this->count = count;

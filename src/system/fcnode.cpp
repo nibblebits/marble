@@ -17,12 +17,13 @@ FunctionCallNode::~FunctionCallNode()
 
 Value FunctionCallNode::interpret(Interpreter* interpreter)
 {
-    Value value;
+   Value value;
 
    std::vector<Value> argument_results;
    for (ExpressionInterpretableNode* argument_node : this->arguments)
    {
-       argument_results.push_back(argument_node->interpret(interpreter));
+       Value v = argument_node->interpret(interpreter);
+       argument_results.push_back(v);
    }
 
     if (this->dest->type == NODE_TYPE_IDENTIFIER)
@@ -35,6 +36,11 @@ Value FunctionCallNode::interpret(Interpreter* interpreter)
         }
 
         function->invoke(argument_results, &value);
-    }    
+    }
+    
+    if (!value.activated)
+    {
+        value.activate();
+    }
     return value;
 }

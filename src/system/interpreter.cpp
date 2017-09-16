@@ -197,9 +197,9 @@ void Interpreter::finish_parented_scope()
 {
     Scope* old_current = current_scope;
     current_scope = old_current->prev;
-    // Clean the objects (basically garbage collection)
-    objectManager->clean(old_current);
     delete old_current;
+    
+    objectManager->clean();
 }
 
 int Interpreter::getVariableTypeForString(std::string str)

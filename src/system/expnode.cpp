@@ -83,7 +83,7 @@ Value ExpNode::mathify(Value& value1, Value& value2, std::string op)
     {
         throw std::logic_error("Value ExpNode::mathify(Value value1, Value2 value2, std::string op): Invalid operator provided");
     }
-
+    
     return result;
 }
 
@@ -98,7 +98,7 @@ Value ExpNode::interpret(Interpreter* interpreter)
 
         // Ok now lets get the value and assign it to the variable
         Value right_v = right->interpret(interpreter);
-
+        
         if (this->op == "=")
         {      
             result = right_v;
