@@ -38,9 +38,5 @@ Value FunctionCallNode::interpret(Interpreter* interpreter)
         function->invoke(argument_results, &value);
     }
     
-    if (!value.activated)
-    {
-        value.activate();
-    }
     return value;
 }

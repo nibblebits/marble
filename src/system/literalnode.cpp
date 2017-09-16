@@ -16,6 +16,5 @@ Value LiteralNode::interpret(Interpreter* interpreter)
     Value v;
     v.type = VALUE_TYPE_NUMBER;
     v.dvalue = this->value;
-    v.activate();
     return v;
 }

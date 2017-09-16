@@ -15,7 +15,7 @@ public:
     Variable* createVariable();
     Variable* getVariable(std::string variable_name);
     std::vector<Variable*> getVariables();
-    std::vector<Variable*> getObjectVariablesFor(Object* object);
+    std::vector<Variable*> getObjectVariablesFor(std::shared_ptr<Object> object);
     Scope* prev;
 private:
     std::vector<Variable*> variables;

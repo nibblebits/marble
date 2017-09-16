@@ -2,6 +2,7 @@
 #include "object.h"
 #include "array.h"
 #include <stdexcept>
+#include <memory>
 
 Scope::Scope()
 {
@@ -45,7 +46,7 @@ std::vector<Variable*> Scope::getVariables()
     return this->variables;
 }
 
-std::vector<Variable*> Scope::getObjectVariablesFor(Object* object)
+std::vector<Variable*> Scope::getObjectVariablesFor(std::shared_ptr<Object> object)
 {
     std::vector<Variable*> variables;
     for (Variable* variable : getVariables())
@@ -54,7 +55,7 @@ std::vector<Variable*> Scope::getObjectVariablesFor(Object* object)
         if (value.type == VALUE_TYPE_OBJECT 
             || value.type == VALUE_TYPE_ARRAY)
         {
-            Object* v_obj = value.avalue;
+            std::shared_ptr<Object> v_obj = value.ovalue;
             if (value.type == VALUE_TYPE_OBJECT)
             {
                 throw std::logic_error("OBJECTS NOT YET SUPPORTED");

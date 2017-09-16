@@ -5,7 +5,6 @@
 #include <memory>
 #include "scope.h"
 #include "functionsystem.h"
-#include "objectmanager.h"
 class Node;
 class VarNode;
 class ExpNode;
@@ -20,7 +19,6 @@ public:
     void runScript(const char* filename);
     Variable* getVariableByName(std::string name);
     FunctionSystem* getFunctionSystem();
-    ObjectManager* getObjectManager();
     Scope* getCurrentScope();
     Scope* getRootScope();
     int getVariableTypeForString(std::string str);
@@ -34,7 +32,6 @@ private:
     void fail();
     double op_on_values(double value1, double value2, std::string op);
     FunctionSystem functionSystem;
-    std::unique_ptr<ObjectManager> objectManager;
     Scope root_scope;
     Scope* current_scope;
 

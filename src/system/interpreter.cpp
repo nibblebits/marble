@@ -16,10 +16,10 @@
 #include "debug.h"
 #include "scope.h"
 #include "variable.h"
+#include "object.h"
 #include "exceptions/IOException.h"
 Interpreter::Interpreter()
 {
-    this->objectManager = std::make_unique<ObjectManager>(this);
     this->current_scope = &root_scope;
 
     getFunctionSystem()->registerFunction("print", [&](std::vector<Value> arguments, Value* return_value) {
@@ -47,6 +47,7 @@ Interpreter::Interpreter()
         return_value->type = VALUE_TYPE_STRING;
         std::cin >> return_value->svalue;
     });
+    
 }
 
 Interpreter::~Interpreter()
@@ -153,11 +154,6 @@ FunctionSystem* Interpreter::getFunctionSystem()
     return &this->functionSystem;
 }
 
-ObjectManager* Interpreter::getObjectManager()
-{
-    return this->objectManager.get();
-}
-
 Scope* Interpreter::getCurrentScope()
 {
     return this->current_scope;
@@ -198,8 +194,6 @@ void Interpreter::finish_parented_scope()
     Scope* old_current = current_scope;
     current_scope = old_current->prev;
     delete old_current;
-    
-    objectManager->clean();
 }
 
 int Interpreter::getVariableTypeForString(std::string str)

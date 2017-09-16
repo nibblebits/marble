@@ -4,6 +4,7 @@
 #include "statics.h"
 #include <string>
 #include <vector>
+#include <memory>
 class Variable;
 class Array;
 class Object;
@@ -14,8 +15,6 @@ public:
     Value(const Value& value);
     virtual ~Value();
     VALUE_TYPE type;
-    // Has this value been activated? This is important and without activation a run-time error will be thrown, call activate();
-    bool activated;
     // The variable who holds this value (NULL if the value stands without a variable)
     Variable* holder;
 
@@ -23,12 +22,12 @@ public:
     union
     {
         double dvalue;
-        Object* ovalue;
-        Array* avalue;
     };
     
+    std::shared_ptr<Object> ovalue;
+    std::shared_ptr<Array> avalue;
+    
     bool isObjectOrArray();
-    void activate();
     
     Value operator+(const Value& other);
     Value operator-(const Value& other);
