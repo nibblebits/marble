@@ -1,6 +1,7 @@
 #include "arraynode.h"
 #include "variable.h"
 #include "array.h"
+#include <iostream>
 ArrayNode::ArrayNode() : ExpressionInterpretableNode(NODE_TYPE_ARRAY)
 {
     this->index_node = NULL;
@@ -11,7 +12,7 @@ ArrayNode::~ArrayNode()
 {
 
 }
-    
+
 Value ArrayNode::interpret(Interpreter* interpreter)
 {
     Value index_exp = this->index_node->interpret(interpreter);
@@ -23,7 +24,7 @@ Value ArrayNode::interpret(Interpreter* interpreter)
     }
     else if(index_exp.dvalue >= next_elem_value.avalue->count)
     {
-        throw std::logic_error("Index out of bounds");
+        throw std::logic_error("Index out of bounds. Index is: " + std::to_string(index_exp.dvalue) + " count is: " + std::to_string(next_elem_value.avalue->count));
     }
     return next_elem_value.avalue->variables[(int)index_exp.dvalue].value;
 }

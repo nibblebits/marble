@@ -402,11 +402,23 @@ void Parser::parse_new()
         parse_error("Expecting a new keyword for creating new instances. This is a interpreter bug please report this");
     }
     
-    parse_expression_for_value();
+    parse_expression();
     ExpressionInterpretableNode* node = (ExpressionInterpretableNode*) pop_node();
-    
     NewNode* new_node = (NewNode*) factory.createNode(NODE_TYPE_NEW);
-    new_node->exp = node;
+    new_node->type_node = node;
+    
+    while (peek()->isSymbol("["))
+    {
+        // This new declaration is handling an array
+        next();
+        parse_expression_for_value();
+        new_node->array_values.push_back((ExpressionInterpretableNode*)pop_node());
+        if (!next()->isSymbol("]"))
+        {
+            parse_error("Expecting a \"]\" symbol to end the array for when creating a new array");
+        }
+    }
+    
     push_node(new_node);
 }
 
