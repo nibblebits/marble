@@ -7,6 +7,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <sstream>
 #include <stdio.h>
 #include "interpreter.h"
 #include "splitter.h"
@@ -21,24 +22,26 @@
 Interpreter::Interpreter()
 {
     this->current_scope = &root_scope;
+    this->output = NULL;
 
     getFunctionSystem()->registerFunction("print", [&](std::vector<Value> arguments, Value* return_value) {
+        std::stringstream ss;
         for (Value v : arguments)
         {
             if (v.type == VALUE_TYPE_NUMBER)
             {
-                std::cout << v.dvalue;
+               ss << v.dvalue;
             }
             else if(v.type == VALUE_TYPE_STRING)
             {
-               std::cout << v.svalue;
+               ss << v.svalue;
             }
             else
             {
-                std::cout << "Invalid value type: " << v.type;
+               ss << "Invalid value type: " << v.type;
             } 
         }
-        std::cout << std::endl;
+        output(ss.str().c_str());
         return_value->type = VALUE_TYPE_NUMBER;
         return_value->dvalue = 1;
     });
@@ -55,11 +58,9 @@ Interpreter::~Interpreter()
 
 }
 
-void Interpreter::output(const char* data)
+void Interpreter::setOutputFunction(OUTPUT_FUNCTION output)
 {
-    /* Here a special output function would be called
-     * instead of direct I/O. This would allow the user of the Marble library to determine how output should be handled. For example if this is running on a standalone application it should output to the console, or if its a web application it should output to the web client of the browsing user.*/
-    std::cout << data << std::endl;
+    this->output = output;
 }
 
 void Interpreter::interpret_body_node(Node* node)
@@ -117,8 +118,17 @@ void Interpreter::interpret_body(BodyNode* node)
    
 }
 
+void Interpreter::ready()
+{
+    if (output == NULL)
+    {
+        throw std::logic_error("Expecting an output function before running a script. Use setOutputFunction(OUTPUT_FUNCTION outputFunction)");
+    }
+}
+
 void Interpreter::run(const char* code)
 {
+    ready();
     Lexer lexer;
     lexer.setInput(code, strlen(code));
     Token* root_token = lexer.lex();
@@ -129,9 +139,10 @@ void Interpreter::run(const char* code)
         token = token->next;
     }
 
-    Parser parser;
-    Node* root_node = parser.parse(root_token);
-    
+    Parser parser(&logger);
+    Node* root_node;
+
+    root_node = parser.parse(root_token);
     Node* current_node = root_node;
     // Awesome now lets interpret!
     while(current_node != NULL)
@@ -314,5 +325,10 @@ void Interpreter::runScript(const char* filename)
     // Close and clean up
     fclose(file);
     delete data;
+}
+
+Logger* Interpreter::getLogger()
+{
+    return &this->logger;
 }
 

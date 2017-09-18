@@ -33,8 +33,9 @@ struct order_of_operation o_of_operation[] =
 };
 
 
-Parser::Parser()
+Parser::Parser(Logger* logger)
 {
+    this->logger = logger;
     this->root_node = NULL;
     this->current_node = NULL;
     this->current_token = NULL;
@@ -58,7 +59,7 @@ bool Parser::legal_value(Token* token)
 
 void Parser::parse_error(std::string message)
 {
-    throw std::logic_error(message);
+    logger->error(message);
 }
 
 void Parser::ensure_type(Token* token, int expected_type)
@@ -705,4 +706,8 @@ Node* Parser::parse(Token* root_token)
     return this->root_node;
 }
 
+Logger* Parser::getLogger()
+{
+    return this->logger;
+}
 

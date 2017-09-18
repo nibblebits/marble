@@ -6,6 +6,7 @@
 #include "statics.h"
 #include "token.h"
 #include "nodefactory.h"
+#include "logger.h"
 
 struct order_of_operation
 {
@@ -17,9 +18,10 @@ struct order_of_operation
 class Parser
 {
 public:
-    Parser();
+    Parser(Logger* logger);
     virtual ~Parser();
     Node* parse(Token* root_token);
+    Logger* getLogger();
 private:
     void global_parse_next();
     bool is_datatype(std::string str);
@@ -63,7 +65,8 @@ private:
 
     bool first_op_has_priority(std::string op1, std::string op2);
     int get_priority_for_op(std::string op);
-
+    
+    Logger* logger;
     NodeFactory factory;
     Token* current_token;
     Node* root_node;

@@ -71,7 +71,15 @@ enum
     RULE_PARSE_ARRAY = 0x02
 };
 
+enum
+{
+    LOG_TYPE_NOTICE,
+    LOG_TYPE_WARNING,
+    LOG_TYPE_ERROR
+};
+
 typedef int TOKEN_TYPE;
 typedef int NODE_TYPE;
 typedef int VALUE_TYPE;
+typedef int LOG_TYPE;
 #endif

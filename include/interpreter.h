@@ -5,6 +5,10 @@
 #include <memory>
 #include "scope.h"
 #include "functionsystem.h"
+#include "logger.h"
+
+typedef std::function<void(const char* output)> OUTPUT_FUNCTION;
+
 class Node;
 class VarNode;
 class ExpNode;
@@ -14,9 +18,11 @@ class Interpreter
 public:
     Interpreter();
     virtual ~Interpreter();
-    void output(const char* data);
+    void setOutputFunction(OUTPUT_FUNCTION output);
+    void ready();
     void run(const char* code);
     void runScript(const char* filename);
+    Logger* getLogger();
     Variable* getVariableByName(std::string name);
     FunctionSystem* getFunctionSystem();
     Scope* getCurrentScope();
@@ -34,7 +40,8 @@ private:
     FunctionSystem functionSystem;
     Scope root_scope;
     Scope* current_scope;
-
+    OUTPUT_FUNCTION output;
+    Logger logger;
 };
 
 #endif
