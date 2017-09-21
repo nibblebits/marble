@@ -11,7 +11,7 @@ Array::Array(Variable* variables, int count)
 
 Array::~Array()
 {
-
+    delete[] variables;
 }
 
 
