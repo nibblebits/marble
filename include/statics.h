@@ -73,9 +73,9 @@ enum
 
 enum
 {
-    LOG_TYPE_NOTICE,
-    LOG_TYPE_WARNING,
-    LOG_TYPE_ERROR
+    LOG_LEVEL_NOTICE,
+    LOG_LEVEL_WARNING,
+    LOG_LEVEL_ERROR
 };
 
 typedef int TOKEN_TYPE;

@@ -1,9 +1,8 @@
 #include "logger.h"
 #include <stdexcept>
-LogEntry::LogEntry(int level, std::string message)
+LogEntry::LogEntry(const int level, const std::string message, const PosInfo posInfo) : level(level), message(message), posInfo(posInfo)
 {
-    this->level = level;
-    this->message = message;
+
 }
 LogEntry::~LogEntry()
 {
@@ -19,9 +18,14 @@ Logger::~Logger()
 
 }
 
-void Logger::error(std::string message)
+void Logger::warn(std::string message, PosInfo posInfo)
 {
-    LogEntry entry(LOG_TYPE_ERROR, message);
+    LogEntry entry(LOG_LEVEL_WARNING, message, posInfo);
+    this->entries.push_back(entry);
+}
+void Logger::error(std::string message, PosInfo posInfo)
+{
+    LogEntry entry(LOG_LEVEL_ERROR, message, posInfo);
     this->entries.push_back(entry);
     throw std::logic_error(message);
 }
@@ -35,7 +39,7 @@ bool Logger::hasErrors()
 {
     for (LogEntry entry : this->entries)
     {
-        if (entry.level == LOG_TYPE_ERROR)
+        if (entry.level == LOG_LEVEL_ERROR)
             return true;
     }
     

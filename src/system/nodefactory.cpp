@@ -1,12 +1,12 @@
 #include "nodefactory.h"
 #include "nodes.h"
+#include <iostream>
 NodeFactory::NodeFactory()
 {
 
 }
 NodeFactory::~NodeFactory()
 {
-
 }
 
 Node* NodeFactory::createNode(NODE_TYPE node_type)

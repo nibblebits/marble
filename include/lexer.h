@@ -4,12 +4,12 @@
 #include <memory>
 #include "tokenfactory.h"
 #include "token.h"
-
+#include "logger.h"
 
 class Lexer
 {
 public:
-    Lexer();
+    Lexer(Logger* logger, PosInfo posInfo);
     virtual ~Lexer();
     void setInput(const char* buf, int size);
     Token* lex();
@@ -33,6 +33,7 @@ private:
     bool is_symbol(char c);
     int is_character(char c);
     bool is_stackable(int token_type);
+    void error(std::string message, PosInfo posInfo);
     int get_type_of_char(char c);
     std::string get_operator(const char** ptr);
     std::string get_number(const char** ptr);
@@ -41,5 +42,8 @@ private:
 
 private:
     TokenFactory tokenFactory;
+    Logger* logger;
+    PosInfo posInfo;
+    const char* filename;
 };
 #endif

@@ -38,6 +38,7 @@ Parser::Parser(Logger* logger)
     this->logger = logger;
     this->root_node = NULL;
     this->current_node = NULL;
+    this->prev_token = NULL;
     this->current_token = NULL;
 }
 Parser::~Parser()
@@ -59,7 +60,9 @@ bool Parser::legal_value(Token* token)
 
 void Parser::parse_error(std::string message)
 {
-    logger->error(message);
+    if (this->prev_token == NULL)
+        throw std::logic_error("No previous token to log error for");
+    logger->error(message, this->prev_token->posInfo);
 }
 
 void Parser::ensure_type(Token* token, int expected_type)
@@ -181,14 +184,14 @@ int Parser::get_priority_for_op(std::string op)
 
 Token* Parser::next()
 {
-    Token* next_token = this->current_token;
-    if (next_token == NULL)
+    Token* token = this->current_token;
+    if (token == NULL)
     {
         return NULL;
     }
-
-    this->current_token = next_token->next;
-    return next_token;
+    this->prev_token = token;
+    this->current_token = this->current_token->next;
+    return token;
 }
 
 Token* Parser::get_identifier_token(std::string error_msg)
@@ -425,7 +428,7 @@ void Parser::parse_new()
 
 void Parser::parse_semicolon()
 {
-    Token*  token = next();
+    Token* token = next();
     if (token == NULL || !token->isSymbol(";"))
     {
         parse_error("Expecting a semicolon");
@@ -696,6 +699,7 @@ void Parser::global_parse_next()
 
 Node* Parser::parse(Token* root_token)
 {
+    this->prev_token = NULL;
     this->root_node = NULL;
     this->current_node = NULL;
     this->current_token = root_token;

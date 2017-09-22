@@ -9,7 +9,8 @@ struct data_descriptor
     int size;
     const char* data;
     struct split* split;
-
+    
+    data_descriptor();
     virtual void update();
 };
 

@@ -2,9 +2,10 @@
 #include "statics.h"
 #include <stdlib.h>
 #include <iostream>
-Token::Token(int type)
+Token::Token(int type, PosInfo posInfo)
 {
     this->type = type;
+    this->posInfo = posInfo;
     this->next = NULL;
 }
 

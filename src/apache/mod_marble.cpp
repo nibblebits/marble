@@ -77,6 +77,28 @@ static bool valid_filename(std::string filename)
     return true; 
 }
 
+std::string format_log_entry(LogEntry entry)
+{
+    std::string type = "";
+    switch(entry.level)
+    {
+        case LOG_LEVEL_NOTICE:
+            type = "Notice";
+        break;
+        case LOG_LEVEL_WARNING:
+            type = "Warning";
+        break;
+        case LOG_LEVEL_ERROR:
+            type = "Error";
+        break;
+        
+        default:
+            type = "Unknown Log Entry";
+    }
+    std::string message = "<b>" + type + "</b>" + ": <i>" + entry.message + "</i> on line " + std::to_string(entry.posInfo.line) + ", column " 
+                + std::to_string(entry.posInfo.col) + " in file " + entry.posInfo.filename + "<br />";
+    return message;
+}
 static int marble_handler(request_rec *req)
 {
     int rc, exists;
@@ -126,9 +148,7 @@ static int marble_handler(request_rec *req)
             // The logger has a log so lets output it
             for(LogEntry entry : logger->entries)
             {
-                std::string message = entry.message;
-                message = "<b>" + message + "</b>" + "<br />";
-                ap_rputs(message.c_str(), req);
+                ap_rputs(format_log_entry(entry).c_str(), req);
             }
         }
     }

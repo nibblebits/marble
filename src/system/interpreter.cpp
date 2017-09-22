@@ -22,7 +22,10 @@
 Interpreter::Interpreter()
 {
     this->current_scope = &root_scope;
-    this->output = NULL;
+    this->output = [](const char* data)
+    {
+        std::cout << data;
+    };
 
     getFunctionSystem()->registerFunction("print", [&](std::vector<Value> arguments, Value* return_value) {
         std::stringstream ss;
@@ -126,16 +129,16 @@ void Interpreter::ready()
     }
 }
 
-void Interpreter::run(const char* code)
+void Interpreter::run(const char* code, PosInfo posInfo)
 {
     ready();
-    Lexer lexer;
+    Lexer lexer(&logger, posInfo);
     lexer.setInput(code, strlen(code));
     Token* root_token = lexer.lex();
     Token* token = root_token;
     while(token != NULL)
     {
-        std::cout << token->getType() << ": " << token->getValue() << std::endl;
+        std::cout << token->getType() << ": " << token->getValue() << " :  line no: " << token->posInfo.line << ", col: " << token->posInfo.col << std::endl;
         token = token->next;
     }
 
@@ -252,32 +255,25 @@ void Interpreter::interpret_variable_node(VarNode* var_node)
 }
 
 
-double Interpreter::op_on_values(double value1, double value2, std::string op)
+void Interpreter::handleLineAndColumn(PosInfo* posInfo, const char* data, int length)
 {
-    if (op == "+")
+    for (int i = 0; i < length; i++)
     {
-        return value1 + value2;
-    }
-    else if(op == "-")
-    {
-        return value1 - value2;
-    }
-    else if(op == "*")
-    {
-        return value1 * value2;
-    }
-    else if(op == "/")
-    {
-        return value1 / value2;
-    }
-
-    else
-    {
-        throw std::logic_error("Unexpected operator: " + op);
+        if (data[i] == 0x0a)
+        {
+            posInfo->line += 1;
+            posInfo->col = 1;
+        }
+        else
+        {
+            posInfo->col+=1;
+        }
     }
 }
+
 void Interpreter::runScript(const char* filename)
 {
+    this->filename = filename;
     // Lets load this script
     FILE* file = fopen(filename, "r");
     if (!file)
@@ -297,7 +293,12 @@ void Interpreter::runScript(const char* filename)
 
     Splitter splitter;
     splitter.setData(data, data_len);
-
+    
+    PosInfo posInfo;
+    posInfo.filename = filename;
+    posInfo.line = 1;
+    posInfo.col = 1;
+    
     split split;
     while(splitter.split(&split))
     {
@@ -308,6 +309,7 @@ void Interpreter::runScript(const char* filename)
             memcpy(output_data, split.output.data, split.output.size);
             output_data[split.output.size] = 0;
             output(output_data);
+            handleLineAndColumn(&posInfo, output_data, split.output.size);
             delete output_data;
         }
 
@@ -317,7 +319,10 @@ void Interpreter::runScript(const char* filename)
             char* code_data = new char[split.code.size+1];
             memcpy(code_data, split.code.data, split.code.size);
             code_data[split.code.size] = 0;
-            run(code_data);
+            // Marble tag "<marble>" should be added to the current position
+            posInfo.col += strlen(MARBLE_OPEN_TAG);
+            run(code_data, posInfo);
+            handleLineAndColumn(&posInfo, code_data, split.code.size);
             delete code_data;
         }
     }

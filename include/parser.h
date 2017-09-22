@@ -68,6 +68,7 @@ private:
     
     Logger* logger;
     NodeFactory factory;
+    Token* prev_token;
     Token* current_token;
     Node* root_node;
     Node* current_node;

@@ -3,6 +3,13 @@
 #include "splitter.h"
 #include "statics.h"
 
+data_descriptor::data_descriptor()
+{
+    this->start = 0;
+    this->end = 0;
+    this->data = 0;
+    this->size = 0;
+}
 void data_descriptor::update()
 {
     this->size = this->end - this->start;

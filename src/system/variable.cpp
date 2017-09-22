@@ -8,5 +8,4 @@ Variable::Variable()
 
 Variable::~Variable()
 {
-
 }

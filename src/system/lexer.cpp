@@ -9,9 +9,11 @@
 const char keywords[][MAX_KEYWORD_SIZE] = {"public", "private", "protected", "number", "char", "string", "bool", "int", "class", "return", "continue", "break", "void", "new", "if"};
 const char valid_operators[][MAX_OPERATORS_SIZE] = {"+", "-", "*", "/", "++", "--", "+=", "-=", "/=", "*=", "-=", "=", ".", "&", "|", "!", "==", "!=", ">=", ">", "<=", "<", "&&", "||"};
 const char symbols[] = {';',',','(', ')', '{', '}','[',']'};
-Lexer::Lexer()
+Lexer::Lexer(Logger* logger, PosInfo posInfo)
 {
+    this->logger = logger;
     this->root = NULL;
+    this->posInfo = posInfo;
 }
 Lexer::~Lexer()
 {
@@ -119,6 +121,11 @@ bool Lexer::is_stackable(int token_type)
     return token_type == TOKEN_TYPE_OPERATOR || token_type == TOKEN_TYPE_NUMBER || token_type == TOKEN_TYPE_STRING;
 }
 
+void Lexer::error(std::string message, PosInfo posInfo)
+{
+    logger->error(message, posInfo);
+}
+
 int Lexer::get_type_of_char(char c)
 {
     int type = -1;
@@ -144,7 +151,7 @@ int Lexer::get_type_of_char(char c)
     }
     else
     {
-        throw std::logic_error("Unexpected type for character " + std::to_string(c) + " in method get_type_of_char");
+        error("Unexpected type for character " + std::to_string(c) + " in method get_type_of_char", posInfo);
     }
 
     return type;
@@ -192,7 +199,7 @@ std::string Lexer::get_string(const char** ptr)
 {
     if (!is_string_seperator(**ptr))
     {
-        throw std::logic_error("Expecting a string seperator for a string");
+        error("Expecting a string seperator for a string", posInfo);
     }
 
     // Ok this appears to be a valid string so far, lets move the pointer forward to ignore the string seperator
@@ -224,7 +231,7 @@ std::string Lexer::get_while(const char** ptr, int expected)
     int type = get_type_of_char(c);
     if (type != expected)
     {
-        throw std::logic_error("While calling \"get_while\" the first character must be of the expected type");
+        error("While calling \"get_while\" the first character must be of the expected type", posInfo);
     }
     while(*ptr < this->end)
     {
@@ -240,11 +247,13 @@ std::string Lexer::get_while(const char** ptr, int expected)
             }
             // Restore the pointer to previous state
             *ptr-=1;
+             posInfo.col-=1;
             break;
         }
 next:
         tokenValue += c;
         *ptr+=1;
+        posInfo.col+=1;
     }
 
     return tokenValue;
@@ -266,7 +275,17 @@ Token* Lexer::stage1()
         char c = *ptr;
         if (is_whitespace(c))
         {
-            ptr++;
+            if (c == 0x0a)
+            {
+                // New line.
+                posInfo.line += 1;
+                posInfo.col = 1;
+            }
+            else
+            {
+                posInfo.col += 1;
+            }
+            ptr+=1;
             continue;
         }
 
@@ -306,7 +325,7 @@ Token* Lexer::stage1()
             }
         }
 
-        Token* new_token = tokenFactory.createToken(token_type);
+        Token* new_token = tokenFactory.createToken(token_type, posInfo);
         new_token->setValue(token_value);
         if (root_token == NULL)
         {
@@ -322,7 +341,8 @@ Token* Lexer::stage1()
         token_type = -1;
         token_value = "";
         // Increment the pointer
-        ptr++;
+        ptr+=1;
+        posInfo.col+=1;
     }
 
     return root_token;
@@ -345,7 +365,7 @@ void Lexer::stage2(Token* root_token)
         {
             if (!is_operator(token_value))
             {
-                throw std::logic_error("Invalid operator: " + token_value);
+                error("Invalid operator: " + token_value, token->posInfo);
             }
         }
         break;

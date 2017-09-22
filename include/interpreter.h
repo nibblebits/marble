@@ -20,7 +20,7 @@ public:
     virtual ~Interpreter();
     void setOutputFunction(OUTPUT_FUNCTION output);
     void ready();
-    void run(const char* code);
+    void run(const char* code, PosInfo posInfo);
     void runScript(const char* filename);
     Logger* getLogger();
     Variable* getVariableByName(std::string name);
@@ -31,17 +31,18 @@ public:
     void interpret_body_node(Node* node);
     void interpret_body(BodyNode* node);
 private:
+    void handleLineAndColumn(PosInfo* posInfo, const char* data, int length);
     void new_parented_scope();
     void finish_parented_scope();
     void interpret_variable_node_for_primitive(VarNode* var_node);
     void interpret_variable_node(VarNode* var_node);
     void fail();
-    double op_on_values(double value1, double value2, std::string op);
     FunctionSystem functionSystem;
     Scope root_scope;
     Scope* current_scope;
     OUTPUT_FUNCTION output;
     Logger logger;
+    const char* filename;
 };
 
 #endif

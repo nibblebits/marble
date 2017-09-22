@@ -3,10 +3,11 @@
 
 #include <string>
 #include <memory>
+#include "posinfo.h"
 class Token
 {
 public:
-    Token(int type);
+    Token(int type, PosInfo posInfo);
     virtual ~Token();
     void setType(int type);
     int getType();
@@ -33,6 +34,8 @@ public:
     Token* next;
     int type;
     std::string value;
+    
+    PosInfo posInfo;
 private:
 };
 #endif

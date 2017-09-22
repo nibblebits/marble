@@ -1,4 +1,4 @@
-SYSTEM_OBJECT_FILES = ./build/system/token.o ./build/system/splitter.o ./build/system/interpreter.o ./build/system/lexer.o ./build/system/parser.o ./build/system/node.o ./build/system/expnode.o ./build/system/varnode.o ./build/system/literalnode.o ./build/system/identifiernode.o ./build/system/debug.o ./build/system/scope.o ./build/system/variable.o ./build/system/fcnode.o ./build/system/keywordnode.o ./build/system/nodefactory.o ./build/system/tokenfactory.o ./build/system/einode.o ./build/system/value.o ./build/system/function.o ./build/system/nativefunction.o ./build/system/functionsystem.o ./build/system/stringnode.o ./build/system/negnode.o ./build/system/statement.o ./build/system/ifstmtnode.o ./build/system/bodynode.o ./build/system/castnode.o ./build/system/arraynode.o ./build/system/newnode.o ./build/system/array.o ./build/system/object.o ./build/system/logger.o
+SYSTEM_OBJECT_FILES = ./build/system/token.o ./build/system/splitter.o ./build/system/interpreter.o ./build/system/lexer.o ./build/system/parser.o ./build/system/node.o ./build/system/expnode.o ./build/system/varnode.o ./build/system/literalnode.o ./build/system/identifiernode.o ./build/system/debug.o ./build/system/scope.o ./build/system/variable.o ./build/system/fcnode.o ./build/system/keywordnode.o ./build/system/nodefactory.o ./build/system/tokenfactory.o ./build/system/einode.o ./build/system/value.o ./build/system/function.o ./build/system/nativefunction.o ./build/system/functionsystem.o ./build/system/stringnode.o ./build/system/negnode.o ./build/system/statement.o ./build/system/ifstmtnode.o ./build/system/bodynode.o ./build/system/castnode.o ./build/system/arraynode.o ./build/system/newnode.o ./build/system/array.o ./build/system/object.o ./build/system/logger.o ./build/system/posinfo.o
 OBJECT_FILE_FLAGS = -c -g -fPIC -std=c++14 -g
 SYSTEM_LIB_LOCAL_FILENAME = libmarble.so
 SYSTEM_LIB_FILE_LOCATION = ./bin/${SYSTEM_LIB_LOCAL_FILENAME}
@@ -72,7 +72,8 @@ system: ${SYSTEM_OBJECT_FILES}
 	g++ -I ./include ./src/system/object.cpp -o ./build/system/object.o ${OBJECT_FILE_FLAGS}
 ./build/system/logger.o: ./src/system/logger.cpp
 	g++ -I ./include ./src/system/logger.cpp -o ./build/system/logger.o ${OBJECT_FILE_FLAGS}
-	
+./build/system/posinfo.o: ./src/system/posinfo.cpp
+	g++ -I ./include ./src/system/posinfo.cpp -o ./build/system/posinfo.o ${OBJECT_FILE_FLAGS}	
 standalone: system
 	cd bin; \
 	g++ -g -I ../include ../src/standalone/main.cpp ./${SYSTEM_LIB_LOCAL_FILENAME}  -std=c++14 -o ./marble;
