@@ -9,6 +9,12 @@ FunctionSystem::FunctionSystem()
     this->currentObj = NULL;
 }
 
+FunctionSystem::FunctionSystem(FunctionSystem* prev_fc_sys)
+{
+    this->prev_fc_sys = prev_fc_sys;
+    this->currentObj = NULL;
+}
+
 
 FunctionSystem::~FunctionSystem()
 {
@@ -17,7 +23,7 @@ FunctionSystem::~FunctionSystem()
 
 Function* FunctionSystem::registerFunction(std::string name, std::function<void(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)> entrypoint)
 {
-    if (hasFunction(name))
+    if (hasFunctionLocally(name))
     {
         throw std::logic_error("Function* FunctionSystem::registerFunction(std::string name, std::function<Value(std::vector<Value>)> entrypoint): The function you are trying to register already exists");
     }
@@ -30,6 +36,19 @@ Function* FunctionSystem::registerFunction(std::string name, std::function<void(
 bool FunctionSystem::hasFunction(std::string name)
 {
     return getFunctionByName(name) != NULL;
+}
+
+bool FunctionSystem::hasFunctionLocally(std::string name)
+{
+    for (int i = 0; i < this->functions.size(); i++)
+    {
+        Function* function = this->functions.at(i).get();
+        if (function->name == name)
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 Function* FunctionSystem::getFunctionByName(std::string name)

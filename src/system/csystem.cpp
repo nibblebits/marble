@@ -1,8 +1,10 @@
 #include "csystem.h"
 #include "interpreter.h"
+#include <iostream>
 ClassSystem::ClassSystem()
 {
     this->interpreter = NULL;
+    this->defaultBaseClass = NULL;
 }
 
 ClassSystem::~ClassSystem()
@@ -12,12 +14,33 @@ ClassSystem::~ClassSystem()
 
 void ClassSystem::setInterpreter(Interpreter* interpreter)
 {
+    if (this->interpreter != NULL)
+        throw std::logic_error("Interpreter already set");
+   
     this->interpreter = interpreter;
 }
 
-Class* ClassSystem::registerClass(std::string class_name)
+void ClassSystem::setDefaultBaseClass(Class* c)
 {
-    Class* c = new Class(class_name, this->interpreter->getRootFunctionSystem());
+    this->defaultBaseClass = c;
+}
+
+Class* ClassSystem::registerClass(std::string class_name, Class* parent)
+{
+    if (hasClassWithName(class_name))
+        throw std::logic_error("The class: " + class_name + " has already been registered");
+    
+    Class* c; 
+    if (parent == NULL && this->defaultBaseClass == NULL)
+    {
+        c = new Class(class_name, this->interpreter->getRootFunctionSystem());
+    }
+    else
+    {
+        if (parent == NULL)
+            parent = this->defaultBaseClass;      
+        c = new Class(class_name, parent);
+    }
     this->classes.push_back(std::unique_ptr<Class>(c));
     return c;
 }
@@ -33,4 +56,8 @@ Class* ClassSystem::getClassByName(std::string name)
    
     return NULL;
 }
-    
+
+bool ClassSystem::hasClassWithName(std::string name)
+{
+    return getClassByName(name) != NULL;
+}

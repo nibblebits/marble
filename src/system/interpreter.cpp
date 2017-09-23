@@ -18,6 +18,7 @@
 #include "scope.h"
 #include "variable.h"
 #include "object.h"
+#include "function.h"
 #include "class.h"
 #include "array.h"
 #include "exceptions/IOException.h"
@@ -32,6 +33,21 @@ Interpreter::Interpreter()
         std::cout << data;
     };
 
+    // Lets create an Object base class that will be the base class of all objects, we should also create an array class that will be used for arrays
+    Class* c = getClassSystem()->registerClass("Object");
+    c->registerFunction("toString", [&](std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+        return_value->type = VALUE_TYPE_STRING;
+        return_value->svalue = object->getClass()->name;
+    });
+    getClassSystem()->setDefaultBaseClass(c);
+    
+    c = getClassSystem()->registerClass("array");
+    c->registerFunction("size",  [&](std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+        std::shared_ptr<Array> array = std::dynamic_pointer_cast<Array>(object);
+        return_value->type = VALUE_TYPE_NUMBER;
+        return_value->dvalue = array->count;
+    });
+    
     getFunctionSystem()->registerFunction("print", [&](std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
         std::stringstream ss;
         for (Value v : arguments)
@@ -58,13 +74,7 @@ Interpreter::Interpreter()
         return_value->type = VALUE_TYPE_STRING;
         std::cin >> return_value->svalue;
     });
-    
-    Class* c = getClassSystem()->registerClass("array");
-    c->registerFunction("size",  [&](std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
-        std::shared_ptr<Array> array = std::dynamic_pointer_cast<Array>(object);
-        return_value->type = VALUE_TYPE_NUMBER;
-        return_value->dvalue = array->count;
-    });
+   
 }
 
 Interpreter::~Interpreter()

@@ -11,11 +11,14 @@ public:
     ClassSystem();
     virtual ~ClassSystem();
     void setInterpreter(Interpreter* interpreter);
-    Class* registerClass(std::string class_name);
+    void setDefaultBaseClass(Class* c);
+    Class* registerClass(std::string class_name, Class* parent=NULL);
     Class* getClassByName(std::string name);
+    bool hasClassWithName(std::string name);
     std::vector<std::unique_ptr<Class>> classes;
 private:
     Interpreter* interpreter;
+    Class* defaultBaseClass;
 };
 
 #endif

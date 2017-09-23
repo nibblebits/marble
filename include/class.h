@@ -6,7 +6,9 @@ class Class : public FunctionSystem
 {
 public:
     Class(std::string name, FunctionSystem* interpreter);
+    Class(std::string name, Class* parent);
     virtual ~Class();
     std::string name;
+    Class* parent;
 };
 #endif
