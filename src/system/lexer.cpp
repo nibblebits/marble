@@ -233,7 +233,7 @@ std::string Lexer::get_while(const char** ptr, int expected)
     {
         error("While calling \"get_while\" the first character must be of the expected type", posInfo);
     }
-    while(*ptr < this->end)
+    while(bounds_safe(*ptr))
     {
         c = **ptr;
         type = get_type_of_char(c);
@@ -270,7 +270,7 @@ Token* Lexer::stage1()
     int token_type = -1;
     std::string token_value = "";
     // We will loop through the whole thing and when we reach a whitespace a token has been completed
-    while (ptr < this->end)
+    while (bounds_safe(ptr))
     {
         char c = *ptr;
         if (is_whitespace(c))
@@ -344,7 +344,10 @@ Token* Lexer::stage1()
         ptr+=1;
         posInfo.col+=1;
     }
-
+    
+    if (root_token == NULL)
+        logger->error("No input provided", posInfo);
+        
     return root_token;
 }
 

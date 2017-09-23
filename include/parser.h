@@ -2,6 +2,7 @@
 #define PARSER_H
 #include <vector>
 #include <string>
+#include <memory>
 #include "nodes.h"
 #include "statics.h"
 #include "token.h"
@@ -65,6 +66,9 @@ private:
 
     bool first_op_has_priority(std::string op1, std::string op2);
     int get_priority_for_op(std::string op);
+    
+    // A token that has no value and is returned rather than returning NULL
+    std::unique_ptr<Token> dummy_token;
     
     Logger* logger;
     NodeFactory factory;

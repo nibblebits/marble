@@ -41,6 +41,13 @@ Parser::Parser(Logger* logger)
     this->current_node = NULL;
     this->prev_token = NULL;
     this->current_token = NULL;
+   
+    PosInfo info;
+    info.line = -1;
+    info.col = -1;
+    info.filename = "DUMMY";
+    
+    this->dummy_token = std::unique_ptr<Token>(new Token(-1, info));
 }
 Parser::~Parser()
 {
@@ -147,6 +154,9 @@ Token* Parser::peek(int ahead)
 
 Token* Parser::peek()
 {
+    if (this->current_token == NULL)
+        return dummy_token.get();
+        
     return this->current_token;
 }
 
@@ -157,7 +167,7 @@ Token* Parser::peek(Token* token, int ahead)
     for (int i = 0; i < ahead; i++)
     {
         if (token_to_return->next == NULL)
-            return NULL;
+            return dummy_token.get();
 
         token_to_return = token_to_return->next;
     }
@@ -188,7 +198,7 @@ Token* Parser::next()
     Token* token = this->current_token;
     if (token == NULL)
     {
-        return NULL;
+        parse_error("Expecting input");
     }
     this->prev_token = token;
     this->current_token = this->current_token->next;
