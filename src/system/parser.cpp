@@ -217,8 +217,7 @@ Token* Parser::get_identifier_token(std::string error_msg)
 
 void Parser::parse_variable_declaration()
 {
-    // Types should be treated as an expression due to the senario "class.other_class var_name"
-    parse_expression();
+    parse_value();
     Node* data_type_node = pop_node();
     int array_dimensions = 0;
     while (peek()->isSymbol("["))
@@ -252,9 +251,9 @@ void Parser::parse_function_call()
 {  
     // Let's parse the function name
     parse_single_token();
-    ExpressionInterpretableNode* dest_node = (ExpressionInterpretableNode*) pop_node();
+    IdentifierNode* name_node = (IdentifierNode*) pop_node();
     FunctionCallNode* func_call_node = (FunctionCallNode*) factory.createNode(NODE_TYPE_FUNCTION_CALL);
-    func_call_node->dest = dest_node;
+    func_call_node->name = name_node;
     // Now that we have the node lets parse the arguments
     parse_arguments(&func_call_node->arguments);
     push_node(func_call_node);
@@ -688,13 +687,26 @@ void Parser::parse_body_next()
     {
         parse_if_stmt();
     }
+    else if(this->current_token->isKeyword("new"))
+    {
+        parse_new();
+        parse_semicolon();
+    }
     else if(this->current_token->isIdentifier())
     {
         /* The token is an identifier so this can be treated as an expression as it is one of the following
          * 1. Representing a variable
          * 2. An assignment
          * 3. A function call
+         * 4. A variable declaration with an object type
          */
+        if (peek(this->current_token, 1)->isIdentifier())
+        {
+            // This is a variable declaration
+            parse_variable_declaration();
+            parse_semicolon();
+            return;
+        }
         parse_expression_for_value();
         parse_semicolon();
     }

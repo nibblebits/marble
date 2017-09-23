@@ -254,10 +254,25 @@ int Interpreter::getVariableTypeForString(std::string str)
     }
     return type;
 }
-void Interpreter::interpret_variable_node_for_primitive(VarNode* var_node)
+
+void Interpreter::interpret_variable_node(VarNode* var_node)
 {
-    int type = -1;
-    KeywordNode* type_node = (KeywordNode*)var_node->type;
+    Node* type_node = var_node->type;
+    std::string type = "";
+    switch (type_node->type)
+    {
+        case NODE_TYPE_KEYWORD:
+        {
+            type = ((KeywordNode*)var_node->type)->value;
+        }
+        break;
+        
+        case NODE_TYPE_IDENTIFIER:
+        {
+            type = ((IdentifierNode*)var_node->type)->value;
+        }
+        break;
+    }
     
     std::string name = var_node->name;
     ExpressionInterpretableNode* value_node = (ExpressionInterpretableNode*)var_node->value;
@@ -268,21 +283,8 @@ void Interpreter::interpret_variable_node_for_primitive(VarNode* var_node)
     variable->value = value_node->interpret(this);
     variable->value.holder = variable;
     variable->name = name;
-    variable->type = getVariableTypeForString(type_node->value);
+    variable->type = getVariableTypeForString(type);
     current_scope->registerVariable(variable);
-}
-
-void Interpreter::interpret_variable_node(VarNode* var_node)
-{
-    Node* type_node = var_node->type;
-    switch (type_node->type)
-    {
-        case NODE_TYPE_KEYWORD:
-        {
-            interpret_variable_node_for_primitive(var_node);
-        }
-        break;
-    }
 }
 
 

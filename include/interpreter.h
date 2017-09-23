@@ -38,7 +38,6 @@ private:
     void handleLineAndColumn(PosInfo* posInfo, const char* data, int length);
     void new_parented_scope();
     void finish_parented_scope();
-    void interpret_variable_node_for_primitive(VarNode* var_node);
     void interpret_variable_node(VarNode* var_node);
     void fail();
     // Root systems

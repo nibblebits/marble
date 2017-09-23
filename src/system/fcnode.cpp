@@ -7,7 +7,7 @@
 #include <stdexcept>
 FunctionCallNode::FunctionCallNode() : ExpressionInterpretableNode(NODE_TYPE_FUNCTION_CALL)
 {
-    this->dest = NULL;
+    this->name = NULL;
 }
 
 FunctionCallNode::~FunctionCallNode()
@@ -18,7 +18,6 @@ FunctionCallNode::~FunctionCallNode()
 Value FunctionCallNode::interpret(Interpreter* interpreter)
 {
    Value value;
-
    std::vector<Value> argument_results;
    for (ExpressionInterpretableNode* argument_node : this->arguments)
    {
@@ -26,18 +25,13 @@ Value FunctionCallNode::interpret(Interpreter* interpreter)
        argument_results.push_back(v);
    }
 
-    if (this->dest->type == NODE_TYPE_IDENTIFIER)
-    {
-        IdentifierNode* iden_dest = (IdentifierNode*) this->dest;
-        FunctionSystem* functionSystem = interpreter->getFunctionSystem();
-        Function* function = functionSystem->getFunctionByName(iden_dest->value);
-        if (function == NULL)
-        {
-            throw std::logic_error("Value FunctionCallNode::interpret(Interpreter* interpreter): Attempting to invoke a function that has not been registered");
-        }
+   FunctionSystem* functionSystem = interpreter->getFunctionSystem();
+   Function* function = functionSystem->getFunctionByName(name->value);
+   if (function == NULL)
+   {
+        throw std::logic_error("Value FunctionCallNode::interpret(Interpreter* interpreter): Attempting to invoke a function that has not been registered");
+   }
 
-        function->invoke(argument_results, &value, functionSystem->currentObj);
-    }
-    
-    return value;
+   function->invoke(argument_results, &value, functionSystem->currentObj);
+   return value;
 }

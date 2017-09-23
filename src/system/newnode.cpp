@@ -3,6 +3,7 @@
 #include "variable.h"
 #include "array.h"
 #include "interpreter.h"
+#include "fcnode.h"
 #include <iostream>
 #include <memory>
 NewNode::NewNode() : ExpressionInterpretableNode(NODE_TYPE_NEW)
@@ -30,6 +31,21 @@ std::shared_ptr<Array> NewNode::new_variable_array(Interpreter* interpreter, int
         var->value.holder = var;
     }
     return std::make_shared<Array>(interpreter->getClassSystem()->getClassByName("array"), variables, total_elements);
+}
+
+
+void NewNode::new_object_variable(Interpreter* interpreter, Value& v, std::string class_name)
+{
+    v.type = VALUE_TYPE_OBJECT;
+    v.ovalue = std::make_shared<Object>(interpreter->getClassSystem()->getClassByName(class_name));
+}
+
+void NewNode::handle_new_variable(Interpreter* interpreter, Value& v)
+{
+    /* It is natural for this type node to be a function call node as it will be calling a constructor, e.g new Object();
+     * the difference is we will not be interpreting instead we will be using it*/ 
+    FunctionCallNode* fc_node = (FunctionCallNode*) this->type_node;
+    new_object_variable(interpreter, v, fc_node->name->value);
 }
 
 std::shared_ptr<Array> NewNode::new_array_array(Interpreter* interpreter, int total_elements, std::vector<ExpressionInterpretableNode*>::iterator it)
@@ -64,6 +80,14 @@ void NewNode::handle_array(Interpreter* interpreter, Value& v, std::vector<Expre
                 v.avalue = new_variable_array(interpreter, var_type, total_elements);
             }
             break;
+            
+            case NODE_TYPE_IDENTIFIER:
+            {
+                IdentifierNode* identifier_node = (IdentifierNode*) type_node;
+                var_type = VARIABLE_TYPE_OBJECT;
+                v.avalue = new_variable_array(interpreter, var_type, total_elements);
+            }
+            break;
         }
     }
     else
@@ -81,6 +105,10 @@ Value NewNode::interpret(Interpreter* interpreter)
     if (this->isArray())
     {
         handle_array(interpreter, v, this->array_values.begin());
+    }
+    else
+    {
+       handle_new_variable(interpreter, v);
     }
     return v;
 }
