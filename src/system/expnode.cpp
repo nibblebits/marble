@@ -3,7 +3,10 @@
 #include "identifiernode.h"
 #include "literalnode.h"
 #include "statics.h"
+#include "object.h"
+#include "interpreter.h"
 #include <iostream>
+#include <memory>
 ExpNode::ExpNode() : ExpressionInterpretableNode(NODE_TYPE_EXPRESSION)
 {
     this->left = NULL;
@@ -111,9 +114,25 @@ Value ExpNode::interpret(Interpreter* interpreter)
         return result;        
     }
 
-
+    FunctionSystem* old_fc_system = NULL;
     Value left_v = this->left->interpret(interpreter);
+    if (this->op == ".")
+    {
+        old_fc_system = interpreter->getFunctionSystem();
+        // Left_v has the object to access
+        std::shared_ptr<Object> obj = left_v.ovalue;
+        Class* c = obj->getClass();
+        c->currentObj = obj;
+        interpreter->setCurrentFunctionSystem(obj->getClass());
+    }
     Value right_v = this->right->interpret(interpreter);
+    if (this->op == ".")
+    {
+        // Restore the old function system
+        interpreter->setCurrentFunctionSystem(old_fc_system);
+        result = right_v;
+        return result;
+    }
     result = mathify(left_v, right_v, this->op);
     return result;
 }

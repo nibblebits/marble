@@ -5,7 +5,8 @@
 
 FunctionSystem::FunctionSystem()
 {
-
+    this->prev_fc_sys = NULL;
+    this->currentObj = NULL;
 }
 
 
@@ -14,7 +15,7 @@ FunctionSystem::~FunctionSystem()
 
 }
 
-Function* FunctionSystem::registerFunction(std::string name, std::function<void(std::vector<Value> values, Value* return_value)> entrypoint)
+Function* FunctionSystem::registerFunction(std::string name, std::function<void(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)> entrypoint)
 {
     if (hasFunction(name))
     {
@@ -42,5 +43,7 @@ Function* FunctionSystem::getFunctionByName(std::string name)
         }
     }
 
+    if (this->prev_fc_sys != NULL)
+        return this->prev_fc_sys->getFunctionByName(name);
     return NULL;
 }

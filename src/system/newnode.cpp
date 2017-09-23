@@ -20,7 +20,7 @@ bool NewNode::isArray()
     return !this->array_values.empty();
 }
 
-std::shared_ptr<Array> NewNode::new_variable_array(int var_type, int total_elements)
+std::shared_ptr<Array> NewNode::new_variable_array(Interpreter* interpreter, int var_type, int total_elements)
 {
     Variable* variables = new Variable[total_elements];
     for (int i = 0; i < total_elements; i++)
@@ -29,7 +29,7 @@ std::shared_ptr<Array> NewNode::new_variable_array(int var_type, int total_eleme
         var->type = var_type;
         var->value.holder = var;
     }
-    return std::make_shared<Array>(variables, total_elements);
+    return std::make_shared<Array>(interpreter->getClassSystem()->getClassByName("array"), variables, total_elements);
 }
 
 std::shared_ptr<Array> NewNode::new_array_array(Interpreter* interpreter, int total_elements, std::vector<ExpressionInterpretableNode*>::iterator it)
@@ -43,7 +43,7 @@ std::shared_ptr<Array> NewNode::new_array_array(Interpreter* interpreter, int to
         handle_array(interpreter, var->value, it+1);
         var->value.holder = var;
     }
-    return std::make_shared<Array>(variables, total_elements);
+    return std::make_shared<Array>(interpreter->getClassSystem()->getClassByName("array"), variables, total_elements);
 }
 
 
@@ -61,7 +61,7 @@ void NewNode::handle_array(Interpreter* interpreter, Value& v, std::vector<Expre
             {
                 KeywordNode* keyword_type = (KeywordNode*) type_node;
                 var_type = interpreter->getVariableTypeForString(keyword_type->value);
-                v.avalue = new_variable_array(var_type, total_elements);
+                v.avalue = new_variable_array(interpreter, var_type, total_elements);
             }
             break;
         }

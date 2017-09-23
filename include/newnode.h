@@ -16,7 +16,7 @@ class NewNode : public ExpressionInterpretableNode
         virtual Value interpret(Interpreter* interpreter);
     private:
         std::shared_ptr<Array> new_array_array(Interpreter* interpreter, int total_elements, std::vector<ExpressionInterpretableNode*>::iterator it);
-        std::shared_ptr<Array> new_variable_array(int var_type, int total_elements);
+        std::shared_ptr<Array> new_variable_array(Interpreter* interpreter, int var_type, int total_elements);
         void handle_array(Interpreter* interpreter, Value& v, std::vector<ExpressionInterpretableNode*>::iterator it);
 };
 #endif

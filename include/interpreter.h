@@ -5,6 +5,7 @@
 #include <memory>
 #include "scope.h"
 #include "functionsystem.h"
+#include "csystem.h"
 #include "logger.h"
 
 typedef std::function<void(const char* output)> OUTPUT_FUNCTION;
@@ -22,9 +23,12 @@ public:
     void ready();
     void run(const char* code, PosInfo posInfo);
     void runScript(const char* filename);
+    void setCurrentFunctionSystem(FunctionSystem* current_fc_system);
     Logger* getLogger();
     Variable* getVariableByName(std::string name);
+    FunctionSystem* getRootFunctionSystem();
     FunctionSystem* getFunctionSystem();
+    ClassSystem* getClassSystem();
     Scope* getCurrentScope();
     Scope* getRootScope();
     int getVariableTypeForString(std::string str);
@@ -37,7 +41,10 @@ private:
     void interpret_variable_node_for_primitive(VarNode* var_node);
     void interpret_variable_node(VarNode* var_node);
     void fail();
+    // Root systems
     FunctionSystem functionSystem;
+    ClassSystem classSystem;
+    FunctionSystem* currentFunctionSystem;
     Scope root_scope;
     Scope* current_scope;
     OUTPUT_FUNCTION output;

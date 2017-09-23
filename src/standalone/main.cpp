@@ -10,15 +10,8 @@ void interpret()
     interpreter.setOutputFunction([](const char* data) {
         std::cout << data;
     });
-    try
-    {
-        interpreter.runScript("./test.marble");
-    } 
-    catch(...)
-    {
-        std::cout << "Exception was thrown" << std::endl;
-    }
-    
+
+    interpreter.runScript("./test.marble");    
     Logger* logger = interpreter.getLogger();
     for (LogEntry entry : logger->entries)
     {

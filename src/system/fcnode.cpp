@@ -29,13 +29,14 @@ Value FunctionCallNode::interpret(Interpreter* interpreter)
     if (this->dest->type == NODE_TYPE_IDENTIFIER)
     {
         IdentifierNode* iden_dest = (IdentifierNode*) this->dest;
-        Function* function = interpreter->getFunctionSystem()->getFunctionByName(iden_dest->value);
+        FunctionSystem* functionSystem = interpreter->getFunctionSystem();
+        Function* function = functionSystem->getFunctionByName(iden_dest->value);
         if (function == NULL)
         {
             throw std::logic_error("Value FunctionCallNode::interpret(Interpreter* interpreter): Attempting to invoke a function that has not been registered");
         }
 
-        function->invoke(argument_results, &value);
+        function->invoke(argument_results, &value, functionSystem->currentObj);
     }
     
     return value;

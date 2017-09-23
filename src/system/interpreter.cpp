@@ -18,16 +18,21 @@
 #include "scope.h"
 #include "variable.h"
 #include "object.h"
+#include "class.h"
+#include "array.h"
 #include "exceptions/IOException.h"
 Interpreter::Interpreter()
 {
     this->current_scope = &root_scope;
+    this->currentFunctionSystem = &functionSystem;
+    this->classSystem.setInterpreter(this);
+    
     this->output = [](const char* data)
     {
         std::cout << data;
     };
 
-    getFunctionSystem()->registerFunction("print", [&](std::vector<Value> arguments, Value* return_value) {
+    getFunctionSystem()->registerFunction("print", [&](std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
         std::stringstream ss;
         for (Value v : arguments)
         {
@@ -49,11 +54,17 @@ Interpreter::Interpreter()
         return_value->dvalue = 1;
     });
     
-     getFunctionSystem()->registerFunction("input_string", [&](std::vector<Value> arguments, Value* return_value) {
+    getFunctionSystem()->registerFunction("input_string", [&](std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
         return_value->type = VALUE_TYPE_STRING;
         std::cin >> return_value->svalue;
     });
     
+    Class* c = getClassSystem()->registerClass("array");
+    c->registerFunction("size",  [&](std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+        std::shared_ptr<Array> array = std::dynamic_pointer_cast<Array>(object);
+        return_value->type = VALUE_TYPE_NUMBER;
+        return_value->dvalue = array->count;
+    });
 }
 
 Interpreter::~Interpreter()
@@ -163,9 +174,19 @@ void Interpreter::fail()
 }
 
 
-FunctionSystem* Interpreter::getFunctionSystem()
+FunctionSystem* Interpreter::getRootFunctionSystem()
 {
     return &this->functionSystem;
+}
+
+FunctionSystem* Interpreter::getFunctionSystem()
+{
+    return this->currentFunctionSystem;
+}
+
+ClassSystem* Interpreter::getClassSystem()
+{
+    return &this->classSystem;
 }
 
 Scope* Interpreter::getCurrentScope()
@@ -330,6 +351,11 @@ void Interpreter::runScript(const char* filename)
     // Close and clean up
     fclose(file);
     delete data;
+}
+
+void Interpreter::setCurrentFunctionSystem(FunctionSystem* current_fc_system)
+{
+    this->currentFunctionSystem = current_fc_system;
 }
 
 Logger* Interpreter::getLogger()
