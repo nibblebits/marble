@@ -25,6 +25,7 @@ Variable* Scope::createVariable()
 {
     Variable* variable = new Variable();
     this->unique_variables.push_back(std::unique_ptr<Variable>(variable));
+    registerVariable(variable);
     return variable;
 }
 
