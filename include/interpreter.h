@@ -31,13 +31,14 @@ public:
     ClassSystem* getClassSystem();
     Scope* getCurrentScope();
     Scope* getRootScope();
+    void setCurrentScope(Scope* scope);
     int getVariableTypeForString(std::string str);
     void interpret_body_node(Node* node);
     void interpret_body(BodyNode* node);
 private:
-    void handleLineAndColumn(PosInfo* posInfo, const char* data, int length);
     void new_parented_scope();
     void finish_parented_scope();
+    void handleLineAndColumn(PosInfo* posInfo, const char* data, int length);
     void interpret_variable_node(VarNode* var_node);
     void fail();
     // Root systems

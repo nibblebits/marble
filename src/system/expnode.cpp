@@ -114,15 +114,19 @@ Value ExpNode::interpret(Interpreter* interpreter)
         return result;        
     }
 
-    FunctionSystem* old_fc_system = NULL;
+    FunctionSystem* old_fc_system;
+    Scope* old_scope;
     Value left_v = this->left->interpret(interpreter);
     if (this->op == ".")
     {
         old_fc_system = interpreter->getFunctionSystem();
+        old_scope = interpreter->getCurrentScope();
         // Left_v has the object to access
         std::shared_ptr<Object> obj = left_v.ovalue;
         Class* c = obj->getClass();
         c->currentObj = obj;
+        // The object scope is where all the attributes for the object ar stored so while we are accessing this object it should be set.
+        interpreter->setCurrentScope(obj->getScope());
         interpreter->setCurrentFunctionSystem(obj->getClass());
     }
     Value right_v = this->right->interpret(interpreter);
@@ -130,6 +134,8 @@ Value ExpNode::interpret(Interpreter* interpreter)
     {
         // Restore the old function system
         interpreter->setCurrentFunctionSystem(old_fc_system);
+        // Restore the old scope
+        interpreter->setCurrentScope(old_scope);
         result = right_v;
         return result;
     }

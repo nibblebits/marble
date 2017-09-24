@@ -209,6 +209,11 @@ Scope* Interpreter::getRootScope()
     return &this->root_scope;
 }
 
+void Interpreter::setCurrentScope(Scope* scope)
+{
+    this->current_scope = scope;
+}
+
 Variable* Interpreter::getVariableByName(std::string name)
 {
     Variable* variable = NULL;
@@ -223,6 +228,9 @@ Variable* Interpreter::getVariableByName(std::string name)
         
         scope = scope->prev;
     }
+    
+    if (variable == NULL)
+        throw std::logic_error("Variable not found: " + name);
 
     return variable;
 }
@@ -284,7 +292,6 @@ void Interpreter::interpret_variable_node(VarNode* var_node)
     variable->value.holder = variable;
     variable->name = name;
     variable->type = getVariableTypeForString(type);
-    current_scope->registerVariable(variable);
 }
 
 
