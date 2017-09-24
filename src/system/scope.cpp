@@ -29,6 +29,16 @@ Variable* Scope::createVariable()
     return variable;
 }
 
+Variable* Scope::cloneCreate(Variable* variable)
+{
+    Variable* new_variable = createVariable();
+    new_variable->type = variable->type;
+    new_variable->name = variable->name;
+    new_variable->value = variable->value;
+    new_variable->value.holder = new_variable;
+    return new_variable;
+}
+
 Variable* Scope::getVariable(std::string variable_name)
 {
     for (Variable* variable : this->variables)

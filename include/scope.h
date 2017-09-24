@@ -13,6 +13,7 @@ public:
     virtual ~Scope();
     void registerVariable(Variable* variable);
     Variable* createVariable();
+    Variable* cloneCreate(Variable* variable);
     Variable* getVariable(std::string variable_name);
     std::vector<Variable*> getVariables();
     std::vector<Variable*> getObjectVariablesFor(std::shared_ptr<Object> object);

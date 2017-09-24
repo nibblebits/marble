@@ -39,6 +39,13 @@ Interpreter::Interpreter()
         return_value->type = VALUE_TYPE_STRING;
         return_value->svalue = object->getClass()->name;
     });
+    Variable v;
+    v.type = VARIABLE_TYPE_NUMBER;
+    v.name = "hello";
+    v.value.type = VALUE_TYPE_NUMBER;
+    v.value.dvalue = 93;
+    c->addLocalVariable(v);
+    
     getClassSystem()->setDefaultBaseClass(c);
     
     c = getClassSystem()->registerClass("array");
