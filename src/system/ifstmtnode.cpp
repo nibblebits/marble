@@ -2,7 +2,7 @@
 #include "interpreter.h"
 IfStatementNode::IfStatementNode() : Statement(NODE_TYPE_IF_STMT)
 {
-
+    this->exp = NULL;
 }
 
 IfStatementNode::~IfStatementNode()
@@ -11,14 +11,20 @@ IfStatementNode::~IfStatementNode()
 }
 
 
-void IfStatementNode::interpret(Interpreter* interpreter)
+Value IfStatementNode::interpret(Interpreter* interpreter)
 {
+    if (exp == NULL)
+        throw std::logic_error("Expecting an expression");
+    
     // Test the expression
     Value result = exp->interpret(interpreter);
     // Do we have a true result?
     if (result.dvalue == 1)
     {
         // We do lets execute
-        interpreter->interpret_body(body);
+        body->interpret(interpreter);
     }   
+    
+    Value v;
+    return v;
 }

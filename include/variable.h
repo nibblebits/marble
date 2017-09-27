@@ -7,6 +7,7 @@ class Variable
 public:
     Variable();
     virtual ~Variable();
+    static int getVariableTypeForString(std::string str);
     std::string name;
     int type;
     struct Value value;

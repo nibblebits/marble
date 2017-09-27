@@ -91,7 +91,16 @@ Node* NodeFactory::createNode(NODE_TYPE node_type)
         node = new NewNode();
     }
     break;
-    
+    case NODE_TYPE_FUNCTION:
+    {
+        node = new FunctionNode();
+    }
+    break;   
+    case NODE_TYPE_RETURN:
+    {
+        node = new ReturnNode();
+    }
+    break;
     default:
         throw std::logic_error("Invalid node type provided to NodeFactory::createNode");
     }

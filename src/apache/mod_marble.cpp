@@ -40,6 +40,51 @@
 // request_rec Struct Reference
 // http://ci.apache.org/projects/httpd/trunk/doxygen/structrequest__rec.html
 
+
+typedef struct
+{
+    char context[256];
+    char* max_memory;
+} configuration;
+
+static configuration config;
+
+static int marble_handler(request_rec *req);
+static void marble_register_hooks(apr_pool_t* p);
+const char* set_max_memory(cmd_parms *cmd, void *cfg_void, const char *arg);
+void *create_dir_conf(apr_pool_t *pool, char *context);
+void *merge_dir_conf(apr_pool_t *pool, void *BASE, void *ADD);
+
+static const command_rec directives[] =
+{
+    AP_INIT_TAKE1("maxMemory", (const char* (*)())set_max_memory, NULL, ACCESS_CONF, "Sets the max memory that marble can use"),
+    { NULL }
+};
+
+
+/* Dispatch list for API hooks */
+module AP_MODULE_DECLARE_DATA mod_marble_module = {
+    STANDARD20_MODULE_STUFF, 
+    create_dir_conf, /* create per-dir    config structures */
+    merge_dir_conf, /* merge  per-dir    config structures */
+    NULL, /* create per-server config structures */
+    NULL, /* merge  per-server config structures */
+    directives, /* table of config file commands       */
+    marble_register_hooks  /* register hooks */
+};
+
+/* Sadly apxs does not compile with G++. I have had to compile with g++ instead of apxs and therefore I have had to duplicate the AP_MODULE_DECLARE_DATA structure as apache requires two symbols. "mod_modulename" and "modulename". Which is usually handled automatically by apxs upon compiling.
+*/
+module AP_MODULE_DECLARE_DATA marble_module = {
+    STANDARD20_MODULE_STUFF, 
+    create_dir_conf, /* create per-dir    config structures */
+    merge_dir_conf, /* merge  per-dir    config structures */
+    NULL, /* create per-server config structures */
+    NULL, /* merge  per-server config structures */
+    directives, /* table of config file commands       */
+    marble_register_hooks  /* register hooks */
+};
+
 std::vector<std::string> split(std::string str, std::string delim)
 {
     std::vector<std::string> splits;
@@ -66,7 +111,6 @@ static bool valid_filename(std::string filename)
     if (vec.empty())
         return false;
     
-
     std::string final_part = vec[vec.size()-1];
     vec = split(final_part, ".");
     if (vec.empty())
@@ -99,8 +143,10 @@ std::string format_log_entry(LogEntry entry)
                 + std::to_string(entry.posInfo.col) + " in file " + entry.posInfo.filename + "<br />";
     return message;
 }
+
 static int marble_handler(request_rec *req)
 {
+    configuration* config = (configuration*) ap_get_module_config(req->per_dir_config, &marble_module);
     int rc, exists;
     apr_finfo_t finfo;
     
@@ -156,31 +202,49 @@ static int marble_handler(request_rec *req)
     return OK;
 }
 
-static void marble_register_hooks(apr_pool_t *p)
+static void marble_register_hooks(apr_pool_t* p)
 {
-    printf("\n ** helloworld_register_hooks  **\n\n");
+    printf("\n ** marble_register_hooks  **\n\n");
     ap_hook_handler(marble_handler, NULL, NULL, APR_HOOK_MIDDLE);
 }
 
-/* Dispatch list for API hooks */
- module AP_MODULE_DECLARE_DATA mod_marble_module = {
-    STANDARD20_MODULE_STUFF, 
-    NULL, /* create per-dir    config structures */
-    NULL, /* merge  per-dir    config structures */
-    NULL, /* create per-server config structures */
-    NULL, /* merge  per-server config structures */
-    NULL, /* table of config file commands       */
-    marble_register_hooks  /* register hooks */
-};
 
-/* Sadly apxs does not compile with G++. I have had to compile with g++ instead of apxs and therefore I have had to duplicate the AP_MODULE_DECLARE_DATA structure as apache requires two symbols. "mod_modulename" and "modulename". Which is usually handled automatically by apxs upon compiling.
-*/
-module AP_MODULE_DECLARE_DATA marble_module = {
-    STANDARD20_MODULE_STUFF, 
-    NULL, /* create per-dir    config structures */
-    NULL, /* merge  per-dir    config structures */
-    NULL, /* create per-server config structures */
-    NULL, /* merge  per-server config structures */
-    NULL, /* table of config file commands       */
-    marble_register_hooks  /* register hooks */
-};
+const char* set_max_memory(cmd_parms *cmd, void *cfg_void, const char *arg)
+{
+    printf("\n ** set_max_memory **\n\n");
+    configuration* cfg = (configuration*) cfg_void;
+    cfg->max_memory = (char*) arg;
+    return NULL;
+}
+
+void *create_dir_conf(apr_pool_t *pool, char *context)
+{
+    context = context ? context : (char*) "Newly created configuration";
+
+    /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+    configuration* cfg = (configuration*) apr_pcalloc(pool, sizeof(configuration));
+    /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+    if(cfg)
+    {
+         /* Set some default values */
+         strcpy(cfg->context, context);
+         cfg->max_memory = (char*) "10MB";
+    }
+
+    return cfg;
+}
+
+void *merge_dir_conf(apr_pool_t *pool, void *BASE, void *ADD)
+{
+    /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+    configuration* base = (configuration*) BASE;
+    configuration* add = (configuration*) ADD;
+    configuration* conf = (configuration*) create_dir_conf(pool, (char*) "Merged configuration");
+    /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+    conf->max_memory = add->max_memory;
+    return conf;
+}
+
+

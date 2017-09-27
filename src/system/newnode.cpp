@@ -76,7 +76,7 @@ void NewNode::handle_array(Interpreter* interpreter, Value& v, std::vector<Expre
             case NODE_TYPE_KEYWORD:
             {
                 KeywordNode* keyword_type = (KeywordNode*) type_node;
-                var_type = interpreter->getVariableTypeForString(keyword_type->value);
+                var_type = Variable::getVariableTypeForString(keyword_type->value);
                 v.avalue = new_variable_array(interpreter, var_type, total_elements);
             }
             break;

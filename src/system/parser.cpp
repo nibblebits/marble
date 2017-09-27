@@ -56,7 +56,7 @@ Parser::~Parser()
 
 bool Parser::is_datatype(std::string str)
 {
-    return str == "number" || str == "char" || str == "string" || str == "bool";
+    return str == "number" || str == "char" || str == "string" || str == "bool" || str == "void";
 }
 
 bool Parser::legal_value(Token* token)
@@ -289,6 +289,74 @@ void Parser::parse_arguments(std::vector<ExpressionInterpretableNode*>* argument
         parse_error("Expecting a \")\" symbol for arguments");
     }
 }
+
+void Parser::parse_function()
+{
+    IdentifierNode* name_node;
+    std::vector<VarNode*> args;
+    Node* return_type;
+    BodyNode* body;
+    FunctionNode* function_node;
+    if (!next()->isKeyword("function"))
+    {
+        parse_error("Expecting a function keyword for a function");
+    }
+    
+    if (!peek()->isIdentifier())
+    {
+        parse_error("Expecting a function name when declaring a function");
+    }
+    
+    parse_single_token();
+    name_node = (IdentifierNode*) pop_node();
+    if (!next()->isSymbol("("))
+    {
+        parse_error("Expecting a left bracket for function arguments");
+    }
+    args = parse_declared_arguments();
+    if (!next()->isSymbol(")"))
+    {
+        parse_error("Expecting a right bracket to end the function arguments");
+    }
+    
+    if (!next()->isSymbol(":"))
+    {
+        parse_error("Expecting a return type, use : ");
+    }
+    
+    if (!peek()->isIdentifier() && !peek()->isKeyword())
+    {
+        parse_error("Expecting a valid return type");
+    }
+    return_type = convertToSingleNode(next());
+    parse_body();
+    body = (BodyNode*) pop_node();
+    function_node = (FunctionNode*) factory.createNode(NODE_TYPE_FUNCTION);
+    function_node->name = name_node->value;
+    function_node->args = args;
+    function_node->body = body;
+    function_node->return_type = return_type;
+    push_node(function_node);   
+}
+
+
+std::vector<VarNode*> Parser::parse_declared_arguments()
+{
+    std::vector<VarNode*> args;
+    while(1)
+    {   
+        parse_variable_declaration();
+        VarNode* argument = (VarNode*) pop_node();
+        args.push_back(argument);
+                    
+        if (!peek()->isSymbol(","))
+            break;
+        // Ignore the comma
+        next();
+    }
+    return args;
+}
+
 void Parser::parse_single_token()
 {
     Node* node = convertToSingleNode(next());
@@ -436,6 +504,23 @@ void Parser::parse_new()
     push_node(new_node);
 }
 
+void Parser::parse_return()
+{
+    if (!next()->isKeyword("return"))
+    {
+        parse_error("Expecting a return keyword for a return statement");
+    }
+    
+    ExpressionInterpretableNode* exp = NULL;
+    if (!peek()->isSymbol(";"))
+    {
+        parse_expression_for_value();
+        exp = (ExpressionInterpretableNode*) pop_node();
+    }
+    ReturnNode* return_node = (ReturnNode*) factory.createNode(NODE_TYPE_RETURN);
+    return_node->exp = exp;
+    push_node(return_node);
+}
 void Parser::parse_semicolon()
 {
     Token* token = next();
@@ -631,7 +716,6 @@ void Parser::parse_if_stmt()
    
     parse_expression_for_value();
     ExpressionInterpretableNode* exp = (ExpressionInterpretableNode*) pop_node();
-    
     if (!next()->isSymbol(")"))
     {
         parse_error("Expecting a right bracket to end the \"if\" statement expression");
@@ -687,10 +771,20 @@ void Parser::parse_body_next()
     {
         parse_if_stmt();
     }
+    // NEW MAY ALSO BE USED IN EXPRESSIONS; MIGHT NEED TO ALLOW FOR THIS.
     else if(this->current_token->isKeyword("new"))
     {
         parse_new();
         parse_semicolon();
+    }
+    else if(this->current_token->isKeyword("return"))
+    {
+        parse_return();
+        parse_semicolon();   
+    }
+    else if(this->current_token->isKeyword("function"))
+    {
+        parse_function();
     }
     else if(this->current_token->isIdentifier())
     {

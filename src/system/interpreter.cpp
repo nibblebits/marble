@@ -24,6 +24,7 @@
 #include "exceptions/IOException.h"
 Interpreter::Interpreter()
 {
+    this->functionSystem.setInterpreter(this);
     this->current_scope = &root_scope;
     this->currentFunctionSystem = &functionSystem;
     this->classSystem.setInterpreter(this);
@@ -94,60 +95,6 @@ void Interpreter::setOutputFunction(OUTPUT_FUNCTION output)
     this->output = output;
 }
 
-void Interpreter::interpret_body_node(Node* node)
-{
-    int type = node->getType();
-    switch (type)
-    {
-        case NODE_TYPE_VARIABLE_DECLARATION:
-        {
-            interpret_variable_node((VarNode*) node);
-        }
-        break;
-        case NODE_TYPE_EXPRESSION:
-        {
-            ExpNode* exp_node = (ExpNode*)  node;
-            Debug::PrintValueForNode(exp_node);
-	        exp_node->interpret(this);
-        }
-        break;
-
-        case NODE_TYPE_FUNCTION_CALL:
-        {
-            FunctionCallNode* func_call_node = (FunctionCallNode*) node;
-            func_call_node->interpret(this);
-        }
-        break;
-        
-        case NODE_TYPE_IF_STMT:
-        {
-            IfStatementNode* if_stmt_node = (IfStatementNode*) node;
-            if_stmt_node->interpret(this);
-        }
-        break;
-        default:
-            throw std::logic_error("void Interpreter::interpret_body_node(Node* node): Unsure how to interpret node: " + std::to_string(type));
-    }
-}
-
-void Interpreter::interpret_body(BodyNode* node)
-{
-    // Let's create a new parented scope for this
-    new_parented_scope();
-    
-    Node* current_node = node->child;
-
-    // Awesome now lets interpret!
-    while(current_node != NULL)
-    {
-        interpret_body_node(current_node);
-        current_node = current_node->next;
-    }
-    
-    // We are done with this cope
-    finish_parented_scope();
-   
-}
 
 void Interpreter::ready()
 {
@@ -174,12 +121,12 @@ void Interpreter::run(const char* code, PosInfo posInfo)
     Node* root_node;
 
     root_node = parser.parse(root_token);
-    Node* current_node = root_node;
+    InterpretableNode* current_node = (InterpretableNode*) root_node;
     // Awesome now lets interpret!
     while(current_node != NULL)
     {
-        interpret_body_node(current_node);
-        current_node = current_node->next;
+        current_node->interpret(this);
+        current_node = (InterpretableNode*) current_node->next;
     }
 
 }
@@ -255,52 +202,6 @@ void Interpreter::finish_parented_scope()
     current_scope = old_current->prev;
     delete old_current;
 }
-
-int Interpreter::getVariableTypeForString(std::string str)
-{
-    int type = VARIABLE_TYPE_OBJECT;
-    if (str == "number")
-    {
-        type = VARIABLE_TYPE_NUMBER;
-    }
-    else if(str == "string")
-    {
-        type = VARIABLE_TYPE_STRING;
-    }
-    return type;
-}
-
-void Interpreter::interpret_variable_node(VarNode* var_node)
-{
-    Node* type_node = var_node->type;
-    std::string type = "";
-    switch (type_node->type)
-    {
-        case NODE_TYPE_KEYWORD:
-        {
-            type = ((KeywordNode*)var_node->type)->value;
-        }
-        break;
-        
-        case NODE_TYPE_IDENTIFIER:
-        {
-            type = ((IdentifierNode*)var_node->type)->value;
-        }
-        break;
-    }
-    
-    std::string name = var_node->name;
-    ExpressionInterpretableNode* value_node = (ExpressionInterpretableNode*)var_node->value;
-
-    Variable* variable = current_scope->createVariable();
-    KeywordNode* type_node_keyword = (KeywordNode*) type_node;
-    Debug::PrintValueForNode(value_node);
-    variable->value = value_node->interpret(this);
-    variable->value.holder = variable;
-    variable->name = name;
-    variable->type = getVariableTypeForString(type);
-}
-
 
 void Interpreter::handleLineAndColumn(PosInfo* posInfo, const char* data, int length)
 {

@@ -14,4 +14,8 @@
 #include "castnode.h"
 #include "arraynode.h"
 #include "newnode.h"
+#include "fnode.h"
+#include "inode.h"
+#include "einode.h"
+#include "retnode.h"
 #endif

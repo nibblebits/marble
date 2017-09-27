@@ -7,7 +7,7 @@ class IfStatementNode : public Statement
 public:
     IfStatementNode();
     virtual ~IfStatementNode();
-    virtual void interpret(Interpreter* interpreter);
+    virtual Value interpret(Interpreter* interpreter);
     ExpressionInterpretableNode* exp; 
 };
 #endif

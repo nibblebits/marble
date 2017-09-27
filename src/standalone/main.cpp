@@ -7,6 +7,7 @@
 
 std::vector<void*> allocations;
 bool wait = false;
+int size = 0;
 void* operator new(size_t size)
 {
     void* allocation = malloc(size);
@@ -39,7 +40,7 @@ void interpret()
     interpreter.setOutputFunction([](const char* data) {
         std::cout << data;
     });
-
+    
     interpreter.runScript("./test.marble");    
     Logger* logger = interpreter.getLogger();
     for (LogEntry entry : logger->entries)

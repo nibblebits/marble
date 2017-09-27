@@ -6,6 +6,8 @@ Value::Value()
 {
     this->type = -1;
     this->holder = NULL;
+    this->ovalue = NULL;
+    this->avalue = NULL;
 }
 
 Value::~Value()
@@ -14,6 +16,24 @@ Value::~Value()
 }
 
 
+VALUE_TYPE Value::getValueTypeForString(std::string str)
+{
+    if (str == "number")
+        return VALUE_TYPE_NUMBER;
+    else if(str == "string")
+        return VALUE_TYPE_STRING;
+    else
+        return VALUE_TYPE_OBJECT;
+}
+
+void Value::set(Value* v)
+{
+    this->type = v->type;
+    this->holder = v->holder;
+    this->ovalue = v->ovalue;
+    this->avalue = v->avalue;
+    this->dvalue = v->dvalue;
+}
 
 bool Value::isObjectOrArray()
 {

@@ -1,4 +1,4 @@
-SYSTEM_OBJECT_FILES = ./build/system/token.o ./build/system/splitter.o ./build/system/interpreter.o ./build/system/lexer.o ./build/system/parser.o ./build/system/node.o ./build/system/expnode.o ./build/system/varnode.o ./build/system/literalnode.o ./build/system/identifiernode.o ./build/system/debug.o ./build/system/scope.o ./build/system/variable.o ./build/system/fcnode.o ./build/system/keywordnode.o ./build/system/nodefactory.o ./build/system/tokenfactory.o ./build/system/einode.o ./build/system/value.o ./build/system/function.o ./build/system/nativefunction.o ./build/system/functionsystem.o ./build/system/stringnode.o ./build/system/negnode.o ./build/system/statement.o ./build/system/ifstmtnode.o ./build/system/bodynode.o ./build/system/castnode.o ./build/system/arraynode.o ./build/system/newnode.o ./build/system/array.o ./build/system/object.o ./build/system/logger.o ./build/system/posinfo.o ./build/system/class.o ./build/system/csystem.o
+SYSTEM_OBJECT_FILES = ./build/system/token.o ./build/system/splitter.o ./build/system/interpreter.o ./build/system/lexer.o ./build/system/parser.o ./build/system/node.o ./build/system/expnode.o ./build/system/varnode.o ./build/system/literalnode.o ./build/system/identifiernode.o ./build/system/debug.o ./build/system/scope.o ./build/system/variable.o ./build/system/fcnode.o ./build/system/keywordnode.o ./build/system/nodefactory.o ./build/system/tokenfactory.o ./build/system/einode.o ./build/system/value.o ./build/system/function.o ./build/system/nativefunction.o ./build/system/functionsystem.o ./build/system/stringnode.o ./build/system/negnode.o ./build/system/statement.o ./build/system/ifstmtnode.o ./build/system/bodynode.o ./build/system/castnode.o ./build/system/arraynode.o ./build/system/newnode.o ./build/system/array.o ./build/system/object.o ./build/system/logger.o ./build/system/posinfo.o ./build/system/class.o ./build/system/csystem.o ./build/system/fnode.o ./build/system/inode.o ./build/system/writtenfunction.o ./build/system/retnode.o
 OBJECT_FILE_FLAGS = -c -g -fPIC -std=c++14 -g
 SYSTEM_LIB_LOCAL_FILENAME = libmarble.so
 SYSTEM_LIB_FILE_LOCATION = ./bin/${SYSTEM_LIB_LOCAL_FILENAME}
@@ -20,7 +20,7 @@ system: ${SYSTEM_OBJECT_FILES}
 	g++ -I ./include ./src/system/node.cpp -o ./build/system/node.o ${OBJECT_FILE_FLAGS}	
 ./build/system/expnode.o: ./src/system/expnode.cpp
 	g++ -I ./include ./src/system/expnode.cpp -o ./build/system/expnode.o ${OBJECT_FILE_FLAGS}	
-./build/system/varnode.o: ./src/system/expnode.cpp
+./build/system/varnode.o: ./src/system/varnode.cpp
 	g++ -I ./include ./src/system/varnode.cpp -o ./build/system/varnode.o ${OBJECT_FILE_FLAGS}
 ./build/system/literalnode.o: ./src/system/literalnode.cpp
 	g++ -I ./include ./src/system/literalnode.cpp -o ./build/system/literalnode.o ${OBJECT_FILE_FLAGS}
@@ -78,6 +78,14 @@ system: ${SYSTEM_OBJECT_FILES}
 	g++ -I ./include ./src/system/class.cpp -o ./build/system/class.o ${OBJECT_FILE_FLAGS}	
 ./build/system/csystem.o: ./src/system/csystem.cpp
 	g++ -I ./include ./src/system/csystem.cpp -o ./build/system/csystem.o ${OBJECT_FILE_FLAGS}	
+./build/system/fnode.o: ./src/system/fnode.cpp
+	g++ -I ./include ./src/system/fnode.cpp -o ./build/system/fnode.o ${OBJECT_FILE_FLAGS}	
+./build/system/inode.o: ./src/system/inode.cpp
+	g++ -I ./include ./src/system/inode.cpp -o ./build/system/inode.o ${OBJECT_FILE_FLAGS}	
+./build/system/writtenfunction.o: ./src/system/writtenfunction.cpp
+	g++ -I ./include ./src/system/writtenfunction.cpp -o ./build/system/writtenfunction.o ${OBJECT_FILE_FLAGS}	
+./build/system/retnode.o: ./src/system/retnode.cpp
+	g++ -I ./include ./src/system/retnode.cpp -o ./build/system/retnode.o ${OBJECT_FILE_FLAGS}	
 standalone: system
 	cd bin; \
 	g++ -g -I ../include ../src/standalone/main.cpp ./${SYSTEM_LIB_LOCAL_FILENAME}  -std=c++14 -o ./marble;

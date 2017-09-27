@@ -43,6 +43,7 @@ private:
     void parse_cast(Node* casting_to);
     void parse_array(Node* related_node);
     void parse_new();
+    void parse_return();
     void parse_semicolon();
     void push_node(Node* node);
 
@@ -58,6 +59,8 @@ private:
     Node* getStringNode(Token* token);
     void parse_function_call();
     void parse_arguments(std::vector<ExpressionInterpretableNode*>* argument_nodes);
+    void parse_function();
+    std::vector<VarNode*> parse_declared_arguments();
 
     Token* next();
     Token* peek(int ahead);

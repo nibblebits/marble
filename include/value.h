@@ -13,6 +13,8 @@ class Value
 public:
     Value();
     virtual ~Value();
+    static VALUE_TYPE getValueTypeForString(std::string str);
+    void set(Value* v);
     VALUE_TYPE type;
     // The variable who holds this value (NULL if the value stands without a variable)
     Variable* holder;

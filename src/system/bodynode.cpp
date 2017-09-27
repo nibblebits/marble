@@ -1,13 +1,61 @@
 #include "bodynode.h"
+#include "inode.h"
 #include "statics.h"
-BodyNode::BodyNode() : Node(NODE_TYPE_BODY)
+#include "interpreter.h"
+BodyNode::BodyNode() : InterpretableNode(NODE_TYPE_BODY)
 {
     this->child = NULL;
+    this->node_listener_function = NULL;
 }
 
 BodyNode::~BodyNode()
 {
 
+}
+
+Value BodyNode::interpret(Interpreter* interpreter)
+{
+    Value v;
+    this->interpreter = interpreter;
+    interpret_body(this);
+    return v;
+}
+
+void BodyNode::apply_node_listener(std::function<bool(Node* node, Value v)> node_listener_function)
+{
+    this->node_listener_function = node_listener_function;
+}
+
+bool BodyNode::interpret_body_node(Node* node)
+{
+    int type = node->getType();
+    InterpretableNode* inode = (InterpretableNode*) node;
+    Value v = inode->interpret(interpreter);
+    if (node_listener_function != NULL && (!node_listener_function(inode, v))) 
+        return false;
+    
+    return true;
+}
+
+void BodyNode::interpret_body(BodyNode* node)
+{
+    // Let's create a new parented scope for this
+    interpreter->new_parented_scope();
+    
+    Node* current_node = node->child;
+
+    // Awesome now lets interpret!
+    while(current_node != NULL)
+    {
+        if(!interpret_body_node(current_node)) goto end;
+        current_node = current_node->next;
+    }
+
+end:
+    // We are done with this cope
+    interpreter->finish_parented_scope();
+    this->node_listener_function = NULL;
+    return;
 }
 
 void BodyNode::addChild(Node* c)

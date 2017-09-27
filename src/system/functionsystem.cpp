@@ -1,16 +1,27 @@
 #include "functionsystem.h"
 #include "function.h"
 #include "nativefunction.h"
-
+#include "writtenfunction.h"
+#include "interpreter.h"
+#include "fnode.h"
 
 FunctionSystem::FunctionSystem()
 {
+    this->interpreter = NULL;
     this->prev_fc_sys = NULL;
     this->currentObj = NULL;
 }
 
-FunctionSystem::FunctionSystem(FunctionSystem* prev_fc_sys)
+FunctionSystem::FunctionSystem(Interpreter* interpreter)
 {
+    this->interpreter = interpreter;
+    this->prev_fc_sys = NULL;
+    this->currentObj = NULL;
+}
+
+FunctionSystem::FunctionSystem(Interpreter* interpreter, FunctionSystem* prev_fc_sys)
+{
+    this->interpreter = interpreter;
     this->prev_fc_sys = prev_fc_sys;
     this->currentObj = NULL;
 }
@@ -21,6 +32,11 @@ FunctionSystem::~FunctionSystem()
 
 }
 
+void FunctionSystem::setInterpreter(Interpreter* interpreter)
+{
+    this->interpreter = interpreter;
+}
+
 Function* FunctionSystem::registerFunction(std::string name, std::function<void(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)> entrypoint)
 {
     if (hasFunctionLocally(name))
@@ -29,6 +45,18 @@ Function* FunctionSystem::registerFunction(std::string name, std::function<void(
     }
 
     Function* function = new NativeFunction(name, entrypoint);
+    this->functions.push_back(std::unique_ptr<Function>(function));
+    return function;
+}
+
+Function* FunctionSystem::registerFunction(FunctionNode* fnode)
+{
+    if (hasFunctionLocally(fnode->name))
+    {
+        throw std::logic_error("Function* FunctionSystem::registerFunction(FunctionNode* fnode): The function you are trying to register already exists");
+    }
+    
+    Function* function = new WrittenFunction(interpreter, fnode);
     this->functions.push_back(std::unique_ptr<Function>(function));
     return function;
 }

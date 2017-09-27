@@ -33,13 +33,13 @@ Class* ClassSystem::registerClass(std::string class_name, Class* parent)
     Class* c; 
     if (parent == NULL && this->defaultBaseClass == NULL)
     {
-        c = new Class(class_name, this->interpreter->getRootFunctionSystem());
+        c = new Class(interpreter, class_name, this->interpreter->getRootFunctionSystem());
     }
     else
     {
         if (parent == NULL)
             parent = this->defaultBaseClass;      
-        c = new Class(class_name, parent);
+        c = new Class(interpreter, class_name, parent);
     }
     this->classes.push_back(std::unique_ptr<Class>(c));
     return c;
