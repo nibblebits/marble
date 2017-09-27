@@ -1,6 +1,8 @@
 #ifndef SPLITTER_H
 #define SPLITTER_H
 
+#include <iostream>
+
 struct split;
 struct data_descriptor
 {
@@ -34,10 +36,11 @@ struct split
     bool is_last;
 };
 
+class Logger;
 class Splitter
 {
 public:
-    Splitter();
+    Splitter(Logger* logger, const char* filename);
     virtual ~Splitter();
     void setData(const char* data, int length);
     bool split(struct split* marble_code);
@@ -48,6 +51,8 @@ private:
     int getPositionOfNextMarbleClosingTag(int current_pos);
     const char* data;
     int length;
+    Logger* logger;
+    const char* filename;
     struct marble_code* previous;
 };
 #endif

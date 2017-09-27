@@ -2,7 +2,7 @@
 #include <stdexcept>
 LogEntry::LogEntry(const int level, const std::string message, const PosInfo posInfo) : level(level), message(message), posInfo(posInfo)
 {
-
+    
 }
 LogEntry::~LogEntry()
 {

@@ -1,8 +1,9 @@
 #include <memory.h>
+#include <stdexcept>
 
 #include "splitter.h"
 #include "statics.h"
-
+#include "logger.h"
 data_descriptor::data_descriptor()
 {
     this->start = 0;
@@ -36,10 +37,12 @@ void marble_code::update()
     this->split->has_code = this->size != 0;
 }
 
-Splitter::Splitter()
+Splitter::Splitter(Logger* logger, const char* filename)
 {
+    this->logger = logger;
     this->data = 0;
     this->previous = 0;
+    this->filename = filename;
 }
 
 Splitter::~Splitter()
@@ -124,7 +127,9 @@ bool Splitter::split(struct split* split)
     int pos_to_marble_closing_tag = getPositionOfNextMarbleClosingTag(pos_to_marble_code);
     if (pos_to_marble_closing_tag == -1)
     {
-        // Handle an error here, a marble tag without a closing tag has been identified.
+        PosInfo posInfo;
+        posInfo.filename = this->filename;
+        logger->error("A Marble tag was opened but never closed", posInfo);
     }
     marble_code->start = pos_to_marble_code;
     marble_code->end = pos_to_marble_closing_tag;

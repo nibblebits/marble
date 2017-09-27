@@ -239,7 +239,7 @@ void Interpreter::runScript(const char* filename)
     char* data = new char[data_len];
     fread(data, data_len, 1, file);
 
-    Splitter splitter;
+    Splitter splitter(&logger, filename);
     splitter.setData(data, data_len);
     
     PosInfo posInfo;

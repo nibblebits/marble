@@ -139,8 +139,10 @@ std::string format_log_entry(LogEntry entry)
         default:
             type = "Unknown Log Entry";
     }
-    std::string message = "<b>" + type + "</b>" + ": <i>" + entry.message + "</i> on line " + std::to_string(entry.posInfo.line) + ", column " 
-                + std::to_string(entry.posInfo.col) + " in file " + entry.posInfo.filename + "<br />";
+    std::string message = "<b>" + type + "</b>" + ": <i>" + entry.message + "</i> ";
+    if (entry.posInfo.line != -1) 
+       message += "on line " + std::to_string(entry.posInfo.line) + ", column "  + std::to_string(entry.posInfo.col);
+    message += " in file " + std::string(entry.posInfo.filename) + "<br />";
     return message;
 }
 
