@@ -18,7 +18,7 @@ Value::~Value()
 
 VALUE_TYPE Value::getValueTypeForString(std::string str)
 {
-    if (str == "number")
+    if (str == "number" || str == "byte")
         return VALUE_TYPE_NUMBER;
     else if(str == "string")
         return VALUE_TYPE_STRING;
@@ -67,8 +67,8 @@ Value Value::operator-(const Value& other)
 {
     ensure_valid_type(type, {VALUE_TYPE_NUMBER});
     ensure_valid_type(other.type, {VALUE_TYPE_NUMBER});
-	Value value;
-	value.type = type;
+    Value value;
+    value.type = type;
     value.dvalue = dvalue - other.dvalue;
     return value;
 }

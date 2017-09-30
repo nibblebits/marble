@@ -25,5 +25,9 @@ int Variable::getVariableTypeForString(std::string str)
     {
         type = VARIABLE_TYPE_VOID;
     }
+    else if(str == "byte")
+    {
+        type = VARIABLE_TYPE_BYTE;
+    }
     return type;
 }

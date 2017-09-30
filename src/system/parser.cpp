@@ -56,7 +56,7 @@ Parser::~Parser()
 
 bool Parser::is_datatype(std::string str)
 {
-    return str == "number" || str == "char" || str == "string" || str == "bool" || str == "void";
+    return str == "number" || str == "byte" || str == "string" || str == "bool" || str == "void";
 }
 
 bool Parser::legal_value(Token* token)

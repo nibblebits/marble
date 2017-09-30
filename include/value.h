@@ -23,6 +23,7 @@ public:
     union
     {
         double dvalue;
+        char bvalue;
     };
     
     std::shared_ptr<Object> ovalue;
