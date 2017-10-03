@@ -28,7 +28,8 @@ enum
     NODE_TYPE_ARRAY,
     NODE_TYPE_NEW,
     NODE_TYPE_FUNCTION,
-    NODE_TYPE_RETURN
+    NODE_TYPE_RETURN,
+    NODE_TYPE_CLASS
 };
 
 enum
@@ -39,6 +40,13 @@ enum
     VARIABLE_TYPE_ARRAY,
     VARIABLE_TYPE_VOID,
     VARIABLE_TYPE_BYTE
+};
+
+enum
+{
+    MODIFIER_ACCESS_PRIVATE,
+    MODIFIER_ACCESS_PROTECTED,
+    MODIFIER_ACCESS_PUBLIC
 };
 
 enum
@@ -87,4 +95,6 @@ typedef int TOKEN_TYPE;
 typedef int NODE_TYPE;
 typedef int VALUE_TYPE;
 typedef int LOG_TYPE;
+
+typedef int MODIFIER_ACCESS;
 #endif

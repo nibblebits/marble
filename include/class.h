@@ -11,10 +11,8 @@ public:
     Class(Interpreter* interpreter, std::string name, Class* parent);
     virtual ~Class();
     
-    void addLocalVariable(Variable v);
-    Variable getLocalVariable(std::string name);
+    void addVariable(Variable v);
     Variable getVariable(std::string name);
-    inline std::vector<Variable> getLocalVariables();
     std::vector<Variable> getVariables();
     
     std::string name;

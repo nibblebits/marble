@@ -11,6 +11,7 @@ VarNode::VarNode() : InterpretableNode(NODE_TYPE_VARIABLE_DECLARATION)
     this->name = "";
     this->value = NULL;
     this->dimensions = 0;
+    this->access = MODIFIER_ACCESS_PUBLIC;
 }
 
 VarNode::~VarNode()
@@ -55,6 +56,7 @@ Value VarNode::interpret(Interpreter* interpreter)
     }
     variable->value.holder = variable;
     variable->name = name;
+    variable->access = this->access;
     variable->type = Variable::getVariableTypeForString(type_str);
     Value v = variable->value;
     return v;

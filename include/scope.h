@@ -11,10 +11,12 @@ class Scope
 public:
     Scope();
     virtual ~Scope();
-    void registerVariable(Variable* variable);
+    virtual void registerVariable(Variable* variable);
     Variable* createVariable();
     Variable* cloneCreate(Variable* variable);
     Variable* getVariable(std::string variable_name);
+    // Returns weather this scope is nested in the scope provided.
+    bool isNestedInScope(Scope* scope);
     std::vector<Variable*> getVariables();
     std::vector<Variable*> getObjectVariablesFor(std::shared_ptr<Object> object);
     Scope* prev;

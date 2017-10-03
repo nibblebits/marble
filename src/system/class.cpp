@@ -16,19 +16,9 @@ Class::~Class()
 
 }
 
-void Class::addLocalVariable(Variable v)
+void Class::addVariable(Variable v)
 {
     this->local_variables.push_back(v);
-}
-
-Variable Class::getLocalVariable(std::string name)
-{
-    for (Variable v : this->local_variables)
-    {
-        if (v.name == name)
-            return v;
-    }
-    throw std::logic_error("No local variable with name: " + name + " has been found");
 }
 
 Variable Class::getVariable(std::string name)
@@ -38,28 +28,11 @@ Variable Class::getVariable(std::string name)
         if (v.name == name)
             return v;
     }
-    
-    if (this->parent != NULL)
-        return this->parent->getVariable(name);
-        
-    throw std::logic_error("No variable in this class or class parents with name: " + name + " has been found");
-}
-
-std::vector<Variable> Class::getLocalVariables()
-{
-    return this->local_variables;
+    throw std::logic_error("No local variable with name: " + name + " has been found");
 }
 
 std::vector<Variable> Class::getVariables()
 {
-    std::vector<Variable> variables = getLocalVariables();
-    if (parent == NULL)
-        return variables;
-        
-    for (Variable variable : parent->getVariables())
-    {
-        variables.push_back(variable);
-    }
-    
-    return variables;
+    return this->local_variables;
 }
+

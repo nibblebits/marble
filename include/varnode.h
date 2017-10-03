@@ -16,6 +16,9 @@ public:
     std::string name;
     Node* value;
     
+    // Is this a private, protected or public variable?
+    MODIFIER_ACCESS access;
+    
     // The array dimensions. Zero if this is not an array
     int dimensions;
     

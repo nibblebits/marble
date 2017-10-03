@@ -13,5 +13,7 @@ class Function
         std::string name;
         std::string getName();
         virtual void invoke(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object) = 0;
+    private:
+        Interpreter* interpreter;
 };
 #endif

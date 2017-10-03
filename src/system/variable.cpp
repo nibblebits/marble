@@ -1,9 +1,13 @@
 #include "variable.h"
-#include <iostream>
+#include "object.h"
+#include "scope.h"
 Variable::Variable()
 {
     this->name = "";
     this->type = -1;
+    this->access = MODIFIER_ACCESS_PUBLIC;
+    this->scope = NULL;
+    this->object = NULL;
 }
 
 Variable::~Variable()
@@ -30,4 +34,15 @@ int Variable::getVariableTypeForString(std::string str)
         type = VARIABLE_TYPE_BYTE;
     }
     return type;
+}
+
+
+Variable Variable::getFromPointer(Variable* variable)
+{
+    Variable v;
+    v.name = variable->name;
+    v.type = variable->type;
+    v.access = variable->access;
+    v.value.set(&variable->value);
+    return v;
 }

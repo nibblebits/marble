@@ -29,6 +29,7 @@ private:
     bool legal_value(Token* token);
     void parse_error(std::string message);
     void ensure_type(Token* token, int expected_type);
+    MODIFIER_ACCESS get_modifier_access_for_string(std::string str);
     Token* get_identifier_token(std::string error_msg);
     void parse_variable_declaration();
     void parse_expression_for_value(int extra_rules=0);
@@ -37,6 +38,9 @@ private:
     void parse_negative_expression();
     void parse_single_token();
     void parse_if_stmt();
+    void parse_modifier_access();
+    void parse_class_body();
+    void parse_class_body_next();
     void parse_body();
     void parse_body_next();
     void parse_value(int rules=0);
@@ -44,6 +48,7 @@ private:
     void parse_array(Node* related_node);
     void parse_new();
     void parse_return();
+    void parse_class();
     void parse_semicolon();
     void push_node(Node* node);
 
@@ -69,6 +74,9 @@ private:
 
     bool first_op_has_priority(std::string op1, std::string op2);
     int get_priority_for_op(std::string op);
+    
+    // The current modifier access, e.g public, private, protected
+    MODIFIER_ACCESS access;
     
     // A token that has no value and is returned rather than returning NULL
     std::unique_ptr<Token> dummy_token;

@@ -1,4 +1,5 @@
 #include "function.h"
+#include "interpreter.h"
 
 Function::Function(std::string name)
 {
@@ -13,3 +14,4 @@ std::string Function::getName()
 {
     return this->name;
 }
+

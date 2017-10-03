@@ -29,6 +29,7 @@ public:
     bool isNumber();
     bool isNumber(std::string value);
     bool isLiteral();
+    bool isDataAccessKeyword();
 
     // The next token after this one
     Token* next;

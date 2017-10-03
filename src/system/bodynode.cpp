@@ -41,19 +41,18 @@ void BodyNode::interpret_body(BodyNode* node)
 {
     // Let's create a new parented scope for this
     interpreter->new_parented_scope();
-    
     Node* current_node = node->child;
 
     // Awesome now lets interpret!
     while(current_node != NULL)
     {
         if(!interpret_body_node(current_node)) goto end;
-        current_node = current_node->next;
+            current_node = current_node->next;
     }
 
 end:
     // We are done with this cope
-    interpreter->finish_parented_scope();
+    interpreter->finish_parented_scope(); 
     this->node_listener_function = NULL;
     return;
 }

@@ -3,16 +3,17 @@
 #include <memory>
 #include "class.h"
 #include "scope.h"
-class Object
+class Interpreter;
+class Object : public Scope
 {
 public:
-    Object(Class* c);
+    Object(Interpreter* interpreter, Class* c);
     virtual ~Object();
+    virtual void registerVariable(Variable* variable);
     Class* getClass();
-    Scope* getScope();
 private:
+    Interpreter* interpreter;
     Class* c;
-    std::unique_ptr<Scope> obj_scope;
 };
 
 #endif

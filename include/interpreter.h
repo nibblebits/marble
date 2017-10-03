@@ -3,6 +3,7 @@
 
 #include <string.h>
 #include <memory>
+#include <vector>
 #include "scope.h"
 #include "functionsystem.h"
 #include "csystem.h"
@@ -14,6 +15,7 @@ class Node;
 class VarNode;
 class ExpNode;
 class BodyNode;
+class Object;
 class Interpreter
 {
 public:
@@ -23,7 +25,7 @@ public:
     void ready();
     void run(const char* code, PosInfo posInfo);
     void runScript(const char* filename);
-    void setCurrentFunctionSystem(FunctionSystem* current_fc_system);
+    void setFunctionSystem(FunctionSystem* current_fc_system);
     Logger* getLogger();
     Variable* getVariableByName(std::string name);
     FunctionSystem* getRootFunctionSystem();
@@ -32,6 +34,7 @@ public:
     Scope* getCurrentScope();
     Scope* getRootScope();
     void setCurrentScope(Scope* scope);
+    Scope* getActionScope();
     void new_parented_scope();
     void finish_parented_scope();
 private:
@@ -43,6 +46,11 @@ private:
     FunctionSystem* currentFunctionSystem;
     Scope root_scope;
     Scope* current_scope;
+    /*
+    * The action_scope holds the scope that any action is preformed on. For example
+    * if a variable is set from the root scope such as. foo.bar = 50; Then during the point of foo.bar being set the action scope will be equal
+    * to the root scope. */
+    Scope* action_scope;
     OUTPUT_FUNCTION output;
     Logger logger;
     const char* filename;

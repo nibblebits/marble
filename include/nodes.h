@@ -18,4 +18,5 @@
 #include "inode.h"
 #include "einode.h"
 #include "retnode.h"
+#include "classnode.h"
 #endif

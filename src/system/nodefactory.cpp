@@ -101,6 +101,13 @@ Node* NodeFactory::createNode(NODE_TYPE node_type)
         node = new ReturnNode();
     }
     break;
+    
+    case NODE_TYPE_CLASS:
+    {
+        node = new ClassNode();
+    }
+    break;
+    
     default:
         throw std::logic_error("Invalid node type provided to NodeFactory::createNode");
     }

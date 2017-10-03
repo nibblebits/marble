@@ -24,6 +24,7 @@
 #include "exceptions/IOException.h"
 Interpreter::Interpreter()
 {
+    this->action_scope = getRootScope();
     this->functionSystem.setInterpreter(this);
     this->current_scope = &root_scope;
     this->currentFunctionSystem = &functionSystem;
@@ -41,11 +42,12 @@ Interpreter::Interpreter()
         return_value->svalue = object->getClass()->name;
     });
     Variable v;
+    v.access = MODIFIER_ACCESS_PRIVATE;
     v.type = VARIABLE_TYPE_NUMBER;
     v.name = "hello";
     v.value.type = VALUE_TYPE_NUMBER;
     v.value.dvalue = 93;
-    c->addLocalVariable(v);
+    c->addVariable(v);
     
     getClassSystem()->setDefaultBaseClass(c);
     
@@ -168,6 +170,12 @@ void Interpreter::setCurrentScope(Scope* scope)
     this->current_scope = scope;
 }
 
+Scope* Interpreter::getActionScope()
+{
+    return this->action_scope;
+}
+
+
 Variable* Interpreter::getVariableByName(std::string name)
 {
     Variable* variable = NULL;
@@ -191,6 +199,7 @@ Variable* Interpreter::getVariableByName(std::string name)
 
 void Interpreter::new_parented_scope()
 {
+    this->action_scope = current_scope;
     Scope* new_prev = current_scope;
     current_scope = new Scope();
     current_scope->prev = new_prev;
@@ -200,6 +209,7 @@ void Interpreter::finish_parented_scope()
 {
     Scope* old_current = current_scope;
     current_scope = old_current->prev;
+    this->action_scope = current_scope;
     delete old_current;
 }
 
@@ -280,7 +290,7 @@ void Interpreter::runScript(const char* filename)
     delete data;
 }
 
-void Interpreter::setCurrentFunctionSystem(FunctionSystem* current_fc_system)
+void Interpreter::setFunctionSystem(FunctionSystem* current_fc_system)
 {
     this->currentFunctionSystem = current_fc_system;
 }

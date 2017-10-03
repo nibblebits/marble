@@ -41,7 +41,8 @@ Parser::Parser(Logger* logger)
     this->current_node = NULL;
     this->prev_token = NULL;
     this->current_token = NULL;
-   
+    this->access = MODIFIER_ACCESS_PUBLIC;
+    
     PosInfo info;
     info.line = -1;
     info.col = -1;
@@ -80,6 +81,29 @@ void Parser::ensure_type(Token* token, int expected_type)
     {
         parse_error("Expecting a " + std::to_string(expected_type) + " but a " + std::to_string(token_type) + " was provided");
     }
+}
+
+MODIFIER_ACCESS Parser::get_modifier_access_for_string(std::string str)
+{
+    MODIFIER_ACCESS access;
+    if (str == "private")
+    {
+        access = MODIFIER_ACCESS_PRIVATE;
+    }
+    else if(str == "public")
+    {
+        access = MODIFIER_ACCESS_PUBLIC;
+    }
+    else if(str == "protected")
+    {
+        access = MODIFIER_ACCESS_PROTECTED;
+    }
+    else
+    {
+        throw std::logic_error("No access for the given string: " + str);
+    }
+    
+    return access;
 }
 
 void Parser::push_node(Node* node)
@@ -235,6 +259,7 @@ void Parser::parse_variable_declaration()
     var_node->type = data_type_node;
     var_node->name = var_name_token->value;
     var_node->dimensions = array_dimensions;
+    var_node->access = access;
     Token* token_ahead = peek();
     if (token_ahead->isOperator("="))
     {
@@ -521,6 +546,35 @@ void Parser::parse_return()
     return_node->exp = exp;
     push_node(return_node);
 }
+
+void Parser::parse_class()
+{
+    if (!next()->isKeyword("class"))
+    {
+        parse_error("Expecting a class keyword for class definitions");
+    }
+    
+    Token* name_token = next();
+    if (name_token->type != TOKEN_TYPE_IDENTIFIER)
+    {
+        parse_error("Expecting a valid class name");
+    }
+    
+    
+    // Now for the class body
+    parse_class_body();
+    BodyNode* body_node = (BodyNode*) pop_node();
+    
+    // Now lets create this class node
+    ClassNode* class_node = (ClassNode*) factory.createNode(NODE_TYPE_CLASS);
+    class_node->name = name_token->value;
+    class_node->body = body_node;
+    
+    // Now we are done with this class lets reset the access to public
+    access = MODIFIER_ACCESS_PUBLIC;
+    
+    push_node(class_node);
+}
 void Parser::parse_semicolon()
 {
     Token* token = next();
@@ -730,6 +784,47 @@ void Parser::parse_if_stmt()
     push_node(if_stmt);
 }
 
+void Parser::parse_modifier_access()
+{
+    access = get_modifier_access_for_string(next()->value);
+    if (!next()->isSymbol(":"))
+    {
+        parse_error("Expecting a \":\" symbol when specifying access");
+    }    
+}
+
+void Parser::parse_class_body()
+{
+    if (!next()->isSymbol("{"))
+    {
+        parse_error("Expecting a left bracket \"{\" for given body");
+    }
+    
+    BodyNode* body_node = (BodyNode*) factory.createNode(NODE_TYPE_BODY);
+    while(!peek()->isSymbol("}"))
+    {
+        if (this->current_token->isDataAccessKeyword())
+        {
+            parse_modifier_access();
+        }
+        else
+        {
+            parse_class_body_next();
+            body_node->addChild(pop_node());
+        }
+    }
+    
+    // Lets remove the "}" symbol
+    next();
+    
+    push_node(body_node);
+}
+
+void Parser::parse_class_body_next()
+{
+    parse_body_next();
+}
+
 void Parser::parse_body()
 {
     if (!next()->isSymbol("{"))
@@ -754,18 +849,8 @@ void Parser::parse_body_next()
     std::string token_value = this->current_token->getValue();
     if (this->current_token->isKeyword() && is_datatype(token_value))
     {
-        // Either this is a function or a variable declaration
-        Token* peeked_token = peek(this->current_token, 2);
-        // If the peeked token is a symbol then this must be a function, e.g number a() { } otherwise its a variable declaration
-        if (peeked_token != NULL && peeked_token->isSymbol("("))
-        {
-            //	parse_function();
-        }
-        else
-        {
-            parse_variable_declaration();
-            parse_semicolon();
-        }
+        parse_variable_declaration();
+        parse_semicolon();
     }
     else if(this->current_token->isKeyword("if"))
     {
@@ -786,6 +871,10 @@ void Parser::parse_body_next()
     {
         parse_function();
     }
+    else if(this->current_token->isKeyword("class"))
+    {
+        parse_class();
+    }
     else if(this->current_token->isIdentifier())
     {
         /* The token is an identifier so this can be treated as an expression as it is one of the following
@@ -794,6 +883,7 @@ void Parser::parse_body_next()
          * 3. A function call
          * 4. A variable declaration with an object type
          */
+         
         if (peek(this->current_token, 1)->isIdentifier())
         {
             // This is a variable declaration

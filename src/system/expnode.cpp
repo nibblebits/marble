@@ -19,9 +19,6 @@ ExpNode::~ExpNode()
 
 }
 
-
-
-
 bool ExpNode::isAssignmentOperator()
 {
     return this->op == "=" || this->op == "+=" || this->op == "-=" || this->op == "*=" || this->op == "/=";
@@ -126,14 +123,14 @@ Value ExpNode::interpret(Interpreter* interpreter)
         Class* c = obj->getClass();
         c->currentObj = obj;
         // The object scope is where all the attributes for the object ar stored so while we are accessing this object it should be set.
-        interpreter->setCurrentScope(obj->getScope());
-        interpreter->setCurrentFunctionSystem(obj->getClass());
+        interpreter->setCurrentScope(obj.get());
+        interpreter->setFunctionSystem(obj->getClass());
     }
     Value right_v = this->right->interpret(interpreter);
     if (this->op == ".")
     {
         // Restore the old function system
-        interpreter->setCurrentFunctionSystem(old_fc_system);
+        interpreter->setFunctionSystem(old_fc_system);
         // Restore the old scope
         interpreter->setCurrentScope(old_scope);
         result = right_v;
