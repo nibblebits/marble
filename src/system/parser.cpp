@@ -549,10 +549,12 @@ void Parser::parse_return()
 
 void Parser::parse_class()
 {
+    std::string parent = "";
     if (!next()->isKeyword("class"))
     {
         parse_error("Expecting a class keyword for class definitions");
     }
+    
     
     Token* name_token = next();
     if (name_token->type != TOKEN_TYPE_IDENTIFIER)
@@ -560,6 +562,15 @@ void Parser::parse_class()
         parse_error("Expecting a valid class name");
     }
     
+    if (peek()->isKeyword("extends"))
+    {
+        next();
+        if (!peek()->isIdentifier())
+        {
+            parse_error("Expecting a class to extend from when using extends");
+        }
+        parent = next()->value;
+    }
     
     // Now for the class body
     parse_class_body();
@@ -568,6 +579,7 @@ void Parser::parse_class()
     // Now lets create this class node
     ClassNode* class_node = (ClassNode*) factory.createNode(NODE_TYPE_CLASS);
     class_node->name = name_token->value;
+    class_node->parent = parent;
     class_node->body = body_node;
     
     // Now we are done with this class lets reset the access to public

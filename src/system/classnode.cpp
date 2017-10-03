@@ -17,7 +17,8 @@ ClassNode::~ClassNode()
 Value ClassNode::interpret(Interpreter* interpreter)
 {
     ClassSystem* c_system = interpreter->getClassSystem();
-    Class* c = c_system->registerClass(name, NULL);
+    Class* parent_class = c_system->getClassByName(this->parent);
+    Class* c = c_system->registerClass(name, parent_class);
     // We need to create a local scope so that we can extract variables once we are done interpreting the class body.
     std::unique_ptr<Scope> tmp_scope = std::make_unique<Scope>();
     Scope* old_scope = interpreter->getCurrentScope();

@@ -12,6 +12,7 @@ public:
     
     std::string name;
     BodyNode* body;
+    std::string parent;
 };
 #endif
 
