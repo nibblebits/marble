@@ -338,7 +338,10 @@ void Parser::parse_function()
     {
         parse_error("Expecting a left bracket for function arguments");
     }
-    args = parse_declared_arguments();
+    if (!peek()->isSymbol(")"))
+    {
+        args = parse_declared_arguments();
+    }
     if (!next()->isSymbol(")"))
     {
         parse_error("Expecting a right bracket to end the function arguments");
