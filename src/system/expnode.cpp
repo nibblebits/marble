@@ -120,13 +120,13 @@ Value ExpNode::interpret(Interpreter* interpreter)
         old_scope = interpreter->getCurrentScope();
         // Left_v has the object to access
         std::shared_ptr<Object> obj = left_v.ovalue;
-        Class* c = NULL;
-        // If the left variables name is "super" then we must be accessing a super-class and we should take the parent's class.
-        if (left_v.holder->name == "super")
-            c = obj->getClass()->parent;
-        else
-            c = obj->getClass();
-            
+        Class* c = obj->getClass();
+        if (left_v.holder != NULL)
+        {
+            // If the left variables name is "super" then we must be accessing a super-class and we should take the parent's class.
+            if (left_v.holder->name == "super")
+                c = obj->getClass()->parent;
+        }
         c->currentObj = obj;
         // The object scope is where all the attributes for the object ar stored so while we are accessing this object it should be set.
         interpreter->setCurrentScope(obj.get());
