@@ -13,6 +13,7 @@
 #include "splitter.h"
 #include "lexer.h"
 #include "parser.h"
+#include "validator.h"
 #include "nodes.h"
 #include "debug.h"
 #include "scope.h"
@@ -24,9 +25,7 @@
 #include "exceptions/IOException.h"
 Interpreter::Interpreter()
 {
-    this->action_scope = getRootScope();
     this->functionSystem.setInterpreter(this);
-    this->current_scope = &root_scope;
     this->currentFunctionSystem = &functionSystem;
     this->classSystem.setInterpreter(this);
     
@@ -123,6 +122,10 @@ void Interpreter::run(const char* code, PosInfo posInfo)
     Node* root_node;
 
     root_node = parser.parse(root_token);
+    
+    Validator validator(&logger);
+    validator.validate(root_node);
+    
     InterpretableNode* current_node = (InterpretableNode*) root_node;
     // Awesome now lets interpret!
     while(current_node != NULL)
@@ -155,62 +158,13 @@ ClassSystem* Interpreter::getClassSystem()
     return &this->classSystem;
 }
 
-Scope* Interpreter::getCurrentScope()
-{
-    return this->current_scope;
-}
-
-Scope* Interpreter::getRootScope()
-{
-    return &this->root_scope;
-}
-
-void Interpreter::setCurrentScope(Scope* scope)
-{
-    this->current_scope = scope;
-}
-
-Scope* Interpreter::getActionScope()
-{
-    return this->action_scope;
-}
-
-
 Variable* Interpreter::getVariableByName(std::string name)
 {
-    Variable* variable = NULL;
-    Scope* scope = current_scope;
-    while(scope != NULL)
-    {
-        variable = scope->getVariable(name);
-        if (variable != NULL)
-        {
-            break;
-        }
-        
-        scope = scope->prev;
-    }
-    
+    Variable* variable = getCurrentScope()->getVariableAnyScope(name);
     if (variable == NULL)
         throw std::logic_error("Variable not found: " + name);
 
     return variable;
-}
-
-void Interpreter::new_parented_scope()
-{
-    this->action_scope = current_scope;
-    Scope* new_prev = current_scope;
-    current_scope = new Scope();
-    current_scope->prev = new_prev;
-}
-
-void Interpreter::finish_parented_scope()
-{
-    Scope* old_current = current_scope;
-    current_scope = old_current->prev;
-    this->action_scope = current_scope;
-    delete old_current;
 }
 
 void Interpreter::handleLineAndColumn(PosInfo* posInfo, const char* data, int length)

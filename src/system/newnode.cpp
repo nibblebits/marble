@@ -4,6 +4,7 @@
 #include "array.h"
 #include "interpreter.h"
 #include "fcnode.h"
+#include "validator.h"
 #include <iostream>
 #include <memory>
 NewNode::NewNode() : ExpressionInterpretableNode(NODE_TYPE_NEW)
@@ -14,6 +15,30 @@ NewNode::NewNode() : ExpressionInterpretableNode(NODE_TYPE_NEW)
 NewNode::~NewNode()
 {
 
+}
+
+void NewNode::test(Validator* validator)
+{
+    if (!validator->isExpecting())
+        return;
+        
+    VALUE_TYPE expecting_type = validator->getExpectingType();
+    if (expecting_type != VALUE_TYPE_OBJECT)
+    {
+        throw std::logic_error("an object was provided");
+    }
+    
+    std::string expecting_object = validator->getExpectingObject();
+    if (expecting_object != "")
+    {
+        /* It is natural for this type node to be a function call node as it will be calling a constructor, e.g new Object();
+     * the difference is we will not be interpreting instead we will be using it*/ 
+        FunctionCallNode* fc_node = (FunctionCallNode*) this->type_node;
+        if (expecting_object != fc_node->name->value)
+        {
+            throw std::logic_error("an " + fc_node->name->value + " was provided which does not extend " + expecting_object);
+        }
+    }
 }
 
 bool NewNode::isArray()
@@ -116,3 +141,5 @@ Value NewNode::interpret(Interpreter* interpreter)
     }
     return v;
 }
+
+

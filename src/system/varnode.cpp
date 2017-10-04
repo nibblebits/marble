@@ -4,6 +4,7 @@
 #include "debug.h"
 #include "interpreter.h"
 #include "value.h"
+#include "validator.h"
 #include <iostream>
 VarNode::VarNode() : InterpretableNode(NODE_TYPE_VARIABLE_DECLARATION)
 {
@@ -20,14 +21,42 @@ VarNode::~VarNode()
 }
 
 /*
-* Interprets the variable node and creates a variable
-* then it returns the value of the variable that it just set.
+* Validates that this variable node is valid and safe to use.
 */
-Value VarNode::interpret(Interpreter* interpreter)
+
+void VarNode::test(Validator* validator)
 {
-    Node* type_node = type;
-    std::string type_str = "";
-    switch (type_node->type)
+   std::string type_str = getTypeAsString();
+   if (this->value != NULL)
+   {
+       if (type_str == "number")
+          validator->expecting(VALUE_TYPE_NUMBER);
+       else if(type_str == "string")
+          validator->expecting(VALUE_TYPE_STRING);
+       else
+          validator->expectingObject(type_str);
+          
+       try
+       {
+         this->value->test(validator);
+       } catch(std::logic_error& ex)
+       {
+          throw std::logic_error("Expecting a " + type_str + " but " + ex.what());
+       }
+   
+       validator->endExpecting();
+   }
+   
+   Variable* var = validator->getCurrentScope()->createVariable();
+   var->type = Variable::getVariableTypeForString(type_str);
+   var->type_name = type_str;
+   var->name = this->name;
+}
+
+std::string VarNode::getTypeAsString()
+{
+    std::string type_str;
+    switch (type->type)
     {
         case NODE_TYPE_KEYWORD:
         {
@@ -41,6 +70,17 @@ Value VarNode::interpret(Interpreter* interpreter)
         }
         break;
     }
+    
+    return type_str;
+}
+/*
+* Interprets the variable node and creates a variable
+* then it returns the value of the variable that it just set.
+*/
+Value VarNode::interpret(Interpreter* interpreter)
+{
+    Node* type_node = type;
+    std::string type_str = getTypeAsString();
     
     ExpressionInterpretableNode* value_node = (ExpressionInterpretableNode*)value;
 
@@ -58,6 +98,7 @@ Value VarNode::interpret(Interpreter* interpreter)
     variable->name = name;
     variable->access = this->access;
     variable->type = Variable::getVariableTypeForString(type_str);
+    variable->type_name = type_str;
     Value v = variable->value;
     return v;
 }

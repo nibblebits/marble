@@ -55,6 +55,28 @@ Variable* Scope::getVariable(std::string variable_name)
     return NULL;
 }
 
+/*
+* Gets the variable with the name "variable_name" from within this scope or any scope above it
+* if it is not found then NULL is returned
+*/
+Variable* Scope::getVariableAnyScope(std::string variable_name)
+{
+    Variable* variable = NULL;
+    Scope* scope = this;
+    while(scope != NULL)
+    {
+        variable = scope->getVariable(variable_name);
+        if (variable != NULL)
+        {
+            break;
+        }
+        
+        scope = scope->prev;
+    }
+    
+    return variable;
+}
+
 bool Scope::isNestedInScope(Scope* scope)
 {
     if (scope == NULL)

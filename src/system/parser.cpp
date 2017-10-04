@@ -266,7 +266,7 @@ void Parser::parse_variable_declaration()
         // We don't need the equals operator anymore
         next();
         parse_expression_for_value();
-        var_node->value = pop_node();
+        var_node->value = (InterpretableNode*) pop_node();
     }
     push_node(var_node);
 

@@ -3,10 +3,12 @@
 
 #include "statics.h"
 #include "value.h"
+#include "testable.h"
 class Interpreter;
-class Interpretable
+class Interpretable : public Testable
 {
 public:
+    virtual void test(Validator* validator) {} 
     virtual Value interpret(Interpreter* interpreter) = 0;
 };
 

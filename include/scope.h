@@ -15,6 +15,8 @@ public:
     Variable* createVariable();
     Variable* cloneCreate(Variable* variable);
     Variable* getVariable(std::string variable_name);
+    Variable* getVariableAnyScope(std::string variable_name);
+    
     // Returns weather this scope is nested in the scope provided.
     bool isNestedInScope(Scope* scope);
     std::vector<Variable*> getVariables();

@@ -5,6 +5,7 @@
 #include <vector>
 class ArrayNode;
 class Interpreter;
+class Validator;
 class NewNode : public ExpressionInterpretableNode
 {
     public:
@@ -13,6 +14,7 @@ class NewNode : public ExpressionInterpretableNode
         ExpressionInterpretableNode* type_node;
         bool isArray();
         std::vector<ExpressionInterpretableNode*> array_values;
+        virtual void test(Validator* validator);
         virtual Value interpret(Interpreter* interpreter);
     private:
         std::shared_ptr<Array> new_array_array(Interpreter* interpreter, int total_elements, std::vector<ExpressionInterpretableNode*>::iterator it);
