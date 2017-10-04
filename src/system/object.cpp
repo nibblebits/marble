@@ -26,6 +26,19 @@ Object::~Object()
  
 }
 
+void Object::setup()
+{
+    // Let's create the "super" and "this" variables
+    Variable* variable = createVariable();
+    variable->type = VARIABLE_TYPE_OBJECT;
+    variable->name = "super";
+    variable->value.ovalue = shared_from_this();
+    variable->value.holder = variable;
+
+    variable = cloneCreate(variable);
+    variable->name = "this";   
+}
+
 void Object::registerVariable(Variable* variable)
 {
     if (variable == NULL)

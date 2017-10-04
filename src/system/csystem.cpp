@@ -1,5 +1,6 @@
 #include "csystem.h"
 #include "interpreter.h"
+#include "variable.h"
 #include <iostream>
 ClassSystem::ClassSystem()
 {
@@ -42,6 +43,7 @@ Class* ClassSystem::registerClass(std::string class_name, Class* parent)
         c = new Class(interpreter, class_name, parent);
     }
     this->classes.push_back(std::unique_ptr<Class>(c));
+    
     return c;
 }
 

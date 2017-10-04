@@ -14,6 +14,11 @@ Array::~Array()
    delete[] variables;
 }
 
+void Array::setup()
+{
+    // Nothing to setup
+}
+
 
 
 

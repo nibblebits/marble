@@ -7,6 +7,7 @@ class Array : public Object
 public:
     Array(Interpreter* interpreter, Class* c, Variable* variables, int count);
     virtual ~Array();
+    virtual void setup();
     Variable* variables;
     int count;
 };
