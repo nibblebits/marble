@@ -23,5 +23,6 @@ public:
     // Is this a private, protected or public variable?
     MODIFIER_ACCESS access;
     struct Value value;
+   
 };
 #endif

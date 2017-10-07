@@ -23,6 +23,20 @@
 #include "class.h"
 #include "array.h"
 #include "exceptions/IOException.h"
+    std::string getAllVariablesAsString(Scope* scope)
+    {
+        std::string return_val = "";
+        for (Variable* var : scope->getVariables())
+        {
+            return_val += var->name + ", ";
+        }
+        
+        if (scope->prev != NULL)
+            return_val += getAllVariablesAsString(scope->prev);
+        
+        return return_val;
+    }
+    
 Interpreter::Interpreter()
 {
     this->functionSystem.setInterpreter(this);
@@ -83,6 +97,11 @@ Interpreter::Interpreter()
         return_value->type = VALUE_TYPE_STRING;
         std::cin >> return_value->svalue;
     });
+    
+    getFunctionSystem()->registerFunction("variables", [&](std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+        return_value->type = VALUE_TYPE_STRING;
+        return_value->svalue = "Variables: " + getAllVariablesAsString(getCurrentScope());
+    });
    
 }
 
@@ -133,8 +152,6 @@ void Interpreter::run(const char* code, PosInfo posInfo)
         current_node->interpret(this);
         current_node = (InterpretableNode*) current_node->next;
     }
-    
-    std::cout << "THIS USE COUNT: " << getCurrentScope()->getVariable("dog")->value.ovalue->getVariable("this")->value.ovalue.use_count() << std::endl;
 
 }
 

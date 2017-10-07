@@ -27,8 +27,8 @@ public:
         char bvalue;
     };
     
-    SharedSelfHoldingPointer<Object> ovalue;
-    SharedSelfHoldingPointer<Array> avalue;
+    std::shared_ptr<Object> ovalue;
+    std::shared_ptr<Array> avalue;
     
     bool isObjectOrArray();
     

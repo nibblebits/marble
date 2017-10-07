@@ -3,6 +3,7 @@
 #include "array.h"
 #include <stdexcept>
 #include <memory>
+#include <algorithm>
 
 Scope::Scope()
 {
@@ -48,6 +49,8 @@ Variable* Scope::getVariable(std::string variable_name)
     {
         if (variable->name == variable_name)
         {
+            // Automatically set the values variable holder upon getting variables. This way if a programmer forgets to do it we are still safe.
+            variable->value.holder = variable;
             return variable;
         }
     }
@@ -77,6 +80,25 @@ Variable* Scope::getVariableAnyScope(std::string variable_name)
     return variable;
 }
 
+
+void Scope::removeVariable(Variable* variable)
+{
+     variables.erase(std::remove_if(variables.begin(), variables.end(),
+                       [&](Variable* v) { return v == variable; }), variables.end());
+     unique_variables.erase(std::remove_if(unique_variables.begin(), unique_variables.end(),
+                    [&](std::unique_ptr<Variable>& v) { return v.get() == variable; }), unique_variables.end());
+}
+
+// Events
+void Scope::onEnterScope()
+{
+
+}
+
+void Scope::onLeaveScope()
+{
+
+}
 bool Scope::isNestedInScope(Scope* scope)
 {
     if (scope == NULL)

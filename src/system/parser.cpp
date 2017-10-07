@@ -12,7 +12,6 @@ struct order_of_operation o_of_operation[] =
     "&=", 0, RIGHT_TO_LEFT,
     "<<=", 0, RIGHT_TO_LEFT,
     ">>=", 0, RIGHT_TO_LEFT,
-    ".", 0, RIGHT_TO_LEFT,
     "||", 1, LEFT_TO_RIGHT,
     "&&", 2, LEFT_TO_RIGHT,
     "|", 3, LEFT_TO_RIGHT,
@@ -31,6 +30,7 @@ struct order_of_operation o_of_operation[] =
     "*", 10, LEFT_TO_RIGHT,
     "/", 10, LEFT_TO_RIGHT,
     "%", 10, LEFT_TO_RIGHT,
+    ".", 11, LEFT_TO_RIGHT,
 };
 
 

@@ -2,6 +2,7 @@
 #include "variable.h"
 #include "interpreter.h"
 #include <iostream>
+#include <memory>
 Object::Object(Interpreter* interpreter, Class* c)
 {
     this->interpreter = interpreter;
@@ -19,25 +20,13 @@ Object::Object(Interpreter* interpreter, Class* c)
         current = current->parent;
     }
     prev = interpreter->getRootScope();
+    
 }
 
 Object::~Object()
 {
-    std::cout << "FREE ME!" << std::endl;
 }
 
-void Object::setup()
-{
-    // Let's create the "super" and "this" variables
-    Variable* variable = createVariable();
-    variable->type = VARIABLE_TYPE_OBJECT;
-    variable->name = "super";
-    variable->value.ovalue = shared_from_this();
-    variable->value.holder = variable;
-
-    variable = cloneCreate(variable);
-    variable->name = "this";   
-}
 
 void Object::registerVariable(Variable* variable)
 {
@@ -51,5 +40,27 @@ void Object::registerVariable(Variable* variable)
 Class* Object::getClass()
 {
     return this->c;
+}
+
+void Object::onEnterScope()
+{
+    // Let's create the "this" and "super" variables when entering scope
+    Variable* variable = createVariable();
+    variable->type = VARIABLE_TYPE_OBJECT;
+    variable->name = "this";
+    variable->value.ovalue = shared_from_this();
+    variable->value.holder = variable;
+
+    variable = cloneCreate(variable);
+    variable->name = "super";
+}
+
+void Object::onLeaveScope()
+{
+    /* To avoid memory leaks we need to remove the "this" and "super" variables upon leaving scope. This is because the shared_ptr will point to its self otherwise.
+    * another reason for removing these variables is to prevent outside access to them.
+    */
+    removeVariable(getVariable("this"));
+    removeVariable(getVariable("super"));
 }
 

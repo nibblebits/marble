@@ -96,7 +96,7 @@ Value ExpNode::interpret(Interpreter* interpreter)
         // This is to be an assignment. We must interpret the left node and then we will have the variable we need to assign to the right node
         Value left_v = left->interpret(interpreter);
         Variable* var_to_assign = left_v.holder;
-
+        
         // Ok now lets get the value and assign it to the variable
         Value right_v = right->interpret(interpreter);
         
@@ -114,6 +114,8 @@ Value ExpNode::interpret(Interpreter* interpreter)
 
     FunctionSystem* old_fc_system;
     Scope* old_scope;
+    std::shared_ptr<Object> old_obj;
+    Class* c;
     Value left_v = this->left->interpret(interpreter);
     if (this->op == ".")
     {
@@ -121,13 +123,14 @@ Value ExpNode::interpret(Interpreter* interpreter)
         old_scope = interpreter->getCurrentScope();
         // Left_v has the object to access
         std::shared_ptr<Object> obj = left_v.ovalue;
-        Class* c = obj->getClass();
+        c = obj->getClass();
         if (left_v.holder != NULL)
         {
             // If the left variables name is "super" then we must be accessing a super-class and we should take the parent's class.
             if (left_v.holder->name == "super")
                 c = obj->getClass()->parent;
         }
+        old_obj = c->currentObj;
         c->currentObj = obj;
         // The object scope is where all the attributes for the object ar stored so while we are accessing this object it should be set.
         interpreter->setCurrentScope(obj.get());
@@ -140,6 +143,8 @@ Value ExpNode::interpret(Interpreter* interpreter)
         interpreter->setFunctionSystem(old_fc_system);
         // Restore the old scope
         interpreter->setCurrentScope(old_scope);
+        // Restore the old class object.
+        c->currentObj = old_obj;
         result = right_v;
         return result;
     }

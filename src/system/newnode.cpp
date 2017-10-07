@@ -62,7 +62,6 @@ std::shared_ptr<Array> NewNode::new_variable_array(Interpreter* interpreter, int
 void NewNode::new_object_variable(Interpreter* interpreter, Value& v, std::string class_name)
 {
     std::shared_ptr<Object> object = std::make_shared<Object>(interpreter, interpreter->getClassSystem()->getClassByName(class_name));
-    object->setup();
     v.type = VALUE_TYPE_OBJECT;
     v.ovalue = object;
 }
@@ -87,7 +86,6 @@ std::shared_ptr<Array> NewNode::new_array_array(Interpreter* interpreter, int to
         var->value.holder = var;
     }
     std::shared_ptr<Array> array = std::make_shared<Array>(interpreter, interpreter->getClassSystem()->getClassByName("array"), variables, total_elements);
-    array->setup();
     return array;
 }
 

@@ -1,4 +1,5 @@
 #include "scopehandler.h"
+#include <iostream>
 ScopeHandler::ScopeHandler()
 {
     this->action_scope = &root_scope;
@@ -22,7 +23,10 @@ Scope* ScopeHandler::getRootScope()
 
 void ScopeHandler::setCurrentScope(Scope* scope)
 {
+    if (this->current_scope != NULL)        
+        this->current_scope->onLeaveScope();
     this->current_scope = scope;
+    this->current_scope->onEnterScope();
 }
 
 Scope* ScopeHandler::getActionScope()
@@ -35,12 +39,14 @@ void ScopeHandler::new_parented_scope()
     this->action_scope = current_scope;
     Scope* new_prev = current_scope;
     current_scope = new Scope();
+    current_scope->onEnterScope();
     current_scope->prev = new_prev;
 }
 
 void ScopeHandler::finish_parented_scope()
 {
     Scope* old_current = current_scope;
+    old_current->onLeaveScope();
     current_scope = old_current->prev;
     this->action_scope = current_scope;
     delete old_current;
