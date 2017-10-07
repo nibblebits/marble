@@ -22,6 +22,15 @@ void IdentifierNode::test(Validator* validator)
     Variable* variable = current_scope->getVariableAnyScope(this->value);
     if (variable == NULL)
         throw std::logic_error("variable \"" + this->value + "\" is not declared");
+    
+    if (!validator->isExpecting())
+        return;
+        
+    // We now need to check if the type is valid
+    VALUE_TYPE expecting_type = validator->getExpectingType();
+    if (variable->type != expecting_type)
+        throw std::logic_error("a " + variable->type_name + " was provided");
+    
 }
 
 Value IdentifierNode::interpret(Interpreter* interpreter)

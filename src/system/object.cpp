@@ -23,7 +23,7 @@ Object::Object(Interpreter* interpreter, Class* c)
 
 Object::~Object()
 {
- 
+    std::cout << "FREE ME!" << std::endl;
 }
 
 void Object::setup()

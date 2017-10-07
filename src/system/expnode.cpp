@@ -5,6 +5,7 @@
 #include "statics.h"
 #include "object.h"
 #include "interpreter.h"
+#include "validator.h"
 #include <iostream>
 #include <memory>
 ExpNode::ExpNode() : ExpressionInterpretableNode(NODE_TYPE_EXPRESSION)
@@ -144,4 +145,13 @@ Value ExpNode::interpret(Interpreter* interpreter)
     }
     result = mathify(left_v, right_v, this->op);
     return result;
+}
+
+void ExpNode::test(Validator* validator)
+{
+    if (!validator->isExpecting())
+        return;
+    
+    left->test(validator);
+    right->test(validator);
 }

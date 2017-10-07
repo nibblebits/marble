@@ -32,21 +32,15 @@ enum
     NODE_TYPE_CLASS
 };
 
+// This enum should be aligned with the value enum so that using either will match with the other.
 enum
 {
     VARIABLE_TYPE_NUMBER,
     VARIABLE_TYPE_STRING,
     VARIABLE_TYPE_OBJECT,
     VARIABLE_TYPE_ARRAY,
+    VARIABLE_TYPE_BYTE,
     VARIABLE_TYPE_VOID,
-    VARIABLE_TYPE_BYTE
-};
-
-enum
-{
-    MODIFIER_ACCESS_PRIVATE,
-    MODIFIER_ACCESS_PROTECTED,
-    MODIFIER_ACCESS_PUBLIC
 };
 
 enum
@@ -57,6 +51,14 @@ enum
     VALUE_TYPE_ARRAY,
     VALUE_TYPE_BYTE
 };
+
+enum
+{
+    MODIFIER_ACCESS_PRIVATE,
+    MODIFIER_ACCESS_PROTECTED,
+    MODIFIER_ACCESS_PUBLIC
+};
+
 
 
 enum

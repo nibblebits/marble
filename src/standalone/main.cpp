@@ -54,5 +54,11 @@ int main(int argc, char** argv)
     interpret();
     std::cout << "Program terminated" << std::endl;
         std::cout << "ALLOCATIONS: " << allocations.size() << std::endl;
+    if (allocations.size() > 0)
+    {
+        std::cout << "MEMORY LEAK DETECTED" << std::endl;
+        for(void* ptr : allocations)
+            free(ptr);
+    }
     return 0;
 }

@@ -2,6 +2,7 @@
 #define VALUE_H
 
 #include "statics.h"
+#include "cpointers.h"
 #include <string>
 #include <vector>
 #include <memory>
@@ -26,8 +27,8 @@ public:
         char bvalue;
     };
     
-    std::shared_ptr<Object> ovalue;
-    std::shared_ptr<Array> avalue;
+    SharedSelfHoldingPointer<Object> ovalue;
+    SharedSelfHoldingPointer<Array> avalue;
     
     bool isObjectOrArray();
     

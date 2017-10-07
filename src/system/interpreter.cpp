@@ -124,7 +124,7 @@ void Interpreter::run(const char* code, PosInfo posInfo)
     root_node = parser.parse(root_token);
     
     Validator validator(&logger);
-    validator.validate(root_node);
+   // validator.validate(root_node);
     
     InterpretableNode* current_node = (InterpretableNode*) root_node;
     // Awesome now lets interpret!
@@ -133,6 +133,8 @@ void Interpreter::run(const char* code, PosInfo posInfo)
         current_node->interpret(this);
         current_node = (InterpretableNode*) current_node->next;
     }
+    
+    std::cout << "THIS USE COUNT: " << getCurrentScope()->getVariable("dog")->value.ovalue->getVariable("this")->value.ovalue.use_count() << std::endl;
 
 }
 
