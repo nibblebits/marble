@@ -18,10 +18,14 @@ bool KeywordNode::isDataTypeKeyword()
     return DataType::isPrimitiveDataType(this->value);
 }
 
-void KeywordNode::evaluate_impl(SystemHandler* handler, struct Evaluation* evaluation)
+void KeywordNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)
 {
+    // The keyword node only evaluates data types.
+    if (!(expected_evaluation & EVALUATION_TYPE_DATATYPE))
+        return;
+    
     if (!isDataTypeKeyword())
-        throw std::logic_error("Nothing to evaluate.");
+        throw std::logic_error("Not a datatype keyword.");
         
     evaluation->type |= EVALUATION_TYPE_DATATYPE;
     evaluation->datatype.type = Variable::getVariableTypeForString(this->value);

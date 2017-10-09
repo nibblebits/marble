@@ -13,7 +13,7 @@ public:
     virtual ~ExpNode();
     virtual Value interpret(Interpreter* intrerpreter);
     virtual void test(Validator* validator);
-    virtual void evaluate_impl(SystemHandler* handler, struct Evaluation* evaluation);
+    virtual void evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation);
     
     ExpressionInterpretableNode* left;
     ExpressionInterpretableNode* right;

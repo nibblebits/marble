@@ -40,7 +40,7 @@ Value IdentifierNode::interpret(Interpreter* interpreter)
     return v;
 }
 
-void IdentifierNode::evaluate_impl(SystemHandler* handler, struct Evaluation* evaluation)
+void IdentifierNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)
 {
     // Nothing yet.
 }

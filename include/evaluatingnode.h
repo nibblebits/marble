@@ -18,9 +18,9 @@ class EvaluatingNode : public Node
 public:
     EvaluatingNode(NODE_TYPE type);
     virtual ~EvaluatingNode();
-    struct Evaluation evaluate(SystemHandler* handler);
-    void evaluate(SystemHandler* handler, struct Evaluation* evaluation);
+    struct Evaluation evaluate(SystemHandler* handler, EVALUATION_TYPE expected_evaluation);
+    void evaluate(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation);
 protected:
-    virtual void evaluate_impl(SystemHandler* handler, struct Evaluation* evaluation) { };
+    virtual void evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation) { /* Nothing to evaluate if this is not overrided */};
 };
 #endif

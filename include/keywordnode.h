@@ -9,7 +9,7 @@ public:
     virtual ~KeywordNode();
     std::string value;
     bool isDataTypeKeyword();
-    virtual void evaluate_impl(SystemHandler* handler, struct Evaluation* evaluation);
+    virtual void evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation);
 };
 
 #endif

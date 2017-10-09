@@ -57,7 +57,7 @@ Value CastNode::interpret(Interpreter* interpreter)
 {
 
     Value v = this->to_cast->interpret(interpreter);
-    struct Evaluation evaluation = this->casting_to->evaluate(interpreter);
+    struct Evaluation evaluation = this->casting_to->evaluate(interpreter, EVALUATION_TYPE_DATATYPE);
     if (evaluation.datatype.value == "number")
     {
         v.dvalue = (int) get_double_value(&v);

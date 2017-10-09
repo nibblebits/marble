@@ -9,14 +9,14 @@ EvaluatingNode::~EvaluatingNode()
 
 }
 
-struct Evaluation EvaluatingNode::evaluate(SystemHandler* handler)
+struct Evaluation EvaluatingNode::evaluate(SystemHandler* handler, EVALUATION_TYPE expected_evaluation)
 {
     struct Evaluation evaluation;
-    evaluate(handler, &evaluation);
+    evaluate(handler, expected_evaluation, &evaluation);
     return evaluation;
 }
 
-void EvaluatingNode::evaluate(SystemHandler* handler, struct Evaluation* evaluation)
+void EvaluatingNode::evaluate(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)
 {
-    evaluate_impl(handler, evaluation);
+    evaluate_impl(handler, expected_evaluation, evaluation);
 }
