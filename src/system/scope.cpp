@@ -49,8 +49,6 @@ Variable* Scope::getVariable(std::string variable_name)
     {
         if (variable->name == variable_name)
         {
-            // Automatically set the values variable holder upon getting variables. This way if a programmer forgets to do it we are still safe.
-            variable->value.holder = variable;
             return variable;
         }
     }

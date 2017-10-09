@@ -143,7 +143,7 @@ void Interpreter::run(const char* code, PosInfo posInfo)
     root_node = parser.parse(root_token);
     
     Validator validator(&logger);
-   // validator.validate(root_node);
+    validator.validate(root_node);
     
     InterpretableNode* current_node = (InterpretableNode*) root_node;
     // Awesome now lets interpret!
@@ -162,29 +162,6 @@ void Interpreter::fail()
 }
 
 
-FunctionSystem* Interpreter::getRootFunctionSystem()
-{
-    return &this->functionSystem;
-}
-
-FunctionSystem* Interpreter::getFunctionSystem()
-{
-    return this->currentFunctionSystem;
-}
-
-ClassSystem* Interpreter::getClassSystem()
-{
-    return &this->classSystem;
-}
-
-Variable* Interpreter::getVariableByName(std::string name)
-{
-    Variable* variable = getCurrentScope()->getVariableAnyScope(name);
-    if (variable == NULL)
-        throw std::logic_error("Variable not found: " + name);
-
-    return variable;
-}
 
 void Interpreter::handleLineAndColumn(PosInfo* posInfo, const char* data, int length)
 {
@@ -261,15 +238,5 @@ void Interpreter::runScript(const char* filename)
     // Close and clean up
     fclose(file);
     delete data;
-}
-
-void Interpreter::setFunctionSystem(FunctionSystem* current_fc_system)
-{
-    this->currentFunctionSystem = current_fc_system;
-}
-
-Logger* Interpreter::getLogger()
-{
-    return &this->logger;
 }
 

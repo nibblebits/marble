@@ -108,7 +108,7 @@ Value ExpNode::interpret(Interpreter* interpreter)
         {
             result = mathify(left_v, right_v, this->op);
         }
-        var_to_assign->value = result;
+        var_to_assign->set_value(result);
         return result;        
     }
 
@@ -153,10 +153,7 @@ Value ExpNode::interpret(Interpreter* interpreter)
 }
 
 void ExpNode::test(Validator* validator)
-{
-    if (!validator->isExpecting())
-        return;
-    
+{    
     left->test(validator);
     right->test(validator);
 }

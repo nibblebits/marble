@@ -1,6 +1,8 @@
 #ifndef SCOPEHANDLER_H
 #define SCOPEHANDLER_H
 #include "scope.h"
+
+class Variable;
 class ScopeHandler
 {
 public:
@@ -12,6 +14,7 @@ public:
     Scope* getActionScope();
     void new_parented_scope();
     void finish_parented_scope();
+    Variable* getVariableByName(std::string name);
 private:
     Scope root_scope;
     Scope* current_scope;

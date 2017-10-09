@@ -46,3 +46,10 @@ Variable Variable::getFromPointer(Variable* variable)
     v.value.set(&variable->value);
     return v;
 }
+
+
+void Variable::set_value(Value value)
+{
+    this->value = value;
+    this->value.holder = this;
+}

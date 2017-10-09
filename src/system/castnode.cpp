@@ -54,6 +54,7 @@ std::string CastNode::get_string_value(Value* from)
 
 Value CastNode::interpret(Interpreter* interpreter)
 {
+
     Value v = this->to_cast->interpret(interpreter);
     if (this->casting_to->type == NODE_TYPE_KEYWORD)
     {
@@ -71,7 +72,12 @@ Value CastNode::interpret(Interpreter* interpreter)
             v.type = VALUE_TYPE_STRING;
         }
     }
-    
+ 
     return v;
+}
+
+void CastNode::test(Validator* validator)
+{    
+
 }
     

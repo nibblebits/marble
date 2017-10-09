@@ -89,6 +89,7 @@ Value VarNode::interpret(Interpreter* interpreter)
     if (value_node != NULL)
     {
         variable->value = value_node->interpret(interpreter);
+        variable->value.holder = variable;
     }
     else
     {

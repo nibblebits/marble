@@ -1,4 +1,5 @@
 #include "scopehandler.h"
+#include "variable.h"
 #include <iostream>
 ScopeHandler::ScopeHandler()
 {
@@ -50,4 +51,13 @@ void ScopeHandler::finish_parented_scope()
     current_scope = old_current->prev;
     this->action_scope = current_scope;
     delete old_current;
+}
+
+Variable* ScopeHandler::getVariableByName(std::string name)
+{
+    Variable* variable = getCurrentScope()->getVariableAnyScope(name);
+    if (variable == NULL)
+        throw std::logic_error("Variable not found: " + name);
+
+    return variable;
 }

@@ -2,12 +2,14 @@
 #define CASTNODE_H
 
 #include "einode.h"
+class Validator;
 class CastNode : public ExpressionInterpretableNode
 {
 public:
     CastNode();
     virtual ~CastNode();
     virtual Value interpret(Interpreter* interpreter);
+    virtual void test(Validator* validator);
     Node* casting_to;
     ExpressionInterpretableNode* to_cast;
 private:

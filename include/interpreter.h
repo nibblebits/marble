@@ -7,7 +7,7 @@
 #include "scope.h"
 #include "functionsystem.h"
 #include "csystem.h"
-#include "scopehandler.h"
+#include "systemhandler.h"
 #include "logger.h"
 
 typedef std::function<void(const char* output)> OUTPUT_FUNCTION;
@@ -17,7 +17,7 @@ class VarNode;
 class ExpNode;
 class BodyNode;
 class Object;
-class Interpreter : public ScopeHandler
+class Interpreter : public SystemHandler
 {
 public:
     Interpreter();
@@ -26,22 +26,12 @@ public:
     void ready();
     void run(const char* code, PosInfo posInfo);
     void runScript(const char* filename);
-    void setFunctionSystem(FunctionSystem* current_fc_system);
-    Logger* getLogger();
-    Variable* getVariableByName(std::string name);
-    FunctionSystem* getRootFunctionSystem();
-    FunctionSystem* getFunctionSystem();
-    ClassSystem* getClassSystem();
+
 private:
     void handleLineAndColumn(PosInfo* posInfo, const char* data, int length);
     void fail();
-    // Root systems
-    FunctionSystem functionSystem;
-    ClassSystem classSystem;
-    FunctionSystem* currentFunctionSystem;
-    OUTPUT_FUNCTION output;
-    Logger logger;
     const char* filename;
+    OUTPUT_FUNCTION output;
 };
 
 #endif

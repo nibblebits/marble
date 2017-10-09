@@ -8,6 +8,7 @@ Value::Value()
     this->holder = NULL;
     this->ovalue = NULL;
     this->avalue = NULL;
+    this->dvalue = 0;
 }
 
 Value::~Value()
@@ -25,7 +26,6 @@ VALUE_TYPE Value::getValueTypeForString(std::string str)
     else
         return VALUE_TYPE_OBJECT;
 }
-
 void Value::set(Value* v)
 {
     this->type = v->type;
