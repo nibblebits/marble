@@ -9,6 +9,7 @@ public:
     virtual ~IdentifierNode();
     virtual void test(Validator* validator);
     virtual Value interpret(Interpreter* interpreter);
+    virtual void evaluate_impl(SystemHandler* handler, struct Evaluation* evaluation);
     std::string value;
 };
 

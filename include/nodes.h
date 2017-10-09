@@ -19,4 +19,5 @@
 #include "einode.h"
 #include "retnode.h"
 #include "classnode.h"
+#include "evaluatingnode.h"
 #endif

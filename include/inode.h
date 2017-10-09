@@ -1,9 +1,9 @@
 #ifndef INTERPRETABLENODE_H
 #define INTERPRETABLENODE_H
 
-#include "node.h"
+#include "evaluatingnode.h"
 #include "interpretable.h"
-class InterpretableNode : public Node, public Interpretable
+class InterpretableNode : public EvaluatingNode, public Interpretable
 {
  public:
 	InterpretableNode(int type);

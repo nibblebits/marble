@@ -242,7 +242,7 @@ Token* Parser::get_identifier_token(std::string error_msg)
 void Parser::parse_variable_declaration()
 {
     parse_value();
-    Node* data_type_node = pop_node();
+    EvaluatingNode* data_type_node = (EvaluatingNode*) pop_node();
     int array_dimensions = 0;
     while (peek()->isSymbol("["))
     {
@@ -463,7 +463,7 @@ void Parser::parse_cast(Node* casting_to)
     ExpressionInterpretableNode* to_cast = (ExpressionInterpretableNode*) pop_node();
     
     CastNode* node = (CastNode*) factory.createNode(NODE_TYPE_CAST);
-    node->casting_to = casting_to;
+    node->casting_to = (EvaluatingNode*) casting_to;
     node->to_cast = to_cast;
     push_node(node);
 }

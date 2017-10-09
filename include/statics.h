@@ -52,6 +52,12 @@ enum
     VALUE_TYPE_BYTE
 };
 
+// Bit masking is used for evaluation types
+enum
+{
+    EVALUATION_TYPE_DATATYPE = 0x01
+};
+
 enum
 {
     MODIFIER_ACCESS_PRIVATE,
@@ -96,7 +102,8 @@ enum
 typedef int TOKEN_TYPE;
 typedef int NODE_TYPE;
 typedef int VALUE_TYPE;
+typedef int VARIABLE_TYPE;
+typedef int EVALUATION_TYPE;
 typedef int LOG_TYPE;
-
 typedef int MODIFIER_ACCESS;
 #endif

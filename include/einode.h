@@ -8,6 +8,7 @@ class ExpressionInterpretableNode : public InterpretableNode
 	ExpressionInterpretableNode(int type);
 	virtual ~ExpressionInterpretableNode();
 	virtual Value interpret(Interpreter* interpreter) = 0;
+	
 };
 
 #endif

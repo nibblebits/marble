@@ -31,6 +31,7 @@ private:
     void ensure_type(Token* token, int expected_type);
     MODIFIER_ACCESS get_modifier_access_for_string(std::string str);
     Token* get_identifier_token(std::string error_msg);
+    
     void parse_variable_declaration();
     void parse_expression_for_value(int extra_rules=0);
     void parse_expression(int rules=0);

@@ -1,5 +1,6 @@
 #include "castnode.h"
 #include "nodes.h"
+#include "interpreter.h"
 #include <iostream>
 CastNode::CastNode() : ExpressionInterpretableNode(NODE_TYPE_CAST)
 {
@@ -56,21 +57,20 @@ Value CastNode::interpret(Interpreter* interpreter)
 {
 
     Value v = this->to_cast->interpret(interpreter);
-    if (this->casting_to->type == NODE_TYPE_KEYWORD)
+    struct Evaluation evaluation = this->casting_to->evaluate(interpreter);
+    if (evaluation.datatype.value == "number")
     {
-        // We have a primitive cast here
-        KeywordNode* keyword_node = (KeywordNode*) this->casting_to;
-        std::string value = keyword_node->value;
-        if (value == "int")
-        {
-            v.dvalue = (int) get_double_value(&v);
-            v.type = VALUE_TYPE_NUMBER;
-        }
-        else if(value == "string")
-        {
-            v.svalue = get_string_value(&v);
-            v.type = VALUE_TYPE_STRING;
-        }
+        v.dvalue = (int) get_double_value(&v);
+        v.type = VALUE_TYPE_NUMBER;
+    }
+    else if(evaluation.datatype.value == "string")
+    {
+        v.svalue = get_string_value(&v);
+        v.type = VALUE_TYPE_STRING;
+    }
+    else
+    {
+        throw std::logic_error("Unexpected: " + evaluation.datatype.value);
     }
  
     return v;
@@ -78,6 +78,6 @@ Value CastNode::interpret(Interpreter* interpreter)
 
 void CastNode::test(Validator* validator)
 {    
-
+    
 }
     

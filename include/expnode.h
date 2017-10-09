@@ -4,6 +4,7 @@
 #include <memory>
 #include "statics.h"
 #include "einode.h"
+#include "evaluatingnode.h"
 #include "validator.h"
 class ExpNode : public ExpressionInterpretableNode
 {
@@ -12,6 +13,7 @@ public:
     virtual ~ExpNode();
     virtual Value interpret(Interpreter* intrerpreter);
     virtual void test(Validator* validator);
+    virtual void evaluate_impl(SystemHandler* handler, struct Evaluation* evaluation);
     
     ExpressionInterpretableNode* left;
     ExpressionInterpretableNode* right;

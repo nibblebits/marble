@@ -6,6 +6,7 @@
 #include "token.h"
 #include "statics.h"
 #include "node.h"
+#include "evaluatingnode.h"
 #include "inode.h"
 class VarNode : public InterpretableNode
 {
@@ -15,7 +16,7 @@ public:
     virtual void test(Validator* validator);
     virtual Value interpret(Interpreter* interpreter);
     std::string getTypeAsString();
-    Node* type;
+    EvaluatingNode* type;
     std::string name;
     InterpretableNode* value;
     

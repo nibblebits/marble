@@ -3,6 +3,7 @@
 
 #include "einode.h"
 class Validator;
+class EvaluatingNode;
 class CastNode : public ExpressionInterpretableNode
 {
 public:
@@ -10,7 +11,7 @@ public:
     virtual ~CastNode();
     virtual Value interpret(Interpreter* interpreter);
     virtual void test(Validator* validator);
-    Node* casting_to;
+    EvaluatingNode* casting_to;
     ExpressionInterpretableNode* to_cast;
 private:
     std::string get_string_value(Value* from);

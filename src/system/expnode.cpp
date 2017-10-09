@@ -157,3 +157,9 @@ void ExpNode::test(Validator* validator)
     left->test(validator);
     right->test(validator);
 }
+
+void ExpNode::evaluate_impl(SystemHandler* handler, struct Evaluation* evaluation)
+{
+    left->evaluate(handler, evaluation);
+    right->evaluate(handler, evaluation);
+}

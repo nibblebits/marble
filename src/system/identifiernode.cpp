@@ -39,3 +39,8 @@ Value IdentifierNode::interpret(Interpreter* interpreter)
     Value v = var->value;
     return v;
 }
+
+void IdentifierNode::evaluate_impl(SystemHandler* handler, struct Evaluation* evaluation)
+{
+    // Nothing yet.
+}
