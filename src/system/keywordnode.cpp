@@ -15,6 +15,7 @@ KeywordNode::~KeywordNode()
 
 bool KeywordNode::isDataTypeKeyword()
 {
+    // Keywords can only represent primitive datatypes.
     return DataType::isPrimitiveDataType(this->value);
 }
 

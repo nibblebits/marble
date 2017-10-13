@@ -26,6 +26,7 @@ VALUE_TYPE Value::getValueTypeForString(std::string str)
     else
         return VALUE_TYPE_OBJECT;
 }
+
 void Value::set(Value* v)
 {
     this->type = v->type;

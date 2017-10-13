@@ -34,9 +34,12 @@ void NewNode::test(Validator* validator)
         /* It is natural for this type node to be a function call node as it will be calling a constructor, e.g new Object();
      * the difference is we will not be interpreting instead we will be using it*/ 
         FunctionCallNode* fc_node = (FunctionCallNode*) this->type_node;
-        if (expecting_object != fc_node->name->value)
+        ClassSystem* class_sys = validator->getClassSystem();
+        Class* expecting_class = class_sys->getClassByName(expecting_object);
+        Class* fc_node_class = class_sys->getClassByName(fc_node->name->value);
+        if (expecting_object != fc_node->name->value && !fc_node_class->instanceOf(expecting_class))
         {
-            throw std::logic_error("an " + fc_node->name->value + " was provided which does not extend " + expecting_object);
+            throw std::logic_error("a " + fc_node->name->value + " was provided which does not extend " + expecting_object);
         }
     }
 }

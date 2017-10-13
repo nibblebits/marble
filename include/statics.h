@@ -55,7 +55,9 @@ enum
 // Bit masking is used for evaluation types
 enum
 {
-    EVALUATION_TYPE_DATATYPE = 0x01
+    EVALUATION_TYPE_DATATYPE = 0x01,
+    // Signifies a variable must be resolved
+    EVALUATION_FROM_VARIABLE = 0x02
 };
 
 enum

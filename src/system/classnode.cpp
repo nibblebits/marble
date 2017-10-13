@@ -14,6 +14,21 @@ ClassNode::~ClassNode()
 
 }
 
+void ClassNode::test(Validator* validator)
+{
+    // Check to see if class already exists
+    ClassSystem* class_sys = validator->getClassSystem();
+    if (class_sys->hasClassWithName(name))
+        throw std::logic_error("The class with the name \"" + name + "\" has already been declared");
+        
+    // Check to see if the parent class exists
+    if (this->parent != "" && !class_sys->hasClassWithName(this->parent))
+        throw std::logic_error("The parent class with the name \"" + this->parent + "\" has not been declared");
+        
+    Class* parent_class = class_sys->getClassByName(this->parent);
+    class_sys->registerClass(name, parent_class);
+}
+
 Value ClassNode::interpret(Interpreter* interpreter)
 {
     ClassSystem* c_system = interpreter->getClassSystem();

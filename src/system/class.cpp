@@ -36,3 +36,18 @@ std::vector<Variable> Class::getVariables()
     return this->local_variables;
 }
 
+
+bool Class::instanceOf(Class* c)
+{
+    if (c == NULL)
+        throw std::logic_error("NULL class provided");
+    Class* current = this;
+    while(current != NULL && current != c)
+    {
+        current = current->parent;
+    }
+    
+    if (c == current)
+        return true;
+    return false;
+}

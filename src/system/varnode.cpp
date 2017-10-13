@@ -41,7 +41,7 @@ void VarNode::test(Validator* validator)
          this->value->test(validator);
        } catch(std::logic_error& ex)
        {
-          throw std::logic_error("Expecting a " + type_str + " but " + ex.what());
+          throw std::logic_error("Expecting a " + type_str + "; " + ex.what());
        }
    
        validator->endExpecting();

@@ -30,6 +30,12 @@ void IdentifierNode::test(Validator* validator)
     VALUE_TYPE expecting_type = validator->getExpectingType();
     if (variable->type != expecting_type)
         throw std::logic_error("a " + variable->type_name + " was provided");
+        
+    if (variable->type == VARIABLE_TYPE_OBJECT)
+    {
+        // We must ensure the object types match
+        
+    }
     
 }
 
@@ -42,5 +48,22 @@ Value IdentifierNode::interpret(Interpreter* interpreter)
 
 void IdentifierNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)
 {
-    // Nothing yet.
+    if(expected_evaluation & EVALUATION_TYPE_DATATYPE)
+    {
+        if (expected_evaluation & EVALUATION_FROM_VARIABLE)
+        {
+            Variable* var = handler->getVariableByName(this->value);
+            evaluation->type |= EVALUATION_TYPE_DATATYPE;
+            evaluation->datatype.type = var->type;
+	        evaluation->datatype.value = var->type_name;
+        }
+        else
+        {
+            evaluation->type |= EVALUATION_TYPE_DATATYPE;
+            evaluation->datatype.type = Variable::getVariableTypeForString(this->value);
+	        evaluation->datatype.value = this->value;
+	    }
+	    
+    }
+    
 }

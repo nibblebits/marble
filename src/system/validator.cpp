@@ -4,13 +4,24 @@
 Validator::Validator(Logger* logger)
 {
     this->logger = logger;
-    this->expecting_type = -1;
-    this->expecting_object = "";
 }
 
 Validator::~Validator()
 {
 
+}
+
+void Validator::save()
+{
+    this->rules_stack.push_back(this->rules);
+    struct rules r;
+    this->rules = r;
+}
+
+void Validator::restore()
+{
+    this->rules = this->rules_stack.back();
+    this->rules_stack.pop_back();
 }
 
 void Validator::validate(Node* root_node)
@@ -34,35 +45,35 @@ void Validator::expectingObject(std::string obj_name)
 {
     if (isExpecting())
         throw std::logic_error("The validator is already expecting");
-    
-    this->expecting_type = VALUE_TYPE_OBJECT;
-    this->expecting_object = obj_name;
+
+    this->rules.expecting_type = VALUE_TYPE_OBJECT;
+    this->rules.expecting_object = obj_name;
 }
 
 void Validator::expecting(VALUE_TYPE type)
 {
     if (isExpecting())
         throw std::logic_error("The validator is already expecting");
-    this->expecting_type = type;
+    this->rules.expecting_type = type;
 }
 
 bool Validator::isExpecting()
 {
-    return this->expecting_type != -1;
+    return this->rules.expecting_type != -1;
 }
 
 void Validator::endExpecting()
 {
-    this->expecting_type = -1;
-    this->expecting_object = "";
+    this->rules.expecting_type = -1;
+    this->rules.expecting_object = "";
 }
 
 VALUE_TYPE Validator::getExpectingType()
 {
-    return this->expecting_type;
+    return this->rules.expecting_type;
 }
 
 std::string Validator::getExpectingObject()
 {
-    return this->expecting_object;
+    return this->rules.expecting_object;
 }

@@ -8,6 +8,7 @@ class ClassNode : public InterpretableNode
 public:
     ClassNode();
     virtual ~ClassNode();
+    virtual void test(Validator* validator);
     virtual Value interpret(Interpreter* interpreter);
     
     std::string name;

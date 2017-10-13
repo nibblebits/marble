@@ -15,6 +15,7 @@ public:
     Variable getVariable(std::string name);
     std::vector<Variable> getVariables();
     
+    bool instanceOf(Class* c);
     std::string name;
     Class* parent;
 private:

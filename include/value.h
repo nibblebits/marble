@@ -15,6 +15,7 @@ public:
     Value();
     virtual ~Value();
     static VALUE_TYPE getValueTypeForString(std::string str);
+    static std::string getValueStringForType(VALUE_TYPE type);
     void set(Value* v);
     VALUE_TYPE type;
     // The variable who holds this value (NULL if the value stands without a variable)
