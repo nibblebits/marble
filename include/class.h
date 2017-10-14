@@ -12,8 +12,11 @@ public:
     virtual ~Class();
     
     void addVariable(Variable v);
+    bool hasVariableWithName(std::string name);
     Variable getVariable(std::string name);
     std::vector<Variable> getVariables();
+    
+    Class* getClassWhoHasVariable(std::string name);
     
     bool instanceOf(Class* c);
     std::string name;

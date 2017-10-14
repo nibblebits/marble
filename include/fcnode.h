@@ -12,6 +12,7 @@ class FunctionCallNode : public ExpressionInterpretableNode
 public:
     FunctionCallNode();
     virtual ~FunctionCallNode();
+    virtual void test(Validator* validator);
     virtual Value interpret(Interpreter* interpreter);
     IdentifierNode* name;
     std::vector<ExpressionInterpretableNode*> arguments;

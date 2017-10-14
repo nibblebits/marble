@@ -54,6 +54,7 @@ void VarNode::test(Validator* validator)
    
    Variable* var = validator->getCurrentScope()->createVariable();
    var->type = Variable::getVariableTypeForString(type_str);
+   var->access = this->access;
    var->type_name = type_str;
    var->name = this->name;
 }
@@ -74,6 +75,9 @@ std::string VarNode::getTypeAsString()
             type_str = ((IdentifierNode*)type)->value;
         }
         break;
+        
+        default:
+            throw std::logic_error("Unsure how to get type as string");
     }
     
     return type_str;

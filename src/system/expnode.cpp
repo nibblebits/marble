@@ -88,6 +88,9 @@ Value ExpNode::mathify(Value& value1, Value& value2, std::string op)
     return result;
 }
 
+/*
+* this must be split into multiple methods in the same way the test routine is.
+*/
 Value ExpNode::interpret(Interpreter* interpreter)
 {
     Value result;
@@ -154,12 +157,102 @@ Value ExpNode::interpret(Interpreter* interpreter)
 
 void ExpNode::test(Validator* validator)
 {    
+   if (this->op == ".")
+   {
+      test_obj_access(validator);
+   }
+   else if(this->op == "=")
+   {
+      test_assign(validator);
+   }
+   else
+   {
+      test_regular_exp(validator);
+   }
+    
+}
+
+
+void ExpNode::test_obj_access(Validator* validator)
+{
     left->test(validator);
+    struct Evaluation evaluation = left->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE);
+    FunctionSystem* old_fc_system;
+    Scope* old_scope;
+    
+    if (this->op == ".")
+    {
+        old_fc_system = validator->getFunctionSystem();
+        old_scope = validator->getCurrentScope();   
+                     
+        Object* obj = validator->getClassObject(evaluation.datatype.value);
+        validator->setCurrentScope(obj);
+        validator->setFunctionSystem(obj->getClass());
+    }
+    
     right->test(validator);
+    
+    if (this->op == ".")
+    {
+        validator->setCurrentScope(old_scope);
+        validator->setFunctionSystem(old_fc_system);
+    }
+}
+
+void ExpNode::test_assign(Validator* validator)
+{
+    left->test(validator);
+    struct Evaluation evaluation = left->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE);
+    if (evaluation.datatype.type == VARIABLE_TYPE_OBJECT)
+    {
+        validator->expectingObject(evaluation.datatype.value);
+    }
+    else
+    {
+        validator->expecting(evaluation.datatype.type);
+    }
+    try
+    {
+        right->test(validator);
+    } catch(std::logic_error& ex)
+    {
+       throw std::logic_error(std::string(ex.what()) + " but this assignment requires a " + evaluation.datatype.value);
+    }
+    validator->endExpecting();
+}
+
+void ExpNode::test_regular_exp(Validator* validator)
+{
+
 }
 
 void ExpNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)
 {
-    left->evaluate(handler, expected_evaluation, evaluation);
-    right->evaluate(handler, expected_evaluation, evaluation);
+    if (expected_evaluation & EVALUATION_TYPE_DATATYPE)
+    {
+        left->evaluate(handler, expected_evaluation, evaluation);
+        FunctionSystem* old_fc_system;
+        Scope* old_scope;
+        if (this->op == ".")
+        {
+            if (handler->getType() != SYSTEM_HANDLER_VALIDATOR)
+                throw std::logic_error("Evaluating the access of classes or objects is only allowed for validators"); 
+            
+            old_fc_system = handler->getFunctionSystem();
+            old_scope = handler->getCurrentScope();   
+                 
+            Validator* validator = (Validator*) handler;
+            Object* obj = validator->getClassObject(evaluation->datatype.value);
+            std::cout << evaluation->datatype.value << std::endl;
+            handler->setCurrentScope(obj);
+            handler->setFunctionSystem(obj->getClass());
+        }
+        right->evaluate(handler, expected_evaluation, evaluation);
+        
+        if (this->op == ".")
+        {
+            handler->setCurrentScope(old_scope);
+            handler->setFunctionSystem(old_fc_system);
+        }
+    }
 }

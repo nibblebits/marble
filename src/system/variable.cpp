@@ -42,6 +42,7 @@ Variable Variable::getFromPointer(Variable* variable)
     Variable v;
     v.name = variable->name;
     v.type = variable->type;
+    v.type_name = variable->type_name;
     v.access = variable->access;
     v.value.set(&variable->value);
     return v;

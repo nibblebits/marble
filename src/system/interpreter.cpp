@@ -37,7 +37,7 @@
         return return_val;
     }
     
-Interpreter::Interpreter()
+Interpreter::Interpreter() : SystemHandler(SYSTEM_HANDLER_INTERPRETER)
 {
     this->functionSystem.setInterpreter(this);
     this->currentFunctionSystem = &functionSystem;
@@ -54,14 +54,7 @@ Interpreter::Interpreter()
         return_value->type = VALUE_TYPE_STRING;
         return_value->svalue = object->getClass()->name;
     });
-    Variable v;
-    v.access = MODIFIER_ACCESS_PRIVATE;
-    v.type = VARIABLE_TYPE_NUMBER;
-    v.name = "hello";
-    v.value.type = VALUE_TYPE_NUMBER;
-    v.value.dvalue = 93;
-    c->addVariable(v);
-    
+
     getClassSystem()->setDefaultBaseClass(c);
     
     c = getClassSystem()->registerClass("array");
@@ -70,6 +63,7 @@ Interpreter::Interpreter()
         return_value->type = VALUE_TYPE_NUMBER;
         return_value->dvalue = array->count;
     });
+    
     
     getFunctionSystem()->registerFunction("print", [&](std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
         std::stringstream ss;

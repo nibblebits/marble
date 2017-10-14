@@ -35,6 +35,7 @@ Variable* Scope::cloneCreate(Variable* variable)
 {
     Variable* new_variable = createVariable();
     new_variable->type = variable->type;
+    new_variable->type_name = variable->type_name;
     new_variable->name = variable->name;
     new_variable->value = variable->value;
     new_variable->value.holder = new_variable;

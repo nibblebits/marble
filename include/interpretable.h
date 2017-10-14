@@ -4,6 +4,7 @@
 #include "statics.h"
 #include "value.h"
 #include "testable.h"
+#include <iostream>
 class Interpreter;
 class Interpretable : public Testable
 {

@@ -2,6 +2,13 @@
 #define STATICS_H
 static const char* MARBLE_OPEN_TAG = "<marble>";
 static const char* MARBLE_CLOSING_TAG = "</marble>";
+
+enum
+{
+    SYSTEM_HANDLER_VALIDATOR,
+    SYSTEM_HANDLER_INTERPRETER
+};
+
 enum
 {
     TOKEN_TYPE_NUMBER,
@@ -101,6 +108,7 @@ enum
     LOG_LEVEL_ERROR
 };
 
+typedef int SYSTEM_HANDLER_TYPE;
 typedef int TOKEN_TYPE;
 typedef int NODE_TYPE;
 typedef int VALUE_TYPE;

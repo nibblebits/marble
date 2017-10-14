@@ -1,8 +1,8 @@
 #include "systemhandler.h"
 
-SystemHandler::SystemHandler()
+SystemHandler::SystemHandler(SYSTEM_HANDLER_TYPE type)
 {
-
+    this->type = type;
 }
 
 SystemHandler::~SystemHandler()
@@ -37,3 +37,7 @@ Logger* SystemHandler::getLogger()
     return &this->logger;
 }
 
+SYSTEM_HANDLER_TYPE SystemHandler::getType()
+{
+    return this->type;
+}

@@ -1,14 +1,34 @@
 #include "validator.h"
 #include "nodes.h"
 #include "logger.h"
-Validator::Validator(Logger* logger)
+#include "object.h"
+Validator::Validator(Logger* logger) : SystemHandler(SYSTEM_HANDLER_VALIDATOR)
 {
     this->logger = logger;
+    this->current_class = NULL;
 }
 
 Validator::~Validator()
 {
 
+}
+
+
+void Validator::giveClassObject(std::shared_ptr<Object> object)
+{
+    this->class_objects.push_back(object);
+}
+
+
+Object* Validator::getClassObject(std::string name)
+{
+    for (std::shared_ptr<Object> obj : this->class_objects)
+    {
+        if (obj->getClass()->name == name)
+            return obj.get();
+    }
+    
+    return NULL;
 }
 
 void Validator::save()
@@ -23,6 +43,7 @@ void Validator::restore()
     this->rules = this->rules_stack.back();
     this->rules_stack.pop_back();
 }
+
 
 void Validator::validate(Node* root_node)
 {
@@ -39,6 +60,27 @@ void Validator::validate(Node* root_node)
         current_node = (InterpretableNode*) current_node->next;
     }
 }
+
+void Validator::beginClass(Class* current_class)
+{
+    if (this->current_class != NULL)
+        throw std::logic_error("A class has already begun. End your own class: Validator::endClass();");
+    this->current_class = current_class;
+}
+
+void Validator::endClass()
+{
+    if (this->current_class == NULL)
+        throw std::logic_error("No class has been begun. You must begin a class with: Validator::beginClass(); before calling Validator::endClass();");
+    this->current_class = NULL;
+}
+
+Class* Validator::getCurrentClass()
+{
+    return this->current_class;
+}
+
+
 
 void Validator::expectingObject(std::string obj_name)
 {

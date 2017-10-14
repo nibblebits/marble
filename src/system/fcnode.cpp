@@ -1,6 +1,7 @@
 #include "fcnode.h"
 #include "statics.h"
 #include "interpreter.h"
+#include "validator.h"
 #include "nodes.h"
 #include "function.h"
 #include <iostream>
@@ -15,6 +16,14 @@ FunctionCallNode::~FunctionCallNode()
 
 }
 
+
+void FunctionCallNode::test(Validator* validator)
+{
+   for (ExpressionInterpretableNode* argument_node : this->arguments)
+   {
+       argument_node->test(validator);
+   }
+}
 Value FunctionCallNode::interpret(Interpreter* interpreter)
 {
    Value value;

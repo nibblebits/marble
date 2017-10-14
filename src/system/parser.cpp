@@ -826,7 +826,7 @@ void Parser::parse_class_body()
         else
         {
             parse_class_body_next();
-            body_node->addChild(pop_node());
+            body_node->addChild((InterpretableNode*) pop_node());
         }
     }
     
@@ -852,7 +852,7 @@ void Parser::parse_body()
     while(!peek()->isSymbol("}"))
     {
         parse_body_next();
-        body_node->addChild(pop_node());
+        body_node->addChild((InterpretableNode*) pop_node());
     }
     
     // Lets remove the "}" symbol

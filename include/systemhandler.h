@@ -12,18 +12,20 @@
 class SystemHandler : public ScopeHandler
 {
 public:
-    SystemHandler();
+    SystemHandler(SYSTEM_HANDLER_TYPE type);
     virtual ~SystemHandler();
     void setFunctionSystem(FunctionSystem* current_fc_system);
     Logger* getLogger();
     FunctionSystem* getRootFunctionSystem();
     FunctionSystem* getFunctionSystem();
     ClassSystem* getClassSystem();
+    SYSTEM_HANDLER_TYPE getType();
 protected:
     // Root systems
     FunctionSystem functionSystem;
     ClassSystem classSystem;
     FunctionSystem* currentFunctionSystem;
     Logger logger;
+    SYSTEM_HANDLER_TYPE type;
 };
 #endif

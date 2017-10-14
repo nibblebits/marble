@@ -1,11 +1,11 @@
 #include "object.h"
 #include "variable.h"
-#include "interpreter.h"
+#include "systemhandler.h"
 #include <iostream>
 #include <memory>
-Object::Object(Interpreter* interpreter, Class* c)
+Object::Object(SystemHandler* sys_handler, Class* c)
 {
-    this->interpreter = interpreter;
+    this->sys_handler = sys_handler;
     if (c == NULL)
         throw std::logic_error("Expecting a non NULL class");
     this->c = c;
@@ -19,7 +19,7 @@ Object::Object(Interpreter* interpreter, Class* c)
         }
         current = current->parent;
     }
-    prev = interpreter->getRootScope();
+    prev = sys_handler->getRootScope();
     
 }
 

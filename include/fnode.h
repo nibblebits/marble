@@ -11,6 +11,7 @@ class FunctionNode : public ExpressionInterpretableNode
 public:
     FunctionNode();
     virtual ~FunctionNode();
+    virtual void test(Validator* validator);
     virtual Value interpret(Interpreter* interpreter);
     
     std::string name;

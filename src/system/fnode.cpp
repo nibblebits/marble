@@ -4,6 +4,7 @@
 #include "fnode.h"
 #include "functionsystem.h"
 #include "interpreter.h"
+#include "validator.h"
 FunctionNode::FunctionNode() : ExpressionInterpretableNode(NODE_TYPE_FUNCTION)
 {
     this->body = NULL;
@@ -13,6 +14,11 @@ FunctionNode::FunctionNode() : ExpressionInterpretableNode(NODE_TYPE_FUNCTION)
 FunctionNode::~FunctionNode()
 {
 
+}
+
+void FunctionNode::test(Validator* validator)
+{
+    this->body->test(validator);
 }
 
 Value FunctionNode::interpret(Interpreter* interpreter)

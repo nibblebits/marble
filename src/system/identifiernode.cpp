@@ -19,9 +19,26 @@ void IdentifierNode::test(Validator* validator)
 {
     // Let's first see if the variable is declared
     Scope* current_scope = validator->getCurrentScope();
+    for (Variable* var : current_scope->getVariables())
+        std::cout << var->name << std::endl;
     Variable* variable = current_scope->getVariableAnyScope(this->value);
     if (variable == NULL)
         throw std::logic_error("variable \"" + this->value + "\" is not declared");
+    
+    /*
+     * If we are in a class and the variable access is private then its essential
+     * that we check to see if the variable is in the current class as if it is not then this is illegal.
+     * E.g a child class trying to access a private variable from the base class.
+    */
+    if (variable->access == MODIFIER_ACCESS_PRIVATE)
+    {
+        Class* current_class = validator->getCurrentClass();
+        if (!current_class->hasVariableWithName(this->value))
+        {
+            Class* holder_class = current_class->getClassWhoHasVariable(this->value);
+            throw std::logic_error("variable \"" + this->value + "\" is private in class " + holder_class->name);
+        }
+    }
     
     if (!validator->isExpecting())
         return;
@@ -50,9 +67,12 @@ void IdentifierNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expec
 {
     if(expected_evaluation & EVALUATION_TYPE_DATATYPE)
     {
+        Scope* current_scope = handler->getCurrentScope();
         if (expected_evaluation & EVALUATION_FROM_VARIABLE)
         {
-            Variable* var = handler->getVariableByName(this->value);
+            Variable* var = current_scope->getVariableAnyScope(this->value);
+            if (var == NULL)
+                throw std::logic_error("Variable not found for evaluation.");
             evaluation->type |= EVALUATION_TYPE_DATATYPE;
             evaluation->datatype.type = var->type;
 	        evaluation->datatype.value = var->type_name;

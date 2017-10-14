@@ -2,9 +2,11 @@
 #include "inode.h"
 #include "statics.h"
 #include "interpreter.h"
+#include "validator.h"
 BodyNode::BodyNode() : InterpretableNode(NODE_TYPE_BODY)
 {
     this->child = NULL;
+    this->before_leave_function = NULL;
     this->node_listener_function = NULL;
 }
 
@@ -12,6 +14,35 @@ BodyNode::~BodyNode()
 {
 
 }
+
+
+void BodyNode::onBeforeLeave(std::function<void()> before_leave_function)
+{
+    this->before_leave_function = before_leave_function;
+}
+
+void BodyNode::test(Validator* validator)
+{
+    // Let's create a new parented scope for this
+    validator->new_parented_scope();
+    InterpretableNode* current_node = child;
+    // Awesome now lets interpret!
+    while(current_node != NULL)
+    {
+        current_node->test(validator);
+        current_node = (InterpretableNode*) current_node->next;
+    }
+
+    if (before_leave_function != NULL)
+    {
+        before_leave_function();
+        this->before_leave_function = NULL;
+    }
+    
+    // We are done with this scope
+    validator->finish_parented_scope(); 
+}
+
 
 Value BodyNode::interpret(Interpreter* interpreter)
 {
@@ -57,7 +88,7 @@ end:
     return;
 }
 
-void BodyNode::addChild(Node* c)
+void BodyNode::addChild(InterpretableNode* c)
 {
     if (this->child == NULL)
     {

@@ -1,7 +1,11 @@
+#include <memory>
 #include "classnode.h"
 #include "csystem.h"
 #include "nodes.h"
 #include "interpreter.h"
+#include "validator.h"
+#include "functionsystem.h"
+#include "object.h"
 #include "scope.h"
 
 ClassNode::ClassNode() : InterpretableNode(NODE_TYPE_CLASS)
@@ -26,7 +30,40 @@ void ClassNode::test(Validator* validator)
         throw std::logic_error("The parent class with the name \"" + this->parent + "\" has not been declared");
         
     Class* parent_class = class_sys->getClassByName(this->parent);
-    class_sys->registerClass(name, parent_class);
+    Class* c = class_sys->registerClass(name, parent_class);
+ 
+    // We must create a temporary object to be used with the testing process. No methods or functions will be called.
+    std::shared_ptr<Object> object = std::make_shared<Object>(validator, c); 
+    
+    Scope* old_scope = validator->getCurrentScope();
+    FunctionSystem* old_function_system = validator->getFunctionSystem();
+    validator->setCurrentScope(object.get());  
+    validator->setFunctionSystem(object->getClass());
+    // Let's test the body of the class node
+    body->onBeforeLeave([&]() -> void {
+        // When leaving the body we should get all the variables that were created during testing this body and store them in the class.
+        for (Variable* var : validator->getCurrentScope()->getVariables())
+        {
+            c->addVariable(Variable::getFromPointer(var));
+        }
+    });
+    
+    validator->beginClass(c);
+    try
+    {
+        body->test(validator);
+    } catch(std::logic_error& e)
+    {
+        throw std::logic_error(std::string(e.what()) + " at class " + name);
+    }
+    validator->endClass();
+    validator->setCurrentScope(old_scope);
+    validator->setFunctionSystem(old_function_system);
+    
+    // The class at this point holds all the variables, lets create a new object instance and add it to the validator. We will need access to this later
+    object = std::make_shared<Object>(validator, c);
+    validator->giveClassObject(object);
+    
 }
 
 Value ClassNode::interpret(Interpreter* interpreter)
