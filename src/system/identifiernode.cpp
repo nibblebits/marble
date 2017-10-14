@@ -19,8 +19,6 @@ void IdentifierNode::test(Validator* validator)
 {
     // Let's first see if the variable is declared
     Scope* current_scope = validator->getCurrentScope();
-    for (Variable* var : current_scope->getVariables())
-        std::cout << var->name << std::endl;
     Variable* variable = current_scope->getVariableAnyScope(this->value);
     if (variable == NULL)
         throw std::logic_error("variable \"" + this->value + "\" is not declared");
@@ -51,7 +49,8 @@ void IdentifierNode::test(Validator* validator)
     if (variable->type == VARIABLE_TYPE_OBJECT)
     {
         // We must ensure the object types match
-        
+        if (variable->type_name != validator->getExpectingObject())
+            throw std::logic_error("a " + variable->type_name + " was provided");
     }
     
 }

@@ -223,7 +223,8 @@ void ExpNode::test_assign(Validator* validator)
 
 void ExpNode::test_regular_exp(Validator* validator)
 {
-
+    left->test(validator);
+    right->test(validator);
 }
 
 void ExpNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)
@@ -243,7 +244,6 @@ void ExpNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_eva
                  
             Validator* validator = (Validator*) handler;
             Object* obj = validator->getClassObject(evaluation->datatype.value);
-            std::cout << evaluation->datatype.value << std::endl;
             handler->setCurrentScope(obj);
             handler->setFunctionSystem(obj->getClass());
         }
