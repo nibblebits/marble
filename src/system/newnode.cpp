@@ -37,6 +37,8 @@ void NewNode::test(Validator* validator)
         ClassSystem* class_sys = validator->getClassSystem();
         Class* expecting_class = class_sys->getClassByName(expecting_object);
         Class* fc_node_class = class_sys->getClassByName(fc_node->name->value);
+        if (fc_node_class == NULL)
+            throw std::logic_error("The class with the name \"" + fc_node->name->value + "\" has not been declared");
         if (expecting_object != fc_node->name->value && !fc_node_class->instanceOf(expecting_class))
         {
             throw std::logic_error("a " + fc_node->name->value + " was provided which does not extend " + expecting_object);

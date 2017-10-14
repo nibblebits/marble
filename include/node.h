@@ -1,7 +1,7 @@
 #ifndef NODE_H
 #define NODE_H
 #include <memory>
-
+#include "posinfo.h"
 class Node
 {
 public:
@@ -10,6 +10,7 @@ public:
     int getType();
     Node* next;
     int const type;
+    PosInfo posInfo;
 };
 
 #endif

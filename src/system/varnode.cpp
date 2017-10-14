@@ -34,8 +34,13 @@ void VarNode::test(Validator* validator)
        else if(type_str == "string")
           validator->expecting(VALUE_TYPE_STRING);
        else
+       {
           validator->expectingObject(type_str);
-          
+          // Let's ensure this object exists
+          ClassSystem* class_sys = validator->getClassSystem();
+          if (!class_sys->hasClassWithName(type_str))
+            throw std::logic_error("The class with the name \"" + type_str + "\" has not been declared");
+       }  
        try
        {
          this->value->test(validator);

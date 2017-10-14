@@ -226,6 +226,7 @@ Token* Parser::next()
     }
     this->prev_token = token;
     this->current_token = this->current_token->next;
+    factory.applyPosition(token->posInfo);
     return token;
 }
 

@@ -34,8 +34,7 @@ void Validator::validate(Node* root_node)
             current_node->test(this);
         } catch(std::logic_error& ex)
         {
-            PosInfo posInfo;
-            this->logger->error(ex.what(), posInfo);
+            this->logger->error(ex.what(), current_node->posInfo);
         }
         current_node = (InterpretableNode*) current_node->next;
     }

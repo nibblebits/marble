@@ -9,6 +9,11 @@ NodeFactory::~NodeFactory()
 {
 }
 
+void NodeFactory::applyPosition(PosInfo posInfo)
+{
+    this->defaultPosInfo = posInfo;
+}
+
 Node* NodeFactory::createNode(NODE_TYPE node_type)
 {
     Node* node;
@@ -112,6 +117,7 @@ Node* NodeFactory::createNode(NODE_TYPE node_type)
         throw std::logic_error("Invalid node type provided to NodeFactory::createNode");
     }
 
+    node->posInfo = this->defaultPosInfo;
     // Lets create a unique pointer and add it to the nodes vector so the memory is freed when the node factory leaves its scope.
     this->nodes.push_back(std::unique_ptr<Node>(node));
     return node;
