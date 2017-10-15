@@ -3,6 +3,7 @@
 #include "interpreter.h"
 #include "validator.h"
 #include "object.h"
+#include "exceptions/testerror.h"
 #include <iostream>
 
 IdentifierNode::IdentifierNode() : ExpressionInterpretableNode(NODE_TYPE_IDENTIFIER)
@@ -21,7 +22,7 @@ void IdentifierNode::test(Validator* validator)
     Scope* current_scope = validator->getCurrentScope();
     Variable* variable = current_scope->getVariableAnyScope(this->value);
     if (variable == NULL)
-        throw std::logic_error("variable \"" + this->value + "\" is not declared");
+        throw TestError("variable \"" + this->value + "\" is not declared");
     
     if (variable->access == MODIFIER_ACCESS_PRIVATE || variable->access == MODIFIER_ACCESS_PROTECTED)
     {
@@ -32,7 +33,7 @@ void IdentifierNode::test(Validator* validator)
             /* If the validator is not in a class then this must mean its being accessed publicly from the global scope 
              * and not from within the class its self. So naturally the variable being private means this is illegal*/
            holder_class = variable->object->getClass();
-           throw std::logic_error("variable \"" + this->value + "\" is private or protected in class " + holder_class->name);
+           throw TestError("variable \"" + this->value + "\" is private or protected in class " + holder_class->name);
         }
         
         
@@ -50,7 +51,7 @@ void IdentifierNode::test(Validator* validator)
         {
             if (var_class != current_class)
             {
-                throw std::logic_error("variable \"" + this->value + "\" is private in class " + var_class->name);
+                throw TestError("variable \"" + this->value + "\" is private in class " + var_class->name);
             }
         }
         else
@@ -58,7 +59,7 @@ void IdentifierNode::test(Validator* validator)
             // This is a protected variable so lets check to see if this is valid
             if (var_class != current_class && !current_class->instanceOf(var_class))
             {
-                throw std::logic_error("variable \"" + this->value + "\" is protected in class " + var_class->name);
+                throw TestError("variable \"" + this->value + "\" is protected in class " + var_class->name);
             }        
         }
         
@@ -72,13 +73,13 @@ void IdentifierNode::test(Validator* validator)
     // We now need to check if the type is valid
     VALUE_TYPE expecting_type = validator->getExpectingType();
     if (variable->type != expecting_type)
-        throw std::logic_error("a " + variable->type_name + " was provided");
+        throw TestError("a " + variable->type_name + " was provided");
         
     if (variable->type == VARIABLE_TYPE_OBJECT)
     {
         // We must ensure the object types match
         if (variable->type_name != validator->getExpectingObject())
-            throw std::logic_error("a " + variable->type_name + " was provided");
+            throw TestError("a " + variable->type_name + " was provided");
     }
     
 }

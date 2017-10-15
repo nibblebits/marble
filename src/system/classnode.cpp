@@ -7,6 +7,7 @@
 #include "functionsystem.h"
 #include "object.h"
 #include "scope.h"
+#include "exceptions/testerror.h"
 
 ClassNode::ClassNode() : InterpretableNode(NODE_TYPE_CLASS)
 {
@@ -23,11 +24,11 @@ void ClassNode::test(Validator* validator)
     // Check to see if class already exists
     ClassSystem* class_sys = validator->getClassSystem();
     if (class_sys->hasClassWithName(name))
-        throw std::logic_error("The class with the name \"" + name + "\" has already been declared");
+        throw TestError("The class with the name \"" + name + "\" has already been declared");
         
     // Check to see if the parent class exists
     if (this->parent != "" && !class_sys->hasClassWithName(this->parent))
-        throw std::logic_error("The parent class with the name \"" + this->parent + "\" has not been declared");
+        throw TestError("The parent class with the name \"" + this->parent + "\" has not been declared");
         
     Class* parent_class = class_sys->getClassByName(this->parent);
     Class* c = class_sys->registerClass(name, parent_class);
@@ -52,9 +53,9 @@ void ClassNode::test(Validator* validator)
     try
     {
         body->test(validator);
-    } catch(std::logic_error& e)
+    } catch(TestError& e)
     {
-        throw std::logic_error(std::string(e.what()) + " at class " + name);
+        throw TestError(std::string(e.what()) + " at class " + name);
     }
     validator->endClass();
     validator->setCurrentScope(old_scope);

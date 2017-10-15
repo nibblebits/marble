@@ -1,6 +1,7 @@
 #include "castnode.h"
 #include "nodes.h"
 #include "interpreter.h"
+#include "exceptions/testerror.h"
 #include <iostream>
 CastNode::CastNode() : ExpressionInterpretableNode(NODE_TYPE_CAST)
 {
@@ -87,25 +88,25 @@ void CastNode::test(Validator* validator)
         // We must ensure this is legal casting of an object
         VALUE_TYPE expecting_type = validator->getExpectingType();
         if (expecting_type != VALUE_TYPE_OBJECT)
-            throw std::logic_error("expecting a primitive type");
+            throw TestError("expecting a primitive type");
         
         
         // Ok lets check to see if this object cast is valid
         ClassSystem* class_sys = validator->getClassSystem();
         if (!class_sys->hasClassWithName(casting_to_evaluation.datatype.value))
-            throw std::logic_error("the class with the name " + casting_to_evaluation.datatype.value + " has not been declared");
+            throw TestError("the class with the name " + casting_to_evaluation.datatype.value + " has not been declared");
             
         struct Evaluation to_cast_evaluation = this->to_cast->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE);
         if (to_cast_evaluation.datatype.type != VARIABLE_TYPE_OBJECT)
-            throw std::logic_error("wanting to cast to " + casting_to_evaluation.datatype.value + " but you are attempting to cast from a primitive type");
+            throw TestError("wanting to cast to " + casting_to_evaluation.datatype.value + " but you are attempting to cast from a primitive type");
         
         if (!class_sys->hasClassWithName(casting_to_evaluation.datatype.value))
-            throw std::logic_error("the class with the name " + casting_to_evaluation.datatype.value + " has not been declared");
+            throw TestError("the class with the name " + casting_to_evaluation.datatype.value + " has not been declared");
         std::cout << to_cast_evaluation.datatype.value << std::endl;
         Class* to_cast_class = class_sys->getClassByName(to_cast_evaluation.datatype.value);
         Class* casting_class = class_sys->getClassByName(casting_to_evaluation.datatype.value);
         if ((casting_class->name != to_cast_evaluation.datatype.value) && (!casting_class->instanceOf(to_cast_class)))
-            throw std::logic_error("the class with the name " + casting_to_evaluation.datatype.value + " is not an instance of " + to_cast_evaluation.datatype.value);   
+            throw TestError("the class with the name " + casting_to_evaluation.datatype.value + " is not an instance of " + to_cast_evaluation.datatype.value);   
         
     }
     

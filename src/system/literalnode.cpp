@@ -2,6 +2,7 @@
 #include "statics.h"
 #include "validator.h"
 #include "interpreter.h"
+#include "exceptions/testerror.h"
 #include <iostream>
 LiteralNode::LiteralNode() : ExpressionInterpretableNode(NODE_TYPE_LITERAL)
 {
@@ -20,7 +21,7 @@ void LiteralNode::test(Validator* validator)
     VALUE_TYPE expecting_type = validator->getExpectingType();
     if (expecting_type != VALUE_TYPE_NUMBER)
     {
-        throw std::logic_error("a number was provided");
+        throw TestError("a number was provided");
     }
 }
 Value LiteralNode::interpret(Interpreter* interpreter)

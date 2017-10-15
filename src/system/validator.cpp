@@ -2,6 +2,7 @@
 #include "nodes.h"
 #include "logger.h"
 #include "object.h"
+#include "exceptions/testerror.h"
 Validator::Validator(Logger* logger) : SystemHandler(SYSTEM_HANDLER_VALIDATOR)
 {
     this->logger = logger;
@@ -57,7 +58,7 @@ void Validator::validate(Node* root_node)
         try
         {
             current_node->test(this);
-        } catch(std::logic_error& ex)
+        } catch(TestError& ex)
         {
             this->logger->error(ex.what(), current_node->posInfo);
         }

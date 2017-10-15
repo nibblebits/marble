@@ -4,6 +4,7 @@
 #include "validator.h"
 #include "nodes.h"
 #include "function.h"
+#include "exceptions/testerror.h"
 #include <iostream>
 #include <stdexcept>
 FunctionCallNode::FunctionCallNode() : ExpressionInterpretableNode(NODE_TYPE_FUNCTION_CALL)
@@ -21,10 +22,9 @@ void FunctionCallNode::test(Validator* validator)
 {
    // Lets ensure the function actually exists
    FunctionSystem* function_sys = validator->getFunctionSystem();
-   std::cout << "FUNCTION: " << this->name->value << std::endl;
    if (!function_sys->hasFunction(this->name->value))
    {
-       throw std::logic_error("The function " + this->name->value + " has not been declared");
+       throw TestError("The function " + this->name->value + " has not been declared");
    }
    
    for (ExpressionInterpretableNode* argument_node : this->arguments)

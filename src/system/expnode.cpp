@@ -6,6 +6,7 @@
 #include "object.h"
 #include "interpreter.h"
 #include "validator.h"
+#include "exceptions/testerror.h"
 #include <iostream>
 #include <memory>
 ExpNode::ExpNode() : ExpressionInterpretableNode(NODE_TYPE_EXPRESSION)
@@ -214,9 +215,9 @@ void ExpNode::test_assign(Validator* validator)
     try
     {
         right->test(validator);
-    } catch(std::logic_error& ex)
+    } catch(TestError& ex)
     {
-       throw std::logic_error(std::string(ex.what()) + " but this assignment requires a " + evaluation.datatype.value);
+       throw TestError(std::string(ex.what()) + " but this assignment requires a " + evaluation.datatype.value);
     }
     validator->endExpecting();
 }

@@ -5,6 +5,7 @@
 #include "functionsystem.h"
 #include "interpreter.h"
 #include "validator.h"
+#include "exceptions/testerror.h"
 FunctionNode::FunctionNode() : ExpressionInterpretableNode(NODE_TYPE_FUNCTION)
 {
     this->body = NULL;

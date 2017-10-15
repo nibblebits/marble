@@ -5,6 +5,7 @@
 #include "interpreter.h"
 #include "fcnode.h"
 #include "validator.h"
+#include "exceptions/testerror.h"
 #include <iostream>
 #include <memory>
 NewNode::NewNode() : ExpressionInterpretableNode(NODE_TYPE_NEW)
@@ -25,7 +26,7 @@ void NewNode::test(Validator* validator)
     VALUE_TYPE expecting_type = validator->getExpectingType();
     if (expecting_type != VALUE_TYPE_OBJECT)
     {
-        throw std::logic_error("an object was provided");
+        throw TestError("an object was provided");
     }
     
     std::string expecting_object = validator->getExpectingObject();
@@ -38,10 +39,10 @@ void NewNode::test(Validator* validator)
         Class* expecting_class = class_sys->getClassByName(expecting_object);
         Class* fc_node_class = class_sys->getClassByName(fc_node->name->value);
         if (fc_node_class == NULL)
-            throw std::logic_error("The class with the name \"" + fc_node->name->value + "\" has not been declared");
+            throw TestError("The class with the name \"" + fc_node->name->value + "\" has not been declared");
         if (expecting_object != fc_node->name->value && !fc_node_class->instanceOf(expecting_class))
         {
-            throw std::logic_error("a " + fc_node->name->value + " was provided which does not extend " + expecting_object);
+            throw TestError("a " + fc_node->name->value + " was provided which does not extend " + expecting_object);
         }
     }
 }

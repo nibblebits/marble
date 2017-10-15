@@ -5,6 +5,7 @@
 #include "interpreter.h"
 #include "value.h"
 #include "validator.h"
+#include "exceptions/testerror.h"
 #include <iostream>
 VarNode::VarNode() : InterpretableNode(NODE_TYPE_VARIABLE_DECLARATION)
 {
@@ -39,14 +40,14 @@ void VarNode::test(Validator* validator)
           // Let's ensure this object exists
           ClassSystem* class_sys = validator->getClassSystem();
           if (!class_sys->hasClassWithName(type_str))
-            throw std::logic_error("The class with the name \"" + type_str + "\" has not been declared");
+            throw TestError("The class with the name \"" + type_str + "\" has not been declared");
        }  
        try
        {
          this->value->test(validator);
-       } catch(std::logic_error& ex)
+       } catch(TestError& ex)
        {
-          throw std::logic_error("Expecting a " + type_str + "; " + ex.what());
+          throw TestError("Expecting a " + type_str + "; " + ex.what());
        }
    
        validator->endExpecting();
