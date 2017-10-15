@@ -18,6 +18,8 @@ FunctionNode::~FunctionNode()
 
 void FunctionNode::test(Validator* validator)
 {
+    // Let's add the function to the list
+    validator->getFunctionSystem()->registerFunction(this);
     this->body->test(validator);
 }
 

@@ -41,7 +41,6 @@ Interpreter::Interpreter() : SystemHandler(SYSTEM_HANDLER_INTERPRETER)
 {
     this->functionSystem.setInterpreter(this);
     this->currentFunctionSystem = &functionSystem;
-    this->classSystem.setInterpreter(this);
     
     this->output = [](const char* data)
     {

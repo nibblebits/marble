@@ -38,7 +38,7 @@ void ClassNode::test(Validator* validator)
     Scope* old_scope = validator->getCurrentScope();
     FunctionSystem* old_function_system = validator->getFunctionSystem();
     validator->setCurrentScope(object.get());  
-    validator->setFunctionSystem(object->getClass());
+    validator->setFunctionSystem(c);
     // Let's test the body of the class node
     body->onBeforeLeave([&]() -> void {
         // When leaving the body we should get all the variables that were created during testing this body and store them in the class.

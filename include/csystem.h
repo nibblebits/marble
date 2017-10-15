@@ -4,20 +4,20 @@
 #include <memory>
 #include "class.h"
 
-class Interpreter;
+class SystemHandler;
 class ClassSystem
 {
 public:
     ClassSystem();
     virtual ~ClassSystem();
-    void setInterpreter(Interpreter* interpreter);
+    void setSystemHandler(SystemHandler* sys_handler);
     void setDefaultBaseClass(Class* c);
     Class* registerClass(std::string class_name, Class* parent=NULL);
     Class* getClassByName(std::string name);
     bool hasClassWithName(std::string name);
     std::vector<std::unique_ptr<Class>> classes;
 private:
-    Interpreter* interpreter;
+    SystemHandler* sys_handler;
     Class* defaultBaseClass;
 };
 
