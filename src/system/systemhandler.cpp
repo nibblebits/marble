@@ -5,7 +5,8 @@ SystemHandler::SystemHandler(SYSTEM_HANDLER_TYPE type)
     this->type = type;
     this->current_obj = NULL;
     this->currentFunctionSystem = getRootFunctionSystem();
-    this->classSystem.setSystemHandler(this);
+    this->classSystem.setSystemHandler(this);    
+    this->functionSystem.setSystemHandler(this);
 }
 
 SystemHandler::~SystemHandler()

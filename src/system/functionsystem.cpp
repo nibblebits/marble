@@ -10,13 +10,13 @@ FunctionSystem::FunctionSystem() : FunctionSystem(NULL, NULL)
 
 }
 
-FunctionSystem::FunctionSystem(Interpreter* interpreter) : FunctionSystem(interpreter, NULL)
+FunctionSystem::FunctionSystem(SystemHandler* sys_handler) : FunctionSystem(sys_handler, NULL)
 {
 }
 
-FunctionSystem::FunctionSystem(Interpreter* interpreter, FunctionSystem* prev_fc_sys)
+FunctionSystem::FunctionSystem(SystemHandler* sys_handler, FunctionSystem* prev_fc_sys)
 {
-    this->interpreter = interpreter;
+    this->sys_handler = sys_handler;
     this->prev_fc_sys = prev_fc_sys;
 }
 
@@ -26,9 +26,9 @@ FunctionSystem::~FunctionSystem()
 
 }
 
-void FunctionSystem::setInterpreter(Interpreter* interpreter)
+void FunctionSystem::setSystemHandler(SystemHandler* sys_handler)
 {
-    this->interpreter = interpreter;
+    this->sys_handler = sys_handler;
 }
 
 Function* FunctionSystem::registerFunction(std::string name, std::function<void(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)> entrypoint)
@@ -45,12 +45,18 @@ Function* FunctionSystem::registerFunction(std::string name, std::function<void(
 
 Function* FunctionSystem::registerFunction(FunctionNode* fnode)
 {
+    if (this->sys_handler == NULL)
+        throw std::logic_error("The function system does not have a system handler attached");
+    
+    if (this->sys_handler->getType() != SYSTEM_HANDLER_INTERPRETER)
+        throw std::exception();
+        
     if (hasFunctionLocally(fnode->name))
     {
         throw std::logic_error("Function* FunctionSystem::registerFunction(FunctionNode* fnode): The function you are trying to register already exists");
     }
     
-    Function* function = new WrittenFunction(interpreter, fnode);
+    Function* function = new WrittenFunction((Interpreter*) sys_handler, fnode);
     this->functions.push_back(std::unique_ptr<Function>(function));
     return function;
 }

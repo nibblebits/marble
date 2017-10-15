@@ -4,7 +4,7 @@
 #include <iostream>
 ClassSystem::ClassSystem()
 {
-    this->interpreter = NULL;
+    this->sys_handler = NULL;
     this->defaultBaseClass = NULL;
 }
 

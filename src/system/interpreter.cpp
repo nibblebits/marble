@@ -38,10 +38,7 @@
     }
     
 Interpreter::Interpreter() : SystemHandler(SYSTEM_HANDLER_INTERPRETER)
-{
-    this->functionSystem.setInterpreter(this);
-    this->currentFunctionSystem = &functionSystem;
-    
+{   
     this->output = [](const char* data)
     {
         std::cout << data;

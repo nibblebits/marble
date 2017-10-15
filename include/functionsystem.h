@@ -7,6 +7,7 @@
 #include <vector>
 #include <stdexcept>
 #include "value.h"
+class SystemHandler;
 class FunctionNode;
 class Function;
 class Interpreter;
@@ -15,10 +16,10 @@ class FunctionSystem
 {
     public:
         FunctionSystem();
-        FunctionSystem(Interpreter* interpreter);
-        FunctionSystem(Interpreter* interpreter, FunctionSystem* prev_fc_sys);
+        FunctionSystem(SystemHandler* sys_handler);
+        FunctionSystem(SystemHandler* sys_handler, FunctionSystem* prev_fc_sys);
         virtual ~FunctionSystem();
-        void setInterpreter(Interpreter* interpreter);
+        void setSystemHandler(SystemHandler* sys_handler);
         // For native C++ marble functions
         /**
          * Creates and registers a NativeFunction into the FunctionSystem and when the function is called
@@ -35,6 +36,6 @@ class FunctionSystem
         std::shared_ptr<Object> currentObj; /*!< Set to an Object instance when calling an Object Class Function through an object access expression such as <i>Foo.Bar();</i> \note This is useful for when the right node of an expression needs to know the current object of the left node \attention this should only be used during an object access expression*/
     private:
         std::vector<std::unique_ptr<Function>> functions;
-        Interpreter* interpreter;
+        SystemHandler* sys_handler;
 };
 #endif

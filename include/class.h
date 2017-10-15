@@ -7,8 +7,8 @@
 class Class : public FunctionSystem
 {
 public:
-    Class(Interpreter* interpreter, std::string name, FunctionSystem* prev_fc_sys);
-    Class(Interpreter* interpreter, std::string name, Class* parent);
+    Class(SystemHandler* sys_handler, std::string name, FunctionSystem* prev_fc_sys);
+    Class(SystemHandler* sys_handler, std::string name, Class* parent);
     virtual ~Class();
     
     void addVariable(Variable v);

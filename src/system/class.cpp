@@ -1,11 +1,11 @@
 #include "class.h"
-Class::Class(Interpreter* interpreter, std::string name, FunctionSystem* prev_fc_sys) : FunctionSystem(interpreter, prev_fc_sys)
+Class::Class(SystemHandler* sys_handler, std::string name, FunctionSystem* prev_fc_sys) : FunctionSystem(sys_handler, prev_fc_sys)
 {
     this->name = name;
     this->parent = NULL;
 }
 
-Class::Class(Interpreter* interpreter, std::string name, Class* parent) : FunctionSystem(interpreter, parent)
+Class::Class(SystemHandler* sys_handler, std::string name, Class* parent) : FunctionSystem(sys_handler, parent)
 {
     this->name = name;
     this->parent = parent;

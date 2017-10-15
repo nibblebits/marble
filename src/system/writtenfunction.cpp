@@ -20,7 +20,7 @@ void WrittenFunction::invoke(std::vector<Value> values, Value* return_value, std
     for (VarNode* arg : this->fnode->args)
     {
         // Interpret the variable node, this will end up creating a variable and adding it to our new scope
-        Value var_value = arg->interpret(interpreter);
+        Value var_value = arg->interpret(this->interpreter);
         // Now we must apply the value given for this argument
         if (count < values.size())
         {
@@ -42,7 +42,7 @@ void WrittenFunction::invoke(std::vector<Value> values, Value* return_value, std
         
         return true;
     });
-    this->fnode->body->interpret(interpreter);
+    this->fnode->body->interpret(this->interpreter);
     // Finish the function body scope
     interpreter->finish_parented_scope();
     // Finish the function arguments scope

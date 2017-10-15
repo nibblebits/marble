@@ -2,7 +2,7 @@
 #define WRITTENFUNCTION_H
 
 #include "function.h"
-class Interpreter;
+class SystemHandler;
 class FunctionNode;
 class WrittenFunction : public Function
 {
