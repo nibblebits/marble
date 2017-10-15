@@ -16,6 +16,9 @@ public:
     virtual ~SystemHandler();
     void setFunctionSystem(FunctionSystem* current_fc_system);
     Logger* getLogger();
+
+    std::shared_ptr<Object> getCurrentObject();
+    void setCurrentObject(std::shared_ptr<Object> object);
     FunctionSystem* getRootFunctionSystem();
     FunctionSystem* getFunctionSystem();
     ClassSystem* getClassSystem();
@@ -27,5 +30,6 @@ protected:
     FunctionSystem* currentFunctionSystem;
     Logger logger;
     SYSTEM_HANDLER_TYPE type;
+    std::shared_ptr<Object> current_obj;
 };
 #endif

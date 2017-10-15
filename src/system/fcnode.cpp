@@ -41,6 +41,7 @@ Value FunctionCallNode::interpret(Interpreter* interpreter)
         throw std::logic_error("Value FunctionCallNode::interpret(Interpreter* interpreter): Attempting to invoke a function that has not been registered");
    }
 
-   function->invoke(argument_results, &value, functionSystem->currentObj);
+   // If the function invoked is not part 
+   function->invoke(argument_results, &value, interpreter->getCurrentObject());
    return value;
 }

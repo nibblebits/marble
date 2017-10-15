@@ -23,19 +23,47 @@ void IdentifierNode::test(Validator* validator)
     if (variable == NULL)
         throw std::logic_error("variable \"" + this->value + "\" is not declared");
     
-    /*
-     * If we are in a class and the variable access is private then its essential
-     * that we check to see if the variable is in the current class as if it is not then this is illegal.
-     * E.g a child class trying to access a private variable from the base class.
-    */
-    if (variable->access == MODIFIER_ACCESS_PRIVATE)
+    if (variable->access == MODIFIER_ACCESS_PRIVATE || variable->access == MODIFIER_ACCESS_PROTECTED)
     {
-        Class* current_class = validator->getCurrentClass();
-        if (!current_class->hasVariableWithName(this->value))
+        Class* holder_class;
+        std::shared_ptr<Object> current_obj = validator->getCurrentObject();
+        if (!validator->isInClass())
         {
-            Class* holder_class = current_class->getClassWhoHasVariable(this->value);
-            throw std::logic_error("variable \"" + this->value + "\" is private in class " + holder_class->name);
+            /* If the validator is not in a class then this must mean its being accessed publicly from the global scope 
+             * and not from within the class its self. So naturally the variable being private means this is illegal*/
+           holder_class = variable->object->getClass();
+           throw std::logic_error("variable \"" + this->value + "\" is private or protected in class " + holder_class->name);
         }
+        
+        
+        /*
+         * Here we are doing this inside a class so we must check to see if we are allowed access.
+         * we do this by ensuring that the variables class and our class match.
+         * If they do not and the variable is private then this is illegal.
+         *
+         * Simularly for protected we check that either the current class is equal to the variable class or that the current class is an instance of the variable class
+         * if it is not once again this is an error and its illegal.
+        */
+        Class* var_class = variable->object->getClass()->getClassWhoHasVariable(this->value);
+        Class* current_class = validator->getCurrentClass();
+        if (variable->access == MODIFIER_ACCESS_PRIVATE)
+        {
+            if (var_class != current_class)
+            {
+                throw std::logic_error("variable \"" + this->value + "\" is private in class " + var_class->name);
+            }
+        }
+        else
+        {
+            // This is a protected variable so lets check to see if this is valid
+            if (var_class != current_class && !current_class->instanceOf(var_class))
+            {
+                throw std::logic_error("variable \"" + this->value + "\" is protected in class " + var_class->name);
+            }        
+        }
+        
+   
+
     }
     
     if (!validator->isExpecting())

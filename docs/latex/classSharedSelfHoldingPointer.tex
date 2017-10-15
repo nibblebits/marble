@@ -1,0 +1,110 @@
+\hypertarget{classSharedSelfHoldingPointer}{}\section{Shared\+Self\+Holding\+Pointer$<$ T $>$ Class Template Reference}
+\label{classSharedSelfHoldingPointer}\index{Shared\+Self\+Holding\+Pointer$<$ T $>$@{Shared\+Self\+Holding\+Pointer$<$ T $>$}}
+
+
+{\ttfamily \#include $<$cpointers.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classSharedSelfHoldingPointer_a4a81e4be5cf4c074d92122b05ef1a7bf}{Shared\+Self\+Holding\+Pointer} ()
+\item 
+\hyperlink{classSharedSelfHoldingPointer_af7081c7427461f6a84765a5c6373f2d4}{Shared\+Self\+Holding\+Pointer} (T $\ast$value)
+\item 
+\hyperlink{classSharedSelfHoldingPointer_a95944d9c7dc5d9b8c6a7efd481ac4906}{Shared\+Self\+Holding\+Pointer} (\hyperlink{classSharedSelfHoldingPointer}{Shared\+Self\+Holding\+Pointer}$<$ T $>$ const \&sp)
+\item 
+\hyperlink{classSharedSelfHoldingPointer_a1f3b14c8c9f032a20304c1d053163dec}{$\sim$\+Shared\+Self\+Holding\+Pointer} ()
+\item 
+bool \hyperlink{classSharedSelfHoldingPointer_a92698bf43ff7ad98da2c3d8f451c9baf}{is\+\_\+object\+\_\+stored} (T $\ast$address)
+\item 
+const \hyperlink{classSharedSelfHoldingPointer}{Shared\+Self\+Holding\+Pointer}$<$ T $>$ \& \hyperlink{classSharedSelfHoldingPointer_afc954c0df268b48304658e3cc078a4d8}{operator=} (const \hyperlink{classSharedSelfHoldingPointer}{Shared\+Self\+Holding\+Pointer}$<$ T $>$ \&\&other)
+\item 
+void \hyperlink{classSharedSelfHoldingPointer_aaa0d7a61277cb3e6040d010f0f805925}{mark\+\_\+points\+\_\+to\+\_\+self} ()
+\item 
+T \& \hyperlink{classSharedSelfHoldingPointer_a3080f870971ee581429079cd998b466f}{operator$\ast$} ()
+\item 
+T $\ast$ \hyperlink{classSharedSelfHoldingPointer_a510f0f53ca3c52af77422b12d6e3ffb6}{operator-\/$>$} ()
+\item 
+int \hyperlink{classSharedSelfHoldingPointer_a09f8385ee224f32cc86261af7a9643b8}{use\+\_\+count} ()
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classSharedSelfHoldingPointer_a4a81e4be5cf4c074d92122b05ef1a7bf}\label{classSharedSelfHoldingPointer_a4a81e4be5cf4c074d92122b05ef1a7bf}} 
+\index{Shared\+Self\+Holding\+Pointer@{Shared\+Self\+Holding\+Pointer}!Shared\+Self\+Holding\+Pointer@{Shared\+Self\+Holding\+Pointer}}
+\index{Shared\+Self\+Holding\+Pointer@{Shared\+Self\+Holding\+Pointer}!Shared\+Self\+Holding\+Pointer@{Shared\+Self\+Holding\+Pointer}}
+\subsubsection{\texorpdfstring{Shared\+Self\+Holding\+Pointer()}{SharedSelfHoldingPointer()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily template$<$typename T$>$ \\
+\hyperlink{classSharedSelfHoldingPointer}{Shared\+Self\+Holding\+Pointer}$<$ T $>$\+::\hyperlink{classSharedSelfHoldingPointer}{Shared\+Self\+Holding\+Pointer} (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classSharedSelfHoldingPointer_af7081c7427461f6a84765a5c6373f2d4}\label{classSharedSelfHoldingPointer_af7081c7427461f6a84765a5c6373f2d4}} 
+\index{Shared\+Self\+Holding\+Pointer@{Shared\+Self\+Holding\+Pointer}!Shared\+Self\+Holding\+Pointer@{Shared\+Self\+Holding\+Pointer}}
+\index{Shared\+Self\+Holding\+Pointer@{Shared\+Self\+Holding\+Pointer}!Shared\+Self\+Holding\+Pointer@{Shared\+Self\+Holding\+Pointer}}
+\subsubsection{\texorpdfstring{Shared\+Self\+Holding\+Pointer()}{SharedSelfHoldingPointer()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily template$<$typename T$>$ \\
+\hyperlink{classSharedSelfHoldingPointer}{Shared\+Self\+Holding\+Pointer}$<$ T $>$\+::\hyperlink{classSharedSelfHoldingPointer}{Shared\+Self\+Holding\+Pointer} (\begin{DoxyParamCaption}\item[{T $\ast$}]{value }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classSharedSelfHoldingPointer_a95944d9c7dc5d9b8c6a7efd481ac4906}\label{classSharedSelfHoldingPointer_a95944d9c7dc5d9b8c6a7efd481ac4906}} 
+\index{Shared\+Self\+Holding\+Pointer@{Shared\+Self\+Holding\+Pointer}!Shared\+Self\+Holding\+Pointer@{Shared\+Self\+Holding\+Pointer}}
+\index{Shared\+Self\+Holding\+Pointer@{Shared\+Self\+Holding\+Pointer}!Shared\+Self\+Holding\+Pointer@{Shared\+Self\+Holding\+Pointer}}
+\subsubsection{\texorpdfstring{Shared\+Self\+Holding\+Pointer()}{SharedSelfHoldingPointer()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily template$<$typename T$>$ \\
+\hyperlink{classSharedSelfHoldingPointer}{Shared\+Self\+Holding\+Pointer}$<$ T $>$\+::\hyperlink{classSharedSelfHoldingPointer}{Shared\+Self\+Holding\+Pointer} (\begin{DoxyParamCaption}\item[{\hyperlink{classSharedSelfHoldingPointer}{Shared\+Self\+Holding\+Pointer}$<$ T $>$ const \&}]{sp }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classSharedSelfHoldingPointer_a1f3b14c8c9f032a20304c1d053163dec}\label{classSharedSelfHoldingPointer_a1f3b14c8c9f032a20304c1d053163dec}} 
+\index{Shared\+Self\+Holding\+Pointer@{Shared\+Self\+Holding\+Pointer}!````~Shared\+Self\+Holding\+Pointer@{$\sim$\+Shared\+Self\+Holding\+Pointer}}
+\index{````~Shared\+Self\+Holding\+Pointer@{$\sim$\+Shared\+Self\+Holding\+Pointer}!Shared\+Self\+Holding\+Pointer@{Shared\+Self\+Holding\+Pointer}}
+\subsubsection{\texorpdfstring{$\sim$\+Shared\+Self\+Holding\+Pointer()}{~SharedSelfHoldingPointer()}}
+{\footnotesize\ttfamily template$<$typename T$>$ \\
+\hyperlink{classSharedSelfHoldingPointer}{Shared\+Self\+Holding\+Pointer}$<$ T $>$\+::$\sim$\hyperlink{classSharedSelfHoldingPointer}{Shared\+Self\+Holding\+Pointer} (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classSharedSelfHoldingPointer_a92698bf43ff7ad98da2c3d8f451c9baf}\label{classSharedSelfHoldingPointer_a92698bf43ff7ad98da2c3d8f451c9baf}} 
+\index{Shared\+Self\+Holding\+Pointer@{Shared\+Self\+Holding\+Pointer}!is\+\_\+object\+\_\+stored@{is\+\_\+object\+\_\+stored}}
+\index{is\+\_\+object\+\_\+stored@{is\+\_\+object\+\_\+stored}!Shared\+Self\+Holding\+Pointer@{Shared\+Self\+Holding\+Pointer}}
+\subsubsection{\texorpdfstring{is\+\_\+object\+\_\+stored()}{is\_object\_stored()}}
+{\footnotesize\ttfamily template$<$typename T$>$ \\
+bool \hyperlink{classSharedSelfHoldingPointer}{Shared\+Self\+Holding\+Pointer}$<$ T $>$\+::is\+\_\+object\+\_\+stored (\begin{DoxyParamCaption}\item[{T $\ast$}]{address }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classSharedSelfHoldingPointer_aaa0d7a61277cb3e6040d010f0f805925}\label{classSharedSelfHoldingPointer_aaa0d7a61277cb3e6040d010f0f805925}} 
+\index{Shared\+Self\+Holding\+Pointer@{Shared\+Self\+Holding\+Pointer}!mark\+\_\+points\+\_\+to\+\_\+self@{mark\+\_\+points\+\_\+to\+\_\+self}}
+\index{mark\+\_\+points\+\_\+to\+\_\+self@{mark\+\_\+points\+\_\+to\+\_\+self}!Shared\+Self\+Holding\+Pointer@{Shared\+Self\+Holding\+Pointer}}
+\subsubsection{\texorpdfstring{mark\+\_\+points\+\_\+to\+\_\+self()}{mark\_points\_to\_self()}}
+{\footnotesize\ttfamily template$<$typename T$>$ \\
+void \hyperlink{classSharedSelfHoldingPointer}{Shared\+Self\+Holding\+Pointer}$<$ T $>$\+::mark\+\_\+points\+\_\+to\+\_\+self (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classSharedSelfHoldingPointer_a3080f870971ee581429079cd998b466f}\label{classSharedSelfHoldingPointer_a3080f870971ee581429079cd998b466f}} 
+\index{Shared\+Self\+Holding\+Pointer@{Shared\+Self\+Holding\+Pointer}!operator$\ast$@{operator$\ast$}}
+\index{operator$\ast$@{operator$\ast$}!Shared\+Self\+Holding\+Pointer@{Shared\+Self\+Holding\+Pointer}}
+\subsubsection{\texorpdfstring{operator$\ast$()}{operator*()}}
+{\footnotesize\ttfamily template$<$typename T$>$ \\
+T\& \hyperlink{classSharedSelfHoldingPointer}{Shared\+Self\+Holding\+Pointer}$<$ T $>$\+::operator$\ast$ (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classSharedSelfHoldingPointer_a510f0f53ca3c52af77422b12d6e3ffb6}\label{classSharedSelfHoldingPointer_a510f0f53ca3c52af77422b12d6e3ffb6}} 
+\index{Shared\+Self\+Holding\+Pointer@{Shared\+Self\+Holding\+Pointer}!operator-\/$>$@{operator-\/$>$}}
+\index{operator-\/$>$@{operator-\/$>$}!Shared\+Self\+Holding\+Pointer@{Shared\+Self\+Holding\+Pointer}}
+\subsubsection{\texorpdfstring{operator-\/$>$()}{operator->()}}
+{\footnotesize\ttfamily template$<$typename T$>$ \\
+T$\ast$ \hyperlink{classSharedSelfHoldingPointer}{Shared\+Self\+Holding\+Pointer}$<$ T $>$\+::operator-\/$>$ (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classSharedSelfHoldingPointer_afc954c0df268b48304658e3cc078a4d8}\label{classSharedSelfHoldingPointer_afc954c0df268b48304658e3cc078a4d8}} 
+\index{Shared\+Self\+Holding\+Pointer@{Shared\+Self\+Holding\+Pointer}!operator=@{operator=}}
+\index{operator=@{operator=}!Shared\+Self\+Holding\+Pointer@{Shared\+Self\+Holding\+Pointer}}
+\subsubsection{\texorpdfstring{operator=()}{operator=()}}
+{\footnotesize\ttfamily template$<$typename T$>$ \\
+const \hyperlink{classSharedSelfHoldingPointer}{Shared\+Self\+Holding\+Pointer}$<$T$>$\& \hyperlink{classSharedSelfHoldingPointer}{Shared\+Self\+Holding\+Pointer}$<$ T $>$\+::operator= (\begin{DoxyParamCaption}\item[{const \hyperlink{classSharedSelfHoldingPointer}{Shared\+Self\+Holding\+Pointer}$<$ T $>$ \&\&}]{other }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classSharedSelfHoldingPointer_a09f8385ee224f32cc86261af7a9643b8}\label{classSharedSelfHoldingPointer_a09f8385ee224f32cc86261af7a9643b8}} 
+\index{Shared\+Self\+Holding\+Pointer@{Shared\+Self\+Holding\+Pointer}!use\+\_\+count@{use\+\_\+count}}
+\index{use\+\_\+count@{use\+\_\+count}!Shared\+Self\+Holding\+Pointer@{Shared\+Self\+Holding\+Pointer}}
+\subsubsection{\texorpdfstring{use\+\_\+count()}{use\_count()}}
+{\footnotesize\ttfamily template$<$typename T$>$ \\
+int \hyperlink{classSharedSelfHoldingPointer}{Shared\+Self\+Holding\+Pointer}$<$ T $>$\+::use\+\_\+count (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\hyperlink{cpointers_8h}{cpointers.\+h}\end{DoxyCompactItemize}

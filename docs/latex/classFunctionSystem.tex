@@ -1,0 +1,147 @@
+\hypertarget{classFunctionSystem}{}\section{Function\+System Class Reference}
+\label{classFunctionSystem}\index{Function\+System@{Function\+System}}
+
+
+{\ttfamily \#include $<$functionsystem.\+h$>$}
+
+Inheritance diagram for Function\+System\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classFunctionSystem}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classFunctionSystem_a66e3b5e5118f00a940c3e4a2f138c9c6}{Function\+System} ()
+\item 
+\hyperlink{classFunctionSystem_acad46fc5783fee1962d2450ea181f310}{Function\+System} (\hyperlink{classInterpreter}{Interpreter} $\ast$interpreter)
+\item 
+\hyperlink{classFunctionSystem_a720ae7e377cda0548bd8f1ef3c9390d9}{Function\+System} (\hyperlink{classInterpreter}{Interpreter} $\ast$interpreter, \hyperlink{classFunctionSystem}{Function\+System} $\ast$\hyperlink{classFunctionSystem_a0d223ca42b6d6617af61136bdb1f33dd}{prev\+\_\+fc\+\_\+sys})
+\item 
+virtual \hyperlink{classFunctionSystem_ad6f794406996091d08df65e8d3e0e665}{$\sim$\+Function\+System} ()
+\item 
+void \hyperlink{classFunctionSystem_a70175d76b5b377e58b1d3b0eebd1bc0a}{set\+Interpreter} (\hyperlink{classInterpreter}{Interpreter} $\ast$interpreter)
+\item 
+\hyperlink{classFunction}{Function} $\ast$ \hyperlink{classFunctionSystem_a975b09fef826151dd66dece595aa452b}{register\+Function} (std\+::string name, std\+::function$<$ void(std\+::vector$<$ \hyperlink{classValue}{Value} $>$ values, \hyperlink{classValue}{Value} $\ast$return\+\_\+value, std\+::shared\+\_\+ptr$<$ \hyperlink{classObject}{Object} $>$ object)$>$ entrypoint)
+\item 
+\hyperlink{classFunction}{Function} $\ast$ \hyperlink{classFunctionSystem_a1a3d54c912c91ea7656cc5a6185a9a6f}{register\+Function} (\hyperlink{classFunctionNode}{Function\+Node} $\ast$fnode)
+\item 
+bool \hyperlink{classFunctionSystem_a7248f494dea505ffaa2108b202f1efcb}{has\+Function} (std\+::string name)
+\item 
+bool \hyperlink{classFunctionSystem_a5bb3f64848489ff7cc4c982c08a10eaa}{has\+Function\+Locally} (std\+::string name)
+\item 
+\hyperlink{classFunction}{Function} $\ast$ \hyperlink{classFunctionSystem_a6ccd76d0760272b64790d6f5c8cdc607}{get\+Function\+By\+Name} (std\+::string name)
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classFunctionSystem}{Function\+System} $\ast$ \hyperlink{classFunctionSystem_a0d223ca42b6d6617af61136bdb1f33dd}{prev\+\_\+fc\+\_\+sys}
+\item 
+std\+::shared\+\_\+ptr$<$ \hyperlink{classObject}{Object} $>$ \hyperlink{classFunctionSystem_a59f2a49d91338ced0a79d3898412fcaf}{current\+Obj}
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classFunctionSystem_a66e3b5e5118f00a940c3e4a2f138c9c6}\label{classFunctionSystem_a66e3b5e5118f00a940c3e4a2f138c9c6}} 
+\index{Function\+System@{Function\+System}!Function\+System@{Function\+System}}
+\index{Function\+System@{Function\+System}!Function\+System@{Function\+System}}
+\subsubsection{\texorpdfstring{Function\+System()}{FunctionSystem()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily Function\+System\+::\+Function\+System (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classFunctionSystem_acad46fc5783fee1962d2450ea181f310}\label{classFunctionSystem_acad46fc5783fee1962d2450ea181f310}} 
+\index{Function\+System@{Function\+System}!Function\+System@{Function\+System}}
+\index{Function\+System@{Function\+System}!Function\+System@{Function\+System}}
+\subsubsection{\texorpdfstring{Function\+System()}{FunctionSystem()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily Function\+System\+::\+Function\+System (\begin{DoxyParamCaption}\item[{\hyperlink{classInterpreter}{Interpreter} $\ast$}]{interpreter }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classFunctionSystem_a720ae7e377cda0548bd8f1ef3c9390d9}\label{classFunctionSystem_a720ae7e377cda0548bd8f1ef3c9390d9}} 
+\index{Function\+System@{Function\+System}!Function\+System@{Function\+System}}
+\index{Function\+System@{Function\+System}!Function\+System@{Function\+System}}
+\subsubsection{\texorpdfstring{Function\+System()}{FunctionSystem()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily Function\+System\+::\+Function\+System (\begin{DoxyParamCaption}\item[{\hyperlink{classInterpreter}{Interpreter} $\ast$}]{interpreter,  }\item[{\hyperlink{classFunctionSystem}{Function\+System} $\ast$}]{prev\+\_\+fc\+\_\+sys }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classFunctionSystem_ad6f794406996091d08df65e8d3e0e665}\label{classFunctionSystem_ad6f794406996091d08df65e8d3e0e665}} 
+\index{Function\+System@{Function\+System}!````~Function\+System@{$\sim$\+Function\+System}}
+\index{````~Function\+System@{$\sim$\+Function\+System}!Function\+System@{Function\+System}}
+\subsubsection{\texorpdfstring{$\sim$\+Function\+System()}{~FunctionSystem()}}
+{\footnotesize\ttfamily virtual Function\+System\+::$\sim$\+Function\+System (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classFunctionSystem_a6ccd76d0760272b64790d6f5c8cdc607}\label{classFunctionSystem_a6ccd76d0760272b64790d6f5c8cdc607}} 
+\index{Function\+System@{Function\+System}!get\+Function\+By\+Name@{get\+Function\+By\+Name}}
+\index{get\+Function\+By\+Name@{get\+Function\+By\+Name}!Function\+System@{Function\+System}}
+\subsubsection{\texorpdfstring{get\+Function\+By\+Name()}{getFunctionByName()}}
+{\footnotesize\ttfamily \hyperlink{classFunction}{Function}$\ast$ Function\+System\+::get\+Function\+By\+Name (\begin{DoxyParamCaption}\item[{std\+::string}]{name }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classFunctionSystem_a7248f494dea505ffaa2108b202f1efcb}\label{classFunctionSystem_a7248f494dea505ffaa2108b202f1efcb}} 
+\index{Function\+System@{Function\+System}!has\+Function@{has\+Function}}
+\index{has\+Function@{has\+Function}!Function\+System@{Function\+System}}
+\subsubsection{\texorpdfstring{has\+Function()}{hasFunction()}}
+{\footnotesize\ttfamily bool Function\+System\+::has\+Function (\begin{DoxyParamCaption}\item[{std\+::string}]{name }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classFunctionSystem_a5bb3f64848489ff7cc4c982c08a10eaa}\label{classFunctionSystem_a5bb3f64848489ff7cc4c982c08a10eaa}} 
+\index{Function\+System@{Function\+System}!has\+Function\+Locally@{has\+Function\+Locally}}
+\index{has\+Function\+Locally@{has\+Function\+Locally}!Function\+System@{Function\+System}}
+\subsubsection{\texorpdfstring{has\+Function\+Locally()}{hasFunctionLocally()}}
+{\footnotesize\ttfamily bool Function\+System\+::has\+Function\+Locally (\begin{DoxyParamCaption}\item[{std\+::string}]{name }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classFunctionSystem_a975b09fef826151dd66dece595aa452b}\label{classFunctionSystem_a975b09fef826151dd66dece595aa452b}} 
+\index{Function\+System@{Function\+System}!register\+Function@{register\+Function}}
+\index{register\+Function@{register\+Function}!Function\+System@{Function\+System}}
+\subsubsection{\texorpdfstring{register\+Function()}{registerFunction()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \hyperlink{classFunction}{Function}$\ast$ Function\+System\+::register\+Function (\begin{DoxyParamCaption}\item[{std\+::string}]{name,  }\item[{std\+::function$<$ void(std\+::vector$<$ \hyperlink{classValue}{Value} $>$ values, \hyperlink{classValue}{Value} $\ast$return\+\_\+value, std\+::shared\+\_\+ptr$<$ \hyperlink{classObject}{Object} $>$ object)$>$}]{entrypoint }\end{DoxyParamCaption})}
+
+Creates and registers a \hyperlink{classNativeFunction}{Native\+Function} into the \hyperlink{classFunctionSystem}{Function\+System} and when the function is called the {\bfseries entrypoint} lambda function provided will be invoked. 
+\begin{DoxyParams}{Parameters}
+{\em name} & The name of the function to create \\
+\hline
+{\em entrypoint} & The entrypoint of the function. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classFunctionSystem_a1a3d54c912c91ea7656cc5a6185a9a6f}\label{classFunctionSystem_a1a3d54c912c91ea7656cc5a6185a9a6f}} 
+\index{Function\+System@{Function\+System}!register\+Function@{register\+Function}}
+\index{register\+Function@{register\+Function}!Function\+System@{Function\+System}}
+\subsubsection{\texorpdfstring{register\+Function()}{registerFunction()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \hyperlink{classFunction}{Function}$\ast$ Function\+System\+::register\+Function (\begin{DoxyParamCaption}\item[{\hyperlink{classFunctionNode}{Function\+Node} $\ast$}]{fnode }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classFunctionSystem_a70175d76b5b377e58b1d3b0eebd1bc0a}\label{classFunctionSystem_a70175d76b5b377e58b1d3b0eebd1bc0a}} 
+\index{Function\+System@{Function\+System}!set\+Interpreter@{set\+Interpreter}}
+\index{set\+Interpreter@{set\+Interpreter}!Function\+System@{Function\+System}}
+\subsubsection{\texorpdfstring{set\+Interpreter()}{setInterpreter()}}
+{\footnotesize\ttfamily void Function\+System\+::set\+Interpreter (\begin{DoxyParamCaption}\item[{\hyperlink{classInterpreter}{Interpreter} $\ast$}]{interpreter }\end{DoxyParamCaption})}
+
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{classFunctionSystem_a59f2a49d91338ced0a79d3898412fcaf}\label{classFunctionSystem_a59f2a49d91338ced0a79d3898412fcaf}} 
+\index{Function\+System@{Function\+System}!current\+Obj@{current\+Obj}}
+\index{current\+Obj@{current\+Obj}!Function\+System@{Function\+System}}
+\subsubsection{\texorpdfstring{current\+Obj}{currentObj}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$\hyperlink{classObject}{Object}$>$ Function\+System\+::current\+Obj}
+
+Set to an \hyperlink{classObject}{Object} instance when calling an \hyperlink{classObject}{Object} \hyperlink{classClass}{Class} \hyperlink{classFunction}{Function} through an object access expression such as {\itshape Foo.\+Bar();} \begin{DoxyNote}{Note}
+This is useful for when the right node of an expression needs to know the current object of the left node 
+\end{DoxyNote}
+\begin{DoxyAttention}{Attention}
+this should only be used during an object access expression 
+\end{DoxyAttention}
+\mbox{\Hypertarget{classFunctionSystem_a0d223ca42b6d6617af61136bdb1f33dd}\label{classFunctionSystem_a0d223ca42b6d6617af61136bdb1f33dd}} 
+\index{Function\+System@{Function\+System}!prev\+\_\+fc\+\_\+sys@{prev\+\_\+fc\+\_\+sys}}
+\index{prev\+\_\+fc\+\_\+sys@{prev\+\_\+fc\+\_\+sys}!Function\+System@{Function\+System}}
+\subsubsection{\texorpdfstring{prev\+\_\+fc\+\_\+sys}{prev\_fc\_sys}}
+{\footnotesize\ttfamily \hyperlink{classFunctionSystem}{Function\+System}$\ast$ Function\+System\+::prev\+\_\+fc\+\_\+sys}
+
+The previous, parent function system. Set to N\+U\+LL if no parent exists. \begin{DoxyNote}{Note}
+This is used for classes that extend other classes 
+\end{DoxyNote}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{classFunctionSystem_a6ccd76d0760272b64790d6f5c8cdc607}{get\+Function\+By\+Name} 
+\end{DoxySeeAlso}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\hyperlink{functionsystem_8h}{functionsystem.\+h}\end{DoxyCompactItemize}

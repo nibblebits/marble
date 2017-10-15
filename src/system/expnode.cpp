@@ -133,8 +133,8 @@ Value ExpNode::interpret(Interpreter* interpreter)
             if (left_v.holder->name == "super")
                 c = obj->getClass()->parent;
         }
-        old_obj = c->currentObj;
-        c->currentObj = obj;
+        old_obj = interpreter->getCurrentObject();
+        interpreter->setCurrentObject(obj);
         // The object scope is where all the attributes for the object ar stored so while we are accessing this object it should be set.
         interpreter->setCurrentScope(obj.get());
         interpreter->setFunctionSystem(c);
@@ -147,7 +147,7 @@ Value ExpNode::interpret(Interpreter* interpreter)
         // Restore the old scope
         interpreter->setCurrentScope(old_scope);
         // Restore the old class object.
-        c->currentObj = old_obj;
+        interpreter->setCurrentObject(old_obj);
         result = right_v;
         return result;
     }

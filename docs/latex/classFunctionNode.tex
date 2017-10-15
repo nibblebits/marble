@@ -1,0 +1,105 @@
+\hypertarget{classFunctionNode}{}\section{Function\+Node Class Reference}
+\label{classFunctionNode}\index{Function\+Node@{Function\+Node}}
+
+
+{\ttfamily \#include $<$fnode.\+h$>$}
+
+Inheritance diagram for Function\+Node\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=5.000000cm]{classFunctionNode}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classFunctionNode_ac4467a4c13382e0058cb2bd4fb70e0ab}{Function\+Node} ()
+\item 
+virtual \hyperlink{classFunctionNode_ad9c4a35db175de9386ac86d91a1a95df}{$\sim$\+Function\+Node} ()
+\item 
+virtual void \hyperlink{classFunctionNode_a1f020e7ea0181b3ce16ad2ef8426f773}{test} (\hyperlink{classValidator}{Validator} $\ast$validator)
+\item 
+virtual \hyperlink{classValue}{Value} \hyperlink{classFunctionNode_a059e6682cd51d0e126372a7af257ea5a}{interpret} (\hyperlink{classInterpreter}{Interpreter} $\ast$interpreter)
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::string \hyperlink{classFunctionNode_a21284dd655c91da1f792dc3bc1bba60c}{name}
+\item 
+struct \hyperlink{classBodyNode}{Body\+Node} $\ast$ \hyperlink{classFunctionNode_a3ebe1489837aee643b7e9f626ef0976a}{body}
+\item 
+std\+::vector$<$ \hyperlink{classVarNode}{Var\+Node} $\ast$ $>$ \hyperlink{classFunctionNode_a04bfceaf29255ffd83195f669b5c37ef}{args}
+\item 
+\hyperlink{classNode}{Node} $\ast$ \hyperlink{classFunctionNode_a52768e57ce61d19f974c5c7412168377}{return\+\_\+type}
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classFunctionNode_ac4467a4c13382e0058cb2bd4fb70e0ab}\label{classFunctionNode_ac4467a4c13382e0058cb2bd4fb70e0ab}} 
+\index{Function\+Node@{Function\+Node}!Function\+Node@{Function\+Node}}
+\index{Function\+Node@{Function\+Node}!Function\+Node@{Function\+Node}}
+\subsubsection{\texorpdfstring{Function\+Node()}{FunctionNode()}}
+{\footnotesize\ttfamily Function\+Node\+::\+Function\+Node (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classFunctionNode_ad9c4a35db175de9386ac86d91a1a95df}\label{classFunctionNode_ad9c4a35db175de9386ac86d91a1a95df}} 
+\index{Function\+Node@{Function\+Node}!````~Function\+Node@{$\sim$\+Function\+Node}}
+\index{````~Function\+Node@{$\sim$\+Function\+Node}!Function\+Node@{Function\+Node}}
+\subsubsection{\texorpdfstring{$\sim$\+Function\+Node()}{~FunctionNode()}}
+{\footnotesize\ttfamily virtual Function\+Node\+::$\sim$\+Function\+Node (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classFunctionNode_a059e6682cd51d0e126372a7af257ea5a}\label{classFunctionNode_a059e6682cd51d0e126372a7af257ea5a}} 
+\index{Function\+Node@{Function\+Node}!interpret@{interpret}}
+\index{interpret@{interpret}!Function\+Node@{Function\+Node}}
+\subsubsection{\texorpdfstring{interpret()}{interpret()}}
+{\footnotesize\ttfamily virtual \hyperlink{classValue}{Value} Function\+Node\+::interpret (\begin{DoxyParamCaption}\item[{\hyperlink{classInterpreter}{Interpreter} $\ast$}]{interpreter }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \hyperlink{classExpressionInterpretableNode_a43650f046c48fc539f77a207e3c9181e}{Expression\+Interpretable\+Node}.
+
+\mbox{\Hypertarget{classFunctionNode_a1f020e7ea0181b3ce16ad2ef8426f773}\label{classFunctionNode_a1f020e7ea0181b3ce16ad2ef8426f773}} 
+\index{Function\+Node@{Function\+Node}!test@{test}}
+\index{test@{test}!Function\+Node@{Function\+Node}}
+\subsubsection{\texorpdfstring{test()}{test()}}
+{\footnotesize\ttfamily virtual void Function\+Node\+::test (\begin{DoxyParamCaption}\item[{\hyperlink{classValidator}{Validator} $\ast$}]{validator }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \hyperlink{classInterpretable_a32f547aaf68dcbab993284d3257ab010}{Interpretable}.
+
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{classFunctionNode_a04bfceaf29255ffd83195f669b5c37ef}\label{classFunctionNode_a04bfceaf29255ffd83195f669b5c37ef}} 
+\index{Function\+Node@{Function\+Node}!args@{args}}
+\index{args@{args}!Function\+Node@{Function\+Node}}
+\subsubsection{\texorpdfstring{args}{args}}
+{\footnotesize\ttfamily std\+::vector$<$\hyperlink{classVarNode}{Var\+Node}$\ast$$>$ Function\+Node\+::args}
+
+\mbox{\Hypertarget{classFunctionNode_a3ebe1489837aee643b7e9f626ef0976a}\label{classFunctionNode_a3ebe1489837aee643b7e9f626ef0976a}} 
+\index{Function\+Node@{Function\+Node}!body@{body}}
+\index{body@{body}!Function\+Node@{Function\+Node}}
+\subsubsection{\texorpdfstring{body}{body}}
+{\footnotesize\ttfamily struct \hyperlink{classBodyNode}{Body\+Node}$\ast$ Function\+Node\+::body}
+
+\mbox{\Hypertarget{classFunctionNode_a21284dd655c91da1f792dc3bc1bba60c}\label{classFunctionNode_a21284dd655c91da1f792dc3bc1bba60c}} 
+\index{Function\+Node@{Function\+Node}!name@{name}}
+\index{name@{name}!Function\+Node@{Function\+Node}}
+\subsubsection{\texorpdfstring{name}{name}}
+{\footnotesize\ttfamily std\+::string Function\+Node\+::name}
+
+\mbox{\Hypertarget{classFunctionNode_a52768e57ce61d19f974c5c7412168377}\label{classFunctionNode_a52768e57ce61d19f974c5c7412168377}} 
+\index{Function\+Node@{Function\+Node}!return\+\_\+type@{return\+\_\+type}}
+\index{return\+\_\+type@{return\+\_\+type}!Function\+Node@{Function\+Node}}
+\subsubsection{\texorpdfstring{return\+\_\+type}{return\_type}}
+{\footnotesize\ttfamily \hyperlink{classNode}{Node}$\ast$ Function\+Node\+::return\+\_\+type}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\hyperlink{fnode_8h}{fnode.\+h}\end{DoxyCompactItemize}

@@ -1,0 +1,90 @@
+\hypertarget{classClassSystem}{}\section{Class\+System Class Reference}
+\label{classClassSystem}\index{Class\+System@{Class\+System}}
+
+
+{\ttfamily \#include $<$csystem.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classClassSystem_aaaec70fea8c72ed8c47bfb4de3fc4b46}{Class\+System} ()
+\item 
+virtual \hyperlink{classClassSystem_a9b1842899a13f28ca47cf24287dc0616}{$\sim$\+Class\+System} ()
+\item 
+void \hyperlink{classClassSystem_ad54dfb82875034ec728a2e417108f164}{set\+Interpreter} (\hyperlink{classInterpreter}{Interpreter} $\ast$interpreter)
+\item 
+void \hyperlink{classClassSystem_a10283c2e4e7cc89b213f6a32a0d709c1}{set\+Default\+Base\+Class} (\hyperlink{classClass}{Class} $\ast$c)
+\item 
+\hyperlink{classClass}{Class} $\ast$ \hyperlink{classClassSystem_a02f4790dd9b8fa8808a4e17f1e152281}{register\+Class} (std\+::string class\+\_\+name, \hyperlink{classClass}{Class} $\ast$parent=N\+U\+LL)
+\item 
+\hyperlink{classClass}{Class} $\ast$ \hyperlink{classClassSystem_a4b88087eed035dc1f6100850c933ae84}{get\+Class\+By\+Name} (std\+::string name)
+\item 
+bool \hyperlink{classClassSystem_aa3e6fdac5739091d3f48dbe2b8c9db46}{has\+Class\+With\+Name} (std\+::string name)
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ std\+::unique\+\_\+ptr$<$ \hyperlink{classClass}{Class} $>$ $>$ \hyperlink{classClassSystem_afdfbb54eb10abf323371cb9bb4f639a2}{classes}
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classClassSystem_aaaec70fea8c72ed8c47bfb4de3fc4b46}\label{classClassSystem_aaaec70fea8c72ed8c47bfb4de3fc4b46}} 
+\index{Class\+System@{Class\+System}!Class\+System@{Class\+System}}
+\index{Class\+System@{Class\+System}!Class\+System@{Class\+System}}
+\subsubsection{\texorpdfstring{Class\+System()}{ClassSystem()}}
+{\footnotesize\ttfamily Class\+System\+::\+Class\+System (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classClassSystem_a9b1842899a13f28ca47cf24287dc0616}\label{classClassSystem_a9b1842899a13f28ca47cf24287dc0616}} 
+\index{Class\+System@{Class\+System}!````~Class\+System@{$\sim$\+Class\+System}}
+\index{````~Class\+System@{$\sim$\+Class\+System}!Class\+System@{Class\+System}}
+\subsubsection{\texorpdfstring{$\sim$\+Class\+System()}{~ClassSystem()}}
+{\footnotesize\ttfamily virtual Class\+System\+::$\sim$\+Class\+System (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classClassSystem_a4b88087eed035dc1f6100850c933ae84}\label{classClassSystem_a4b88087eed035dc1f6100850c933ae84}} 
+\index{Class\+System@{Class\+System}!get\+Class\+By\+Name@{get\+Class\+By\+Name}}
+\index{get\+Class\+By\+Name@{get\+Class\+By\+Name}!Class\+System@{Class\+System}}
+\subsubsection{\texorpdfstring{get\+Class\+By\+Name()}{getClassByName()}}
+{\footnotesize\ttfamily \hyperlink{classClass}{Class}$\ast$ Class\+System\+::get\+Class\+By\+Name (\begin{DoxyParamCaption}\item[{std\+::string}]{name }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classClassSystem_aa3e6fdac5739091d3f48dbe2b8c9db46}\label{classClassSystem_aa3e6fdac5739091d3f48dbe2b8c9db46}} 
+\index{Class\+System@{Class\+System}!has\+Class\+With\+Name@{has\+Class\+With\+Name}}
+\index{has\+Class\+With\+Name@{has\+Class\+With\+Name}!Class\+System@{Class\+System}}
+\subsubsection{\texorpdfstring{has\+Class\+With\+Name()}{hasClassWithName()}}
+{\footnotesize\ttfamily bool Class\+System\+::has\+Class\+With\+Name (\begin{DoxyParamCaption}\item[{std\+::string}]{name }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classClassSystem_a02f4790dd9b8fa8808a4e17f1e152281}\label{classClassSystem_a02f4790dd9b8fa8808a4e17f1e152281}} 
+\index{Class\+System@{Class\+System}!register\+Class@{register\+Class}}
+\index{register\+Class@{register\+Class}!Class\+System@{Class\+System}}
+\subsubsection{\texorpdfstring{register\+Class()}{registerClass()}}
+{\footnotesize\ttfamily \hyperlink{classClass}{Class}$\ast$ Class\+System\+::register\+Class (\begin{DoxyParamCaption}\item[{std\+::string}]{class\+\_\+name,  }\item[{\hyperlink{classClass}{Class} $\ast$}]{parent = {\ttfamily NULL} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classClassSystem_a10283c2e4e7cc89b213f6a32a0d709c1}\label{classClassSystem_a10283c2e4e7cc89b213f6a32a0d709c1}} 
+\index{Class\+System@{Class\+System}!set\+Default\+Base\+Class@{set\+Default\+Base\+Class}}
+\index{set\+Default\+Base\+Class@{set\+Default\+Base\+Class}!Class\+System@{Class\+System}}
+\subsubsection{\texorpdfstring{set\+Default\+Base\+Class()}{setDefaultBaseClass()}}
+{\footnotesize\ttfamily void Class\+System\+::set\+Default\+Base\+Class (\begin{DoxyParamCaption}\item[{\hyperlink{classClass}{Class} $\ast$}]{c }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classClassSystem_ad54dfb82875034ec728a2e417108f164}\label{classClassSystem_ad54dfb82875034ec728a2e417108f164}} 
+\index{Class\+System@{Class\+System}!set\+Interpreter@{set\+Interpreter}}
+\index{set\+Interpreter@{set\+Interpreter}!Class\+System@{Class\+System}}
+\subsubsection{\texorpdfstring{set\+Interpreter()}{setInterpreter()}}
+{\footnotesize\ttfamily void Class\+System\+::set\+Interpreter (\begin{DoxyParamCaption}\item[{\hyperlink{classInterpreter}{Interpreter} $\ast$}]{interpreter }\end{DoxyParamCaption})}
+
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{classClassSystem_afdfbb54eb10abf323371cb9bb4f639a2}\label{classClassSystem_afdfbb54eb10abf323371cb9bb4f639a2}} 
+\index{Class\+System@{Class\+System}!classes@{classes}}
+\index{classes@{classes}!Class\+System@{Class\+System}}
+\subsubsection{\texorpdfstring{classes}{classes}}
+{\footnotesize\ttfamily std\+::vector$<$std\+::unique\+\_\+ptr$<$\hyperlink{classClass}{Class}$>$ $>$ Class\+System\+::classes}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\hyperlink{csystem_8h}{csystem.\+h}\end{DoxyCompactItemize}

@@ -1,0 +1,156 @@
+\hypertarget{classScope}{}\section{Scope Class Reference}
+\label{classScope}\index{Scope@{Scope}}
+
+
+{\ttfamily \#include $<$scope.\+h$>$}
+
+Inheritance diagram for Scope\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classScope}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classScope_a17c806f9852bb4454ed5709564945373}{Scope} ()
+\item 
+virtual \hyperlink{classScope_af19fa415c0496acf5667982b584c23d3}{$\sim$\+Scope} ()
+\item 
+virtual void \hyperlink{classScope_a4c2622adf1835753f5233869febd80d4}{register\+Variable} (\hyperlink{classVariable}{Variable} $\ast$variable)
+\item 
+\hyperlink{classVariable}{Variable} $\ast$ \hyperlink{classScope_a99112eccd8fd60ac511ed9b754268a6d}{create\+Variable} ()
+\item 
+\hyperlink{classVariable}{Variable} $\ast$ \hyperlink{classScope_aa723099076a40daa24e7818c6dd1c259}{clone\+Create} (\hyperlink{classVariable}{Variable} $\ast$variable)
+\item 
+\hyperlink{classVariable}{Variable} $\ast$ \hyperlink{classScope_a910e045176dbe71d2260bac3204e47bb}{get\+Variable} (std\+::string variable\+\_\+name)
+\item 
+\hyperlink{classVariable}{Variable} $\ast$ \hyperlink{classScope_aa6e0e555c44953e4c8eebaa4adba0b1a}{get\+Variable\+Any\+Scope} (std\+::string variable\+\_\+name)
+\item 
+void \hyperlink{classScope_a5fe1e6e8c81549eec1ff4dfca7001a69}{remove\+Variable} (\hyperlink{classVariable}{Variable} $\ast$variable)
+\item 
+virtual void \hyperlink{classScope_a4a42aaa7bd341ef07a90ef51860f0a8a}{on\+Enter\+Scope} ()
+\item 
+virtual void \hyperlink{classScope_acff92230877eb8ff60f27c86ac56e929}{on\+Leave\+Scope} ()
+\item 
+bool \hyperlink{classScope_a340e72ca6fa7b3b85760e8b13e75fb16}{is\+Nested\+In\+Scope} (\hyperlink{classScope}{Scope} $\ast$scope)
+\item 
+std\+::vector$<$ \hyperlink{classVariable}{Variable} $\ast$ $>$ \hyperlink{classScope_adb9ef772a81d2d5ce883298e43161a2d}{get\+Variables} ()
+\item 
+std\+::vector$<$ \hyperlink{classVariable}{Variable} $\ast$ $>$ \hyperlink{classScope_a93fdedbd4bd26e9eceb1a0e367b3785c}{get\+Object\+Variables\+For} (std\+::shared\+\_\+ptr$<$ \hyperlink{classObject}{Object} $>$ object)
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classScope}{Scope} $\ast$ \hyperlink{classScope_abc7b9357aa6fae81075bca080ea73d5f}{prev}
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classScope_a17c806f9852bb4454ed5709564945373}\label{classScope_a17c806f9852bb4454ed5709564945373}} 
+\index{Scope@{Scope}!Scope@{Scope}}
+\index{Scope@{Scope}!Scope@{Scope}}
+\subsubsection{\texorpdfstring{Scope()}{Scope()}}
+{\footnotesize\ttfamily Scope\+::\+Scope (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classScope_af19fa415c0496acf5667982b584c23d3}\label{classScope_af19fa415c0496acf5667982b584c23d3}} 
+\index{Scope@{Scope}!````~Scope@{$\sim$\+Scope}}
+\index{````~Scope@{$\sim$\+Scope}!Scope@{Scope}}
+\subsubsection{\texorpdfstring{$\sim$\+Scope()}{~Scope()}}
+{\footnotesize\ttfamily virtual Scope\+::$\sim$\+Scope (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classScope_aa723099076a40daa24e7818c6dd1c259}\label{classScope_aa723099076a40daa24e7818c6dd1c259}} 
+\index{Scope@{Scope}!clone\+Create@{clone\+Create}}
+\index{clone\+Create@{clone\+Create}!Scope@{Scope}}
+\subsubsection{\texorpdfstring{clone\+Create()}{cloneCreate()}}
+{\footnotesize\ttfamily \hyperlink{classVariable}{Variable}$\ast$ Scope\+::clone\+Create (\begin{DoxyParamCaption}\item[{\hyperlink{classVariable}{Variable} $\ast$}]{variable }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classScope_a99112eccd8fd60ac511ed9b754268a6d}\label{classScope_a99112eccd8fd60ac511ed9b754268a6d}} 
+\index{Scope@{Scope}!create\+Variable@{create\+Variable}}
+\index{create\+Variable@{create\+Variable}!Scope@{Scope}}
+\subsubsection{\texorpdfstring{create\+Variable()}{createVariable()}}
+{\footnotesize\ttfamily \hyperlink{classVariable}{Variable}$\ast$ Scope\+::create\+Variable (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classScope_a93fdedbd4bd26e9eceb1a0e367b3785c}\label{classScope_a93fdedbd4bd26e9eceb1a0e367b3785c}} 
+\index{Scope@{Scope}!get\+Object\+Variables\+For@{get\+Object\+Variables\+For}}
+\index{get\+Object\+Variables\+For@{get\+Object\+Variables\+For}!Scope@{Scope}}
+\subsubsection{\texorpdfstring{get\+Object\+Variables\+For()}{getObjectVariablesFor()}}
+{\footnotesize\ttfamily std\+::vector$<$\hyperlink{classVariable}{Variable}$\ast$$>$ Scope\+::get\+Object\+Variables\+For (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ \hyperlink{classObject}{Object} $>$}]{object }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classScope_a910e045176dbe71d2260bac3204e47bb}\label{classScope_a910e045176dbe71d2260bac3204e47bb}} 
+\index{Scope@{Scope}!get\+Variable@{get\+Variable}}
+\index{get\+Variable@{get\+Variable}!Scope@{Scope}}
+\subsubsection{\texorpdfstring{get\+Variable()}{getVariable()}}
+{\footnotesize\ttfamily \hyperlink{classVariable}{Variable}$\ast$ Scope\+::get\+Variable (\begin{DoxyParamCaption}\item[{std\+::string}]{variable\+\_\+name }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classScope_aa6e0e555c44953e4c8eebaa4adba0b1a}\label{classScope_aa6e0e555c44953e4c8eebaa4adba0b1a}} 
+\index{Scope@{Scope}!get\+Variable\+Any\+Scope@{get\+Variable\+Any\+Scope}}
+\index{get\+Variable\+Any\+Scope@{get\+Variable\+Any\+Scope}!Scope@{Scope}}
+\subsubsection{\texorpdfstring{get\+Variable\+Any\+Scope()}{getVariableAnyScope()}}
+{\footnotesize\ttfamily \hyperlink{classVariable}{Variable}$\ast$ Scope\+::get\+Variable\+Any\+Scope (\begin{DoxyParamCaption}\item[{std\+::string}]{variable\+\_\+name }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classScope_adb9ef772a81d2d5ce883298e43161a2d}\label{classScope_adb9ef772a81d2d5ce883298e43161a2d}} 
+\index{Scope@{Scope}!get\+Variables@{get\+Variables}}
+\index{get\+Variables@{get\+Variables}!Scope@{Scope}}
+\subsubsection{\texorpdfstring{get\+Variables()}{getVariables()}}
+{\footnotesize\ttfamily std\+::vector$<$\hyperlink{classVariable}{Variable}$\ast$$>$ Scope\+::get\+Variables (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classScope_a340e72ca6fa7b3b85760e8b13e75fb16}\label{classScope_a340e72ca6fa7b3b85760e8b13e75fb16}} 
+\index{Scope@{Scope}!is\+Nested\+In\+Scope@{is\+Nested\+In\+Scope}}
+\index{is\+Nested\+In\+Scope@{is\+Nested\+In\+Scope}!Scope@{Scope}}
+\subsubsection{\texorpdfstring{is\+Nested\+In\+Scope()}{isNestedInScope()}}
+{\footnotesize\ttfamily bool Scope\+::is\+Nested\+In\+Scope (\begin{DoxyParamCaption}\item[{\hyperlink{classScope}{Scope} $\ast$}]{scope }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classScope_a4a42aaa7bd341ef07a90ef51860f0a8a}\label{classScope_a4a42aaa7bd341ef07a90ef51860f0a8a}} 
+\index{Scope@{Scope}!on\+Enter\+Scope@{on\+Enter\+Scope}}
+\index{on\+Enter\+Scope@{on\+Enter\+Scope}!Scope@{Scope}}
+\subsubsection{\texorpdfstring{on\+Enter\+Scope()}{onEnterScope()}}
+{\footnotesize\ttfamily virtual void Scope\+::on\+Enter\+Scope (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented in \hyperlink{classObject_a61b4cd86dd434abf07e3f4d19b5c93eb}{Object}.
+
+\mbox{\Hypertarget{classScope_acff92230877eb8ff60f27c86ac56e929}\label{classScope_acff92230877eb8ff60f27c86ac56e929}} 
+\index{Scope@{Scope}!on\+Leave\+Scope@{on\+Leave\+Scope}}
+\index{on\+Leave\+Scope@{on\+Leave\+Scope}!Scope@{Scope}}
+\subsubsection{\texorpdfstring{on\+Leave\+Scope()}{onLeaveScope()}}
+{\footnotesize\ttfamily virtual void Scope\+::on\+Leave\+Scope (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented in \hyperlink{classObject_a54a99563b5936626d47fb1e2f0e13a9c}{Object}.
+
+\mbox{\Hypertarget{classScope_a4c2622adf1835753f5233869febd80d4}\label{classScope_a4c2622adf1835753f5233869febd80d4}} 
+\index{Scope@{Scope}!register\+Variable@{register\+Variable}}
+\index{register\+Variable@{register\+Variable}!Scope@{Scope}}
+\subsubsection{\texorpdfstring{register\+Variable()}{registerVariable()}}
+{\footnotesize\ttfamily virtual void Scope\+::register\+Variable (\begin{DoxyParamCaption}\item[{\hyperlink{classVariable}{Variable} $\ast$}]{variable }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented in \hyperlink{classObject_ad8f3631de109f50f94432ae9e1f7a130}{Object}.
+
+\mbox{\Hypertarget{classScope_a5fe1e6e8c81549eec1ff4dfca7001a69}\label{classScope_a5fe1e6e8c81549eec1ff4dfca7001a69}} 
+\index{Scope@{Scope}!remove\+Variable@{remove\+Variable}}
+\index{remove\+Variable@{remove\+Variable}!Scope@{Scope}}
+\subsubsection{\texorpdfstring{remove\+Variable()}{removeVariable()}}
+{\footnotesize\ttfamily void Scope\+::remove\+Variable (\begin{DoxyParamCaption}\item[{\hyperlink{classVariable}{Variable} $\ast$}]{variable }\end{DoxyParamCaption})}
+
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{classScope_abc7b9357aa6fae81075bca080ea73d5f}\label{classScope_abc7b9357aa6fae81075bca080ea73d5f}} 
+\index{Scope@{Scope}!prev@{prev}}
+\index{prev@{prev}!Scope@{Scope}}
+\subsubsection{\texorpdfstring{prev}{prev}}
+{\footnotesize\ttfamily \hyperlink{classScope}{Scope}$\ast$ Scope\+::prev}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\hyperlink{scope_8h}{scope.\+h}\end{DoxyCompactItemize}

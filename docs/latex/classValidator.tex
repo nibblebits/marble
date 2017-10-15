@@ -1,0 +1,155 @@
+\hypertarget{classValidator}{}\section{Validator Class Reference}
+\label{classValidator}\index{Validator@{Validator}}
+
+
+{\ttfamily \#include $<$validator.\+h$>$}
+
+Inheritance diagram for Validator\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classValidator}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classValidator_a7c66bc9f7104715da531915186691eb8}{Validator} (\hyperlink{classLogger}{Logger} $\ast$logger)
+\item 
+virtual \hyperlink{classValidator_a4270e7ebf0c451ff80b4ec6fd8eb6a42}{$\sim$\+Validator} ()
+\item 
+void \hyperlink{classValidator_aa0bc30458ce0255fcec64d8346e384a5}{validate} (\hyperlink{classNode}{Node} $\ast$root\+\_\+node)
+\item 
+void \hyperlink{classValidator_ad0a3d5e1c57840006e96c74c74eac0aa}{give\+Class\+Object} (std\+::shared\+\_\+ptr$<$ \hyperlink{classObject}{Object} $>$ object)
+\item 
+\hyperlink{classObject}{Object} $\ast$ \hyperlink{classValidator_afe99d9833e5cda3ab1aab764ab99d716}{get\+Class\+Object} (std\+::string name)
+\item 
+void \hyperlink{classValidator_a364835c9dc181485838d083b6f227fdb}{begin\+Class} (\hyperlink{classClass}{Class} $\ast$current\+\_\+class)
+\item 
+\hyperlink{classClass}{Class} $\ast$ \hyperlink{classValidator_a342833ad81caff452754620d29083a3d}{get\+Current\+Class} ()
+\item 
+void \hyperlink{classValidator_a1d31142fe2275fbc9556d1164b01cbfb}{end\+Class} ()
+\item 
+void \hyperlink{classValidator_a055e6bdb84438449655135b9166bcf2d}{save} ()
+\item 
+void \hyperlink{classValidator_a0c89c0c840be87b9011cb518d7bc12ff}{restore} ()
+\item 
+void \hyperlink{classValidator_a38479b2cec77382e7c25ce898f4d47f9}{expecting} (\hyperlink{statics_8h_a0674a913b8e8c8a9f265baab3646b565}{V\+A\+L\+U\+E\+\_\+\+T\+Y\+PE} \hyperlink{classSystemHandler_a8ca6090af683e8555051681fd31cd865}{type})
+\item 
+void \hyperlink{classValidator_a6a88dbc8624b8803408094c16a98c205}{expecting\+Object} (std\+::string obj\+\_\+name)
+\item 
+bool \hyperlink{classValidator_ab94d9925c577be6a8cad24a5a6b60db9}{is\+Expecting} ()
+\item 
+void \hyperlink{classValidator_adfa1b750001981ae5daa085d32bd626f}{end\+Expecting} ()
+\item 
+\hyperlink{statics_8h_a0674a913b8e8c8a9f265baab3646b565}{V\+A\+L\+U\+E\+\_\+\+T\+Y\+PE} \hyperlink{classValidator_a786b6b8a5dc6136bbcb2d012e1d8914b}{get\+Expecting\+Type} ()
+\item 
+std\+::string \hyperlink{classValidator_aca02c85892f3c74114fa936bad41ff07}{get\+Expecting\+Object} ()
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classValidator_a7c66bc9f7104715da531915186691eb8}\label{classValidator_a7c66bc9f7104715da531915186691eb8}} 
+\index{Validator@{Validator}!Validator@{Validator}}
+\index{Validator@{Validator}!Validator@{Validator}}
+\subsubsection{\texorpdfstring{Validator()}{Validator()}}
+{\footnotesize\ttfamily Validator\+::\+Validator (\begin{DoxyParamCaption}\item[{\hyperlink{classLogger}{Logger} $\ast$}]{logger }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classValidator_a4270e7ebf0c451ff80b4ec6fd8eb6a42}\label{classValidator_a4270e7ebf0c451ff80b4ec6fd8eb6a42}} 
+\index{Validator@{Validator}!````~Validator@{$\sim$\+Validator}}
+\index{````~Validator@{$\sim$\+Validator}!Validator@{Validator}}
+\subsubsection{\texorpdfstring{$\sim$\+Validator()}{~Validator()}}
+{\footnotesize\ttfamily virtual Validator\+::$\sim$\+Validator (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classValidator_a364835c9dc181485838d083b6f227fdb}\label{classValidator_a364835c9dc181485838d083b6f227fdb}} 
+\index{Validator@{Validator}!begin\+Class@{begin\+Class}}
+\index{begin\+Class@{begin\+Class}!Validator@{Validator}}
+\subsubsection{\texorpdfstring{begin\+Class()}{beginClass()}}
+{\footnotesize\ttfamily void Validator\+::begin\+Class (\begin{DoxyParamCaption}\item[{\hyperlink{classClass}{Class} $\ast$}]{current\+\_\+class }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classValidator_a1d31142fe2275fbc9556d1164b01cbfb}\label{classValidator_a1d31142fe2275fbc9556d1164b01cbfb}} 
+\index{Validator@{Validator}!end\+Class@{end\+Class}}
+\index{end\+Class@{end\+Class}!Validator@{Validator}}
+\subsubsection{\texorpdfstring{end\+Class()}{endClass()}}
+{\footnotesize\ttfamily void Validator\+::end\+Class (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classValidator_adfa1b750001981ae5daa085d32bd626f}\label{classValidator_adfa1b750001981ae5daa085d32bd626f}} 
+\index{Validator@{Validator}!end\+Expecting@{end\+Expecting}}
+\index{end\+Expecting@{end\+Expecting}!Validator@{Validator}}
+\subsubsection{\texorpdfstring{end\+Expecting()}{endExpecting()}}
+{\footnotesize\ttfamily void Validator\+::end\+Expecting (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classValidator_a38479b2cec77382e7c25ce898f4d47f9}\label{classValidator_a38479b2cec77382e7c25ce898f4d47f9}} 
+\index{Validator@{Validator}!expecting@{expecting}}
+\index{expecting@{expecting}!Validator@{Validator}}
+\subsubsection{\texorpdfstring{expecting()}{expecting()}}
+{\footnotesize\ttfamily void Validator\+::expecting (\begin{DoxyParamCaption}\item[{\hyperlink{statics_8h_a0674a913b8e8c8a9f265baab3646b565}{V\+A\+L\+U\+E\+\_\+\+T\+Y\+PE}}]{type }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classValidator_a6a88dbc8624b8803408094c16a98c205}\label{classValidator_a6a88dbc8624b8803408094c16a98c205}} 
+\index{Validator@{Validator}!expecting\+Object@{expecting\+Object}}
+\index{expecting\+Object@{expecting\+Object}!Validator@{Validator}}
+\subsubsection{\texorpdfstring{expecting\+Object()}{expectingObject()}}
+{\footnotesize\ttfamily void Validator\+::expecting\+Object (\begin{DoxyParamCaption}\item[{std\+::string}]{obj\+\_\+name }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classValidator_afe99d9833e5cda3ab1aab764ab99d716}\label{classValidator_afe99d9833e5cda3ab1aab764ab99d716}} 
+\index{Validator@{Validator}!get\+Class\+Object@{get\+Class\+Object}}
+\index{get\+Class\+Object@{get\+Class\+Object}!Validator@{Validator}}
+\subsubsection{\texorpdfstring{get\+Class\+Object()}{getClassObject()}}
+{\footnotesize\ttfamily \hyperlink{classObject}{Object}$\ast$ Validator\+::get\+Class\+Object (\begin{DoxyParamCaption}\item[{std\+::string}]{name }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classValidator_a342833ad81caff452754620d29083a3d}\label{classValidator_a342833ad81caff452754620d29083a3d}} 
+\index{Validator@{Validator}!get\+Current\+Class@{get\+Current\+Class}}
+\index{get\+Current\+Class@{get\+Current\+Class}!Validator@{Validator}}
+\subsubsection{\texorpdfstring{get\+Current\+Class()}{getCurrentClass()}}
+{\footnotesize\ttfamily \hyperlink{classClass}{Class}$\ast$ Validator\+::get\+Current\+Class (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classValidator_aca02c85892f3c74114fa936bad41ff07}\label{classValidator_aca02c85892f3c74114fa936bad41ff07}} 
+\index{Validator@{Validator}!get\+Expecting\+Object@{get\+Expecting\+Object}}
+\index{get\+Expecting\+Object@{get\+Expecting\+Object}!Validator@{Validator}}
+\subsubsection{\texorpdfstring{get\+Expecting\+Object()}{getExpectingObject()}}
+{\footnotesize\ttfamily std\+::string Validator\+::get\+Expecting\+Object (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classValidator_a786b6b8a5dc6136bbcb2d012e1d8914b}\label{classValidator_a786b6b8a5dc6136bbcb2d012e1d8914b}} 
+\index{Validator@{Validator}!get\+Expecting\+Type@{get\+Expecting\+Type}}
+\index{get\+Expecting\+Type@{get\+Expecting\+Type}!Validator@{Validator}}
+\subsubsection{\texorpdfstring{get\+Expecting\+Type()}{getExpectingType()}}
+{\footnotesize\ttfamily \hyperlink{statics_8h_a0674a913b8e8c8a9f265baab3646b565}{V\+A\+L\+U\+E\+\_\+\+T\+Y\+PE} Validator\+::get\+Expecting\+Type (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classValidator_ad0a3d5e1c57840006e96c74c74eac0aa}\label{classValidator_ad0a3d5e1c57840006e96c74c74eac0aa}} 
+\index{Validator@{Validator}!give\+Class\+Object@{give\+Class\+Object}}
+\index{give\+Class\+Object@{give\+Class\+Object}!Validator@{Validator}}
+\subsubsection{\texorpdfstring{give\+Class\+Object()}{giveClassObject()}}
+{\footnotesize\ttfamily void Validator\+::give\+Class\+Object (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ \hyperlink{classObject}{Object} $>$}]{object }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classValidator_ab94d9925c577be6a8cad24a5a6b60db9}\label{classValidator_ab94d9925c577be6a8cad24a5a6b60db9}} 
+\index{Validator@{Validator}!is\+Expecting@{is\+Expecting}}
+\index{is\+Expecting@{is\+Expecting}!Validator@{Validator}}
+\subsubsection{\texorpdfstring{is\+Expecting()}{isExpecting()}}
+{\footnotesize\ttfamily bool Validator\+::is\+Expecting (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classValidator_a0c89c0c840be87b9011cb518d7bc12ff}\label{classValidator_a0c89c0c840be87b9011cb518d7bc12ff}} 
+\index{Validator@{Validator}!restore@{restore}}
+\index{restore@{restore}!Validator@{Validator}}
+\subsubsection{\texorpdfstring{restore()}{restore()}}
+{\footnotesize\ttfamily void Validator\+::restore (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classValidator_a055e6bdb84438449655135b9166bcf2d}\label{classValidator_a055e6bdb84438449655135b9166bcf2d}} 
+\index{Validator@{Validator}!save@{save}}
+\index{save@{save}!Validator@{Validator}}
+\subsubsection{\texorpdfstring{save()}{save()}}
+{\footnotesize\ttfamily void Validator\+::save (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classValidator_aa0bc30458ce0255fcec64d8346e384a5}\label{classValidator_aa0bc30458ce0255fcec64d8346e384a5}} 
+\index{Validator@{Validator}!validate@{validate}}
+\index{validate@{validate}!Validator@{Validator}}
+\subsubsection{\texorpdfstring{validate()}{validate()}}
+{\footnotesize\ttfamily void Validator\+::validate (\begin{DoxyParamCaption}\item[{\hyperlink{classNode}{Node} $\ast$}]{root\+\_\+node }\end{DoxyParamCaption})}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\hyperlink{validator_8h}{validator.\+h}\end{DoxyCompactItemize}

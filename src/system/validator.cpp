@@ -19,6 +19,10 @@ void Validator::giveClassObject(std::shared_ptr<Object> object)
     this->class_objects.push_back(object);
 }
 
+bool Validator::isInClass()
+{
+    return this->current_class != NULL;
+}
 
 Object* Validator::getClassObject(std::string name)
 {

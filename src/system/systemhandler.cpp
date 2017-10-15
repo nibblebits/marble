@@ -3,6 +3,7 @@
 SystemHandler::SystemHandler(SYSTEM_HANDLER_TYPE type)
 {
     this->type = type;
+    this->current_obj = NULL;
 }
 
 SystemHandler::~SystemHandler()
@@ -41,3 +42,14 @@ SYSTEM_HANDLER_TYPE SystemHandler::getType()
 {
     return this->type;
 }
+
+std::shared_ptr<Object> SystemHandler::getCurrentObject()
+{
+    return this->current_obj;
+}
+
+void SystemHandler::setCurrentObject(std::shared_ptr<Object> object)
+{
+    this->current_obj = object;
+}
+

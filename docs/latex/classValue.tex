@@ -1,0 +1,245 @@
+\hypertarget{classValue}{}\section{Value Class Reference}
+\label{classValue}\index{Value@{Value}}
+
+
+{\ttfamily \#include $<$value.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classValue_abc2a5a2e6484fac66dae2539cc955667}{Value} ()
+\item 
+virtual \hyperlink{classValue_aceb26b90be781020c0c71ae5d16ca06f}{$\sim$\+Value} ()
+\item 
+void \hyperlink{classValue_a83944ac4d53d5bd27fd6a0bd2bc1bd3a}{set} (\hyperlink{classValue}{Value} $\ast$v)
+\item 
+bool \hyperlink{classValue_a37e1fe6c86dc755a3e000442c4949ab7}{is\+Object\+Or\+Array} ()
+\item 
+\hyperlink{classValue}{Value} \hyperlink{classValue_a59e467d3ee4cdfb802a2aed8a5a0f1dd}{operator+} (const \hyperlink{classValue}{Value} \&other)
+\item 
+\hyperlink{classValue}{Value} \hyperlink{classValue_aeb5e368aaea65ed1d1ef37fef6de80fc}{operator-\/} (const \hyperlink{classValue}{Value} \&other)
+\item 
+\hyperlink{classValue}{Value} \hyperlink{classValue_a8c1b2b5806fbf5d37d0b8bb2ec1ac584}{operator$\ast$} (const \hyperlink{classValue}{Value} \&other)
+\item 
+\hyperlink{classValue}{Value} \hyperlink{classValue_a5bee3270435124beed9a24cb78941a56}{operator/} (const \hyperlink{classValue}{Value} \&other)
+\item 
+\hyperlink{classValue}{Value} \hyperlink{classValue_a05800a20d5b799d1a81b28c950899aea}{operator$>$} (const \hyperlink{classValue}{Value} \&other)
+\item 
+\hyperlink{classValue}{Value} \hyperlink{classValue_ab8f33387ddbc00335cb96643e61643f6}{operator$<$} (const \hyperlink{classValue}{Value} \&other)
+\item 
+\hyperlink{classValue}{Value} \hyperlink{classValue_a85a296609b51245c4aec34ebf206a66d}{operator$>$=} (const \hyperlink{classValue}{Value} \&other)
+\item 
+\hyperlink{classValue}{Value} \hyperlink{classValue_a38e0f17676ad08e88bedffb1e931d543}{operator$<$=} (const \hyperlink{classValue}{Value} \&other)
+\item 
+\hyperlink{classValue}{Value} \hyperlink{classValue_a872c51bf32543279f522426527b4c857}{operator==} (const \hyperlink{classValue}{Value} \&other)
+\item 
+\hyperlink{classValue}{Value} \hyperlink{classValue_a9ad57dde72c068377e6da67caec558a3}{operator!=} (const \hyperlink{classValue}{Value} \&other)
+\item 
+\hyperlink{classValue}{Value} \hyperlink{classValue_a8550d0a2396c3222421fdd1aef7ff49b}{operator \&\&} (const \hyperlink{classValue}{Value} \&other)
+\item 
+\hyperlink{classValue}{Value} \hyperlink{classValue_a2bb40009194bb698b113dc71154d888a}{operator$\vert$$\vert$} (const \hyperlink{classValue}{Value} \&other)
+\item 
+bool \hyperlink{classValue_a9193333ebda6a44b426ebc24519473db}{has\+Holder} ()
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \hyperlink{statics_8h_a0674a913b8e8c8a9f265baab3646b565}{V\+A\+L\+U\+E\+\_\+\+T\+Y\+PE} \hyperlink{classValue_a4f772a945a39235b058b18cc187f64a8}{get\+Value\+Type\+For\+String} (std\+::string str)
+\item 
+static std\+::string \hyperlink{classValue_ad1e0a7607c63edbe77251059d433914e}{get\+Value\+String\+For\+Type} (\hyperlink{statics_8h_a0674a913b8e8c8a9f265baab3646b565}{V\+A\+L\+U\+E\+\_\+\+T\+Y\+PE} \hyperlink{classValue_a4ee4412ce2c7b78bad42d8eb93294bea}{type})
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{statics_8h_a0674a913b8e8c8a9f265baab3646b565}{V\+A\+L\+U\+E\+\_\+\+T\+Y\+PE} \hyperlink{classValue_a4ee4412ce2c7b78bad42d8eb93294bea}{type}
+\item 
+\hyperlink{classVariable}{Variable} $\ast$ \hyperlink{classValue_af3b547ae64c4985008d6eb7c39868a3f}{holder}
+\item 
+std\+::string \hyperlink{classValue_a033edf7ba7f753cf274565fac27f9c7d}{svalue}
+\item 
+\begin{tabbing}
+xx\=xx\=xx\=xx\=xx\=xx\=xx\=xx\=xx\=\kill
+union \{\\
+\>double \hyperlink{classValue_aac350b98b4eb19c6a9b79dae50e97cc6}{dvalue}\\
+\>char \hyperlink{classValue_a6690838c4e198bd9b371108cffcd09e3}{bvalue}\\
+\}; \\
+
+\end{tabbing}\item 
+std\+::shared\+\_\+ptr$<$ \hyperlink{classObject}{Object} $>$ \hyperlink{classValue_a04703ea830e0cb9a24286c588e69ee28}{ovalue}
+\item 
+std\+::shared\+\_\+ptr$<$ \hyperlink{classArray}{Array} $>$ \hyperlink{classValue_acb0c09facf0b3b0a88f6fb5a240c1783}{avalue}
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classValue_abc2a5a2e6484fac66dae2539cc955667}\label{classValue_abc2a5a2e6484fac66dae2539cc955667}} 
+\index{Value@{Value}!Value@{Value}}
+\index{Value@{Value}!Value@{Value}}
+\subsubsection{\texorpdfstring{Value()}{Value()}}
+{\footnotesize\ttfamily Value\+::\+Value (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classValue_aceb26b90be781020c0c71ae5d16ca06f}\label{classValue_aceb26b90be781020c0c71ae5d16ca06f}} 
+\index{Value@{Value}!````~Value@{$\sim$\+Value}}
+\index{````~Value@{$\sim$\+Value}!Value@{Value}}
+\subsubsection{\texorpdfstring{$\sim$\+Value()}{~Value()}}
+{\footnotesize\ttfamily virtual Value\+::$\sim$\+Value (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classValue_ad1e0a7607c63edbe77251059d433914e}\label{classValue_ad1e0a7607c63edbe77251059d433914e}} 
+\index{Value@{Value}!get\+Value\+String\+For\+Type@{get\+Value\+String\+For\+Type}}
+\index{get\+Value\+String\+For\+Type@{get\+Value\+String\+For\+Type}!Value@{Value}}
+\subsubsection{\texorpdfstring{get\+Value\+String\+For\+Type()}{getValueStringForType()}}
+{\footnotesize\ttfamily static std\+::string Value\+::get\+Value\+String\+For\+Type (\begin{DoxyParamCaption}\item[{\hyperlink{statics_8h_a0674a913b8e8c8a9f265baab3646b565}{V\+A\+L\+U\+E\+\_\+\+T\+Y\+PE}}]{type }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{classValue_a4f772a945a39235b058b18cc187f64a8}\label{classValue_a4f772a945a39235b058b18cc187f64a8}} 
+\index{Value@{Value}!get\+Value\+Type\+For\+String@{get\+Value\+Type\+For\+String}}
+\index{get\+Value\+Type\+For\+String@{get\+Value\+Type\+For\+String}!Value@{Value}}
+\subsubsection{\texorpdfstring{get\+Value\+Type\+For\+String()}{getValueTypeForString()}}
+{\footnotesize\ttfamily static \hyperlink{statics_8h_a0674a913b8e8c8a9f265baab3646b565}{V\+A\+L\+U\+E\+\_\+\+T\+Y\+PE} Value\+::get\+Value\+Type\+For\+String (\begin{DoxyParamCaption}\item[{std\+::string}]{str }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{classValue_a9193333ebda6a44b426ebc24519473db}\label{classValue_a9193333ebda6a44b426ebc24519473db}} 
+\index{Value@{Value}!has\+Holder@{has\+Holder}}
+\index{has\+Holder@{has\+Holder}!Value@{Value}}
+\subsubsection{\texorpdfstring{has\+Holder()}{hasHolder()}}
+{\footnotesize\ttfamily bool Value\+::has\+Holder (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classValue_a37e1fe6c86dc755a3e000442c4949ab7}\label{classValue_a37e1fe6c86dc755a3e000442c4949ab7}} 
+\index{Value@{Value}!is\+Object\+Or\+Array@{is\+Object\+Or\+Array}}
+\index{is\+Object\+Or\+Array@{is\+Object\+Or\+Array}!Value@{Value}}
+\subsubsection{\texorpdfstring{is\+Object\+Or\+Array()}{isObjectOrArray()}}
+{\footnotesize\ttfamily bool Value\+::is\+Object\+Or\+Array (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classValue_a8550d0a2396c3222421fdd1aef7ff49b}\label{classValue_a8550d0a2396c3222421fdd1aef7ff49b}} 
+\index{Value@{Value}!operator \&\&@{operator \&\&}}
+\index{operator \&\&@{operator \&\&}!Value@{Value}}
+\subsubsection{\texorpdfstring{operator \&\&()}{operator \&\&()}}
+{\footnotesize\ttfamily \hyperlink{classValue}{Value} Value\+::operator\&\& (\begin{DoxyParamCaption}\item[{const \hyperlink{classValue}{Value} \&}]{other }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classValue_a9ad57dde72c068377e6da67caec558a3}\label{classValue_a9ad57dde72c068377e6da67caec558a3}} 
+\index{Value@{Value}!operator"!=@{operator"!=}}
+\index{operator"!=@{operator"!=}!Value@{Value}}
+\subsubsection{\texorpdfstring{operator"!=()}{operator!=()}}
+{\footnotesize\ttfamily \hyperlink{classValue}{Value} Value\+::operator!= (\begin{DoxyParamCaption}\item[{const \hyperlink{classValue}{Value} \&}]{other }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classValue_a8c1b2b5806fbf5d37d0b8bb2ec1ac584}\label{classValue_a8c1b2b5806fbf5d37d0b8bb2ec1ac584}} 
+\index{Value@{Value}!operator$\ast$@{operator$\ast$}}
+\index{operator$\ast$@{operator$\ast$}!Value@{Value}}
+\subsubsection{\texorpdfstring{operator$\ast$()}{operator*()}}
+{\footnotesize\ttfamily \hyperlink{classValue}{Value} Value\+::operator$\ast$ (\begin{DoxyParamCaption}\item[{const \hyperlink{classValue}{Value} \&}]{other }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classValue_a59e467d3ee4cdfb802a2aed8a5a0f1dd}\label{classValue_a59e467d3ee4cdfb802a2aed8a5a0f1dd}} 
+\index{Value@{Value}!operator+@{operator+}}
+\index{operator+@{operator+}!Value@{Value}}
+\subsubsection{\texorpdfstring{operator+()}{operator+()}}
+{\footnotesize\ttfamily \hyperlink{classValue}{Value} Value\+::operator+ (\begin{DoxyParamCaption}\item[{const \hyperlink{classValue}{Value} \&}]{other }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classValue_aeb5e368aaea65ed1d1ef37fef6de80fc}\label{classValue_aeb5e368aaea65ed1d1ef37fef6de80fc}} 
+\index{Value@{Value}!operator-\/@{operator-\/}}
+\index{operator-\/@{operator-\/}!Value@{Value}}
+\subsubsection{\texorpdfstring{operator-\/()}{operator-()}}
+{\footnotesize\ttfamily \hyperlink{classValue}{Value} Value\+::operator-\/ (\begin{DoxyParamCaption}\item[{const \hyperlink{classValue}{Value} \&}]{other }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classValue_a5bee3270435124beed9a24cb78941a56}\label{classValue_a5bee3270435124beed9a24cb78941a56}} 
+\index{Value@{Value}!operator/@{operator/}}
+\index{operator/@{operator/}!Value@{Value}}
+\subsubsection{\texorpdfstring{operator/()}{operator/()}}
+{\footnotesize\ttfamily \hyperlink{classValue}{Value} Value\+::operator/ (\begin{DoxyParamCaption}\item[{const \hyperlink{classValue}{Value} \&}]{other }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classValue_ab8f33387ddbc00335cb96643e61643f6}\label{classValue_ab8f33387ddbc00335cb96643e61643f6}} 
+\index{Value@{Value}!operator$<$@{operator$<$}}
+\index{operator$<$@{operator$<$}!Value@{Value}}
+\subsubsection{\texorpdfstring{operator$<$()}{operator<()}}
+{\footnotesize\ttfamily \hyperlink{classValue}{Value} Value\+::operator$<$ (\begin{DoxyParamCaption}\item[{const \hyperlink{classValue}{Value} \&}]{other }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classValue_a38e0f17676ad08e88bedffb1e931d543}\label{classValue_a38e0f17676ad08e88bedffb1e931d543}} 
+\index{Value@{Value}!operator$<$=@{operator$<$=}}
+\index{operator$<$=@{operator$<$=}!Value@{Value}}
+\subsubsection{\texorpdfstring{operator$<$=()}{operator<=()}}
+{\footnotesize\ttfamily \hyperlink{classValue}{Value} Value\+::operator$<$= (\begin{DoxyParamCaption}\item[{const \hyperlink{classValue}{Value} \&}]{other }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classValue_a872c51bf32543279f522426527b4c857}\label{classValue_a872c51bf32543279f522426527b4c857}} 
+\index{Value@{Value}!operator==@{operator==}}
+\index{operator==@{operator==}!Value@{Value}}
+\subsubsection{\texorpdfstring{operator==()}{operator==()}}
+{\footnotesize\ttfamily \hyperlink{classValue}{Value} Value\+::operator== (\begin{DoxyParamCaption}\item[{const \hyperlink{classValue}{Value} \&}]{other }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classValue_a05800a20d5b799d1a81b28c950899aea}\label{classValue_a05800a20d5b799d1a81b28c950899aea}} 
+\index{Value@{Value}!operator$>$@{operator$>$}}
+\index{operator$>$@{operator$>$}!Value@{Value}}
+\subsubsection{\texorpdfstring{operator$>$()}{operator>()}}
+{\footnotesize\ttfamily \hyperlink{classValue}{Value} Value\+::operator$>$ (\begin{DoxyParamCaption}\item[{const \hyperlink{classValue}{Value} \&}]{other }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classValue_a85a296609b51245c4aec34ebf206a66d}\label{classValue_a85a296609b51245c4aec34ebf206a66d}} 
+\index{Value@{Value}!operator$>$=@{operator$>$=}}
+\index{operator$>$=@{operator$>$=}!Value@{Value}}
+\subsubsection{\texorpdfstring{operator$>$=()}{operator>=()}}
+{\footnotesize\ttfamily \hyperlink{classValue}{Value} Value\+::operator$>$= (\begin{DoxyParamCaption}\item[{const \hyperlink{classValue}{Value} \&}]{other }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classValue_a2bb40009194bb698b113dc71154d888a}\label{classValue_a2bb40009194bb698b113dc71154d888a}} 
+\index{Value@{Value}!operator\texttt{"|}\texttt{"|}@{operator\texttt{"|}\texttt{"|}}}
+\index{operator\texttt{"|}\texttt{"|}@{operator\texttt{"|}\texttt{"|}}!Value@{Value}}
+\subsubsection{\texorpdfstring{operator\texttt{"|}\texttt{"|}()}{operator||()}}
+{\footnotesize\ttfamily \hyperlink{classValue}{Value} Value\+::operator$\vert$$\vert$ (\begin{DoxyParamCaption}\item[{const \hyperlink{classValue}{Value} \&}]{other }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classValue_a83944ac4d53d5bd27fd6a0bd2bc1bd3a}\label{classValue_a83944ac4d53d5bd27fd6a0bd2bc1bd3a}} 
+\index{Value@{Value}!set@{set}}
+\index{set@{set}!Value@{Value}}
+\subsubsection{\texorpdfstring{set()}{set()}}
+{\footnotesize\ttfamily void Value\+::set (\begin{DoxyParamCaption}\item[{\hyperlink{classValue}{Value} $\ast$}]{v }\end{DoxyParamCaption})}
+
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{classValue_ad1da8326a7b233b3cc1708236cecfc6b}\label{classValue_ad1da8326a7b233b3cc1708236cecfc6b}} 
+\subsubsection{\texorpdfstring{"@12}{@12}}
+{\footnotesize\ttfamily union \{ ... \} }
+
+\mbox{\Hypertarget{classValue_acb0c09facf0b3b0a88f6fb5a240c1783}\label{classValue_acb0c09facf0b3b0a88f6fb5a240c1783}} 
+\index{Value@{Value}!avalue@{avalue}}
+\index{avalue@{avalue}!Value@{Value}}
+\subsubsection{\texorpdfstring{avalue}{avalue}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$\hyperlink{classArray}{Array}$>$ Value\+::avalue}
+
+\mbox{\Hypertarget{classValue_a6690838c4e198bd9b371108cffcd09e3}\label{classValue_a6690838c4e198bd9b371108cffcd09e3}} 
+\index{Value@{Value}!bvalue@{bvalue}}
+\index{bvalue@{bvalue}!Value@{Value}}
+\subsubsection{\texorpdfstring{bvalue}{bvalue}}
+{\footnotesize\ttfamily char Value\+::bvalue}
+
+\mbox{\Hypertarget{classValue_aac350b98b4eb19c6a9b79dae50e97cc6}\label{classValue_aac350b98b4eb19c6a9b79dae50e97cc6}} 
+\index{Value@{Value}!dvalue@{dvalue}}
+\index{dvalue@{dvalue}!Value@{Value}}
+\subsubsection{\texorpdfstring{dvalue}{dvalue}}
+{\footnotesize\ttfamily double Value\+::dvalue}
+
+\mbox{\Hypertarget{classValue_af3b547ae64c4985008d6eb7c39868a3f}\label{classValue_af3b547ae64c4985008d6eb7c39868a3f}} 
+\index{Value@{Value}!holder@{holder}}
+\index{holder@{holder}!Value@{Value}}
+\subsubsection{\texorpdfstring{holder}{holder}}
+{\footnotesize\ttfamily \hyperlink{classVariable}{Variable}$\ast$ Value\+::holder}
+
+\mbox{\Hypertarget{classValue_a04703ea830e0cb9a24286c588e69ee28}\label{classValue_a04703ea830e0cb9a24286c588e69ee28}} 
+\index{Value@{Value}!ovalue@{ovalue}}
+\index{ovalue@{ovalue}!Value@{Value}}
+\subsubsection{\texorpdfstring{ovalue}{ovalue}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$\hyperlink{classObject}{Object}$>$ Value\+::ovalue}
+
+\mbox{\Hypertarget{classValue_a033edf7ba7f753cf274565fac27f9c7d}\label{classValue_a033edf7ba7f753cf274565fac27f9c7d}} 
+\index{Value@{Value}!svalue@{svalue}}
+\index{svalue@{svalue}!Value@{Value}}
+\subsubsection{\texorpdfstring{svalue}{svalue}}
+{\footnotesize\ttfamily std\+::string Value\+::svalue}
+
+\mbox{\Hypertarget{classValue_a4ee4412ce2c7b78bad42d8eb93294bea}\label{classValue_a4ee4412ce2c7b78bad42d8eb93294bea}} 
+\index{Value@{Value}!type@{type}}
+\index{type@{type}!Value@{Value}}
+\subsubsection{\texorpdfstring{type}{type}}
+{\footnotesize\ttfamily \hyperlink{statics_8h_a0674a913b8e8c8a9f265baab3646b565}{V\+A\+L\+U\+E\+\_\+\+T\+Y\+PE} Value\+::type}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\hyperlink{value_8h}{value.\+h}\end{DoxyCompactItemize}

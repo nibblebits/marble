@@ -5,25 +5,19 @@
 #include "interpreter.h"
 #include "fnode.h"
 
-FunctionSystem::FunctionSystem()
+FunctionSystem::FunctionSystem() : FunctionSystem(NULL, NULL)
 {
-    this->interpreter = NULL;
-    this->prev_fc_sys = NULL;
-    this->currentObj = NULL;
+
 }
 
-FunctionSystem::FunctionSystem(Interpreter* interpreter)
+FunctionSystem::FunctionSystem(Interpreter* interpreter) : FunctionSystem(interpreter, NULL)
 {
-    this->interpreter = interpreter;
-    this->prev_fc_sys = NULL;
-    this->currentObj = NULL;
 }
 
 FunctionSystem::FunctionSystem(Interpreter* interpreter, FunctionSystem* prev_fc_sys)
 {
     this->interpreter = interpreter;
     this->prev_fc_sys = prev_fc_sys;
-    this->currentObj = NULL;
 }
 
 

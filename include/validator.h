@@ -15,6 +15,7 @@ public:
     virtual ~Validator();
     void validate(Node* root_node);
     void giveClassObject(std::shared_ptr<Object> object);
+    bool isInClass();
     Object* getClassObject(std::string name);
     void beginClass(Class* current_class);
     Class* getCurrentClass();

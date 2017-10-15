@@ -1,0 +1,121 @@
+\hypertarget{classBodyNode}{}\section{Body\+Node Class Reference}
+\label{classBodyNode}\index{Body\+Node@{Body\+Node}}
+
+
+{\ttfamily \#include $<$bodynode.\+h$>$}
+
+Inheritance diagram for Body\+Node\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=4.000000cm]{classBodyNode}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classBodyNode_ac431b406e16e66745f5413eb868f23b8}{Body\+Node} ()
+\item 
+virtual \hyperlink{classBodyNode_acf86c2f7982224510b39a5f35de0bbde}{$\sim$\+Body\+Node} ()
+\item 
+virtual void \hyperlink{classBodyNode_a80e75b0ab6c388c34a82bdce63fdc7bb}{test} (\hyperlink{classValidator}{Validator} $\ast$validator)
+\item 
+virtual \hyperlink{classValue}{Value} \hyperlink{classBodyNode_a5ab94984d059dba1f7d2baa6022712ba}{interpret} (\hyperlink{classInterpreter}{Interpreter} $\ast$interpreter)
+\item 
+void \hyperlink{classBodyNode_a8b27949f189186af47dd81336d0d5ce7}{on\+Before\+Leave} (std\+::function$<$ void()$>$ before\+\_\+leave\+\_\+function)
+\item 
+void \hyperlink{classBodyNode_adf1536979d1a57a735cc75290117afa4}{apply\+\_\+node\+\_\+listener} (std\+::function$<$ bool(\hyperlink{classNode}{Node} $\ast$node, \hyperlink{classValue}{Value} v)$>$ node\+\_\+listener\+\_\+function)
+\item 
+bool \hyperlink{classBodyNode_a7019e16f431cbf8975b1fde622d47d77}{interpret\+\_\+body\+\_\+node} (\hyperlink{classNode}{Node} $\ast$node)
+\item 
+void \hyperlink{classBodyNode_a9b6bafc8338e35a034aff1a23d519b1e}{interpret\+\_\+body} (\hyperlink{classBodyNode}{Body\+Node} $\ast$node)
+\item 
+void \hyperlink{classBodyNode_ab8a99f9e2c7d33f7cf4cbb07a61bec0f}{add\+Child} (\hyperlink{classInterpretableNode}{Interpretable\+Node} $\ast$c)
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classInterpretableNode}{Interpretable\+Node} $\ast$ \hyperlink{classBodyNode_a6b18b29807903661a9f06e865331fca4}{child}
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classBodyNode_ac431b406e16e66745f5413eb868f23b8}\label{classBodyNode_ac431b406e16e66745f5413eb868f23b8}} 
+\index{Body\+Node@{Body\+Node}!Body\+Node@{Body\+Node}}
+\index{Body\+Node@{Body\+Node}!Body\+Node@{Body\+Node}}
+\subsubsection{\texorpdfstring{Body\+Node()}{BodyNode()}}
+{\footnotesize\ttfamily Body\+Node\+::\+Body\+Node (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classBodyNode_acf86c2f7982224510b39a5f35de0bbde}\label{classBodyNode_acf86c2f7982224510b39a5f35de0bbde}} 
+\index{Body\+Node@{Body\+Node}!````~Body\+Node@{$\sim$\+Body\+Node}}
+\index{````~Body\+Node@{$\sim$\+Body\+Node}!Body\+Node@{Body\+Node}}
+\subsubsection{\texorpdfstring{$\sim$\+Body\+Node()}{~BodyNode()}}
+{\footnotesize\ttfamily virtual Body\+Node\+::$\sim$\+Body\+Node (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classBodyNode_ab8a99f9e2c7d33f7cf4cbb07a61bec0f}\label{classBodyNode_ab8a99f9e2c7d33f7cf4cbb07a61bec0f}} 
+\index{Body\+Node@{Body\+Node}!add\+Child@{add\+Child}}
+\index{add\+Child@{add\+Child}!Body\+Node@{Body\+Node}}
+\subsubsection{\texorpdfstring{add\+Child()}{addChild()}}
+{\footnotesize\ttfamily void Body\+Node\+::add\+Child (\begin{DoxyParamCaption}\item[{\hyperlink{classInterpretableNode}{Interpretable\+Node} $\ast$}]{c }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classBodyNode_adf1536979d1a57a735cc75290117afa4}\label{classBodyNode_adf1536979d1a57a735cc75290117afa4}} 
+\index{Body\+Node@{Body\+Node}!apply\+\_\+node\+\_\+listener@{apply\+\_\+node\+\_\+listener}}
+\index{apply\+\_\+node\+\_\+listener@{apply\+\_\+node\+\_\+listener}!Body\+Node@{Body\+Node}}
+\subsubsection{\texorpdfstring{apply\+\_\+node\+\_\+listener()}{apply\_node\_listener()}}
+{\footnotesize\ttfamily void Body\+Node\+::apply\+\_\+node\+\_\+listener (\begin{DoxyParamCaption}\item[{std\+::function$<$ bool(\hyperlink{classNode}{Node} $\ast$node, \hyperlink{classValue}{Value} v)$>$}]{node\+\_\+listener\+\_\+function }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classBodyNode_a5ab94984d059dba1f7d2baa6022712ba}\label{classBodyNode_a5ab94984d059dba1f7d2baa6022712ba}} 
+\index{Body\+Node@{Body\+Node}!interpret@{interpret}}
+\index{interpret@{interpret}!Body\+Node@{Body\+Node}}
+\subsubsection{\texorpdfstring{interpret()}{interpret()}}
+{\footnotesize\ttfamily virtual \hyperlink{classValue}{Value} Body\+Node\+::interpret (\begin{DoxyParamCaption}\item[{\hyperlink{classInterpreter}{Interpreter} $\ast$}]{interpreter }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \hyperlink{classInterpretableNode_a9a466e7d65c4b323d2b96b4ac8396cd7}{Interpretable\+Node}.
+
+\mbox{\Hypertarget{classBodyNode_a9b6bafc8338e35a034aff1a23d519b1e}\label{classBodyNode_a9b6bafc8338e35a034aff1a23d519b1e}} 
+\index{Body\+Node@{Body\+Node}!interpret\+\_\+body@{interpret\+\_\+body}}
+\index{interpret\+\_\+body@{interpret\+\_\+body}!Body\+Node@{Body\+Node}}
+\subsubsection{\texorpdfstring{interpret\+\_\+body()}{interpret\_body()}}
+{\footnotesize\ttfamily void Body\+Node\+::interpret\+\_\+body (\begin{DoxyParamCaption}\item[{\hyperlink{classBodyNode}{Body\+Node} $\ast$}]{node }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classBodyNode_a7019e16f431cbf8975b1fde622d47d77}\label{classBodyNode_a7019e16f431cbf8975b1fde622d47d77}} 
+\index{Body\+Node@{Body\+Node}!interpret\+\_\+body\+\_\+node@{interpret\+\_\+body\+\_\+node}}
+\index{interpret\+\_\+body\+\_\+node@{interpret\+\_\+body\+\_\+node}!Body\+Node@{Body\+Node}}
+\subsubsection{\texorpdfstring{interpret\+\_\+body\+\_\+node()}{interpret\_body\_node()}}
+{\footnotesize\ttfamily bool Body\+Node\+::interpret\+\_\+body\+\_\+node (\begin{DoxyParamCaption}\item[{\hyperlink{classNode}{Node} $\ast$}]{node }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classBodyNode_a8b27949f189186af47dd81336d0d5ce7}\label{classBodyNode_a8b27949f189186af47dd81336d0d5ce7}} 
+\index{Body\+Node@{Body\+Node}!on\+Before\+Leave@{on\+Before\+Leave}}
+\index{on\+Before\+Leave@{on\+Before\+Leave}!Body\+Node@{Body\+Node}}
+\subsubsection{\texorpdfstring{on\+Before\+Leave()}{onBeforeLeave()}}
+{\footnotesize\ttfamily void Body\+Node\+::on\+Before\+Leave (\begin{DoxyParamCaption}\item[{std\+::function$<$ void()$>$}]{before\+\_\+leave\+\_\+function }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classBodyNode_a80e75b0ab6c388c34a82bdce63fdc7bb}\label{classBodyNode_a80e75b0ab6c388c34a82bdce63fdc7bb}} 
+\index{Body\+Node@{Body\+Node}!test@{test}}
+\index{test@{test}!Body\+Node@{Body\+Node}}
+\subsubsection{\texorpdfstring{test()}{test()}}
+{\footnotesize\ttfamily virtual void Body\+Node\+::test (\begin{DoxyParamCaption}\item[{\hyperlink{classValidator}{Validator} $\ast$}]{validator }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \hyperlink{classInterpretable_a32f547aaf68dcbab993284d3257ab010}{Interpretable}.
+
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{classBodyNode_a6b18b29807903661a9f06e865331fca4}\label{classBodyNode_a6b18b29807903661a9f06e865331fca4}} 
+\index{Body\+Node@{Body\+Node}!child@{child}}
+\index{child@{child}!Body\+Node@{Body\+Node}}
+\subsubsection{\texorpdfstring{child}{child}}
+{\footnotesize\ttfamily \hyperlink{classInterpretableNode}{Interpretable\+Node}$\ast$ Body\+Node\+::child}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\hyperlink{bodynode_8h}{bodynode.\+h}\end{DoxyCompactItemize}
