@@ -79,3 +79,21 @@ bool ClassSystem::hasClassWithName(std::string name)
 {
     return getClassByName(name) != NULL;
 }
+
+std::vector<Class*> ClassSystem::getAllClasses()
+{
+    std::vector<Class*> all_classes;
+    if (this->prev_sys != NULL)
+    {
+        all_classes = this->prev_sys->getAllClasses();
+    }
+    
+    for (int i = 0; i < this->classes.size(); i++)
+    {
+        Class* c = this->classes.at(i).get();
+        all_classes.push_back(c);
+    }
+    
+    return all_classes;
+    
+}

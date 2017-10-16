@@ -3,6 +3,7 @@
 #include "node.h"
 #include "statics.h"
 class SystemHandler;
+class Variable;
 struct Evaluation
 {
     EVALUATION_TYPE type = 0;
@@ -11,6 +12,8 @@ struct Evaluation
         VARIABLE_TYPE type = 0;
         std::string value = "";
     } datatype;
+    
+    Variable* variable = NULL;
 };
 
 class EvaluatingNode : public Node

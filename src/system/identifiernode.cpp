@@ -93,9 +93,9 @@ Value IdentifierNode::interpret(Interpreter* interpreter)
 
 void IdentifierNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)
 {
+    Scope* current_scope = handler->getCurrentScope();
     if(expected_evaluation & EVALUATION_TYPE_DATATYPE)
     {
-        Scope* current_scope = handler->getCurrentScope();
         if (expected_evaluation & EVALUATION_FROM_VARIABLE)
         {
             Variable* var = current_scope->getVariableAnyScope(this->value);
@@ -112,6 +112,14 @@ void IdentifierNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expec
 	        evaluation->datatype.value = this->value;
 	    }
 	    
+    }
+    
+    if (expected_evaluation & EVALUATION_TYPE_VARIABLE)
+    {
+        Variable* var = current_scope->getVariableAnyScope(this->value);
+        if (var == NULL)
+            throw std::logic_error("Variable not found for evaluation.");
+        evaluation->variable = var;
     }
     
 }

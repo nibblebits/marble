@@ -49,6 +49,7 @@ void ClassNode::test(Validator* validator)
         }
     });
     
+    validator->giveClassObject(object);
     validator->beginClass(c);
     try
     {
@@ -63,7 +64,6 @@ void ClassNode::test(Validator* validator)
     
     // The class at this point holds all the variables, lets create a new object instance and add it to the validator. We will need access to this later
     object = std::make_shared<Object>(validator, c);
-    validator->giveClassObject(object);
     
 }
 

@@ -162,27 +162,30 @@ void ExpNode::test(Validator* validator)
 void ExpNode::test_obj_access(Validator* validator)
 {
     left->test(validator);
-    struct Evaluation evaluation = left->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE);
-    FunctionSystem* old_fc_system;
-    Scope* old_scope;
+    struct Evaluation evaluation = left->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_TYPE_VARIABLE | EVALUATION_FROM_VARIABLE);
     
     if (this->op == ".")
     {
-        old_fc_system = validator->getFunctionSystem();
-        old_scope = validator->getCurrentScope();   
-                     
+        Class* c = NULL;
         Object* obj = validator->getClassObject(evaluation.datatype.value);
-        validator->setCurrentScope(obj);
-        validator->setFunctionSystem(obj->getClass());
+        if (obj == NULL)
+            throw std::logic_error("NULL object from validator: " + evaluation.datatype.value);
+            
+        if (evaluation.variable != NULL)
+        {
+            // If the evaluated variables name is "super" then we must be accessing a super-class and we should take the parent's class.
+            if (evaluation.variable->name == "super")
+                c = obj->getClass()->parent;
+        }
+ 
+        obj->runThis([&] {
+            this->right->test(validator);
+        }, c);
+        return;
     }
     
     right->test(validator);
     
-    if (this->op == ".")
-    {
-        validator->setCurrentScope(old_scope);
-        validator->setFunctionSystem(old_fc_system);
-    }
 }
 
 void ExpNode::test_assign(Validator* validator)

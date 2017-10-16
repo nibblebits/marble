@@ -24,6 +24,9 @@ Scope* ScopeHandler::getRootScope()
 
 void ScopeHandler::setCurrentScope(Scope* scope)
 {
+    if (scope == NULL)
+        throw std::logic_error("Was not expecting a NULL scope");
+        
     if (this->current_scope != NULL)        
         this->current_scope->onLeaveScope();
     this->current_scope = scope;

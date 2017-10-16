@@ -80,6 +80,7 @@ void Object::onEnterScope()
     // Let's create the "this" and "super" variables when entering scope
     Variable* variable = createVariable();
     variable->type = VARIABLE_TYPE_OBJECT;
+    variable->type_name = getClass()->name;
     variable->name = "this";
     variable->value.ovalue = shared_from_this();
     variable->value.holder = variable;

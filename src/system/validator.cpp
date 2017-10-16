@@ -7,6 +7,12 @@ Validator::Validator(Logger* logger, ClassSystem* classSystem, FunctionSystem* b
 {
     this->logger = logger;
     this->current_class = NULL;
+    
+    // We must create class objects for all current classes so that they will be compatible with the validation system
+    for (Class* c : classSystem->getAllClasses())
+    {
+        giveClassObject(std::make_shared<Object>(this, c));
+    }
 }
 
 Validator::~Validator()
@@ -29,6 +35,7 @@ Object* Validator::getClassObject(std::string name)
 {
     for (std::shared_ptr<Object> obj : this->class_objects)
     {
+        std::cout << obj->getClass()->name << std::endl;
         if (obj->getClass()->name == name)
             return obj.get();
     }
