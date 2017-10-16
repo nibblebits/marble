@@ -15,7 +15,7 @@ SystemHandler::SystemHandler(SYSTEM_HANDLER_TYPE type, ClassSystem* baseClassSys
         this->baseClassSystem = baseClassSystem;
         
     this->currentFunctionSystem = &this->globalFunctionSystem;
-    this->currentFunctionSystem->prev_fc_sys = baseFunctionSystem;
+    this->currentFunctionSystem->setPreviousFunctionSystem(baseFunctionSystem);
     this->classSystem.setPreviousClassSystem(baseClassSystem);
     this->classSystem.setSystemHandler(this);
     if (baseClassSystem != NULL)

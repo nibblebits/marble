@@ -31,6 +31,16 @@ void FunctionSystem::setSystemHandler(SystemHandler* sys_handler)
     this->sys_handler = sys_handler;
 }
 
+void FunctionSystem::setPreviousFunctionSystem(FunctionSystem* prev_fc_sys)
+{
+    this->prev_fc_sys = prev_fc_sys;
+}
+
+FunctionSystem* FunctionSystem::getPreviousFunctionSystem()
+{
+    return this->prev_fc_sys;
+}
+
 Function* FunctionSystem::registerFunction(std::string name, std::function<void(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)> entrypoint)
 {
     if (hasFunctionLocally(name))
