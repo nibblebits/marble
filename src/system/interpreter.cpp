@@ -37,7 +37,7 @@
         return return_val;
     }
     
-Interpreter::Interpreter() : SystemHandler(SYSTEM_HANDLER_INTERPRETER)
+Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionSystem) : SystemHandler(SYSTEM_HANDLER_INTERPRETER, classSystem, baseFunctionSystem)
 {   
     this->output = [](const char* data)
     {
@@ -61,7 +61,7 @@ Interpreter::Interpreter() : SystemHandler(SYSTEM_HANDLER_INTERPRETER)
     });
     
     
-    getFunctionSystem()->registerFunction("print", [&](std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+    getBaseFunctionSystem()->registerFunction("print", [&](std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
         std::stringstream ss;
         for (Value v : arguments)
         {
@@ -83,12 +83,12 @@ Interpreter::Interpreter() : SystemHandler(SYSTEM_HANDLER_INTERPRETER)
         return_value->dvalue = 1;
     });
     
-    getFunctionSystem()->registerFunction("input_string", [&](std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+    getBaseFunctionSystem()->registerFunction("input_string", [&](std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
         return_value->type = VALUE_TYPE_STRING;
         std::cin >> return_value->svalue;
     });
     
-    getFunctionSystem()->registerFunction("variables", [&](std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+    getBaseFunctionSystem()->registerFunction("variables", [&](std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
         return_value->type = VALUE_TYPE_STRING;
         return_value->svalue = "Variables: " + getAllVariablesAsString(getCurrentScope());
     });
@@ -132,7 +132,7 @@ void Interpreter::run(const char* code, PosInfo posInfo)
 
     root_node = parser.parse(root_token);
     
-    Validator validator(&logger);
+    Validator validator(&logger, getClassSystem(), getBaseFunctionSystem());
     validator.validate(root_node);
     
     InterpretableNode* current_node = (InterpretableNode*) root_node;

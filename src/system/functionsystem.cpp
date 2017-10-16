@@ -49,7 +49,7 @@ Function* FunctionSystem::registerFunction(FunctionNode* fnode)
         throw std::logic_error("The function system does not have a system handler attached");
     
     if (this->sys_handler->getType() != SYSTEM_HANDLER_INTERPRETER)
-        throw std::exception();
+        throw std::logic_error("The function: " + fnode->name + " cannot be registered as the current system handler is not an interpreter");
         
     if (hasFunctionLocally(fnode->name))
     {

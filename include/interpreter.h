@@ -20,7 +20,7 @@ class Object;
 class Interpreter : public SystemHandler
 {
 public:
-    Interpreter();
+    Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionSystem);
     virtual ~Interpreter();
     void setOutputFunction(OUTPUT_FUNCTION output);
     void ready();

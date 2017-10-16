@@ -1,12 +1,26 @@
 #include "systemhandler.h"
 
-SystemHandler::SystemHandler(SYSTEM_HANDLER_TYPE type)
+
+SystemHandler::SystemHandler(SYSTEM_HANDLER_TYPE type, ClassSystem* baseClassSystem, FunctionSystem* baseFunctionSystem)
 {
     this->type = type;
     this->current_obj = NULL;
-    this->currentFunctionSystem = getRootFunctionSystem();
-    this->classSystem.setSystemHandler(this);    
-    this->functionSystem.setSystemHandler(this);
+    if (baseFunctionSystem == NULL)
+        this->baseFunctionSystem = &this->globalFunctionSystem;
+    else
+        this->baseFunctionSystem = baseFunctionSystem;
+    if (baseClassSystem == NULL)
+        this->baseClassSystem = &this->classSystem;
+    else
+        this->baseClassSystem = baseClassSystem;
+        
+    this->currentFunctionSystem = &this->globalFunctionSystem;
+    this->currentFunctionSystem->prev_fc_sys = baseFunctionSystem;
+    this->classSystem.setPreviousClassSystem(baseClassSystem);
+    this->classSystem.setSystemHandler(this);
+    if (baseClassSystem != NULL)
+        this->classSystem.setDefaultBaseClass(baseClassSystem->getDefaultBaseClass());
+    this->globalFunctionSystem.setSystemHandler(this);
 }
 
 SystemHandler::~SystemHandler()
@@ -15,9 +29,9 @@ SystemHandler::~SystemHandler()
 }
 
 
-FunctionSystem* SystemHandler::getRootFunctionSystem()
+FunctionSystem* SystemHandler::getGlobalFunctionSystem()
 {
-    return &this->functionSystem;
+    return &this->globalFunctionSystem;
 }
 
 FunctionSystem* SystemHandler::getFunctionSystem()
@@ -25,9 +39,19 @@ FunctionSystem* SystemHandler::getFunctionSystem()
     return this->currentFunctionSystem;
 }
 
+FunctionSystem* SystemHandler::getBaseFunctionSystem()
+{
+    return this->baseFunctionSystem;
+}
+
 ClassSystem* SystemHandler::getClassSystem()
 {
     return &this->classSystem;
+}
+
+ClassSystem* SystemHandler::getBaseClassSystem()
+{
+    return this->baseClassSystem;
 }
 
 

@@ -11,7 +11,7 @@ class Node;
 class Validator : public SystemHandler
 {
 public:
-    Validator(Logger* logger);
+    Validator(Logger* logger, ClassSystem* classSystem, FunctionSystem* baseFunctionSystem);
     virtual ~Validator();
     void validate(Node* root_node);
     void giveClassObject(std::shared_ptr<Object> object);

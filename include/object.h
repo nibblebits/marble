@@ -1,6 +1,7 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 #include <memory>
+#include <functional>
 #include "class.h"
 #include "scope.h"
 class SystemHandler;
@@ -11,6 +12,7 @@ public:
     virtual ~Object();
     virtual void registerVariable(Variable* variable);
     Class* getClass();
+    void runThis(std::function<void()> function, Class* c=NULL);
     virtual void onEnterScope();
     virtual void onLeaveScope();
 private:

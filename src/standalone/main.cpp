@@ -34,18 +34,21 @@ void operator delete[](void* ptr)
     allocations.erase(std::remove(allocations.begin(), allocations.end(), ptr), allocations.end());
     free(ptr);
 }
+
 void interpret()
 {
-    Interpreter interpreter;
+    Interpreter interpreter(NULL, NULL);
     interpreter.setOutputFunction([](const char* data) {
         std::cout << data;
     });
     
-    interpreter.runScript("./test.marble");    
     Logger* logger = interpreter.getLogger();
+
+        interpreter.runScript("./test.marble");    
+
     for (LogEntry entry : logger->entries)
     {
-        std::cout << entry.message << " line: " << entry.posInfo.line << ", col: " << entry.posInfo.col << std::endl;
+        std::cout << entry.message << " on line: " << entry.posInfo.line << ", col: " << entry.posInfo.col << std::endl;
     }    
     std::cout << "END OF SCOPE" << std::endl;
 }
@@ -57,6 +60,7 @@ int main(int argc, char** argv)
     if (allocations.size() > 0)
     {
         std::cout << "MEMORY LEAK DETECTED" << std::endl;
+        // We won't let the leak continue.
         for(void* ptr : allocations)
             free(ptr);
     }

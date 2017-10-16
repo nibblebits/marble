@@ -42,6 +42,39 @@ Class* Object::getClass()
     return this->c;
 }
 
+
+void Object::runThis(std::function<void()> function, Class* c)
+{
+    FunctionSystem* old_fc_system;
+    Scope* old_scope;
+    std::shared_ptr<Object> old_obj;
+    if (c == NULL)
+    {
+        c = this->getClass();
+    }
+    else
+    {
+        // Let's ensure that this class is based on this object.
+        if (!this->getClass()->instanceOf(c))
+            throw std::logic_error("The class provided is not related to the class \"" + this->getClass()->name + "\"");
+    }  
+    old_fc_system = sys_handler->getFunctionSystem();
+    old_scope = sys_handler->getCurrentScope();
+    old_obj = sys_handler->getCurrentObject();
+    sys_handler->setCurrentObject(shared_from_this());
+    sys_handler->setCurrentScope(this);
+    sys_handler->setFunctionSystem(c);
+    
+    // Now the scopes have been adjusted to run on this object we should invoke the function provided
+    function();
+    
+    // and now restore
+    sys_handler->setCurrentObject(old_obj);
+    sys_handler->setCurrentScope(old_scope);
+    sys_handler->setFunctionSystem(old_fc_system);
+    
+}
+
 void Object::onEnterScope()
 {
     // Let's create the "this" and "super" variables when entering scope

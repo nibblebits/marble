@@ -116,42 +116,27 @@ Value ExpNode::interpret(Interpreter* interpreter)
         return result;        
     }
 
-    FunctionSystem* old_fc_system;
-    Scope* old_scope;
-    std::shared_ptr<Object> old_obj;
-    Class* c;
     Value left_v = this->left->interpret(interpreter);
     if (this->op == ".")
     {
-        old_fc_system = interpreter->getFunctionSystem();
-        old_scope = interpreter->getCurrentScope();
         // Left_v has the object to access
         std::shared_ptr<Object> obj = left_v.ovalue;
-        c = obj->getClass();
+        Class* c = NULL;
         if (left_v.holder != NULL)
         {
             // If the left variables name is "super" then we must be accessing a super-class and we should take the parent's class.
             if (left_v.holder->name == "super")
                 c = obj->getClass()->parent;
         }
-        old_obj = interpreter->getCurrentObject();
-        interpreter->setCurrentObject(obj);
-        // The object scope is where all the attributes for the object ar stored so while we are accessing this object it should be set.
-        interpreter->setCurrentScope(obj.get());
-        interpreter->setFunctionSystem(c);
-    }
-    Value right_v = this->right->interpret(interpreter);
-    if (this->op == ".")
-    {
-        // Restore the old function system
-        interpreter->setFunctionSystem(old_fc_system);
-        // Restore the old scope
-        interpreter->setCurrentScope(old_scope);
-        // Restore the old class object.
-        interpreter->setCurrentObject(old_obj);
-        result = right_v;
+        
+        // Interpret the right node on the object scope and return the result.
+        obj->runThis([&] {
+            result = this->right->interpret(interpreter);
+        }, c);
         return result;
     }
+    
+    Value right_v = this->right->interpret(interpreter);
     result = mathify(left_v, right_v, this->op);
     return result;
 }

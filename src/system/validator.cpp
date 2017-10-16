@@ -3,7 +3,7 @@
 #include "logger.h"
 #include "object.h"
 #include "exceptions/testerror.h"
-Validator::Validator(Logger* logger) : SystemHandler(SYSTEM_HANDLER_VALIDATOR)
+Validator::Validator(Logger* logger, ClassSystem* classSystem, FunctionSystem* baseFunctionSystem) : SystemHandler(SYSTEM_HANDLER_VALIDATOR, classSystem, baseFunctionSystem)
 {
     this->logger = logger;
     this->current_class = NULL;

@@ -65,9 +65,9 @@ std::shared_ptr<Array> NewNode::new_variable_array(Interpreter* interpreter, int
 }
 
 
-void NewNode::new_object_variable(Interpreter* interpreter, Value& v, std::string class_name)
+void NewNode::new_object_variable(Interpreter* interpreter, Value& v, FunctionCallNode* fc_node)
 {
-    std::shared_ptr<Object> object = std::make_shared<Object>(interpreter, interpreter->getClassSystem()->getClassByName(class_name));
+    std::shared_ptr<Object> object = std::make_shared<Object>(interpreter, interpreter->getClassSystem()->getClassByName(fc_node->name->value));
     v.type = VALUE_TYPE_OBJECT;
     v.ovalue = object;
 }
@@ -77,7 +77,7 @@ void NewNode::handle_new_variable(Interpreter* interpreter, Value& v)
     /* It is natural for this type node to be a function call node as it will be calling a constructor, e.g new Object();
      * the difference is we will not be interpreting instead we will be using it*/ 
     FunctionCallNode* fc_node = (FunctionCallNode*) this->type_node;
-    new_object_variable(interpreter, v, fc_node->name->value);
+    new_object_variable(interpreter, v, fc_node);
 }
 
 std::shared_ptr<Array> NewNode::new_array_array(Interpreter* interpreter, int total_elements, std::vector<ExpressionInterpretableNode*>::iterator it)

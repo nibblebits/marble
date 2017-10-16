@@ -6,6 +6,7 @@ ClassSystem::ClassSystem()
 {
     this->sys_handler = NULL;
     this->defaultBaseClass = NULL;
+    this->prev_sys = NULL;
 }
 
 ClassSystem::~ClassSystem()
@@ -13,17 +14,29 @@ ClassSystem::~ClassSystem()
 
 }
 
+void ClassSystem::setPreviousClassSystem(ClassSystem* prev_sys)
+{
+    this->prev_sys = prev_sys;
+}
+
+ClassSystem* ClassSystem::getPreviousClassSystem()
+{
+    return this->prev_sys;
+}
+
 void ClassSystem::setSystemHandler(SystemHandler* sys_handler)
 {
-    if (this->sys_handler != NULL)
-        throw std::logic_error("SystemHandler already set");
-   
     this->sys_handler = sys_handler;
 }
 
 void ClassSystem::setDefaultBaseClass(Class* c)
 {
     this->defaultBaseClass = c;
+}
+
+Class* ClassSystem::getDefaultBaseClass()
+{
+    return this->defaultBaseClass;
 }
 
 Class* ClassSystem::registerClass(std::string class_name, Class* parent)
@@ -34,7 +47,7 @@ Class* ClassSystem::registerClass(std::string class_name, Class* parent)
     Class* c; 
     if (parent == NULL && this->defaultBaseClass == NULL)
     {
-        c = new Class(this->sys_handler, class_name, this->sys_handler->getRootFunctionSystem());
+        c = new Class(this->sys_handler, class_name, this->sys_handler->getGlobalFunctionSystem());
     }
     else
     {
@@ -56,6 +69,9 @@ Class* ClassSystem::getClassByName(std::string name)
             return c;
     }
    
+    if (this->prev_sys != NULL)
+        return this->prev_sys->getClassByName(name);
+        
     return NULL;
 }
 
