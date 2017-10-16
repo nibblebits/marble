@@ -14,5 +14,6 @@ var searchData=
   ['rule_5fparse_5farray',['RULE_PARSE_ARRAY',['../statics_8h.html#ab04a0655cd1e3bcac5e8f48c18df1a57abe138e46b8b7f932885978c3f27f2109',1,'statics.h']]],
   ['rule_5fparse_5fcasting',['RULE_PARSE_CASTING',['../statics_8h.html#ab04a0655cd1e3bcac5e8f48c18df1a57a031c67cea5434164f0e8c5e9f3fb9de8',1,'statics.h']]],
   ['run',['run',['../classInterpreter.html#acd0f2550080bcf9c769da5e9b056d005',1,'Interpreter']]],
-  ['runscript',['runScript',['../classInterpreter.html#a98b6ecfea24f94e180bd1853a39f0a12',1,'Interpreter']]]
+  ['runscript',['runScript',['../classInterpreter.html#a98b6ecfea24f94e180bd1853a39f0a12',1,'Interpreter']]],
+  ['runthis',['runThis',['../classObject.html#ae2bc4dcbc6eba10f4a93e0939477b7d5',1,'Object']]]
 ];

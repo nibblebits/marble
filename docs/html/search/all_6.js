@@ -1,22 +1,27 @@
 var searchData=
 [
   ['getactionscope',['getActionScope',['../classScopeHandler.html#aabc3a430b566706a8c868a5b1118e37b',1,'ScopeHandler']]],
+  ['getbaseclasssystem',['getBaseClassSystem',['../classSystemHandler.html#a2127b2f17952d52c457d40baa641b009',1,'SystemHandler']]],
+  ['getbasefunctionsystem',['getBaseFunctionSystem',['../classSystemHandler.html#a2013db1f8788be4d7e3eb1da5320de45',1,'SystemHandler']]],
   ['getclass',['getClass',['../classObject.html#a51f229ad629a4ac1ad6e359a3b53941d',1,'Object']]],
   ['getclassbyname',['getClassByName',['../classClassSystem.html#a4b88087eed035dc1f6100850c933ae84',1,'ClassSystem']]],
   ['getclassobject',['getClassObject',['../classValidator.html#afe99d9833e5cda3ab1aab764ab99d716',1,'Validator']]],
   ['getclasssystem',['getClassSystem',['../classSystemHandler.html#a218066abe52952bf45c3ba21fdf86368',1,'SystemHandler']]],
   ['getclasswhohasvariable',['getClassWhoHasVariable',['../classClass.html#aec836433f28bcfb9bf013ce79f24ba23',1,'Class']]],
   ['getcurrentclass',['getCurrentClass',['../classValidator.html#a342833ad81caff452754620d29083a3d',1,'Validator']]],
+  ['getcurrentobject',['getCurrentObject',['../classSystemHandler.html#aa2a7dad9232938a79b8a813b1238ee13',1,'SystemHandler']]],
   ['getcurrentscope',['getCurrentScope',['../classScopeHandler.html#af6dae9d47ebc9ed6c6931243d2ccee8f',1,'ScopeHandler']]],
+  ['getdefaultbaseclass',['getDefaultBaseClass',['../classClassSystem.html#add1ff8eadba3826024e68c836af28250',1,'ClassSystem']]],
   ['getexpectingobject',['getExpectingObject',['../classValidator.html#aca02c85892f3c74114fa936bad41ff07',1,'Validator']]],
   ['getexpectingtype',['getExpectingType',['../classValidator.html#a786b6b8a5dc6136bbcb2d012e1d8914b',1,'Validator']]],
   ['getfrompointer',['getFromPointer',['../classVariable.html#a9082f1e84cdaac510ddba4d491d990e0',1,'Variable']]],
   ['getfunctionbyname',['getFunctionByName',['../classFunctionSystem.html#a6ccd76d0760272b64790d6f5c8cdc607',1,'FunctionSystem']]],
   ['getfunctionsystem',['getFunctionSystem',['../classSystemHandler.html#a052dfd8bfff27ed9bf12fd84e066ecb3',1,'SystemHandler']]],
+  ['getglobalfunctionsystem',['getGlobalFunctionSystem',['../classSystemHandler.html#a6622a7fa3c494ec657448d0d3f01eb3b',1,'SystemHandler']]],
   ['getlogger',['getLogger',['../classParser.html#a87f0d3ea4178cfba8aaf9f898ce899e6',1,'Parser::getLogger()'],['../classSystemHandler.html#a2d30e2dd0efb6287ae14b36f1c6bb48b',1,'SystemHandler::getLogger()']]],
   ['getname',['getName',['../classFunction.html#a5b7d859d767e8a9c19fc5b81a0d10395',1,'Function']]],
   ['getobjectvariablesfor',['getObjectVariablesFor',['../classScope.html#a93fdedbd4bd26e9eceb1a0e367b3785c',1,'Scope']]],
-  ['getrootfunctionsystem',['getRootFunctionSystem',['../classSystemHandler.html#acecab58c51aa620942f4364f5a42a21c',1,'SystemHandler']]],
+  ['getpreviousclasssystem',['getPreviousClassSystem',['../classClassSystem.html#a32c4883e03da6a11ab11f2f39afc073a',1,'ClassSystem']]],
   ['getrootscope',['getRootScope',['../classScopeHandler.html#af01a4b16265a02b1c786ad54815dd96d',1,'ScopeHandler']]],
   ['gettype',['getType',['../classNode.html#a8de16678e4b507d5caee3fe52bfa053b',1,'Node::getType()'],['../classSystemHandler.html#a7d5df891633958f20c66e8046019bdcb',1,'SystemHandler::getType()'],['../classToken.html#a34e68f22453e7d1d41097ab76ddc199a',1,'Token::getType()']]],
   ['gettypeasstring',['getTypeAsString',['../classVarNode.html#afcde838758181438e89f8f91699c9d5b',1,'VarNode']]],
@@ -28,5 +33,6 @@ var searchData=
   ['getvariablebyname',['getVariableByName',['../classScopeHandler.html#afd5d7cc4438b75b3ac78e52f1d1779f8',1,'ScopeHandler']]],
   ['getvariables',['getVariables',['../classClass.html#ab24282751aa8b0ba2b2c71fbd3eef7e5',1,'Class::getVariables()'],['../classScope.html#adb9ef772a81d2d5ce883298e43161a2d',1,'Scope::getVariables()']]],
   ['getvariabletypeforstring',['getVariableTypeForString',['../classVariable.html#aa0be16097cea78860a025aeaac8f6d2e',1,'Variable']]],
-  ['giveclassobject',['giveClassObject',['../classValidator.html#ad0a3d5e1c57840006e96c74c74eac0aa',1,'Validator']]]
+  ['giveclassobject',['giveClassObject',['../classValidator.html#ad0a3d5e1c57840006e96c74c74eac0aa',1,'Validator']]],
+  ['globalfunctionsystem',['globalFunctionSystem',['../classSystemHandler.html#a16b8444f364e1a4dd6db3b210fc8fa4e',1,'SystemHandler']]]
 ];

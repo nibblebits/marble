@@ -4,7 +4,7 @@ var searchData=
   ['castnode',['CastNode',['../classCastNode.html',1,'CastNode'],['../classCastNode.html#aacc7aea8e67a26de47f9a9a175cad3e2',1,'CastNode::CastNode()']]],
   ['castnode_2eh',['castnode.h',['../castnode_8h.html',1,'']]],
   ['child',['child',['../classBodyNode.html#a6b18b29807903661a9f06e865331fca4',1,'BodyNode']]],
-  ['class',['Class',['../classClass.html',1,'Class'],['../classClass.html#a7682a59beaae0b8ce1070af8b9dcb534',1,'Class::Class(Interpreter *interpreter, std::string name, FunctionSystem *prev_fc_sys)'],['../classClass.html#a56aabf11831a180f94fe047d4af4ccb5',1,'Class::Class(Interpreter *interpreter, std::string name, Class *parent)']]],
+  ['class',['Class',['../classClass.html',1,'Class'],['../classClass.html#a1c88be1af88c4c9b3c054d124ce44b6e',1,'Class::Class(SystemHandler *sys_handler, std::string name, FunctionSystem *prev_fc_sys)'],['../classClass.html#a1b960c202d43c46097e267e5c4e259ef',1,'Class::Class(SystemHandler *sys_handler, std::string name, Class *parent)']]],
   ['class_2eh',['class.h',['../class_8h.html',1,'']]],
   ['classes',['classes',['../classClassSystem.html#afdfbb54eb10abf323371cb9bb4f639a2',1,'ClassSystem']]],
   ['classnode',['ClassNode',['../classClassNode.html',1,'ClassNode'],['../classClassNode.html#a217389d155a37b90d12fa6a9d49d6326',1,'ClassNode::ClassNode()']]],
@@ -20,6 +20,7 @@ var searchData=
   ['createtoken',['createToken',['../classTokenFactory.html#a8cd2afd2f2a645e6ad542a6b10d2ea6b',1,'TokenFactory']]],
   ['createvariable',['createVariable',['../classScope.html#a99112eccd8fd60ac511ed9b754268a6d',1,'Scope']]],
   ['csystem_2eh',['csystem.h',['../csystem_8h.html',1,'']]],
+  ['current_5fobj',['current_obj',['../classSystemHandler.html#a069c004c6108de742e7f2d9233c9ee77',1,'SystemHandler']]],
   ['currentfunctionsystem',['currentFunctionSystem',['../classSystemHandler.html#a5d29f688a621b074c2630470c31e6784',1,'SystemHandler']]],
   ['currentobj',['currentObj',['../classFunctionSystem.html#a59f2a49d91338ced0a79d3898412fcaf',1,'FunctionSystem']]]
 ];

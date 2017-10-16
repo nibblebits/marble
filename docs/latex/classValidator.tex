@@ -13,13 +13,15 @@ Inheritance diagram for Validator\+:\begin{figure}[H]
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\hyperlink{classValidator_a7c66bc9f7104715da531915186691eb8}{Validator} (\hyperlink{classLogger}{Logger} $\ast$logger)
+\hyperlink{classValidator_ae4550667c2bc1d85f4654cf6f5efe253}{Validator} (\hyperlink{classLogger}{Logger} $\ast$logger, \hyperlink{classClassSystem}{Class\+System} $\ast$\hyperlink{classSystemHandler_ace6de39b5621a138654577c93f3ce9aa}{class\+System}, \hyperlink{classFunctionSystem}{Function\+System} $\ast$\hyperlink{classSystemHandler_af601707ec9f56e24be4c0541a1c760f4}{base\+Function\+System})
 \item 
 virtual \hyperlink{classValidator_a4270e7ebf0c451ff80b4ec6fd8eb6a42}{$\sim$\+Validator} ()
 \item 
 void \hyperlink{classValidator_aa0bc30458ce0255fcec64d8346e384a5}{validate} (\hyperlink{classNode}{Node} $\ast$root\+\_\+node)
 \item 
 void \hyperlink{classValidator_ad0a3d5e1c57840006e96c74c74eac0aa}{give\+Class\+Object} (std\+::shared\+\_\+ptr$<$ \hyperlink{classObject}{Object} $>$ object)
+\item 
+bool \hyperlink{classValidator_a497b47a6718ba3b84a73bc9ee4fd9796}{is\+In\+Class} ()
 \item 
 \hyperlink{classObject}{Object} $\ast$ \hyperlink{classValidator_afe99d9833e5cda3ab1aab764ab99d716}{get\+Class\+Object} (std\+::string name)
 \item 
@@ -49,11 +51,11 @@ std\+::string \hyperlink{classValidator_aca02c85892f3c74114fa936bad41ff07}{get\+
 
 
 \subsection{Constructor \& Destructor Documentation}
-\mbox{\Hypertarget{classValidator_a7c66bc9f7104715da531915186691eb8}\label{classValidator_a7c66bc9f7104715da531915186691eb8}} 
+\mbox{\Hypertarget{classValidator_ae4550667c2bc1d85f4654cf6f5efe253}\label{classValidator_ae4550667c2bc1d85f4654cf6f5efe253}} 
 \index{Validator@{Validator}!Validator@{Validator}}
 \index{Validator@{Validator}!Validator@{Validator}}
 \subsubsection{\texorpdfstring{Validator()}{Validator()}}
-{\footnotesize\ttfamily Validator\+::\+Validator (\begin{DoxyParamCaption}\item[{\hyperlink{classLogger}{Logger} $\ast$}]{logger }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily Validator\+::\+Validator (\begin{DoxyParamCaption}\item[{\hyperlink{classLogger}{Logger} $\ast$}]{logger,  }\item[{\hyperlink{classClassSystem}{Class\+System} $\ast$}]{class\+System,  }\item[{\hyperlink{classFunctionSystem}{Function\+System} $\ast$}]{base\+Function\+System }\end{DoxyParamCaption})}
 
 \mbox{\Hypertarget{classValidator_a4270e7ebf0c451ff80b4ec6fd8eb6a42}\label{classValidator_a4270e7ebf0c451ff80b4ec6fd8eb6a42}} 
 \index{Validator@{Validator}!````~Validator@{$\sim$\+Validator}}
@@ -129,6 +131,12 @@ std\+::string \hyperlink{classValidator_aca02c85892f3c74114fa936bad41ff07}{get\+
 \index{is\+Expecting@{is\+Expecting}!Validator@{Validator}}
 \subsubsection{\texorpdfstring{is\+Expecting()}{isExpecting()}}
 {\footnotesize\ttfamily bool Validator\+::is\+Expecting (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classValidator_a497b47a6718ba3b84a73bc9ee4fd9796}\label{classValidator_a497b47a6718ba3b84a73bc9ee4fd9796}} 
+\index{Validator@{Validator}!is\+In\+Class@{is\+In\+Class}}
+\index{is\+In\+Class@{is\+In\+Class}!Validator@{Validator}}
+\subsubsection{\texorpdfstring{is\+In\+Class()}{isInClass()}}
+{\footnotesize\ttfamily bool Validator\+::is\+In\+Class (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
 \mbox{\Hypertarget{classValidator_a0c89c0c840be87b9011cb518d7bc12ff}\label{classValidator_a0c89c0c840be87b9011cb518d7bc12ff}} 
 \index{Validator@{Validator}!restore@{restore}}

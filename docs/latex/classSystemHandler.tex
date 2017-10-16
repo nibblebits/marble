@@ -13,7 +13,7 @@ Inheritance diagram for System\+Handler\+:\begin{figure}[H]
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\hyperlink{classSystemHandler_ae137763b37da96d62288adddba15aae7}{System\+Handler} (\hyperlink{statics_8h_a28f867553077bc713fdf8921a9226e2e}{S\+Y\+S\+T\+E\+M\+\_\+\+H\+A\+N\+D\+L\+E\+R\+\_\+\+T\+Y\+PE} \hyperlink{classSystemHandler_a8ca6090af683e8555051681fd31cd865}{type})
+\hyperlink{classSystemHandler_abda0d6c76ea3eb8fa8e1493931e5d76b}{System\+Handler} (\hyperlink{statics_8h_a28f867553077bc713fdf8921a9226e2e}{S\+Y\+S\+T\+E\+M\+\_\+\+H\+A\+N\+D\+L\+E\+R\+\_\+\+T\+Y\+PE} \hyperlink{classSystemHandler_a8ca6090af683e8555051681fd31cd865}{type}, \hyperlink{classClassSystem}{Class\+System} $\ast$\hyperlink{classSystemHandler_ab54036ced60be518459b1c4753667912}{base\+Class\+System}, \hyperlink{classFunctionSystem}{Function\+System} $\ast$\hyperlink{classSystemHandler_af601707ec9f56e24be4c0541a1c760f4}{base\+Function\+System})
 \item 
 virtual \hyperlink{classSystemHandler_afd4662824fbf97d8feb248c346968102}{$\sim$\+System\+Handler} ()
 \item 
@@ -21,9 +21,17 @@ void \hyperlink{classSystemHandler_af27b9410a75ac02dff13b045afdff038}{set\+Funct
 \item 
 \hyperlink{classLogger}{Logger} $\ast$ \hyperlink{classSystemHandler_a2d30e2dd0efb6287ae14b36f1c6bb48b}{get\+Logger} ()
 \item 
-\hyperlink{classFunctionSystem}{Function\+System} $\ast$ \hyperlink{classSystemHandler_acecab58c51aa620942f4364f5a42a21c}{get\+Root\+Function\+System} ()
+std\+::shared\+\_\+ptr$<$ \hyperlink{classObject}{Object} $>$ \hyperlink{classSystemHandler_aa2a7dad9232938a79b8a813b1238ee13}{get\+Current\+Object} ()
+\item 
+void \hyperlink{classSystemHandler_a2954779b7877d67d7207c4ea27194a0c}{set\+Current\+Object} (std\+::shared\+\_\+ptr$<$ \hyperlink{classObject}{Object} $>$ object)
+\item 
+\hyperlink{classFunctionSystem}{Function\+System} $\ast$ \hyperlink{classSystemHandler_a6622a7fa3c494ec657448d0d3f01eb3b}{get\+Global\+Function\+System} ()
 \item 
 \hyperlink{classFunctionSystem}{Function\+System} $\ast$ \hyperlink{classSystemHandler_a052dfd8bfff27ed9bf12fd84e066ecb3}{get\+Function\+System} ()
+\item 
+\hyperlink{classFunctionSystem}{Function\+System} $\ast$ \hyperlink{classSystemHandler_a2013db1f8788be4d7e3eb1da5320de45}{get\+Base\+Function\+System} ()
+\item 
+\hyperlink{classClassSystem}{Class\+System} $\ast$ \hyperlink{classSystemHandler_a2127b2f17952d52c457d40baa641b009}{get\+Base\+Class\+System} ()
 \item 
 \hyperlink{classClassSystem}{Class\+System} $\ast$ \hyperlink{classSystemHandler_a218066abe52952bf45c3ba21fdf86368}{get\+Class\+System} ()
 \item 
@@ -32,24 +40,30 @@ void \hyperlink{classSystemHandler_af27b9410a75ac02dff13b045afdff038}{set\+Funct
 \subsection*{Protected Attributes}
 \begin{DoxyCompactItemize}
 \item 
-\hyperlink{classFunctionSystem}{Function\+System} \hyperlink{classSystemHandler_a4fc7e5a07ff162d154c7623932094a18}{function\+System}
+\hyperlink{classClassSystem}{Class\+System} $\ast$ \hyperlink{classSystemHandler_ab54036ced60be518459b1c4753667912}{base\+Class\+System}
 \item 
 \hyperlink{classClassSystem}{Class\+System} \hyperlink{classSystemHandler_ace6de39b5621a138654577c93f3ce9aa}{class\+System}
+\item 
+\hyperlink{classFunctionSystem}{Function\+System} $\ast$ \hyperlink{classSystemHandler_af601707ec9f56e24be4c0541a1c760f4}{base\+Function\+System}
+\item 
+\hyperlink{classFunctionSystem}{Function\+System} \hyperlink{classSystemHandler_a16b8444f364e1a4dd6db3b210fc8fa4e}{global\+Function\+System}
 \item 
 \hyperlink{classFunctionSystem}{Function\+System} $\ast$ \hyperlink{classSystemHandler_a5d29f688a621b074c2630470c31e6784}{current\+Function\+System}
 \item 
 \hyperlink{classLogger}{Logger} \hyperlink{classSystemHandler_aff3c17bc71f072c415a793a6114a5e68}{logger}
 \item 
 \hyperlink{statics_8h_a28f867553077bc713fdf8921a9226e2e}{S\+Y\+S\+T\+E\+M\+\_\+\+H\+A\+N\+D\+L\+E\+R\+\_\+\+T\+Y\+PE} \hyperlink{classSystemHandler_a8ca6090af683e8555051681fd31cd865}{type}
+\item 
+std\+::shared\+\_\+ptr$<$ \hyperlink{classObject}{Object} $>$ \hyperlink{classSystemHandler_a069c004c6108de742e7f2d9233c9ee77}{current\+\_\+obj}
 \end{DoxyCompactItemize}
 
 
 \subsection{Constructor \& Destructor Documentation}
-\mbox{\Hypertarget{classSystemHandler_ae137763b37da96d62288adddba15aae7}\label{classSystemHandler_ae137763b37da96d62288adddba15aae7}} 
+\mbox{\Hypertarget{classSystemHandler_abda0d6c76ea3eb8fa8e1493931e5d76b}\label{classSystemHandler_abda0d6c76ea3eb8fa8e1493931e5d76b}} 
 \index{System\+Handler@{System\+Handler}!System\+Handler@{System\+Handler}}
 \index{System\+Handler@{System\+Handler}!System\+Handler@{System\+Handler}}
 \subsubsection{\texorpdfstring{System\+Handler()}{SystemHandler()}}
-{\footnotesize\ttfamily System\+Handler\+::\+System\+Handler (\begin{DoxyParamCaption}\item[{\hyperlink{statics_8h_a28f867553077bc713fdf8921a9226e2e}{S\+Y\+S\+T\+E\+M\+\_\+\+H\+A\+N\+D\+L\+E\+R\+\_\+\+T\+Y\+PE}}]{type }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily System\+Handler\+::\+System\+Handler (\begin{DoxyParamCaption}\item[{\hyperlink{statics_8h_a28f867553077bc713fdf8921a9226e2e}{S\+Y\+S\+T\+E\+M\+\_\+\+H\+A\+N\+D\+L\+E\+R\+\_\+\+T\+Y\+PE}}]{type,  }\item[{\hyperlink{classClassSystem}{Class\+System} $\ast$}]{base\+Class\+System,  }\item[{\hyperlink{classFunctionSystem}{Function\+System} $\ast$}]{base\+Function\+System }\end{DoxyParamCaption})}
 
 \mbox{\Hypertarget{classSystemHandler_afd4662824fbf97d8feb248c346968102}\label{classSystemHandler_afd4662824fbf97d8feb248c346968102}} 
 \index{System\+Handler@{System\+Handler}!````~System\+Handler@{$\sim$\+System\+Handler}}
@@ -60,11 +74,29 @@ void \hyperlink{classSystemHandler_af27b9410a75ac02dff13b045afdff038}{set\+Funct
 
 
 \subsection{Member Function Documentation}
+\mbox{\Hypertarget{classSystemHandler_a2127b2f17952d52c457d40baa641b009}\label{classSystemHandler_a2127b2f17952d52c457d40baa641b009}} 
+\index{System\+Handler@{System\+Handler}!get\+Base\+Class\+System@{get\+Base\+Class\+System}}
+\index{get\+Base\+Class\+System@{get\+Base\+Class\+System}!System\+Handler@{System\+Handler}}
+\subsubsection{\texorpdfstring{get\+Base\+Class\+System()}{getBaseClassSystem()}}
+{\footnotesize\ttfamily \hyperlink{classClassSystem}{Class\+System}$\ast$ System\+Handler\+::get\+Base\+Class\+System (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classSystemHandler_a2013db1f8788be4d7e3eb1da5320de45}\label{classSystemHandler_a2013db1f8788be4d7e3eb1da5320de45}} 
+\index{System\+Handler@{System\+Handler}!get\+Base\+Function\+System@{get\+Base\+Function\+System}}
+\index{get\+Base\+Function\+System@{get\+Base\+Function\+System}!System\+Handler@{System\+Handler}}
+\subsubsection{\texorpdfstring{get\+Base\+Function\+System()}{getBaseFunctionSystem()}}
+{\footnotesize\ttfamily \hyperlink{classFunctionSystem}{Function\+System}$\ast$ System\+Handler\+::get\+Base\+Function\+System (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
 \mbox{\Hypertarget{classSystemHandler_a218066abe52952bf45c3ba21fdf86368}\label{classSystemHandler_a218066abe52952bf45c3ba21fdf86368}} 
 \index{System\+Handler@{System\+Handler}!get\+Class\+System@{get\+Class\+System}}
 \index{get\+Class\+System@{get\+Class\+System}!System\+Handler@{System\+Handler}}
 \subsubsection{\texorpdfstring{get\+Class\+System()}{getClassSystem()}}
 {\footnotesize\ttfamily \hyperlink{classClassSystem}{Class\+System}$\ast$ System\+Handler\+::get\+Class\+System (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classSystemHandler_aa2a7dad9232938a79b8a813b1238ee13}\label{classSystemHandler_aa2a7dad9232938a79b8a813b1238ee13}} 
+\index{System\+Handler@{System\+Handler}!get\+Current\+Object@{get\+Current\+Object}}
+\index{get\+Current\+Object@{get\+Current\+Object}!System\+Handler@{System\+Handler}}
+\subsubsection{\texorpdfstring{get\+Current\+Object()}{getCurrentObject()}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$\hyperlink{classObject}{Object}$>$ System\+Handler\+::get\+Current\+Object (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
 \mbox{\Hypertarget{classSystemHandler_a052dfd8bfff27ed9bf12fd84e066ecb3}\label{classSystemHandler_a052dfd8bfff27ed9bf12fd84e066ecb3}} 
 \index{System\+Handler@{System\+Handler}!get\+Function\+System@{get\+Function\+System}}
@@ -72,23 +104,29 @@ void \hyperlink{classSystemHandler_af27b9410a75ac02dff13b045afdff038}{set\+Funct
 \subsubsection{\texorpdfstring{get\+Function\+System()}{getFunctionSystem()}}
 {\footnotesize\ttfamily \hyperlink{classFunctionSystem}{Function\+System}$\ast$ System\+Handler\+::get\+Function\+System (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
+\mbox{\Hypertarget{classSystemHandler_a6622a7fa3c494ec657448d0d3f01eb3b}\label{classSystemHandler_a6622a7fa3c494ec657448d0d3f01eb3b}} 
+\index{System\+Handler@{System\+Handler}!get\+Global\+Function\+System@{get\+Global\+Function\+System}}
+\index{get\+Global\+Function\+System@{get\+Global\+Function\+System}!System\+Handler@{System\+Handler}}
+\subsubsection{\texorpdfstring{get\+Global\+Function\+System()}{getGlobalFunctionSystem()}}
+{\footnotesize\ttfamily \hyperlink{classFunctionSystem}{Function\+System}$\ast$ System\+Handler\+::get\+Global\+Function\+System (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
 \mbox{\Hypertarget{classSystemHandler_a2d30e2dd0efb6287ae14b36f1c6bb48b}\label{classSystemHandler_a2d30e2dd0efb6287ae14b36f1c6bb48b}} 
 \index{System\+Handler@{System\+Handler}!get\+Logger@{get\+Logger}}
 \index{get\+Logger@{get\+Logger}!System\+Handler@{System\+Handler}}
 \subsubsection{\texorpdfstring{get\+Logger()}{getLogger()}}
 {\footnotesize\ttfamily \hyperlink{classLogger}{Logger}$\ast$ System\+Handler\+::get\+Logger (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
-\mbox{\Hypertarget{classSystemHandler_acecab58c51aa620942f4364f5a42a21c}\label{classSystemHandler_acecab58c51aa620942f4364f5a42a21c}} 
-\index{System\+Handler@{System\+Handler}!get\+Root\+Function\+System@{get\+Root\+Function\+System}}
-\index{get\+Root\+Function\+System@{get\+Root\+Function\+System}!System\+Handler@{System\+Handler}}
-\subsubsection{\texorpdfstring{get\+Root\+Function\+System()}{getRootFunctionSystem()}}
-{\footnotesize\ttfamily \hyperlink{classFunctionSystem}{Function\+System}$\ast$ System\+Handler\+::get\+Root\+Function\+System (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
-
 \mbox{\Hypertarget{classSystemHandler_a7d5df891633958f20c66e8046019bdcb}\label{classSystemHandler_a7d5df891633958f20c66e8046019bdcb}} 
 \index{System\+Handler@{System\+Handler}!get\+Type@{get\+Type}}
 \index{get\+Type@{get\+Type}!System\+Handler@{System\+Handler}}
 \subsubsection{\texorpdfstring{get\+Type()}{getType()}}
 {\footnotesize\ttfamily \hyperlink{statics_8h_a28f867553077bc713fdf8921a9226e2e}{S\+Y\+S\+T\+E\+M\+\_\+\+H\+A\+N\+D\+L\+E\+R\+\_\+\+T\+Y\+PE} System\+Handler\+::get\+Type (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classSystemHandler_a2954779b7877d67d7207c4ea27194a0c}\label{classSystemHandler_a2954779b7877d67d7207c4ea27194a0c}} 
+\index{System\+Handler@{System\+Handler}!set\+Current\+Object@{set\+Current\+Object}}
+\index{set\+Current\+Object@{set\+Current\+Object}!System\+Handler@{System\+Handler}}
+\subsubsection{\texorpdfstring{set\+Current\+Object()}{setCurrentObject()}}
+{\footnotesize\ttfamily void System\+Handler\+::set\+Current\+Object (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ \hyperlink{classObject}{Object} $>$}]{object }\end{DoxyParamCaption})}
 
 \mbox{\Hypertarget{classSystemHandler_af27b9410a75ac02dff13b045afdff038}\label{classSystemHandler_af27b9410a75ac02dff13b045afdff038}} 
 \index{System\+Handler@{System\+Handler}!set\+Function\+System@{set\+Function\+System}}
@@ -99,11 +137,29 @@ void \hyperlink{classSystemHandler_af27b9410a75ac02dff13b045afdff038}{set\+Funct
 
 
 \subsection{Member Data Documentation}
+\mbox{\Hypertarget{classSystemHandler_ab54036ced60be518459b1c4753667912}\label{classSystemHandler_ab54036ced60be518459b1c4753667912}} 
+\index{System\+Handler@{System\+Handler}!base\+Class\+System@{base\+Class\+System}}
+\index{base\+Class\+System@{base\+Class\+System}!System\+Handler@{System\+Handler}}
+\subsubsection{\texorpdfstring{base\+Class\+System}{baseClassSystem}}
+{\footnotesize\ttfamily \hyperlink{classClassSystem}{Class\+System}$\ast$ System\+Handler\+::base\+Class\+System\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classSystemHandler_af601707ec9f56e24be4c0541a1c760f4}\label{classSystemHandler_af601707ec9f56e24be4c0541a1c760f4}} 
+\index{System\+Handler@{System\+Handler}!base\+Function\+System@{base\+Function\+System}}
+\index{base\+Function\+System@{base\+Function\+System}!System\+Handler@{System\+Handler}}
+\subsubsection{\texorpdfstring{base\+Function\+System}{baseFunctionSystem}}
+{\footnotesize\ttfamily \hyperlink{classFunctionSystem}{Function\+System}$\ast$ System\+Handler\+::base\+Function\+System\hspace{0.3cm}{\ttfamily [protected]}}
+
 \mbox{\Hypertarget{classSystemHandler_ace6de39b5621a138654577c93f3ce9aa}\label{classSystemHandler_ace6de39b5621a138654577c93f3ce9aa}} 
 \index{System\+Handler@{System\+Handler}!class\+System@{class\+System}}
 \index{class\+System@{class\+System}!System\+Handler@{System\+Handler}}
 \subsubsection{\texorpdfstring{class\+System}{classSystem}}
 {\footnotesize\ttfamily \hyperlink{classClassSystem}{Class\+System} System\+Handler\+::class\+System\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classSystemHandler_a069c004c6108de742e7f2d9233c9ee77}\label{classSystemHandler_a069c004c6108de742e7f2d9233c9ee77}} 
+\index{System\+Handler@{System\+Handler}!current\+\_\+obj@{current\+\_\+obj}}
+\index{current\+\_\+obj@{current\+\_\+obj}!System\+Handler@{System\+Handler}}
+\subsubsection{\texorpdfstring{current\+\_\+obj}{current\_obj}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$\hyperlink{classObject}{Object}$>$ System\+Handler\+::current\+\_\+obj\hspace{0.3cm}{\ttfamily [protected]}}
 
 \mbox{\Hypertarget{classSystemHandler_a5d29f688a621b074c2630470c31e6784}\label{classSystemHandler_a5d29f688a621b074c2630470c31e6784}} 
 \index{System\+Handler@{System\+Handler}!current\+Function\+System@{current\+Function\+System}}
@@ -111,11 +167,11 @@ void \hyperlink{classSystemHandler_af27b9410a75ac02dff13b045afdff038}{set\+Funct
 \subsubsection{\texorpdfstring{current\+Function\+System}{currentFunctionSystem}}
 {\footnotesize\ttfamily \hyperlink{classFunctionSystem}{Function\+System}$\ast$ System\+Handler\+::current\+Function\+System\hspace{0.3cm}{\ttfamily [protected]}}
 
-\mbox{\Hypertarget{classSystemHandler_a4fc7e5a07ff162d154c7623932094a18}\label{classSystemHandler_a4fc7e5a07ff162d154c7623932094a18}} 
-\index{System\+Handler@{System\+Handler}!function\+System@{function\+System}}
-\index{function\+System@{function\+System}!System\+Handler@{System\+Handler}}
-\subsubsection{\texorpdfstring{function\+System}{functionSystem}}
-{\footnotesize\ttfamily \hyperlink{classFunctionSystem}{Function\+System} System\+Handler\+::function\+System\hspace{0.3cm}{\ttfamily [protected]}}
+\mbox{\Hypertarget{classSystemHandler_a16b8444f364e1a4dd6db3b210fc8fa4e}\label{classSystemHandler_a16b8444f364e1a4dd6db3b210fc8fa4e}} 
+\index{System\+Handler@{System\+Handler}!global\+Function\+System@{global\+Function\+System}}
+\index{global\+Function\+System@{global\+Function\+System}!System\+Handler@{System\+Handler}}
+\subsubsection{\texorpdfstring{global\+Function\+System}{globalFunctionSystem}}
+{\footnotesize\ttfamily \hyperlink{classFunctionSystem}{Function\+System} System\+Handler\+::global\+Function\+System\hspace{0.3cm}{\ttfamily [protected]}}
 
 \mbox{\Hypertarget{classSystemHandler_aff3c17bc71f072c415a793a6114a5e68}\label{classSystemHandler_aff3c17bc71f072c415a793a6114a5e68}} 
 \index{System\+Handler@{System\+Handler}!logger@{logger}}

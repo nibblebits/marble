@@ -1,19 +1,21 @@
 var searchData=
 [
   ['save',['save',['../classValidator.html#a055e6bdb84438449655135b9166bcf2d',1,'Validator']]],
-  ['scope',['Scope',['../classScope.html',1,'Scope'],['../classVariable.html#a1d7f7a674747e42e4ecc5267252c12d4',1,'Variable::scope()'],['../classScope.html#a17c806f9852bb4454ed5709564945373',1,'Scope::Scope()']]],
+  ['scope',['Scope',['../classScope.html',1,'Scope'],['../classScope.html#a17c806f9852bb4454ed5709564945373',1,'Scope::Scope()'],['../classVariable.html#a1d7f7a674747e42e4ecc5267252c12d4',1,'Variable::scope()']]],
   ['scope_2eh',['scope.h',['../scope_8h.html',1,'']]],
   ['scopehandler',['ScopeHandler',['../classScopeHandler.html',1,'ScopeHandler'],['../classScopeHandler.html#a27b5c6a49bda76740ed06114eb250ed1',1,'ScopeHandler::ScopeHandler()']]],
   ['scopehandler_2eh',['scopehandler.h',['../scopehandler_8h.html',1,'']]],
   ['set',['set',['../classValue.html#a83944ac4d53d5bd27fd6a0bd2bc1bd3a',1,'Value']]],
   ['set_5fvalue',['set_value',['../classVariable.html#af4e546850a78ab022d111a2d1af5b74d',1,'Variable']]],
+  ['setcurrentobject',['setCurrentObject',['../classSystemHandler.html#a2954779b7877d67d7207c4ea27194a0c',1,'SystemHandler']]],
   ['setcurrentscope',['setCurrentScope',['../classScopeHandler.html#a7627747afbebc1dd7017da404fcabd3c',1,'ScopeHandler']]],
   ['setdata',['setData',['../classSplitter.html#a63334af48b3c284b4852af96085a949f',1,'Splitter']]],
   ['setdefaultbaseclass',['setDefaultBaseClass',['../classClassSystem.html#a10283c2e4e7cc89b213f6a32a0d709c1',1,'ClassSystem']]],
   ['setfunctionsystem',['setFunctionSystem',['../classSystemHandler.html#af27b9410a75ac02dff13b045afdff038',1,'SystemHandler']]],
   ['setinput',['setInput',['../classLexer.html#aec0b93e8614e2327341c73c2adda68c6',1,'Lexer']]],
-  ['setinterpreter',['setInterpreter',['../classClassSystem.html#ad54dfb82875034ec728a2e417108f164',1,'ClassSystem::setInterpreter()'],['../classFunctionSystem.html#a70175d76b5b377e58b1d3b0eebd1bc0a',1,'FunctionSystem::setInterpreter()']]],
   ['setoutputfunction',['setOutputFunction',['../classInterpreter.html#a3578606fb7dfe1705aee148a468a39a6',1,'Interpreter']]],
+  ['setpreviousclasssystem',['setPreviousClassSystem',['../classClassSystem.html#a8bda9472a03697e442079606aa51c4fc',1,'ClassSystem']]],
+  ['setsystemhandler',['setSystemHandler',['../classClassSystem.html#abe7eb559b5291d324cb055c89e80b180',1,'ClassSystem::setSystemHandler()'],['../classFunctionSystem.html#a7924e14b5794c595167aa9d547182883',1,'FunctionSystem::setSystemHandler()']]],
   ['settype',['setType',['../classToken.html#a6bf54cdc17cec9c64eeefaf756c260d6',1,'Token']]],
   ['setup',['setup',['../classArray.html#ac9828e89510c879b36acc6eca5efef51',1,'Array']]],
   ['setvalue',['setValue',['../classToken.html#a0c3a53668483200013e6a2c296fb15c1',1,'Token']]],
@@ -32,6 +34,6 @@ var searchData=
   ['system_5fhandler_5finterpreter',['SYSTEM_HANDLER_INTERPRETER',['../statics_8h.html#a06fc87d81c62e9abb8790b6e5713c55ba8120abce982a5d0f7a5cd2b2daffa32a',1,'statics.h']]],
   ['system_5fhandler_5ftype',['SYSTEM_HANDLER_TYPE',['../statics_8h.html#a28f867553077bc713fdf8921a9226e2e',1,'statics.h']]],
   ['system_5fhandler_5fvalidator',['SYSTEM_HANDLER_VALIDATOR',['../statics_8h.html#a06fc87d81c62e9abb8790b6e5713c55ba26f155f830094369c46c8c5351aa766d',1,'statics.h']]],
-  ['systemhandler',['SystemHandler',['../classSystemHandler.html',1,'SystemHandler'],['../classSystemHandler.html#ae137763b37da96d62288adddba15aae7',1,'SystemHandler::SystemHandler()']]],
+  ['systemhandler',['SystemHandler',['../classSystemHandler.html',1,'SystemHandler'],['../classSystemHandler.html#abda0d6c76ea3eb8fa8e1493931e5d76b',1,'SystemHandler::SystemHandler()']]],
   ['systemhandler_2eh',['systemhandler.h',['../systemhandler_8h.html',1,'']]]
 ];

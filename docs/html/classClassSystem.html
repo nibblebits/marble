@@ -75,10 +75,16 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aaaec70fea8c72ed8c47bfb4de3fc4b46"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9b1842899a13f28ca47cf24287dc0616"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassSystem.html#a9b1842899a13f28ca47cf24287dc0616">~ClassSystem</a> ()</td></tr>
 <tr class="separator:a9b1842899a13f28ca47cf24287dc0616"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad54dfb82875034ec728a2e417108f164"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassSystem.html#ad54dfb82875034ec728a2e417108f164">setInterpreter</a> (<a class="el" href="classInterpreter.html">Interpreter</a> *interpreter)</td></tr>
-<tr class="separator:ad54dfb82875034ec728a2e417108f164"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe7eb559b5291d324cb055c89e80b180"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassSystem.html#abe7eb559b5291d324cb055c89e80b180">setSystemHandler</a> (<a class="el" href="classSystemHandler.html">SystemHandler</a> *sys_handler)</td></tr>
+<tr class="separator:abe7eb559b5291d324cb055c89e80b180"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8bda9472a03697e442079606aa51c4fc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassSystem.html#a8bda9472a03697e442079606aa51c4fc">setPreviousClassSystem</a> (<a class="el" href="classClassSystem.html">ClassSystem</a> *prev_sys)</td></tr>
+<tr class="separator:a8bda9472a03697e442079606aa51c4fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32c4883e03da6a11ab11f2f39afc073a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classClassSystem.html">ClassSystem</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassSystem.html#a32c4883e03da6a11ab11f2f39afc073a">getPreviousClassSystem</a> ()</td></tr>
+<tr class="separator:a32c4883e03da6a11ab11f2f39afc073a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a10283c2e4e7cc89b213f6a32a0d709c1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassSystem.html#a10283c2e4e7cc89b213f6a32a0d709c1">setDefaultBaseClass</a> (<a class="el" href="classClass.html">Class</a> *c)</td></tr>
 <tr class="separator:a10283c2e4e7cc89b213f6a32a0d709c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add1ff8eadba3826024e68c836af28250"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classClass.html">Class</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassSystem.html#add1ff8eadba3826024e68c836af28250">getDefaultBaseClass</a> ()</td></tr>
+<tr class="separator:add1ff8eadba3826024e68c836af28250"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a02f4790dd9b8fa8808a4e17f1e152281"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classClass.html">Class</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassSystem.html#a02f4790dd9b8fa8808a4e17f1e152281">registerClass</a> (std::string class_name, <a class="el" href="classClass.html">Class</a> *parent=NULL)</td></tr>
 <tr class="separator:a02f4790dd9b8fa8808a4e17f1e152281"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4b88087eed035dc1f6100850c933ae84"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classClass.html">Class</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassSystem.html#a4b88087eed035dc1f6100850c933ae84">getClassByName</a> (std::string name)</td></tr>
@@ -91,7 +97,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:afdfbb54eb10abf323371cb9bb4f639a2"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::unique_ptr&lt; <a class="el" href="classClass.html">Class</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClassSystem.html#afdfbb54eb10abf323371cb9bb4f639a2">classes</a></td></tr>
 <tr class="separator:afdfbb54eb10abf323371cb9bb4f639a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>The <a class="el" href="classClassSystem.html">ClassSystem</a> is in charge of maintaining classes this includes registering and retrieving classes. The <a class="el" href="classClassSystem.html">ClassSystem</a> can also have previous class systems. This is required so when a new <a class="el" href="classSystemHandler.html">SystemHandler</a> is created all previously registered classes do not have to be lost. You just pass the class system in the constructor of the <a class="el" href="classSystemHandler.html">SystemHandler</a>. When retrieving a class from the <a class="el" href="classClassSystem.html">ClassSystem</a> with the <a class="el" href="classClassSystem.html#a4b88087eed035dc1f6100850c933ae84">getClassByName()</a> method if the class is not found the <a class="el" href="classClassSystem.html">ClassSystem</a> will check the previous class systems if it has any. </p><dl class="section attention"><dt>Attention</dt><dd>Each <a class="el" href="classClassSystem.html">ClassSystem</a> is independant from any others. By setting a previous class system it does not mean that both these ClassSystems will share properties they will not. This means that if one <a class="el" href="classClassSystem.html">ClassSystem</a> has a default base class of <a class="el" href="classObject.html">Object</a> and another has a default base class of Foo both these base classes will remain the same upon setting a previous class system. This also means that the <a class="el" href="classSystemHandler.html">SystemHandler</a> will remain the same for both ClassSystems. </dd></dl>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="aaaec70fea8c72ed8c47bfb4de3fc4b46"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aaaec70fea8c72ed8c47bfb4de3fc4b46">&#9670;&nbsp;</a></span>ClassSystem()</h2>
 
@@ -146,6 +154,40 @@ Public Attributes</h2></td></tr>
           <td>(</td>
           <td class="paramtype">std::string&#160;</td>
           <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="add1ff8eadba3826024e68c836af28250"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#add1ff8eadba3826024e68c836af28250">&#9670;&nbsp;</a></span>getDefaultBaseClass()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classClass.html">Class</a>* ClassSystem::getDefaultBaseClass </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a32c4883e03da6a11ab11f2f39afc073a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a32c4883e03da6a11ab11f2f39afc073a">&#9670;&nbsp;</a></span>getPreviousClassSystem()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classClassSystem.html">ClassSystem</a>* ClassSystem::getPreviousClassSystem </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -217,17 +259,35 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ad54dfb82875034ec728a2e417108f164"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad54dfb82875034ec728a2e417108f164">&#9670;&nbsp;</a></span>setInterpreter()</h2>
+<a id="a8bda9472a03697e442079606aa51c4fc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8bda9472a03697e442079606aa51c4fc">&#9670;&nbsp;</a></span>setPreviousClassSystem()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void ClassSystem::setInterpreter </td>
+          <td class="memname">void ClassSystem::setPreviousClassSystem </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classInterpreter.html">Interpreter</a> *&#160;</td>
-          <td class="paramname"><em>interpreter</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="classClassSystem.html">ClassSystem</a> *&#160;</td>
+          <td class="paramname"><em>prev_sys</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abe7eb559b5291d324cb055c89e80b180"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abe7eb559b5291d324cb055c89e80b180">&#9670;&nbsp;</a></span>setSystemHandler()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ClassSystem::setSystemHandler </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classSystemHandler.html">SystemHandler</a> *&#160;</td>
+          <td class="paramname"><em>sys_handler</em></td><td>)</td>
           <td></td>
         </tr>
       </table>

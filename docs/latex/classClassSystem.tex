@@ -11,9 +11,15 @@
 \item 
 virtual \hyperlink{classClassSystem_a9b1842899a13f28ca47cf24287dc0616}{$\sim$\+Class\+System} ()
 \item 
-void \hyperlink{classClassSystem_ad54dfb82875034ec728a2e417108f164}{set\+Interpreter} (\hyperlink{classInterpreter}{Interpreter} $\ast$interpreter)
+void \hyperlink{classClassSystem_abe7eb559b5291d324cb055c89e80b180}{set\+System\+Handler} (\hyperlink{classSystemHandler}{System\+Handler} $\ast$sys\+\_\+handler)
+\item 
+void \hyperlink{classClassSystem_a8bda9472a03697e442079606aa51c4fc}{set\+Previous\+Class\+System} (\hyperlink{classClassSystem}{Class\+System} $\ast$prev\+\_\+sys)
+\item 
+\hyperlink{classClassSystem}{Class\+System} $\ast$ \hyperlink{classClassSystem_a32c4883e03da6a11ab11f2f39afc073a}{get\+Previous\+Class\+System} ()
 \item 
 void \hyperlink{classClassSystem_a10283c2e4e7cc89b213f6a32a0d709c1}{set\+Default\+Base\+Class} (\hyperlink{classClass}{Class} $\ast$c)
+\item 
+\hyperlink{classClass}{Class} $\ast$ \hyperlink{classClassSystem_add1ff8eadba3826024e68c836af28250}{get\+Default\+Base\+Class} ()
 \item 
 \hyperlink{classClass}{Class} $\ast$ \hyperlink{classClassSystem_a02f4790dd9b8fa8808a4e17f1e152281}{register\+Class} (std\+::string class\+\_\+name, \hyperlink{classClass}{Class} $\ast$parent=N\+U\+LL)
 \item 
@@ -26,6 +32,12 @@ bool \hyperlink{classClassSystem_aa3e6fdac5739091d3f48dbe2b8c9db46}{has\+Class\+
 \item 
 std\+::vector$<$ std\+::unique\+\_\+ptr$<$ \hyperlink{classClass}{Class} $>$ $>$ \hyperlink{classClassSystem_afdfbb54eb10abf323371cb9bb4f639a2}{classes}
 \end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The \hyperlink{classClassSystem}{Class\+System} is in charge of maintaining classes this includes registering and retrieving classes. The \hyperlink{classClassSystem}{Class\+System} can also have previous class systems. This is required so when a new \hyperlink{classSystemHandler}{System\+Handler} is created all previously registered classes do not have to be lost. You just pass the class system in the constructor of the \hyperlink{classSystemHandler}{System\+Handler}. When retrieving a class from the \hyperlink{classClassSystem}{Class\+System} with the \hyperlink{classClassSystem_a4b88087eed035dc1f6100850c933ae84}{get\+Class\+By\+Name()} method if the class is not found the \hyperlink{classClassSystem}{Class\+System} will check the previous class systems if it has any. \begin{DoxyAttention}{Attention}
+Each \hyperlink{classClassSystem}{Class\+System} is independant from any others. By setting a previous class system it does not mean that both these Class\+Systems will share properties they will not. This means that if one \hyperlink{classClassSystem}{Class\+System} has a default base class of \hyperlink{classObject}{Object} and another has a default base class of Foo both these base classes will remain the same upon setting a previous class system. This also means that the \hyperlink{classSystemHandler}{System\+Handler} will remain the same for both Class\+Systems. 
+\end{DoxyAttention}
 
 
 \subsection{Constructor \& Destructor Documentation}
@@ -50,6 +62,18 @@ std\+::vector$<$ std\+::unique\+\_\+ptr$<$ \hyperlink{classClass}{Class} $>$ $>$
 \subsubsection{\texorpdfstring{get\+Class\+By\+Name()}{getClassByName()}}
 {\footnotesize\ttfamily \hyperlink{classClass}{Class}$\ast$ Class\+System\+::get\+Class\+By\+Name (\begin{DoxyParamCaption}\item[{std\+::string}]{name }\end{DoxyParamCaption})}
 
+\mbox{\Hypertarget{classClassSystem_add1ff8eadba3826024e68c836af28250}\label{classClassSystem_add1ff8eadba3826024e68c836af28250}} 
+\index{Class\+System@{Class\+System}!get\+Default\+Base\+Class@{get\+Default\+Base\+Class}}
+\index{get\+Default\+Base\+Class@{get\+Default\+Base\+Class}!Class\+System@{Class\+System}}
+\subsubsection{\texorpdfstring{get\+Default\+Base\+Class()}{getDefaultBaseClass()}}
+{\footnotesize\ttfamily \hyperlink{classClass}{Class}$\ast$ Class\+System\+::get\+Default\+Base\+Class (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classClassSystem_a32c4883e03da6a11ab11f2f39afc073a}\label{classClassSystem_a32c4883e03da6a11ab11f2f39afc073a}} 
+\index{Class\+System@{Class\+System}!get\+Previous\+Class\+System@{get\+Previous\+Class\+System}}
+\index{get\+Previous\+Class\+System@{get\+Previous\+Class\+System}!Class\+System@{Class\+System}}
+\subsubsection{\texorpdfstring{get\+Previous\+Class\+System()}{getPreviousClassSystem()}}
+{\footnotesize\ttfamily \hyperlink{classClassSystem}{Class\+System}$\ast$ Class\+System\+::get\+Previous\+Class\+System (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
 \mbox{\Hypertarget{classClassSystem_aa3e6fdac5739091d3f48dbe2b8c9db46}\label{classClassSystem_aa3e6fdac5739091d3f48dbe2b8c9db46}} 
 \index{Class\+System@{Class\+System}!has\+Class\+With\+Name@{has\+Class\+With\+Name}}
 \index{has\+Class\+With\+Name@{has\+Class\+With\+Name}!Class\+System@{Class\+System}}
@@ -68,11 +92,17 @@ std\+::vector$<$ std\+::unique\+\_\+ptr$<$ \hyperlink{classClass}{Class} $>$ $>$
 \subsubsection{\texorpdfstring{set\+Default\+Base\+Class()}{setDefaultBaseClass()}}
 {\footnotesize\ttfamily void Class\+System\+::set\+Default\+Base\+Class (\begin{DoxyParamCaption}\item[{\hyperlink{classClass}{Class} $\ast$}]{c }\end{DoxyParamCaption})}
 
-\mbox{\Hypertarget{classClassSystem_ad54dfb82875034ec728a2e417108f164}\label{classClassSystem_ad54dfb82875034ec728a2e417108f164}} 
-\index{Class\+System@{Class\+System}!set\+Interpreter@{set\+Interpreter}}
-\index{set\+Interpreter@{set\+Interpreter}!Class\+System@{Class\+System}}
-\subsubsection{\texorpdfstring{set\+Interpreter()}{setInterpreter()}}
-{\footnotesize\ttfamily void Class\+System\+::set\+Interpreter (\begin{DoxyParamCaption}\item[{\hyperlink{classInterpreter}{Interpreter} $\ast$}]{interpreter }\end{DoxyParamCaption})}
+\mbox{\Hypertarget{classClassSystem_a8bda9472a03697e442079606aa51c4fc}\label{classClassSystem_a8bda9472a03697e442079606aa51c4fc}} 
+\index{Class\+System@{Class\+System}!set\+Previous\+Class\+System@{set\+Previous\+Class\+System}}
+\index{set\+Previous\+Class\+System@{set\+Previous\+Class\+System}!Class\+System@{Class\+System}}
+\subsubsection{\texorpdfstring{set\+Previous\+Class\+System()}{setPreviousClassSystem()}}
+{\footnotesize\ttfamily void Class\+System\+::set\+Previous\+Class\+System (\begin{DoxyParamCaption}\item[{\hyperlink{classClassSystem}{Class\+System} $\ast$}]{prev\+\_\+sys }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classClassSystem_abe7eb559b5291d324cb055c89e80b180}\label{classClassSystem_abe7eb559b5291d324cb055c89e80b180}} 
+\index{Class\+System@{Class\+System}!set\+System\+Handler@{set\+System\+Handler}}
+\index{set\+System\+Handler@{set\+System\+Handler}!Class\+System@{Class\+System}}
+\subsubsection{\texorpdfstring{set\+System\+Handler()}{setSystemHandler()}}
+{\footnotesize\ttfamily void Class\+System\+::set\+System\+Handler (\begin{DoxyParamCaption}\item[{\hyperlink{classSystemHandler}{System\+Handler} $\ast$}]{sys\+\_\+handler }\end{DoxyParamCaption})}
 
 
 

@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['value',['value',['../structEvaluation_1_1datatype.html#acb206aace88caf1dde6fea1211ce9714',1,'Evaluation::datatype::value()'],['../classIdentifierNode.html#a7d92bad6e678bdff5f87f53bd55a53fb',1,'IdentifierNode::value()'],['../classKeywordNode.html#aa70b672a2e216e214c595ee196f225ae',1,'KeywordNode::value()'],['../classLiteralNode.html#aaead85ec08c6a4ec23534a547176a450',1,'LiteralNode::value()'],['../classStringNode.html#a52fd9cb80da963e39d0d6d33d5396c93',1,'StringNode::value()'],['../classToken.html#a4b7142147b8598f8e24c404928d9263b',1,'Token::value()'],['../classVariable.html#a94151da0f0a411749f84aaf65a9c7045',1,'Variable::value()'],['../classVarNode.html#a58798cdece4226f1e0b844c8cbcd5146',1,'VarNode::value()']]],
-  ['variables',['variables',['../classArray.html#af685a2298bef03e179093d6791c75b40',1,'Array']]]
+  ['to_5fcast',['to_cast',['../classCastNode.html#a01fc0556ce65230a77941f1519b72769',1,'CastNode']]],
+  ['type',['type',['../structEvaluation.html#ab056e930fde1d7f4ce8474e31f133860',1,'Evaluation::type()'],['../structEvaluation_1_1datatype.html#a608b8aad78f560f52549422c4a1921e2',1,'Evaluation::datatype::type()'],['../classNode.html#af4f536b1b3f60e197fe364ba56022291',1,'Node::type()'],['../classSystemHandler.html#a8ca6090af683e8555051681fd31cd865',1,'SystemHandler::type()'],['../classToken.html#ae46b6b806df89709a13a14dc76c86623',1,'Token::type()'],['../classValue.html#a4ee4412ce2c7b78bad42d8eb93294bea',1,'Value::type()'],['../classVariable.html#a659e966bd442dbde52df805e15005bf9',1,'Variable::type()'],['../classVarNode.html#a8aff9f630482d9f8570dd9feb10849cd',1,'VarNode::type()']]],
+  ['type_5fname',['type_name',['../classVariable.html#ac237e4099c004a617ad8bd2effbfafb2',1,'Variable']]],
+  ['type_5fnode',['type_node',['../classNewNode.html#a1cf62395c1531a22ca8e1932ed82910c',1,'NewNode']]]
 ];

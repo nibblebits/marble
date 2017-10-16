@@ -7,6 +7,7 @@ var searchData=
   ['code',['code',['../structsplit.html#a8fc2329ce8e3049edfe903fdca076a17',1,'split']]],
   ['col',['col',['../classPosInfo.html#a7507047c71abe1f3db13b41ee340cc59',1,'PosInfo']]],
   ['count',['count',['../classArray.html#a11dfcc73b3484e2bfdb5ce81457a7650',1,'Array']]],
+  ['current_5fobj',['current_obj',['../classSystemHandler.html#a069c004c6108de742e7f2d9233c9ee77',1,'SystemHandler']]],
   ['currentfunctionsystem',['currentFunctionSystem',['../classSystemHandler.html#a5d29f688a621b074c2630470c31e6784',1,'SystemHandler']]],
   ['currentobj',['currentObj',['../classFunctionSystem.html#a59f2a49d91338ced0a79d3898412fcaf',1,'FunctionSystem']]]
 ];
