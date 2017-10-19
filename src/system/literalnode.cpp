@@ -18,7 +18,7 @@ void LiteralNode::test(Validator* validator)
 {
     if (!validator->isExpecting())
         return;
-    VALUE_TYPE expecting_type = validator->getExpectingType();
+    VALUE_TYPE expecting_type = validator->getExpectingValueType();
     if (expecting_type != VALUE_TYPE_NUMBER)
     {
         throw TestError("a number was provided");

@@ -35,17 +35,9 @@ void VarNode::test(Validator* validator)
            validator->expectingArray(this->dimensions);
        }
        
-       if (isPrimitive())
+       validator->expecting(type_str);
+       if (!isPrimitive())
        {
-           if (type_str == "number")
-              validator->expecting(VALUE_TYPE_NUMBER);
-           else if(type_str == "string")
-              validator->expecting(VALUE_TYPE_STRING);
-          
-       }
-       else
-       {
-           validator->expectingObject(type_str);
            // Let's ensure this object exists
            ClassSystem* class_sys = validator->getClassSystem();
            if (!class_sys->hasClassWithName(type_str))

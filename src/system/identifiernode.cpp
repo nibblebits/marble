@@ -71,14 +71,14 @@ void IdentifierNode::test(Validator* validator)
         return;
     
     // We now need to check if the type is valid
-    VALUE_TYPE expecting_type = validator->getExpectingType();
+    VARIABLE_TYPE expecting_type = validator->getExpectingVariableType();
     if (variable->type != expecting_type)
         throw TestError("a " + variable->type_name + " was provided");
         
     if (variable->type == VARIABLE_TYPE_OBJECT)
     {
         // We must ensure the object types match
-        if (variable->type_name != validator->getExpectingObject())
+        if (variable->type_name != validator->getExpectingType())
             throw TestError("a " + variable->type_name + " was provided");
     }
     

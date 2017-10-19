@@ -30,8 +30,8 @@ void NewNode::test(Validator* validator)
 
 void NewNode::test_for_object(Validator* validator)
 {
-    VALUE_TYPE expecting_type = validator->getExpectingType();
-    std::string expecting_object = validator->getExpectingObject();
+    VALUE_TYPE expecting_type = validator->getExpectingValueType();
+    std::string expecting_object = validator->getExpectingType();
     // We handle non-array objects only here. So if our type is an array then there is a test error
     if (isArray())
         throw TestError("an array was provided");
@@ -65,12 +65,7 @@ void NewNode::test_for_array(Validator* validator)
     if (expected_dimensions != current_dimensions)
         throw TestError("the array dimensions do not match. Expecting " + std::to_string(expected_dimensions) + " dimensions but " + std::to_string(current_dimensions) + " provided");
         
-    VALUE_TYPE expecting_type = validator->getExpectingType();
-    if (expecting_type == VALUE_TYPE_NUMBER || expecting_type == VALUE_TYPE_STRING)
-    {
-        if(this->type_node->type != NODE_TYPE_KEYWORD)
-            throw TestError("non primitive type provided");   
-    }
+
 }
 
 bool NewNode::isArray()

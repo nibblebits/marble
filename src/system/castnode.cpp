@@ -86,7 +86,7 @@ void CastNode::test(Validator* validator)
     if (casting_to_evaluation.datatype.type == VARIABLE_TYPE_OBJECT)
     {
         // We must ensure this is legal casting of an object
-        VALUE_TYPE expecting_type = validator->getExpectingType();
+        VALUE_TYPE expecting_type = validator->getExpectingValueType();
         if (expecting_type != VALUE_TYPE_OBJECT)
             throw TestError("expecting a primitive type");
         

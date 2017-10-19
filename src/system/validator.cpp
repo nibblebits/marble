@@ -94,32 +94,23 @@ Class* Validator::getCurrentClass()
 }
 
 
-
-void Validator::expectingObject(std::string obj_name)
-{
-    if (isExpecting())
-        throw std::logic_error("The validator is already expecting");
-
-    this->rules.expecting_type = VALUE_TYPE_OBJECT;
-    this->rules.expecting_object = obj_name;
-}
-
-
 void Validator::expectingArray(int dimensions)
 {
     this->rules.expected_array_dimensions = dimensions;
 }
 
-void Validator::expecting(VALUE_TYPE type)
+void Validator::expecting(std::string type)
 {
     if (isExpecting())
         throw std::logic_error("The validator is already expecting");
     this->rules.expecting_type = type;
+    this->rules.expecting_value_type = Value::getValueTypeForString(type);
+    this->rules.expecting_variable_type = Variable::getVariableTypeForString(type);
 }
 
 bool Validator::isExpecting()
 {
-    return this->rules.expecting_type != -1;
+    return this->rules.expecting_type != "";
 }
 
 bool Validator::isExpectingArray()
@@ -134,17 +125,21 @@ int Validator::getExpectedArrayDimensions()
 
 void Validator::endExpecting()
 {
-    this->rules.expecting_type = -1;
-    this->rules.expecting_object = "";
+    this->rules.expecting_type = "";
     this->rules.expected_array_dimensions = 0;
 }
 
-VALUE_TYPE Validator::getExpectingType()
+std::string Validator::getExpectingType()
 {
     return this->rules.expecting_type;
 }
 
-std::string Validator::getExpectingObject()
+VALUE_TYPE Validator::getExpectingValueType()
 {
-    return this->rules.expecting_object;
+    return this->rules.expecting_value_type;
+}
+
+VARIABLE_TYPE Validator::getExpectingVariableType()
+{
+    return this->rules.expecting_variable_type;
 }

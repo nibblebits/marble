@@ -22,23 +22,24 @@ public:
     void endClass();
     void save();
     void restore();
-    void expecting(VALUE_TYPE type);
-    void expectingObject(std::string obj_name);
+    void expecting(std::string type);
     void expectingArray(int dimensions);
     bool isExpecting();
     bool isExpectingArray();
     int getExpectedArrayDimensions();
     void endExpecting();
-    VALUE_TYPE getExpectingType();
-    std::string getExpectingObject();
+    std::string getExpectingType();
+    VALUE_TYPE getExpectingValueType();
+    VARIABLE_TYPE getExpectingVariableType();
 private:
     Logger* logger;
     
     // We must be able to stack the rules so that they can be reset for different operations
     struct rules
     {
-        VALUE_TYPE expecting_type = -1;
-        std::string expecting_object = "";
+        VALUE_TYPE expecting_value_type = -1;
+        VARIABLE_TYPE expecting_variable_type = -1;
+        std::string expecting_type = "";
         // Set to zero if we are not expecting an array
         int expected_array_dimensions = 0;
     };

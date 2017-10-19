@@ -192,14 +192,8 @@ void ExpNode::test_assign(Validator* validator)
 {
     left->test(validator);
     struct Evaluation evaluation = left->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE);
-    if (evaluation.datatype.type == VARIABLE_TYPE_OBJECT)
-    {
-        validator->expectingObject(evaluation.datatype.value);
-    }
-    else
-    {
-        validator->expecting(evaluation.datatype.type);
-    }
+    validator->expecting(evaluation.datatype.value);
+    
     try
     {
         right->test(validator);

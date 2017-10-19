@@ -16,7 +16,7 @@ void StringNode::test(Validator* validator)
 {
     if (!validator->isExpecting())
         return;
-    VALUE_TYPE expecting_type = validator->getExpectingType();
+    VALUE_TYPE expecting_type = validator->getExpectingValueType();
     if (expecting_type != VALUE_TYPE_STRING)
     {
         throw std::logic_error("a string was provided");
