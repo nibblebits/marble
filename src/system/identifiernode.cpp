@@ -18,6 +18,7 @@ IdentifierNode::~IdentifierNode()
 
 void IdentifierNode::test(Validator* validator)
 {
+    ClassSystem* class_sys = validator->getClassSystem();
     // Let's first see if the variable is declared
     Scope* current_scope = validator->getCurrentScope();
     Variable* variable = current_scope->getVariableAnyScope(this->value);
@@ -77,8 +78,10 @@ void IdentifierNode::test(Validator* validator)
         
     if (variable->type == VARIABLE_TYPE_OBJECT)
     {
-        // We must ensure the object types match
-        if (variable->type_name != validator->getExpectingType())
+        // We must ensure the object types are compatible
+        Class* expecting_class = class_sys->getClassByName(validator->getExpectingType());
+        Class* var_class = class_sys->getClassByName(variable->type_name);
+        if (variable->type_name != validator->getExpectingType() && !(var_class->instanceOf(expecting_class)))
             throw TestError("a " + variable->type_name + " was provided");
     }
     
