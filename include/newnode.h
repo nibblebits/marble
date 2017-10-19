@@ -14,10 +14,13 @@ class NewNode : public ExpressionInterpretableNode
         virtual ~NewNode();
         ExpressionInterpretableNode* type_node;
         bool isArray();
-        std::vector<ExpressionInterpretableNode*> array_values;
         virtual void test(Validator* validator);
         virtual Value interpret(Interpreter* interpreter);
+        
+        std::vector<ExpressionInterpretableNode*> array_values;
     private:
+        void test_for_object(Validator* validator);
+        void test_for_array(Validator* validator);
         std::shared_ptr<Array> new_array_array(Interpreter* interpreter, int total_elements, std::vector<ExpressionInterpretableNode*>::iterator it);
         std::shared_ptr<Array> new_variable_array(Interpreter* interpreter, int var_type, int total_elements);
         void new_object_variable(Interpreter* interpreter, Value& v, FunctionCallNode* fc_node);

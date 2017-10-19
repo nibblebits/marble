@@ -22,14 +22,25 @@ void NewNode::test(Validator* validator)
 {
     if (!validator->isExpecting())
         return;
-        
+    if (validator->isExpectingArray())
+        test_for_array(validator);
+    else
+        test_for_object(validator);
+}
+
+void NewNode::test_for_object(Validator* validator)
+{
     VALUE_TYPE expecting_type = validator->getExpectingType();
+    std::string expecting_object = validator->getExpectingObject();
+    // We handle non-array objects only here. So if our type is an array then there is a test error
+    if (isArray())
+        throw TestError("an array was provided");
+
     if (expecting_type != VALUE_TYPE_OBJECT)
     {
         throw TestError("an object was provided");
     }
     
-    std::string expecting_object = validator->getExpectingObject();
     if (expecting_object != "")
     {
         /* It is natural for this type node to be a function call node as it will be calling a constructor, e.g new Object();
@@ -44,6 +55,21 @@ void NewNode::test(Validator* validator)
         {
             throw TestError("a " + fc_node->name->value + " was provided which does not extend " + expecting_object);
         }
+    }
+}
+
+void NewNode::test_for_array(Validator* validator)
+{
+    int expected_dimensions = validator->getExpectedArrayDimensions();
+    int current_dimensions = this->array_values.size();
+    if (expected_dimensions != current_dimensions)
+        throw TestError("the array dimensions do not match. Expecting " + std::to_string(expected_dimensions) + " dimensions but " + std::to_string(current_dimensions) + " provided");
+        
+    VALUE_TYPE expecting_type = validator->getExpectingType();
+    if (expecting_type == VALUE_TYPE_NUMBER || expecting_type == VALUE_TYPE_STRING)
+    {
+        if(this->type_node->type != NODE_TYPE_KEYWORD)
+            throw TestError("non primitive type provided");   
     }
 }
 

@@ -13,6 +13,7 @@ Validator::Validator(Logger* logger, ClassSystem* classSystem, FunctionSystem* b
     {
         giveClassObject(std::make_shared<Object>(this, c));
     }
+    
 }
 
 Validator::~Validator()
@@ -103,6 +104,12 @@ void Validator::expectingObject(std::string obj_name)
     this->rules.expecting_object = obj_name;
 }
 
+
+void Validator::expectingArray(int dimensions)
+{
+    this->rules.expected_array_dimensions = dimensions;
+}
+
 void Validator::expecting(VALUE_TYPE type)
 {
     if (isExpecting())
@@ -115,10 +122,21 @@ bool Validator::isExpecting()
     return this->rules.expecting_type != -1;
 }
 
+bool Validator::isExpectingArray()
+{
+    return this->rules.expected_array_dimensions != 0;
+}
+
+int Validator::getExpectedArrayDimensions()
+{
+    return this->rules.expected_array_dimensions;
+}
+
 void Validator::endExpecting()
 {
     this->rules.expecting_type = -1;
     this->rules.expecting_object = "";
+    this->rules.expected_array_dimensions = 0;
 }
 
 VALUE_TYPE Validator::getExpectingType()

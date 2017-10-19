@@ -24,7 +24,10 @@ public:
     void restore();
     void expecting(VALUE_TYPE type);
     void expectingObject(std::string obj_name);
+    void expectingArray(int dimensions);
     bool isExpecting();
+    bool isExpectingArray();
+    int getExpectedArrayDimensions();
     void endExpecting();
     VALUE_TYPE getExpectingType();
     std::string getExpectingObject();
@@ -36,6 +39,8 @@ private:
     {
         VALUE_TYPE expecting_type = -1;
         std::string expecting_object = "";
+        // Set to zero if we are not expecting an array
+        int expected_array_dimensions = 0;
     };
     
     struct rules rules;

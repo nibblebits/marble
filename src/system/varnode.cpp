@@ -30,18 +30,28 @@ void VarNode::test(Validator* validator)
    std::string type_str = getTypeAsString();
    if (this->value != NULL)
    {
-       if (type_str == "number")
-          validator->expecting(VALUE_TYPE_NUMBER);
-       else if(type_str == "string")
-          validator->expecting(VALUE_TYPE_STRING);
+       if (isArray())
+       {
+           validator->expectingArray(this->dimensions);
+       }
+       
+       if (isPrimitive())
+       {
+           if (type_str == "number")
+              validator->expecting(VALUE_TYPE_NUMBER);
+           else if(type_str == "string")
+              validator->expecting(VALUE_TYPE_STRING);
+          
+       }
        else
        {
-          validator->expectingObject(type_str);
-          // Let's ensure this object exists
-          ClassSystem* class_sys = validator->getClassSystem();
-          if (!class_sys->hasClassWithName(type_str))
-            throw TestError("The class with the name \"" + type_str + "\" has not been declared");
-       }  
+           validator->expectingObject(type_str);
+           // Let's ensure this object exists
+           ClassSystem* class_sys = validator->getClassSystem();
+           if (!class_sys->hasClassWithName(type_str))
+                throw TestError("The class with the name \"" + type_str + "\" has not been declared");
+       }
+       
        try
        {
          this->value->test(validator);
@@ -83,6 +93,25 @@ std::string VarNode::getTypeAsString()
     
     return type_str;
 }
+
+bool VarNode::isArray()
+{
+    return this->dimensions > 0;
+}
+
+bool VarNode::isPrimitive()
+{
+    std::string type_str = getTypeAsString();
+    return (type_str == "number" || type_str == "string");
+}
+
+
+bool VarNode::isObject()
+{
+    return !isPrimitive();
+}
+
+
 /*
 * Interprets the variable node and creates a variable
 * then it returns the value of the variable that it just set.

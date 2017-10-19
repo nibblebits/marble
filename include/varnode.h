@@ -16,6 +16,9 @@ public:
     virtual void test(Validator* validator);
     virtual Value interpret(Interpreter* interpreter);
     std::string getTypeAsString();
+    bool isArray();
+    bool isPrimitive();
+    bool isObject();
     EvaluatingNode* type;
     std::string name;
     InterpretableNode* value;

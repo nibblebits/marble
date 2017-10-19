@@ -69,7 +69,7 @@ void IdentifierNode::test(Validator* validator)
     
     if (!validator->isExpecting())
         return;
-        
+    
     // We now need to check if the type is valid
     VALUE_TYPE expecting_type = validator->getExpectingType();
     if (variable->type != expecting_type)
