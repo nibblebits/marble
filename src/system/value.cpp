@@ -27,6 +27,29 @@ VALUE_TYPE Value::getValueTypeForString(std::string str)
         return VALUE_TYPE_OBJECT;
 }
 
+VALUE_TYPE Value::getValueTypeFromVariableType(VARIABLE_TYPE type)
+{
+    VALUE_TYPE value_type;
+    switch(type)
+    {
+        case VARIABLE_TYPE_NUMBER:
+            value_type = VALUE_TYPE_NUMBER;
+        break;
+        
+        case VARIABLE_TYPE_STRING:
+            value_type = VALUE_TYPE_STRING;
+        break;
+        
+        case VARIABLE_TYPE_OBJECT:
+            value_type = VALUE_TYPE_OBJECT;
+        break;
+        
+        default:
+            throw std::logic_error("Unable to convert variable type: " + std::to_string(type) + " into value type: " + std::to_string(value_type));
+    }
+    
+    return value_type;
+}
 void Value::set(Value* v)
 {
     this->type = v->type;

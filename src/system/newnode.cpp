@@ -66,7 +66,11 @@ void NewNode::test_for_array(Validator* validator)
         throw TestError("the array dimensions do not match. Expecting " + std::to_string(expected_dimensions) + " dimensions but " + std::to_string(current_dimensions) + " provided");
         
     std::string expecting_type = validator->getExpectingType();
-    
+    struct Evaluation eval = this->type_node->evaluate(validator, EVALUATION_TYPE_DATATYPE);
+    if(expecting_type != eval.datatype.value)
+    {
+        throw TestError("an array type of " + eval.datatype.value + " was provided");
+    }   
 }
 
 bool NewNode::isArray()
@@ -81,6 +85,7 @@ std::shared_ptr<Array> NewNode::new_variable_array(Interpreter* interpreter, int
     {
         Variable* var = &variables[i];
         var->type = var_type;
+        var->value.type = Value::getValueTypeFromVariableType(var_type);
         var->value.holder = var;
     }
     return std::make_shared<Array>(interpreter, interpreter->getClassSystem()->getClassByName("array"), variables, total_elements);
@@ -109,6 +114,7 @@ std::shared_ptr<Array> NewNode::new_array_array(Interpreter* interpreter, int to
     {
         Variable* var = &variables[i];
         var->type = VARIABLE_TYPE_ARRAY;
+        var->value.type = VALUE_TYPE_ARRAY;
         // Each element of this array will contain a reference to the next array
         handle_array(interpreter, var->value, it+1);
         var->value.holder = var;
