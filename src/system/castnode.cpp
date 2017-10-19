@@ -112,4 +112,8 @@ void CastNode::test(Validator* validator)
     
     // All other types can be casted to eachother no need for a test.
 }
-    
+
+void CastNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)
+{
+    throw std::logic_error("Evaluation is not supported for cast nodes");
+}

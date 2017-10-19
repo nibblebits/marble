@@ -65,7 +65,8 @@ void NewNode::test_for_array(Validator* validator)
     if (expected_dimensions != current_dimensions)
         throw TestError("the array dimensions do not match. Expecting " + std::to_string(expected_dimensions) + " dimensions but " + std::to_string(current_dimensions) + " provided");
         
-
+    std::string expecting_type = validator->getExpectingType();
+    
 }
 
 bool NewNode::isArray()
@@ -167,4 +168,9 @@ Value NewNode::interpret(Interpreter* interpreter)
     return v;
 }
 
+
+void NewNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)
+{
+    throw std::logic_error("Evaluating of new nodes is not yet supported");
+}
 

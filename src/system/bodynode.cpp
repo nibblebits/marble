@@ -52,6 +52,11 @@ Value BodyNode::interpret(Interpreter* interpreter)
     return v;
 }
 
+void BodyNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)
+{
+    throw std::logic_error("Evaluating of body nodes is not supported");
+}
+
 void BodyNode::apply_node_listener(std::function<bool(Node* node, Value v)> node_listener_function)
 {
     this->node_listener_function = node_listener_function;

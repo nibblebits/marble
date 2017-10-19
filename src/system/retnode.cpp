@@ -17,3 +17,8 @@ Value ReturnNode::interpret(Interpreter* interpreter)
         v = this->exp->interpret(interpreter);
     return v;
 }
+
+void ReturnNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)
+{
+    throw std::logic_error("Evaluating of return nodes is not yet implemented");
+}

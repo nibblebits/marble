@@ -32,3 +32,7 @@ Value StringNode::interpret(Interpreter* interpreter)
     return result;
 }
 
+void StringNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)
+{
+    throw std::logic_error("String nodes cannot be evaluated");
+}

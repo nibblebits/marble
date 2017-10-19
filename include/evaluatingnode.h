@@ -24,6 +24,6 @@ public:
     struct Evaluation evaluate(SystemHandler* handler, EVALUATION_TYPE expected_evaluation);
     void evaluate(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation);
 protected:
-    virtual void evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation) { /* Nothing to evaluate if this is not overrided */};
+    virtual void evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation) = 0;
 };
 #endif

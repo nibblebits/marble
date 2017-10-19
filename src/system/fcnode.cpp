@@ -53,3 +53,8 @@ Value FunctionCallNode::interpret(Interpreter* interpreter)
    function->invoke(argument_results, &value, interpreter->getCurrentObject());
    return value;
 }
+
+void FunctionCallNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)
+{
+    throw std::logic_error("Function calls do not support evaluation");
+}

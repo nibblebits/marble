@@ -11,6 +11,7 @@ public:
     virtual ~BodyNode();
     virtual void test(Validator* validator);
     virtual Value interpret(Interpreter* interpreter);
+    virtual void evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation);
     
     void onBeforeLeave(std::function<void()> before_leave_function);
     void apply_node_listener(std::function<bool(Node* node, Value v)> node_listener_function);

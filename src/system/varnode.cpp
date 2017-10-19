@@ -62,6 +62,11 @@ void VarNode::test(Validator* validator)
    var->name = this->name;
 }
 
+void VarNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)
+{
+    throw std::logic_error("Evaluation is not implemented for variable nodes");
+}
+
 std::string VarNode::getTypeAsString()
 {
     std::string type_str;

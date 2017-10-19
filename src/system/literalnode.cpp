@@ -31,3 +31,8 @@ Value LiteralNode::interpret(Interpreter* interpreter)
     v.dvalue = this->value;
     return v;
 }
+
+void LiteralNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)
+{
+    throw std::logic_error("Literal nodes cannot be evaluated");
+}

@@ -28,3 +28,8 @@ Value ArrayNode::interpret(Interpreter* interpreter)
     }
     return next_elem_value.avalue->variables[(int)index_exp.dvalue].value;
 }
+
+void ArrayNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)
+{
+    throw std::logic_error("Evaluating of array nodes is not supported");
+}

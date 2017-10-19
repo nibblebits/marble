@@ -28,3 +28,8 @@ Value IfStatementNode::interpret(Interpreter* interpreter)
     Value v;
     return v;
 }
+
+void IfStatementNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)
+{
+    throw std::logic_error("If statements cannot be evaluated");
+}

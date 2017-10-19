@@ -19,3 +19,8 @@ Value NegNode::interpret(Interpreter* interpreter)
     return v;
 
 }
+
+void NegNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)
+{
+    throw std::logic_error("NegNode's do not support evaluation");
+}

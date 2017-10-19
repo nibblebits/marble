@@ -96,3 +96,7 @@ Value ClassNode::interpret(Interpreter* interpreter)
     return v;
 }
 
+void ClassNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)
+{
+    throw std::logic_error("Class nodes do not support evaluation");
+}

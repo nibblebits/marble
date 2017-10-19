@@ -31,3 +31,7 @@ Value FunctionNode::interpret(Interpreter* interpreter)
     return v;
 }
 
+void FunctionNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)
+{
+    throw std::logic_error("Evaluating of function nodes is not supported");
+}

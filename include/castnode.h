@@ -11,6 +11,7 @@ public:
     virtual ~CastNode();
     virtual Value interpret(Interpreter* interpreter);
     virtual void test(Validator* validator);
+    virtual void evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation);
     EvaluatingNode* casting_to;
     ExpressionInterpretableNode* to_cast;
 private:
