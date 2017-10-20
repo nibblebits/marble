@@ -1,7 +1,7 @@
 var searchData=
 [
   ['name',['name',['../classClass.html#aac209ee2e03afc3bc9e93fd1fd46256b',1,'Class::name()'],['../classClassNode.html#a1fc3152f6442b5f6913ec72f26afacbe',1,'ClassNode::name()'],['../classFunctionCallNode.html#a03ebfc10277d6c6a7698b5eb0c02ac73',1,'FunctionCallNode::name()'],['../classFunctionNode.html#a21284dd655c91da1f792dc3bc1bba60c',1,'FunctionNode::name()'],['../classFunction.html#a161d1ceb4f67f3222caf429fea7b71f1',1,'Function::name()'],['../classVariable.html#aaf7205662069a5f8f673c158cb31f418',1,'Variable::name()'],['../classVarNode.html#adcfff85229e23fb0670fa3fc14b830e0',1,'VarNode::name()']]],
-  ['nativefunction',['NativeFunction',['../classNativeFunction.html',1,'NativeFunction'],['../classNativeFunction.html#adb5628f86e150f797e8225bf9388fadc',1,'NativeFunction::NativeFunction()']]],
+  ['nativefunction',['NativeFunction',['../classNativeFunction.html',1,'NativeFunction'],['../classNativeFunction.html#a189f9fd9161c741e533c3dc2c8396f31',1,'NativeFunction::NativeFunction()']]],
   ['nativefunction_2eh',['nativefunction.h',['../nativefunction_8h.html',1,'']]],
   ['negnode',['NegNode',['../classNegNode.html',1,'NegNode'],['../classNegNode.html#a543d2b5abde85cbcaca1e8927ec55c9e',1,'NegNode::NegNode()']]],
   ['negnode_2eh',['negnode.h',['../negnode_8h.html',1,'']]],

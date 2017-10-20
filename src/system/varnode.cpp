@@ -49,7 +49,7 @@ void VarNode::test(Validator* validator)
          this->value->test(validator);
        } catch(TestError& ex)
        {
-          throw TestError("Expecting a " + type_str + "; " + ex.what());
+          throw TestError("Expecting a " + type_str + (isArray() ? " array" : "") + "; " + ex.what());
        }
    
        validator->endExpecting();

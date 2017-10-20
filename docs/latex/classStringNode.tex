@@ -20,6 +20,8 @@ virtual \hyperlink{classStringNode_a2b2f8f89db3402822e55da8ede0ca443}{$\sim$\+St
 virtual void \hyperlink{classStringNode_a3836ad2a1bb6f86cd52663653a65bad8}{test} (\hyperlink{classValidator}{Validator} $\ast$validator)
 \item 
 virtual \hyperlink{classValue}{Value} \hyperlink{classStringNode_ae92c0858cd07baf0c6417f7bdfce9f0d}{interpret} (\hyperlink{classInterpreter}{Interpreter} $\ast$interpreter)
+\item 
+virtual void \hyperlink{classStringNode_a1399a24e093f4ecd00957268923c5d23}{evaluate\+\_\+impl} (\hyperlink{classSystemHandler}{System\+Handler} $\ast$handler, \hyperlink{statics_8h_a6664c451ca7787483a7981cc1de68dbb}{E\+V\+A\+L\+U\+A\+T\+I\+O\+N\+\_\+\+T\+Y\+PE} expected\+\_\+evaluation, struct \hyperlink{structEvaluation}{Evaluation} $\ast$evaluation)
 \end{DoxyCompactItemize}
 \subsection*{Public Attributes}
 \begin{DoxyCompactItemize}
@@ -45,6 +47,16 @@ std\+::string \hyperlink{classStringNode_a52fd9cb80da963e39d0d6d33d5396c93}{valu
 
 
 \subsection{Member Function Documentation}
+\mbox{\Hypertarget{classStringNode_a1399a24e093f4ecd00957268923c5d23}\label{classStringNode_a1399a24e093f4ecd00957268923c5d23}} 
+\index{String\+Node@{String\+Node}!evaluate\+\_\+impl@{evaluate\+\_\+impl}}
+\index{evaluate\+\_\+impl@{evaluate\+\_\+impl}!String\+Node@{String\+Node}}
+\subsubsection{\texorpdfstring{evaluate\+\_\+impl()}{evaluate\_impl()}}
+{\footnotesize\ttfamily virtual void String\+Node\+::evaluate\+\_\+impl (\begin{DoxyParamCaption}\item[{\hyperlink{classSystemHandler}{System\+Handler} $\ast$}]{handler,  }\item[{\hyperlink{statics_8h_a6664c451ca7787483a7981cc1de68dbb}{E\+V\+A\+L\+U\+A\+T\+I\+O\+N\+\_\+\+T\+Y\+PE}}]{expected\+\_\+evaluation,  }\item[{struct \hyperlink{structEvaluation}{Evaluation} $\ast$}]{evaluation }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \hyperlink{classEvaluatingNode_a085fa06e0b46a93c814dc55cda0c1b26}{Evaluating\+Node}.
+
 \mbox{\Hypertarget{classStringNode_ae92c0858cd07baf0c6417f7bdfce9f0d}\label{classStringNode_ae92c0858cd07baf0c6417f7bdfce9f0d}} 
 \index{String\+Node@{String\+Node}!interpret@{interpret}}
 \index{interpret@{interpret}!String\+Node@{String\+Node}}

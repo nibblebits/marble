@@ -2,17 +2,13 @@
 #define EVALUATINGNODE_H
 #include "node.h"
 #include "statics.h"
+#include "vartype.h"
 class SystemHandler;
 class Variable;
 struct Evaluation
 {
     EVALUATION_TYPE type = 0;
-    struct datatype
-    {
-        VARIABLE_TYPE type = 0;
-        std::string value = "";
-    } datatype;
-    
+    VarType datatype;
     Variable* variable = NULL;
 };
 

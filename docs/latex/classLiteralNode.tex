@@ -20,6 +20,8 @@ virtual \hyperlink{classLiteralNode_a09793ae51506882eaa8d345eeef90d16}{$\sim$\+L
 virtual void \hyperlink{classLiteralNode_af55e4e5e668c9be666c0b6c24c3918f9}{test} (\hyperlink{classValidator}{Validator} $\ast$validator)
 \item 
 virtual \hyperlink{classValue}{Value} \hyperlink{classLiteralNode_abb32ed943c6a5b2029a496ac04885b2a}{interpret} (\hyperlink{classInterpreter}{Interpreter} $\ast$interpreter)
+\item 
+virtual void \hyperlink{classLiteralNode_ac468128f093b3955ddd7c85eaa959ec2}{evaluate\+\_\+impl} (\hyperlink{classSystemHandler}{System\+Handler} $\ast$handler, \hyperlink{statics_8h_a6664c451ca7787483a7981cc1de68dbb}{E\+V\+A\+L\+U\+A\+T\+I\+O\+N\+\_\+\+T\+Y\+PE} expected\+\_\+evaluation, struct \hyperlink{structEvaluation}{Evaluation} $\ast$evaluation)
 \end{DoxyCompactItemize}
 \subsection*{Public Attributes}
 \begin{DoxyCompactItemize}
@@ -45,6 +47,16 @@ double \hyperlink{classLiteralNode_aaead85ec08c6a4ec23534a547176a450}{value}
 
 
 \subsection{Member Function Documentation}
+\mbox{\Hypertarget{classLiteralNode_ac468128f093b3955ddd7c85eaa959ec2}\label{classLiteralNode_ac468128f093b3955ddd7c85eaa959ec2}} 
+\index{Literal\+Node@{Literal\+Node}!evaluate\+\_\+impl@{evaluate\+\_\+impl}}
+\index{evaluate\+\_\+impl@{evaluate\+\_\+impl}!Literal\+Node@{Literal\+Node}}
+\subsubsection{\texorpdfstring{evaluate\+\_\+impl()}{evaluate\_impl()}}
+{\footnotesize\ttfamily virtual void Literal\+Node\+::evaluate\+\_\+impl (\begin{DoxyParamCaption}\item[{\hyperlink{classSystemHandler}{System\+Handler} $\ast$}]{handler,  }\item[{\hyperlink{statics_8h_a6664c451ca7787483a7981cc1de68dbb}{E\+V\+A\+L\+U\+A\+T\+I\+O\+N\+\_\+\+T\+Y\+PE}}]{expected\+\_\+evaluation,  }\item[{struct \hyperlink{structEvaluation}{Evaluation} $\ast$}]{evaluation }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \hyperlink{classEvaluatingNode_a085fa06e0b46a93c814dc55cda0c1b26}{Evaluating\+Node}.
+
 \mbox{\Hypertarget{classLiteralNode_abb32ed943c6a5b2029a496ac04885b2a}\label{classLiteralNode_abb32ed943c6a5b2029a496ac04885b2a}} 
 \index{Literal\+Node@{Literal\+Node}!interpret@{interpret}}
 \index{interpret@{interpret}!Literal\+Node@{Literal\+Node}}

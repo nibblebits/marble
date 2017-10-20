@@ -84,12 +84,16 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a66e3b5e5118f00a940c3e4a2f138c9c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8c2420b3c21af6e84bdf0ef23ccdb0a6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFunctionSystem.html#a8c2420b3c21af6e84bdf0ef23ccdb0a6">FunctionSystem</a> (<a class="el" href="classSystemHandler.html">SystemHandler</a> *sys_handler)</td></tr>
 <tr class="separator:a8c2420b3c21af6e84bdf0ef23ccdb0a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa847d30455d0868179326505ec6384cd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFunctionSystem.html#aa847d30455d0868179326505ec6384cd">FunctionSystem</a> (<a class="el" href="classSystemHandler.html">SystemHandler</a> *sys_handler, <a class="el" href="classFunctionSystem.html">FunctionSystem</a> *<a class="el" href="classFunctionSystem.html#a0d223ca42b6d6617af61136bdb1f33dd">prev_fc_sys</a>)</td></tr>
+<tr class="memitem:aa847d30455d0868179326505ec6384cd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFunctionSystem.html#aa847d30455d0868179326505ec6384cd">FunctionSystem</a> (<a class="el" href="classSystemHandler.html">SystemHandler</a> *sys_handler, <a class="el" href="classFunctionSystem.html">FunctionSystem</a> *prev_fc_sys)</td></tr>
 <tr class="separator:aa847d30455d0868179326505ec6384cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad6f794406996091d08df65e8d3e0e665"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFunctionSystem.html#ad6f794406996091d08df65e8d3e0e665">~FunctionSystem</a> ()</td></tr>
 <tr class="separator:ad6f794406996091d08df65e8d3e0e665"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7924e14b5794c595167aa9d547182883"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFunctionSystem.html#a7924e14b5794c595167aa9d547182883">setSystemHandler</a> (<a class="el" href="classSystemHandler.html">SystemHandler</a> *sys_handler)</td></tr>
 <tr class="separator:a7924e14b5794c595167aa9d547182883"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2304a8ecdf5ddad124779b75be69f4a1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFunctionSystem.html#a2304a8ecdf5ddad124779b75be69f4a1">setPreviousFunctionSystem</a> (<a class="el" href="classFunctionSystem.html">FunctionSystem</a> *prev_fc_sys)</td></tr>
+<tr class="separator:a2304a8ecdf5ddad124779b75be69f4a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c6914067d4eca5f9c039bed454d072f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classFunctionSystem.html">FunctionSystem</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFunctionSystem.html#a2c6914067d4eca5f9c039bed454d072f">getPreviousFunctionSystem</a> ()</td></tr>
+<tr class="separator:a2c6914067d4eca5f9c039bed454d072f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a975b09fef826151dd66dece595aa452b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classFunction.html">Function</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFunctionSystem.html#a975b09fef826151dd66dece595aa452b">registerFunction</a> (std::string name, std::function&lt; void(std::vector&lt; <a class="el" href="classValue.html">Value</a> &gt; values, <a class="el" href="classValue.html">Value</a> *return_value, std::shared_ptr&lt; <a class="el" href="classObject.html">Object</a> &gt; object)&gt; entrypoint)</td></tr>
 <tr class="separator:a975b09fef826151dd66dece595aa452b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1a3d54c912c91ea7656cc5a6185a9a6f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classFunction.html">Function</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFunctionSystem.html#a1a3d54c912c91ea7656cc5a6185a9a6f">registerFunction</a> (<a class="el" href="classFunctionNode.html">FunctionNode</a> *fnode)</td></tr>
@@ -103,8 +107,6 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a0d223ca42b6d6617af61136bdb1f33dd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classFunctionSystem.html">FunctionSystem</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFunctionSystem.html#a0d223ca42b6d6617af61136bdb1f33dd">prev_fc_sys</a></td></tr>
-<tr class="separator:a0d223ca42b6d6617af61136bdb1f33dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a59f2a49d91338ced0a79d3898412fcaf"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classObject.html">Object</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFunctionSystem.html#a59f2a49d91338ced0a79d3898412fcaf">currentObj</a></td></tr>
 <tr class="separator:a59f2a49d91338ced0a79d3898412fcaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -216,6 +218,23 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a2c6914067d4eca5f9c039bed454d072f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2c6914067d4eca5f9c039bed454d072f">&#9670;&nbsp;</a></span>getPreviousFunctionSystem()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classFunctionSystem.html">FunctionSystem</a>* FunctionSystem::getPreviousFunctionSystem </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a7248f494dea505ffaa2108b202f1efcb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7248f494dea505ffaa2108b202f1efcb">&#9670;&nbsp;</a></span>hasFunction()</h2>
 
@@ -305,6 +324,24 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a2304a8ecdf5ddad124779b75be69f4a1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2304a8ecdf5ddad124779b75be69f4a1">&#9670;&nbsp;</a></span>setPreviousFunctionSystem()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FunctionSystem::setPreviousFunctionSystem </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classFunctionSystem.html">FunctionSystem</a> *&#160;</td>
+          <td class="paramname"><em>prev_fc_sys</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a7924e14b5794c595167aa9d547182883"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7924e14b5794c595167aa9d547182883">&#9670;&nbsp;</a></span>setSystemHandler()</h2>
 
@@ -337,22 +374,6 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>Set to an <a class="el" href="classObject.html">Object</a> instance when calling an <a class="el" href="classObject.html">Object</a> <a class="el" href="classClass.html">Class</a> <a class="el" href="classFunction.html">Function</a> through an object access expression such as <em>Foo.Bar();</em> </p><dl class="section note"><dt>Note</dt><dd>This is useful for when the right node of an expression needs to know the current object of the left node </dd></dl>
 <dl class="section attention"><dt>Attention</dt><dd>this should only be used during an object access expression </dd></dl>
-
-</div>
-</div>
-<a id="a0d223ca42b6d6617af61136bdb1f33dd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0d223ca42b6d6617af61136bdb1f33dd">&#9670;&nbsp;</a></span>prev_fc_sys</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classFunctionSystem.html">FunctionSystem</a>* FunctionSystem::prev_fc_sys</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>The previous, parent function system. Set to NULL if no parent exists. </p><dl class="section note"><dt>Note</dt><dd>This is used for classes that extend other classes </dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classFunctionSystem.html#a6ccd76d0760272b64790d6f5c8cdc607">getFunctionByName</a> </dd></dl>
 
 </div>
 </div>

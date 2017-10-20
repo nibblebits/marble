@@ -39,6 +39,13 @@ enum
     NODE_TYPE_CLASS
 };
 
+enum
+{
+    FUNCTION_TYPE_WRITTEN,
+    FUNCTION_TYPE_NATIVE,
+    FUNCTION_TYPE_GROUPED
+};
+
 // This enum should be aligned with the value enum so that using either will match with the other.
 enum
 {
@@ -115,6 +122,7 @@ typedef int NODE_TYPE;
 typedef int VALUE_TYPE;
 typedef int VARIABLE_TYPE;
 typedef int EVALUATION_TYPE;
+typedef int FUNCTION_TYPE;
 typedef int LOG_TYPE;
 typedef int MODIFIER_ACCESS;
 #endif

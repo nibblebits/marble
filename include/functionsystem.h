@@ -7,6 +7,8 @@
 #include <vector>
 #include <stdexcept>
 #include "value.h"
+#include "vartype.h"
+
 class SystemHandler;
 class FunctionNode;
 class Function;

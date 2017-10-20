@@ -12,7 +12,7 @@ public:
     static int getVariableTypeForString(std::string str);
     static Variable getFromPointer(Variable* variable);
     std::string name;
-    int type;
+    VARIABLE_TYPE type;
     std::string type_name;
     
     // The scope this is a part of. For example if this variable is declared in an IF statement the scope will be the IF statement scope.

@@ -21,7 +21,15 @@ virtual void \hyperlink{classVarNode_afaca674319775ae5e8a4fb0e5ec7b59f}{test} (\
 \item 
 virtual \hyperlink{classValue}{Value} \hyperlink{classVarNode_af2eed4fcade96d174c5b1f623b6bcdf6}{interpret} (\hyperlink{classInterpreter}{Interpreter} $\ast$interpreter)
 \item 
+virtual void \hyperlink{classVarNode_affe926e80803de0a83ce88f9a0d97db3}{evaluate\+\_\+impl} (\hyperlink{classSystemHandler}{System\+Handler} $\ast$handler, \hyperlink{statics_8h_a6664c451ca7787483a7981cc1de68dbb}{E\+V\+A\+L\+U\+A\+T\+I\+O\+N\+\_\+\+T\+Y\+PE} expected\+\_\+evaluation, struct \hyperlink{structEvaluation}{Evaluation} $\ast$evaluation)
+\item 
 std\+::string \hyperlink{classVarNode_afcde838758181438e89f8f91699c9d5b}{get\+Type\+As\+String} ()
+\item 
+bool \hyperlink{classVarNode_ab433d17cf3b2002756931a4f74cc200a}{is\+Array} ()
+\item 
+bool \hyperlink{classVarNode_a0a735a87c57b56a0fbcb87ef3dd36c3f}{is\+Primitive} ()
+\item 
+bool \hyperlink{classVarNode_ae0c6e834fe26f709f3e6bc859bc4384f}{is\+Object} ()
 \end{DoxyCompactItemize}
 \subsection*{Public Attributes}
 \begin{DoxyCompactItemize}
@@ -55,6 +63,16 @@ int \hyperlink{classVarNode_a408a93fc558984318fb6fdad5cb36077}{dimensions}
 
 
 \subsection{Member Function Documentation}
+\mbox{\Hypertarget{classVarNode_affe926e80803de0a83ce88f9a0d97db3}\label{classVarNode_affe926e80803de0a83ce88f9a0d97db3}} 
+\index{Var\+Node@{Var\+Node}!evaluate\+\_\+impl@{evaluate\+\_\+impl}}
+\index{evaluate\+\_\+impl@{evaluate\+\_\+impl}!Var\+Node@{Var\+Node}}
+\subsubsection{\texorpdfstring{evaluate\+\_\+impl()}{evaluate\_impl()}}
+{\footnotesize\ttfamily virtual void Var\+Node\+::evaluate\+\_\+impl (\begin{DoxyParamCaption}\item[{\hyperlink{classSystemHandler}{System\+Handler} $\ast$}]{handler,  }\item[{\hyperlink{statics_8h_a6664c451ca7787483a7981cc1de68dbb}{E\+V\+A\+L\+U\+A\+T\+I\+O\+N\+\_\+\+T\+Y\+PE}}]{expected\+\_\+evaluation,  }\item[{struct \hyperlink{structEvaluation}{Evaluation} $\ast$}]{evaluation }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \hyperlink{classEvaluatingNode_a085fa06e0b46a93c814dc55cda0c1b26}{Evaluating\+Node}.
+
 \mbox{\Hypertarget{classVarNode_afcde838758181438e89f8f91699c9d5b}\label{classVarNode_afcde838758181438e89f8f91699c9d5b}} 
 \index{Var\+Node@{Var\+Node}!get\+Type\+As\+String@{get\+Type\+As\+String}}
 \index{get\+Type\+As\+String@{get\+Type\+As\+String}!Var\+Node@{Var\+Node}}
@@ -70,6 +88,24 @@ int \hyperlink{classVarNode_a408a93fc558984318fb6fdad5cb36077}{dimensions}
 
 
 Implements \hyperlink{classInterpretableNode_a9a466e7d65c4b323d2b96b4ac8396cd7}{Interpretable\+Node}.
+
+\mbox{\Hypertarget{classVarNode_ab433d17cf3b2002756931a4f74cc200a}\label{classVarNode_ab433d17cf3b2002756931a4f74cc200a}} 
+\index{Var\+Node@{Var\+Node}!is\+Array@{is\+Array}}
+\index{is\+Array@{is\+Array}!Var\+Node@{Var\+Node}}
+\subsubsection{\texorpdfstring{is\+Array()}{isArray()}}
+{\footnotesize\ttfamily bool Var\+Node\+::is\+Array (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classVarNode_ae0c6e834fe26f709f3e6bc859bc4384f}\label{classVarNode_ae0c6e834fe26f709f3e6bc859bc4384f}} 
+\index{Var\+Node@{Var\+Node}!is\+Object@{is\+Object}}
+\index{is\+Object@{is\+Object}!Var\+Node@{Var\+Node}}
+\subsubsection{\texorpdfstring{is\+Object()}{isObject()}}
+{\footnotesize\ttfamily bool Var\+Node\+::is\+Object (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classVarNode_a0a735a87c57b56a0fbcb87ef3dd36c3f}\label{classVarNode_a0a735a87c57b56a0fbcb87ef3dd36c3f}} 
+\index{Var\+Node@{Var\+Node}!is\+Primitive@{is\+Primitive}}
+\index{is\+Primitive@{is\+Primitive}!Var\+Node@{Var\+Node}}
+\subsubsection{\texorpdfstring{is\+Primitive()}{isPrimitive()}}
+{\footnotesize\ttfamily bool Var\+Node\+::is\+Primitive (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
 \mbox{\Hypertarget{classVarNode_afaca674319775ae5e8a4fb0e5ec7b59f}\label{classVarNode_afaca674319775ae5e8a4fb0e5ec7b59f}} 
 \index{Var\+Node@{Var\+Node}!test@{test}}

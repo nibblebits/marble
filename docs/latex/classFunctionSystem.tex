@@ -17,11 +17,15 @@ Inheritance diagram for Function\+System\+:\begin{figure}[H]
 \item 
 \hyperlink{classFunctionSystem_a8c2420b3c21af6e84bdf0ef23ccdb0a6}{Function\+System} (\hyperlink{classSystemHandler}{System\+Handler} $\ast$sys\+\_\+handler)
 \item 
-\hyperlink{classFunctionSystem_aa847d30455d0868179326505ec6384cd}{Function\+System} (\hyperlink{classSystemHandler}{System\+Handler} $\ast$sys\+\_\+handler, \hyperlink{classFunctionSystem}{Function\+System} $\ast$\hyperlink{classFunctionSystem_a0d223ca42b6d6617af61136bdb1f33dd}{prev\+\_\+fc\+\_\+sys})
+\hyperlink{classFunctionSystem_aa847d30455d0868179326505ec6384cd}{Function\+System} (\hyperlink{classSystemHandler}{System\+Handler} $\ast$sys\+\_\+handler, \hyperlink{classFunctionSystem}{Function\+System} $\ast$prev\+\_\+fc\+\_\+sys)
 \item 
 virtual \hyperlink{classFunctionSystem_ad6f794406996091d08df65e8d3e0e665}{$\sim$\+Function\+System} ()
 \item 
 void \hyperlink{classFunctionSystem_a7924e14b5794c595167aa9d547182883}{set\+System\+Handler} (\hyperlink{classSystemHandler}{System\+Handler} $\ast$sys\+\_\+handler)
+\item 
+void \hyperlink{classFunctionSystem_a2304a8ecdf5ddad124779b75be69f4a1}{set\+Previous\+Function\+System} (\hyperlink{classFunctionSystem}{Function\+System} $\ast$prev\+\_\+fc\+\_\+sys)
+\item 
+\hyperlink{classFunctionSystem}{Function\+System} $\ast$ \hyperlink{classFunctionSystem_a2c6914067d4eca5f9c039bed454d072f}{get\+Previous\+Function\+System} ()
 \item 
 \hyperlink{classFunction}{Function} $\ast$ \hyperlink{classFunctionSystem_a975b09fef826151dd66dece595aa452b}{register\+Function} (std\+::string name, std\+::function$<$ void(std\+::vector$<$ \hyperlink{classValue}{Value} $>$ values, \hyperlink{classValue}{Value} $\ast$return\+\_\+value, std\+::shared\+\_\+ptr$<$ \hyperlink{classObject}{Object} $>$ object)$>$ entrypoint)
 \item 
@@ -35,8 +39,6 @@ bool \hyperlink{classFunctionSystem_a5bb3f64848489ff7cc4c982c08a10eaa}{has\+Func
 \end{DoxyCompactItemize}
 \subsection*{Public Attributes}
 \begin{DoxyCompactItemize}
-\item 
-\hyperlink{classFunctionSystem}{Function\+System} $\ast$ \hyperlink{classFunctionSystem_a0d223ca42b6d6617af61136bdb1f33dd}{prev\+\_\+fc\+\_\+sys}
 \item 
 std\+::shared\+\_\+ptr$<$ \hyperlink{classObject}{Object} $>$ \hyperlink{classFunctionSystem_a59f2a49d91338ced0a79d3898412fcaf}{current\+Obj}
 \end{DoxyCompactItemize}
@@ -76,6 +78,12 @@ std\+::shared\+\_\+ptr$<$ \hyperlink{classObject}{Object} $>$ \hyperlink{classFu
 \subsubsection{\texorpdfstring{get\+Function\+By\+Name()}{getFunctionByName()}}
 {\footnotesize\ttfamily \hyperlink{classFunction}{Function}$\ast$ Function\+System\+::get\+Function\+By\+Name (\begin{DoxyParamCaption}\item[{std\+::string}]{name }\end{DoxyParamCaption})}
 
+\mbox{\Hypertarget{classFunctionSystem_a2c6914067d4eca5f9c039bed454d072f}\label{classFunctionSystem_a2c6914067d4eca5f9c039bed454d072f}} 
+\index{Function\+System@{Function\+System}!get\+Previous\+Function\+System@{get\+Previous\+Function\+System}}
+\index{get\+Previous\+Function\+System@{get\+Previous\+Function\+System}!Function\+System@{Function\+System}}
+\subsubsection{\texorpdfstring{get\+Previous\+Function\+System()}{getPreviousFunctionSystem()}}
+{\footnotesize\ttfamily \hyperlink{classFunctionSystem}{Function\+System}$\ast$ Function\+System\+::get\+Previous\+Function\+System (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
 \mbox{\Hypertarget{classFunctionSystem_a7248f494dea505ffaa2108b202f1efcb}\label{classFunctionSystem_a7248f494dea505ffaa2108b202f1efcb}} 
 \index{Function\+System@{Function\+System}!has\+Function@{has\+Function}}
 \index{has\+Function@{has\+Function}!Function\+System@{Function\+System}}
@@ -107,6 +115,12 @@ Creates and registers a \hyperlink{classNativeFunction}{Native\+Function} into t
 \subsubsection{\texorpdfstring{register\+Function()}{registerFunction()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
 {\footnotesize\ttfamily \hyperlink{classFunction}{Function}$\ast$ Function\+System\+::register\+Function (\begin{DoxyParamCaption}\item[{\hyperlink{classFunctionNode}{Function\+Node} $\ast$}]{fnode }\end{DoxyParamCaption})}
 
+\mbox{\Hypertarget{classFunctionSystem_a2304a8ecdf5ddad124779b75be69f4a1}\label{classFunctionSystem_a2304a8ecdf5ddad124779b75be69f4a1}} 
+\index{Function\+System@{Function\+System}!set\+Previous\+Function\+System@{set\+Previous\+Function\+System}}
+\index{set\+Previous\+Function\+System@{set\+Previous\+Function\+System}!Function\+System@{Function\+System}}
+\subsubsection{\texorpdfstring{set\+Previous\+Function\+System()}{setPreviousFunctionSystem()}}
+{\footnotesize\ttfamily void Function\+System\+::set\+Previous\+Function\+System (\begin{DoxyParamCaption}\item[{\hyperlink{classFunctionSystem}{Function\+System} $\ast$}]{prev\+\_\+fc\+\_\+sys }\end{DoxyParamCaption})}
+
 \mbox{\Hypertarget{classFunctionSystem_a7924e14b5794c595167aa9d547182883}\label{classFunctionSystem_a7924e14b5794c595167aa9d547182883}} 
 \index{Function\+System@{Function\+System}!set\+System\+Handler@{set\+System\+Handler}}
 \index{set\+System\+Handler@{set\+System\+Handler}!Function\+System@{Function\+System}}
@@ -128,18 +142,6 @@ This is useful for when the right node of an expression needs to know the curren
 \begin{DoxyAttention}{Attention}
 this should only be used during an object access expression 
 \end{DoxyAttention}
-\mbox{\Hypertarget{classFunctionSystem_a0d223ca42b6d6617af61136bdb1f33dd}\label{classFunctionSystem_a0d223ca42b6d6617af61136bdb1f33dd}} 
-\index{Function\+System@{Function\+System}!prev\+\_\+fc\+\_\+sys@{prev\+\_\+fc\+\_\+sys}}
-\index{prev\+\_\+fc\+\_\+sys@{prev\+\_\+fc\+\_\+sys}!Function\+System@{Function\+System}}
-\subsubsection{\texorpdfstring{prev\+\_\+fc\+\_\+sys}{prev\_fc\_sys}}
-{\footnotesize\ttfamily \hyperlink{classFunctionSystem}{Function\+System}$\ast$ Function\+System\+::prev\+\_\+fc\+\_\+sys}
-
-The previous, parent function system. Set to N\+U\+LL if no parent exists. \begin{DoxyNote}{Note}
-This is used for classes that extend other classes 
-\end{DoxyNote}
-\begin{DoxySeeAlso}{See also}
-\hyperlink{classFunctionSystem_a6ccd76d0760272b64790d6f5c8cdc607}{get\+Function\+By\+Name} 
-\end{DoxySeeAlso}
 
 
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}

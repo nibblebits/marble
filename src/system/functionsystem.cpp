@@ -3,8 +3,7 @@
 #include "nativefunction.h"
 #include "writtenfunction.h"
 #include "interpreter.h"
-#include "fnode.h"
-
+#include "nodes.h"
 FunctionSystem::FunctionSystem() : FunctionSystem(NULL, NULL)
 {
 
@@ -48,7 +47,10 @@ Function* FunctionSystem::registerFunction(std::string name, std::function<void(
         throw std::logic_error("Function* FunctionSystem::registerFunction(std::string name, std::function<Value(std::vector<Value>)> entrypoint): The function you are trying to register already exists");
     }
 
-    Function* function = new NativeFunction(name, entrypoint);
+    // Blank argument types for now.
+    std::vector<VarType> argument_types;
+    
+    Function* function = new NativeFunction(name, argument_types, entrypoint);
     this->functions.push_back(std::unique_ptr<Function>(function));
     return function;
 }
@@ -63,10 +65,20 @@ Function* FunctionSystem::registerFunction(FunctionNode* fnode)
         
     if (hasFunctionLocally(fnode->name))
     {
+        // So we already have this function registered so we may need to create a grouped function if it is not that already
         throw std::logic_error("Function* FunctionSystem::registerFunction(FunctionNode* fnode): The function you are trying to register already exists");
     }
     
-    Function* function = new WrittenFunction((Interpreter*) sys_handler, fnode);
+    
+    // We must get the variable arguments and give them to the function we are about to create.
+    std::vector<VarType> var_types;
+    for (VarNode* node : fnode->args)
+    {
+        struct Evaluation evaluation = node->type->evaluate(this->sys_handler, EVALUATION_TYPE_DATATYPE);
+        var_types.push_back(evaluation.datatype);
+    }
+    
+    Function* function = new WrittenFunction((Interpreter*) sys_handler, fnode, var_types);
     this->functions.push_back(std::unique_ptr<Function>(function));
     return function;
 }

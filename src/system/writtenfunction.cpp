@@ -3,7 +3,7 @@
 #include "fnode.h"
 #include "varnode.h"
 #include "bodynode.h"
-WrittenFunction::WrittenFunction(Interpreter* interpreter, FunctionNode* function_node) : Function(function_node->name)
+WrittenFunction::WrittenFunction(Interpreter* interpreter, FunctionNode* function_node, std::vector<VarType> argument_types) : SingleFunction(FUNCTION_TYPE_WRITTEN, function_node->name, argument_types)
 {
     this->interpreter = interpreter;
     this->fnode = function_node;

@@ -92,6 +92,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a80e75b0ab6c388c34a82bdce63fdc7bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5ab94984d059dba1f7d2baa6022712ba"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classValue.html">Value</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBodyNode.html#a5ab94984d059dba1f7d2baa6022712ba">interpret</a> (<a class="el" href="classInterpreter.html">Interpreter</a> *interpreter)</td></tr>
 <tr class="separator:a5ab94984d059dba1f7d2baa6022712ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab08c6586b725065afca095786b842991"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBodyNode.html#ab08c6586b725065afca095786b842991">evaluate_impl</a> (<a class="el" href="classSystemHandler.html">SystemHandler</a> *handler, <a class="el" href="statics_8h.html#a6664c451ca7787483a7981cc1de68dbb">EVALUATION_TYPE</a> expected_evaluation, struct <a class="el" href="structEvaluation.html">Evaluation</a> *evaluation)</td></tr>
+<tr class="separator:ab08c6586b725065afca095786b842991"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8b27949f189186af47dd81336d0d5ce7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBodyNode.html#a8b27949f189186af47dd81336d0d5ce7">onBeforeLeave</a> (std::function&lt; void()&gt; before_leave_function)</td></tr>
 <tr class="separator:a8b27949f189186af47dd81336d0d5ce7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adf1536979d1a57a735cc75290117afa4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBodyNode.html#adf1536979d1a57a735cc75290117afa4">apply_node_listener</a> (std::function&lt; bool(<a class="el" href="classNode.html">Node</a> *node, <a class="el" href="classValue.html">Value</a> v)&gt; node_listener_function)</td></tr>
@@ -138,9 +140,6 @@ Public Attributes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
-<tr class="inherit_header pro_methods_classEvaluatingNode"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classEvaluatingNode')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classEvaluatingNode.html">EvaluatingNode</a></td></tr>
-<tr class="memitem:abb86fa7334a5871f959b0633db3b5215 inherit pro_methods_classEvaluatingNode"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEvaluatingNode.html#abb86fa7334a5871f959b0633db3b5215">evaluate_impl</a> (<a class="el" href="classSystemHandler.html">SystemHandler</a> *handler, <a class="el" href="statics_8h.html#a6664c451ca7787483a7981cc1de68dbb">EVALUATION_TYPE</a> expected_evaluation, struct <a class="el" href="structEvaluation.html">Evaluation</a> *evaluation)</td></tr>
-<tr class="separator:abb86fa7334a5871f959b0633db3b5215 inherit pro_methods_classEvaluatingNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ac431b406e16e66745f5413eb868f23b8"></a>
@@ -219,6 +218,50 @@ Additional Inherited Members</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab08c6586b725065afca095786b842991"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab08c6586b725065afca095786b842991">&#9670;&nbsp;</a></span>evaluate_impl()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void BodyNode::evaluate_impl </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classSystemHandler.html">SystemHandler</a> *&#160;</td>
+          <td class="paramname"><em>handler</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="statics_8h.html#a6664c451ca7787483a7981cc1de68dbb">EVALUATION_TYPE</a>&#160;</td>
+          <td class="paramname"><em>expected_evaluation</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structEvaluation.html">Evaluation</a> *&#160;</td>
+          <td class="paramname"><em>evaluation</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="classEvaluatingNode.html#a085fa06e0b46a93c814dc55cda0c1b26">EvaluatingNode</a>.</p>
 
 </div>
 </div>

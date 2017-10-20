@@ -15,6 +15,7 @@ var searchData=
   ['_7efunctioncallnode',['~FunctionCallNode',['../classFunctionCallNode.html#a781834ac40eada17d2f9dc53a8bd26e5',1,'FunctionCallNode']]],
   ['_7efunctionnode',['~FunctionNode',['../classFunctionNode.html#ad9c4a35db175de9386ac86d91a1a95df',1,'FunctionNode']]],
   ['_7efunctionsystem',['~FunctionSystem',['../classFunctionSystem.html#ad6f794406996091d08df65e8d3e0e665',1,'FunctionSystem']]],
+  ['_7egroupedfunction',['~GroupedFunction',['../classGroupedFunction.html#a5f3c1ed74083a0b9f1dea5ae2f287e70',1,'GroupedFunction']]],
   ['_7eidentifiernode',['~IdentifierNode',['../classIdentifierNode.html#a1c6fac2ceb5c9b7a435006b41898aa31',1,'IdentifierNode']]],
   ['_7eifstatementnode',['~IfStatementNode',['../classIfStatementNode.html#a81885b8c46c006ff58324e9121e0bab2',1,'IfStatementNode']]],
   ['_7einterpretablenode',['~InterpretableNode',['../classInterpretableNode.html#a36f9960c9cfe7267fc518bd5e5462e2e',1,'InterpretableNode']]],
@@ -36,6 +37,7 @@ var searchData=
   ['_7escope',['~Scope',['../classScope.html#af19fa415c0496acf5667982b584c23d3',1,'Scope']]],
   ['_7escopehandler',['~ScopeHandler',['../classScopeHandler.html#acb1cddd8d15f29d2ce656dff6192c53f',1,'ScopeHandler']]],
   ['_7esharedselfholdingpointer',['~SharedSelfHoldingPointer',['../classSharedSelfHoldingPointer.html#a1f3b14c8c9f032a20304c1d053163dec',1,'SharedSelfHoldingPointer']]],
+  ['_7esinglefunction',['~SingleFunction',['../classSingleFunction.html#ae414926a60c49b4039e7cd41a304ed77',1,'SingleFunction']]],
   ['_7esplitter',['~Splitter',['../classSplitter.html#a39a9ddc7baf2616717677effae5ca547',1,'Splitter']]],
   ['_7estatement',['~Statement',['../classStatement.html#aebe8ef20fbd0a932ebb33f6cef555a6d',1,'Statement']]],
   ['_7estringnode',['~StringNode',['../classStringNode.html#a2b2f8f89db3402822e55da8ede0ca443',1,'StringNode']]],
@@ -46,5 +48,6 @@ var searchData=
   ['_7evalue',['~Value',['../classValue.html#aceb26b90be781020c0c71ae5d16ca06f',1,'Value']]],
   ['_7evariable',['~Variable',['../classVariable.html#abeaf0f45e2b8d0b063b567d6491604fd',1,'Variable']]],
   ['_7evarnode',['~VarNode',['../classVarNode.html#aab6e763704273c00cd756edbdd0b13df',1,'VarNode']]],
+  ['_7evartype',['~VarType',['../classVarType.html#af090ea0ac8270c1566c592bd9b3df2e6',1,'VarType']]],
   ['_7ewrittenfunction',['~WrittenFunction',['../classWrittenFunction.html#a46facc10f998146c7709772b0b662ad6',1,'WrittenFunction']]]
 ];

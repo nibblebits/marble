@@ -18,6 +18,8 @@ Inheritance diagram for Neg\+Node\+:\begin{figure}[H]
 virtual \hyperlink{classNegNode_aba880abbb0e47060985c5ec3e3e0c3fc}{$\sim$\+Neg\+Node} ()
 \item 
 virtual \hyperlink{classValue}{Value} \hyperlink{classNegNode_a35ff48d55ab355e27f33dcc21483e4c7}{interpret} (\hyperlink{classInterpreter}{Interpreter} $\ast$interpreter)
+\item 
+virtual void \hyperlink{classNegNode_a504b9103413ac571d7a332cd4dd0b9c5}{evaluate\+\_\+impl} (\hyperlink{classSystemHandler}{System\+Handler} $\ast$handler, \hyperlink{statics_8h_a6664c451ca7787483a7981cc1de68dbb}{E\+V\+A\+L\+U\+A\+T\+I\+O\+N\+\_\+\+T\+Y\+PE} expected\+\_\+evaluation, struct \hyperlink{structEvaluation}{Evaluation} $\ast$evaluation)
 \end{DoxyCompactItemize}
 \subsection*{Public Attributes}
 \begin{DoxyCompactItemize}
@@ -43,6 +45,16 @@ virtual \hyperlink{classValue}{Value} \hyperlink{classNegNode_a35ff48d55ab355e27
 
 
 \subsection{Member Function Documentation}
+\mbox{\Hypertarget{classNegNode_a504b9103413ac571d7a332cd4dd0b9c5}\label{classNegNode_a504b9103413ac571d7a332cd4dd0b9c5}} 
+\index{Neg\+Node@{Neg\+Node}!evaluate\+\_\+impl@{evaluate\+\_\+impl}}
+\index{evaluate\+\_\+impl@{evaluate\+\_\+impl}!Neg\+Node@{Neg\+Node}}
+\subsubsection{\texorpdfstring{evaluate\+\_\+impl()}{evaluate\_impl()}}
+{\footnotesize\ttfamily virtual void Neg\+Node\+::evaluate\+\_\+impl (\begin{DoxyParamCaption}\item[{\hyperlink{classSystemHandler}{System\+Handler} $\ast$}]{handler,  }\item[{\hyperlink{statics_8h_a6664c451ca7787483a7981cc1de68dbb}{E\+V\+A\+L\+U\+A\+T\+I\+O\+N\+\_\+\+T\+Y\+PE}}]{expected\+\_\+evaluation,  }\item[{struct \hyperlink{structEvaluation}{Evaluation} $\ast$}]{evaluation }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \hyperlink{classEvaluatingNode_a085fa06e0b46a93c814dc55cda0c1b26}{Evaluating\+Node}.
+
 \mbox{\Hypertarget{classNegNode_a35ff48d55ab355e27f33dcc21483e4c7}\label{classNegNode_a35ff48d55ab355e27f33dcc21483e4c7}} 
 \index{Neg\+Node@{Neg\+Node}!interpret@{interpret}}
 \index{interpret@{interpret}!Neg\+Node@{Neg\+Node}}

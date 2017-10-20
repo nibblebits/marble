@@ -21,6 +21,8 @@ virtual void \hyperlink{classBodyNode_a80e75b0ab6c388c34a82bdce63fdc7bb}{test} (
 \item 
 virtual \hyperlink{classValue}{Value} \hyperlink{classBodyNode_a5ab94984d059dba1f7d2baa6022712ba}{interpret} (\hyperlink{classInterpreter}{Interpreter} $\ast$interpreter)
 \item 
+virtual void \hyperlink{classBodyNode_ab08c6586b725065afca095786b842991}{evaluate\+\_\+impl} (\hyperlink{classSystemHandler}{System\+Handler} $\ast$handler, \hyperlink{statics_8h_a6664c451ca7787483a7981cc1de68dbb}{E\+V\+A\+L\+U\+A\+T\+I\+O\+N\+\_\+\+T\+Y\+PE} expected\+\_\+evaluation, struct \hyperlink{structEvaluation}{Evaluation} $\ast$evaluation)
+\item 
 void \hyperlink{classBodyNode_a8b27949f189186af47dd81336d0d5ce7}{on\+Before\+Leave} (std\+::function$<$ void()$>$ before\+\_\+leave\+\_\+function)
 \item 
 void \hyperlink{classBodyNode_adf1536979d1a57a735cc75290117afa4}{apply\+\_\+node\+\_\+listener} (std\+::function$<$ bool(\hyperlink{classNode}{Node} $\ast$node, \hyperlink{classValue}{Value} v)$>$ node\+\_\+listener\+\_\+function)
@@ -66,6 +68,16 @@ void \hyperlink{classBodyNode_ab8a99f9e2c7d33f7cf4cbb07a61bec0f}{add\+Child} (\h
 \index{apply\+\_\+node\+\_\+listener@{apply\+\_\+node\+\_\+listener}!Body\+Node@{Body\+Node}}
 \subsubsection{\texorpdfstring{apply\+\_\+node\+\_\+listener()}{apply\_node\_listener()}}
 {\footnotesize\ttfamily void Body\+Node\+::apply\+\_\+node\+\_\+listener (\begin{DoxyParamCaption}\item[{std\+::function$<$ bool(\hyperlink{classNode}{Node} $\ast$node, \hyperlink{classValue}{Value} v)$>$}]{node\+\_\+listener\+\_\+function }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classBodyNode_ab08c6586b725065afca095786b842991}\label{classBodyNode_ab08c6586b725065afca095786b842991}} 
+\index{Body\+Node@{Body\+Node}!evaluate\+\_\+impl@{evaluate\+\_\+impl}}
+\index{evaluate\+\_\+impl@{evaluate\+\_\+impl}!Body\+Node@{Body\+Node}}
+\subsubsection{\texorpdfstring{evaluate\+\_\+impl()}{evaluate\_impl()}}
+{\footnotesize\ttfamily virtual void Body\+Node\+::evaluate\+\_\+impl (\begin{DoxyParamCaption}\item[{\hyperlink{classSystemHandler}{System\+Handler} $\ast$}]{handler,  }\item[{\hyperlink{statics_8h_a6664c451ca7787483a7981cc1de68dbb}{E\+V\+A\+L\+U\+A\+T\+I\+O\+N\+\_\+\+T\+Y\+PE}}]{expected\+\_\+evaluation,  }\item[{struct \hyperlink{structEvaluation}{Evaluation} $\ast$}]{evaluation }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \hyperlink{classEvaluatingNode_a085fa06e0b46a93c814dc55cda0c1b26}{Evaluating\+Node}.
 
 \mbox{\Hypertarget{classBodyNode_a5ab94984d059dba1f7d2baa6022712ba}\label{classBodyNode_a5ab94984d059dba1f7d2baa6022712ba}} 
 \index{Body\+Node@{Body\+Node}!interpret@{interpret}}

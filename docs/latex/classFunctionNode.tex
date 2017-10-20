@@ -20,6 +20,8 @@ virtual \hyperlink{classFunctionNode_ad9c4a35db175de9386ac86d91a1a95df}{$\sim$\+
 virtual void \hyperlink{classFunctionNode_a1f020e7ea0181b3ce16ad2ef8426f773}{test} (\hyperlink{classValidator}{Validator} $\ast$validator)
 \item 
 virtual \hyperlink{classValue}{Value} \hyperlink{classFunctionNode_a059e6682cd51d0e126372a7af257ea5a}{interpret} (\hyperlink{classInterpreter}{Interpreter} $\ast$interpreter)
+\item 
+virtual void \hyperlink{classFunctionNode_a697f1fdc368f5ad09284b32b4466f353}{evaluate\+\_\+impl} (\hyperlink{classSystemHandler}{System\+Handler} $\ast$handler, \hyperlink{statics_8h_a6664c451ca7787483a7981cc1de68dbb}{E\+V\+A\+L\+U\+A\+T\+I\+O\+N\+\_\+\+T\+Y\+PE} expected\+\_\+evaluation, struct \hyperlink{structEvaluation}{Evaluation} $\ast$evaluation)
 \end{DoxyCompactItemize}
 \subsection*{Public Attributes}
 \begin{DoxyCompactItemize}
@@ -51,6 +53,16 @@ std\+::vector$<$ \hyperlink{classVarNode}{Var\+Node} $\ast$ $>$ \hyperlink{class
 
 
 \subsection{Member Function Documentation}
+\mbox{\Hypertarget{classFunctionNode_a697f1fdc368f5ad09284b32b4466f353}\label{classFunctionNode_a697f1fdc368f5ad09284b32b4466f353}} 
+\index{Function\+Node@{Function\+Node}!evaluate\+\_\+impl@{evaluate\+\_\+impl}}
+\index{evaluate\+\_\+impl@{evaluate\+\_\+impl}!Function\+Node@{Function\+Node}}
+\subsubsection{\texorpdfstring{evaluate\+\_\+impl()}{evaluate\_impl()}}
+{\footnotesize\ttfamily virtual void Function\+Node\+::evaluate\+\_\+impl (\begin{DoxyParamCaption}\item[{\hyperlink{classSystemHandler}{System\+Handler} $\ast$}]{handler,  }\item[{\hyperlink{statics_8h_a6664c451ca7787483a7981cc1de68dbb}{E\+V\+A\+L\+U\+A\+T\+I\+O\+N\+\_\+\+T\+Y\+PE}}]{expected\+\_\+evaluation,  }\item[{struct \hyperlink{structEvaluation}{Evaluation} $\ast$}]{evaluation }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \hyperlink{classEvaluatingNode_a085fa06e0b46a93c814dc55cda0c1b26}{Evaluating\+Node}.
+
 \mbox{\Hypertarget{classFunctionNode_a059e6682cd51d0e126372a7af257ea5a}\label{classFunctionNode_a059e6682cd51d0e126372a7af257ea5a}} 
 \index{Function\+Node@{Function\+Node}!interpret@{interpret}}
 \index{interpret@{interpret}!Function\+Node@{Function\+Node}}

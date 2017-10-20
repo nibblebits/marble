@@ -1,0 +1,99 @@
+\hypertarget{classGroupedFunction}{}\section{Grouped\+Function Class Reference}
+\label{classGroupedFunction}\index{Grouped\+Function@{Grouped\+Function}}
+
+
+{\ttfamily \#include $<$groupedfunction.\+h$>$}
+
+Inheritance diagram for Grouped\+Function\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classGroupedFunction}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classGroupedFunction_a5c0b6a884019fdf2eb5caab86e0fec9c}{Grouped\+Function} (std\+::string \hyperlink{classFunction_a161d1ceb4f67f3222caf429fea7b71f1}{name})
+\item 
+virtual \hyperlink{classGroupedFunction_a5f3c1ed74083a0b9f1dea5ae2f287e70}{$\sim$\+Grouped\+Function} ()
+\item 
+virtual void \hyperlink{classGroupedFunction_a90a74bd39250863046a7cb97ce013d2b}{invoke} (std\+::vector$<$ \hyperlink{classValue}{Value} $>$ values, \hyperlink{classValue}{Value} $\ast$return\+\_\+value, std\+::shared\+\_\+ptr$<$ \hyperlink{classObject}{Object} $>$ object)
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ \hyperlink{classFunction}{Function} $\ast$ $>$ \hyperlink{classGroupedFunction_a34767023406ae622e9d33d81584e969a}{functions}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+A grouped function is a function that holds other functions with the same name. This is possible with function overloading. Take the following example
+
+
+\begin{DoxyCode}
+\textcolor{keyword}{function} \hyperlink{classFunction_a5b7d859d767e8a9c19fc5b81a0d10395}{getName}() : string \{ \textcolor{keywordflow}{return} this.\hyperlink{classFunction_a161d1ceb4f67f3222caf429fea7b71f1}{name}; \}
+\textcolor{keyword}{function} \hyperlink{classFunction_a5b7d859d767e8a9c19fc5b81a0d10395}{getName}(number size) \{ \textcolor{keywordtype}{string} new\_name = \textcolor{stringliteral}{""}; \textcolor{keywordflow}{for} (number i = 0; i < size; i+=1) \{ new\_name 
+      += this.\hyperlink{classFunction_a161d1ceb4f67f3222caf429fea7b71f1}{name}[i]; \} \} 
+\end{DoxyCode}
+
+
+As you can see from the two functions named \char`\"{}get\+Name\char`\"{} one of these functions returns the whole name and one of them returns the name up to a certain size. This is function overloading as both functions have the same name but different arguments and in the marble interpreter when registering a function with the same name with different arguments the function becomes a grouped function and all the different types of functions become functions in this grouped function.
+
+{\bfseries Upon invoking a \hyperlink{classGroupedFunction}{Grouped\+Function} the \hyperlink{classGroupedFunction}{Grouped\+Function} will automatically pick the correct function to invoke based on the input values this allows all functions to all be treated singular } 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classGroupedFunction_a5c0b6a884019fdf2eb5caab86e0fec9c}\label{classGroupedFunction_a5c0b6a884019fdf2eb5caab86e0fec9c}} 
+\index{Grouped\+Function@{Grouped\+Function}!Grouped\+Function@{Grouped\+Function}}
+\index{Grouped\+Function@{Grouped\+Function}!Grouped\+Function@{Grouped\+Function}}
+\subsubsection{\texorpdfstring{Grouped\+Function()}{GroupedFunction()}}
+{\footnotesize\ttfamily Grouped\+Function\+::\+Grouped\+Function (\begin{DoxyParamCaption}\item[{std\+::string}]{name }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classGroupedFunction_a5f3c1ed74083a0b9f1dea5ae2f287e70}\label{classGroupedFunction_a5f3c1ed74083a0b9f1dea5ae2f287e70}} 
+\index{Grouped\+Function@{Grouped\+Function}!````~Grouped\+Function@{$\sim$\+Grouped\+Function}}
+\index{````~Grouped\+Function@{$\sim$\+Grouped\+Function}!Grouped\+Function@{Grouped\+Function}}
+\subsubsection{\texorpdfstring{$\sim$\+Grouped\+Function()}{~GroupedFunction()}}
+{\footnotesize\ttfamily virtual Grouped\+Function\+::$\sim$\+Grouped\+Function (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classGroupedFunction_a90a74bd39250863046a7cb97ce013d2b}\label{classGroupedFunction_a90a74bd39250863046a7cb97ce013d2b}} 
+\index{Grouped\+Function@{Grouped\+Function}!invoke@{invoke}}
+\index{invoke@{invoke}!Grouped\+Function@{Grouped\+Function}}
+\subsubsection{\texorpdfstring{invoke()}{invoke()}}
+{\footnotesize\ttfamily virtual void Grouped\+Function\+::invoke (\begin{DoxyParamCaption}\item[{std\+::vector$<$ \hyperlink{classValue}{Value} $>$}]{values,  }\item[{\hyperlink{classValue}{Value} $\ast$}]{return\+\_\+value,  }\item[{std\+::shared\+\_\+ptr$<$ \hyperlink{classObject}{Object} $>$}]{object }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Invokes the correct function in this grouped function based on the values provided. If no function is found with the appropriate arguments for the input values then an exception is thrown.
+
+
+\begin{DoxyParams}{Parameters}
+{\em values} & The values to pass to the function to be called \\
+\hline
+{\em return\+\_\+value} & The return value for this function. \\
+\hline
+{\em object} & The object this function was invoked on. Set to N\+U\+LL if no object was provided. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em std\+::logic\+\_\+error} & Thrown if no function can be found that can deal with the values provided. \\
+\hline
+\end{DoxyExceptions}
+
+
+Implements \hyperlink{classFunction_a84f9a63e68becc27e58ea738ba4cd698}{Function}.
+
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{classGroupedFunction_a34767023406ae622e9d33d81584e969a}\label{classGroupedFunction_a34767023406ae622e9d33d81584e969a}} 
+\index{Grouped\+Function@{Grouped\+Function}!functions@{functions}}
+\index{functions@{functions}!Grouped\+Function@{Grouped\+Function}}
+\subsubsection{\texorpdfstring{functions}{functions}}
+{\footnotesize\ttfamily std\+::vector$<$\hyperlink{classFunction}{Function}$\ast$$>$ Grouped\+Function\+::functions}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\hyperlink{groupedfunction_8h}{groupedfunction.\+h}\end{DoxyCompactItemize}

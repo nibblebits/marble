@@ -18,6 +18,8 @@ Inheritance diagram for Array\+Node\+:\begin{figure}[H]
 virtual \hyperlink{classArrayNode_aa45e4fbc84eab2f8731feefdc99bd639}{$\sim$\+Array\+Node} ()
 \item 
 virtual \hyperlink{classValue}{Value} \hyperlink{classArrayNode_a029220b946233e22cb661fcfac9634d0}{interpret} (\hyperlink{classInterpreter}{Interpreter} $\ast$interpreter)
+\item 
+virtual void \hyperlink{classArrayNode_aeefbfe735ed37a81785a492dbc66eddc}{evaluate\+\_\+impl} (\hyperlink{classSystemHandler}{System\+Handler} $\ast$handler, \hyperlink{statics_8h_a6664c451ca7787483a7981cc1de68dbb}{E\+V\+A\+L\+U\+A\+T\+I\+O\+N\+\_\+\+T\+Y\+PE} expected\+\_\+evaluation, struct \hyperlink{structEvaluation}{Evaluation} $\ast$evaluation)
 \end{DoxyCompactItemize}
 \subsection*{Public Attributes}
 \begin{DoxyCompactItemize}
@@ -45,6 +47,16 @@ virtual \hyperlink{classValue}{Value} \hyperlink{classArrayNode_a029220b946233e2
 
 
 \subsection{Member Function Documentation}
+\mbox{\Hypertarget{classArrayNode_aeefbfe735ed37a81785a492dbc66eddc}\label{classArrayNode_aeefbfe735ed37a81785a492dbc66eddc}} 
+\index{Array\+Node@{Array\+Node}!evaluate\+\_\+impl@{evaluate\+\_\+impl}}
+\index{evaluate\+\_\+impl@{evaluate\+\_\+impl}!Array\+Node@{Array\+Node}}
+\subsubsection{\texorpdfstring{evaluate\+\_\+impl()}{evaluate\_impl()}}
+{\footnotesize\ttfamily virtual void Array\+Node\+::evaluate\+\_\+impl (\begin{DoxyParamCaption}\item[{\hyperlink{classSystemHandler}{System\+Handler} $\ast$}]{handler,  }\item[{\hyperlink{statics_8h_a6664c451ca7787483a7981cc1de68dbb}{E\+V\+A\+L\+U\+A\+T\+I\+O\+N\+\_\+\+T\+Y\+PE}}]{expected\+\_\+evaluation,  }\item[{struct \hyperlink{structEvaluation}{Evaluation} $\ast$}]{evaluation }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \hyperlink{classEvaluatingNode_a085fa06e0b46a93c814dc55cda0c1b26}{Evaluating\+Node}.
+
 \mbox{\Hypertarget{classArrayNode_a029220b946233e22cb661fcfac9634d0}\label{classArrayNode_a029220b946233e22cb661fcfac9634d0}} 
 \index{Array\+Node@{Array\+Node}!interpret@{interpret}}
 \index{interpret@{interpret}!Array\+Node@{Array\+Node}}

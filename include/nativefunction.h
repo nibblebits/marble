@@ -1,11 +1,11 @@
 #ifndef NATIVEFUNCTION_H
 #define NATIVEFUNCTION_H
 
-#include "function.h"
-class NativeFunction : public Function
+#include "singlefunction.h"
+class NativeFunction : public SingleFunction
 {
     public:
-        NativeFunction(std::string name, std::function<void(std::vector<Value>, Value* return_value, std::shared_ptr<Object> object)> entrypoint);
+        NativeFunction(std::string name, std::vector<VarType> argument_types, std::function<void(std::vector<Value>, Value* return_value, std::shared_ptr<Object> object)> entrypoint);
         virtual ~NativeFunction();
         virtual void invoke(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object);
     private:

@@ -22,6 +22,8 @@ bool \hyperlink{classNewNode_af2d1614a80b8fcc00957155109e4b2f2}{is\+Array} ()
 virtual void \hyperlink{classNewNode_a9be504d069e8a5d4ea13b4767a3c792a}{test} (\hyperlink{classValidator}{Validator} $\ast$validator)
 \item 
 virtual \hyperlink{classValue}{Value} \hyperlink{classNewNode_a77447b9402f0153401bf0e623b5f1e6e}{interpret} (\hyperlink{classInterpreter}{Interpreter} $\ast$interpreter)
+\item 
+virtual void \hyperlink{classNewNode_a53fe843af3bbb2add900646ef3891f8e}{evaluate\+\_\+impl} (\hyperlink{classSystemHandler}{System\+Handler} $\ast$handler, \hyperlink{statics_8h_a6664c451ca7787483a7981cc1de68dbb}{E\+V\+A\+L\+U\+A\+T\+I\+O\+N\+\_\+\+T\+Y\+PE} expected\+\_\+evaluation, struct \hyperlink{structEvaluation}{Evaluation} $\ast$evaluation)
 \end{DoxyCompactItemize}
 \subsection*{Public Attributes}
 \begin{DoxyCompactItemize}
@@ -49,6 +51,16 @@ std\+::vector$<$ \hyperlink{classExpressionInterpretableNode}{Expression\+Interp
 
 
 \subsection{Member Function Documentation}
+\mbox{\Hypertarget{classNewNode_a53fe843af3bbb2add900646ef3891f8e}\label{classNewNode_a53fe843af3bbb2add900646ef3891f8e}} 
+\index{New\+Node@{New\+Node}!evaluate\+\_\+impl@{evaluate\+\_\+impl}}
+\index{evaluate\+\_\+impl@{evaluate\+\_\+impl}!New\+Node@{New\+Node}}
+\subsubsection{\texorpdfstring{evaluate\+\_\+impl()}{evaluate\_impl()}}
+{\footnotesize\ttfamily virtual void New\+Node\+::evaluate\+\_\+impl (\begin{DoxyParamCaption}\item[{\hyperlink{classSystemHandler}{System\+Handler} $\ast$}]{handler,  }\item[{\hyperlink{statics_8h_a6664c451ca7787483a7981cc1de68dbb}{E\+V\+A\+L\+U\+A\+T\+I\+O\+N\+\_\+\+T\+Y\+PE}}]{expected\+\_\+evaluation,  }\item[{struct \hyperlink{structEvaluation}{Evaluation} $\ast$}]{evaluation }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \hyperlink{classEvaluatingNode_a085fa06e0b46a93c814dc55cda0c1b26}{Evaluating\+Node}.
+
 \mbox{\Hypertarget{classNewNode_a77447b9402f0153401bf0e623b5f1e6e}\label{classNewNode_a77447b9402f0153401bf0e623b5f1e6e}} 
 \index{New\+Node@{New\+Node}!interpret@{interpret}}
 \index{interpret@{interpret}!New\+Node@{New\+Node}}

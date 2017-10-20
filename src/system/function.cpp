@@ -1,8 +1,9 @@
 #include "function.h"
 #include "interpreter.h"
 
-Function::Function(std::string name)
+Function::Function(FUNCTION_TYPE type, std::string name)
 {
+    this->type = type;
     this->name = name;
 }
 

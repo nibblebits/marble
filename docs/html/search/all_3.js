@@ -2,7 +2,7 @@ var searchData=
 [
   ['data',['data',['../structdata__descriptor.html#a438b90d9b79eaa4d589d13edc66809cb',1,'data_descriptor']]],
   ['data_5fdescriptor',['data_descriptor',['../structdata__descriptor.html',1,'data_descriptor'],['../structdata__descriptor.html#a6d9ca56cc8c9dc991da573b4de28a24f',1,'data_descriptor::data_descriptor()']]],
-  ['datatype',['DataType',['../classDataType.html',1,'DataType'],['../structEvaluation_1_1datatype.html',1,'Evaluation::datatype'],['../structEvaluation.html#afd26f89d96c69704172ddcce5d08fee4',1,'Evaluation::datatype()']]],
+  ['datatype',['DataType',['../classDataType.html',1,'DataType'],['../structEvaluation.html#abd759f3afe3d74d94f38e340f77be416',1,'Evaluation::datatype()']]],
   ['datatype_2eh',['datatype.h',['../datatype_8h.html',1,'']]],
   ['debug',['Debug',['../classDebug.html',1,'Debug'],['../classDebug.html#a5b453c195c4cfffed2702c3330f53a64',1,'Debug::Debug()']]],
   ['debug_2eh',['debug.h',['../debug_8h.html',1,'']]],
