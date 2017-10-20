@@ -25,8 +25,9 @@ void GroupedFunction::invoke(std::vector<Value> values, Value* return_value, std
 
 Function* GroupedFunction::getFunctionForValues(std::vector<Value> values)
 {
-  for (Function* function : this->functions)
+  for (int i = 0; i < this->functions.size(); i++)
   {
+    Function* function = this->functions.at(i).get();
     if (isValidFunctionForValues((SingleFunction*) function, values))
         return function;
   }
@@ -36,8 +37,8 @@ Function* GroupedFunction::getFunctionForValues(std::vector<Value> values)
 
 bool GroupedFunction::isValidFunctionForValues(SingleFunction* function, std::vector<Value> values)
 {
-    std::vector<VarType> argument_types = function->argument_types;
-    if (argument_types.size() != values.size());
+    std::vector<VarType> argument_types = function->argument_types; 
+    if (argument_types.size() != values.size())
         return false;
     
     for (int i = 0; i < argument_types.size(); i++)
@@ -49,6 +50,7 @@ bool GroupedFunction::isValidFunctionForValues(SingleFunction* function, std::ve
         if (arg_value_type != value->type)
         {
             // The argument value type and the value type do not match this means they are incompatible;
+            std::cout << "fail typed" << std::endl;
             return false;
         }
         
@@ -65,4 +67,9 @@ bool GroupedFunction::isValidFunctionForValues(SingleFunction* function, std::ve
     }
     
     return true;
+}
+
+void GroupedFunction::addFunction(std::unique_ptr<Function> function)
+{
+    this->functions.push_back(std::move(function));
 }

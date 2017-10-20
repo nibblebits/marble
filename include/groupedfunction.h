@@ -40,9 +40,11 @@ public:
     */
     virtual void invoke(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object);
     Function* getFunctionForValues(std::vector<Value> values);
-    bool isValidFunctionForValues(SingleFunction* function, std::vector<Value> values);
-    std::vector<std::unique_ptr<SingleFunction>> functions; 
+    void addFunction(std::unique_ptr<Function> function);
     SystemHandler* sys_handler;
+private:
+    bool isValidFunctionForValues(SingleFunction* function, std::vector<Value> values);
+    std::vector<std::unique_ptr<Function>> functions; 
 };
 
 #endif
