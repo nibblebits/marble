@@ -50,17 +50,15 @@ GroupedFunction* FunctionSystem::replaceFunctionWithGroup(std::string function_n
     return grouped_function;
 }
 
-Function* FunctionSystem::registerFunction(std::string name, std::function<void(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)> entrypoint)
+Function* FunctionSystem::registerFunction(std::string name, std::vector<VarType> args, std::function<void(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)> entrypoint)
 {
-    if (hasFunctionLocally(name))
+    if (hasFunctionLocally(name, args))
     {
-       // throw std::logic_error("Function* FunctionSystem::registerFunction(std::string name, std::function<Value(std::vector<Value>)> entrypoint): The function you are trying to register already exists: " + name);
+        throw std::logic_error("The function: " + name + " has already been registered with the given arguments");
     }
 
-    // Blank argument types for now.
-    std::vector<VarType> argument_types;
     
-    Function* function = new NativeFunction(name, argument_types, entrypoint);
+    Function* function = new NativeFunction(name, args, entrypoint);
     this->functions[name] = std::unique_ptr<Function>(function);
     return function;
 }
@@ -70,9 +68,6 @@ Function* FunctionSystem::registerFunction(FunctionNode* fnode)
     if (this->sys_handler == NULL)
         throw std::logic_error("The function system does not have a system handler attached");
     
-    if (this->sys_handler->getType() != SYSTEM_HANDLER_INTERPRETER)
-        throw std::logic_error("The function: " + fnode->name + " cannot be registered as the current system handler is not an interpreter");
-        
     // We must get the variable arguments and give them to the function we are about to create.
     std::vector<VarType> var_types;
     for (VarNode* node : fnode->args)
@@ -81,7 +76,11 @@ Function* FunctionSystem::registerFunction(FunctionNode* fnode)
         var_types.push_back(evaluation.datatype);
     }    
     
-    std::unique_ptr<Function> function = std::unique_ptr<Function>(new WrittenFunction((Interpreter*) sys_handler, fnode, var_types));
+    // Has a function with the same variable argument types already been registered
+    if (hasFunctionLocally(fnode->name, var_types))
+        throw std::logic_error("The function: " + fnode->name + " has already been registered with the given arguments");
+        
+    std::unique_ptr<Function> function = std::unique_ptr<Function>(new WrittenFunction(sys_handler, fnode, var_types));
     if (hasFunctionLocally(fnode->name))
     {
         // So we already have this function registered so we may need to create a grouped function if it is not that already
@@ -109,18 +108,81 @@ bool FunctionSystem::hasFunction(std::string name)
     return getFunctionByName(name) != NULL;
 }
 
+bool FunctionSystem::hasFunction(std::string name, std::vector<VarType> args)
+{
+    return this->getFunctionByNameAndArguments(name, args) != NULL;
+}
+
 bool FunctionSystem::hasFunctionLocally(std::string name)
 {
     return this->functions.find(name) != this->functions.end();
 }
 
+bool FunctionSystem::hasFunctionLocally(std::string name, std::vector<VarType> args)
+{
+    Function* function = this->getFunctionLocallyByNameAndArguments(name, args);
+    return function != NULL;
+}
+
 Function* FunctionSystem::getFunctionByName(std::string name)
 {
-   Function* function = this->functions.find(name)->second.get();
-   if (function != NULL)
-      return function;
+   std::map<std::string, std::unique_ptr<Function>>::iterator it = this->functions.find(name); 
+   if (it != this->functions.end())
+   {
+       Function* function = it->second.get();
+       if (function != NULL)
+          return function;
+   }
     
    if (this->prev_fc_sys != NULL)
         return this->prev_fc_sys->getFunctionByName(name);
     return NULL;
+}
+
+Function* FunctionSystem::getFunctionLocallyByNameAndArguments(std::string name, std::vector<VarType> args)
+{
+    std::map<std::string, std::unique_ptr<Function>>::iterator it = this->functions.find(name); 
+    if (it == this->functions.end())
+        return NULL;
+        
+    Function* function = it->second.get();
+    if (function != NULL)
+    {
+        switch(function->type)
+        {
+            case FUNCTION_TYPE_WRITTEN:
+            case FUNCTION_TYPE_NATIVE:
+            {
+                SingleFunction* single_function = (SingleFunction*) function;
+                if (args == single_function->argument_types)
+                {
+                    return single_function;
+                }
+            }
+            break;
+            
+            case FUNCTION_TYPE_GROUPED:
+            {
+                GroupedFunction* grouped_function = (GroupedFunction*) function;
+                function = grouped_function->getFunctionForArguments(args);      
+                return function;
+            }
+            break;
+        } 
+        
+    }
+    
+    return NULL;   
+}
+
+Function* FunctionSystem::getFunctionByNameAndArguments(std::string name, std::vector<VarType> args)
+{
+    Function* function = getFunctionLocallyByNameAndArguments(name, args);
+    if (function == NULL)
+    { 
+        if (this->prev_fc_sys != NULL)
+            return this->prev_fc_sys->getFunctionByNameAndArguments(name, args);
+    }
+    
+    return function;
 }

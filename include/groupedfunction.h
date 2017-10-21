@@ -2,7 +2,9 @@
 #define GROUPEDFUNCTION_H
 
 #include <memory>
+#include <algorithm>
 #include "function.h"
+#include "vartype.h"
 
 /**
 * A grouped function is a function that holds other functions with the same name.
@@ -40,6 +42,8 @@ public:
     */
     virtual void invoke(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object);
     Function* getFunctionForValues(std::vector<Value> values);
+    Function* getFunctionForArguments(std::vector<VarType> types);
+    bool hasFunctionWithArguments(std::vector<VarType> types);
     void addFunction(std::unique_ptr<Function> function);
     SystemHandler* sys_handler;
 private:

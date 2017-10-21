@@ -19,8 +19,18 @@ FunctionNode::~FunctionNode()
 
 void FunctionNode::test(Validator* validator)
 {
+    std::vector<VarType> var_types;
+    for (VarNode* node : this->args)
+    {
+        struct Evaluation evaluation = node->type->evaluate(validator, EVALUATION_TYPE_DATATYPE);
+        var_types.push_back(evaluation.datatype);
+    }   
+    
+    FunctionSystem* func_sys = validator->getFunctionSystem();
+    if(func_sys->hasFunctionLocally(this->name, var_types))
+        throw TestError("The function with the name \"" + this->name + "\" has already been registered with the same arguments provided");
     // Let's add the function to the list
-    validator->getFunctionSystem()->registerFunction(this->name, NULL);
+    func_sys->registerFunction(this);
     this->body->test(validator);
 }
 

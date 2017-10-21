@@ -7,11 +7,11 @@ class FunctionNode;
 class WrittenFunction : public SingleFunction
 {
  public:
-        WrittenFunction(Interpreter* interpreter, FunctionNode* function_node,  std::vector<VarType> argument_types);
+        WrittenFunction(SystemHandler* sys_handler, FunctionNode* function_node,  std::vector<VarType> argument_types);
         virtual ~WrittenFunction();
         virtual void invoke(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object);
  private:
-        Interpreter* interpreter;
+        SystemHandler* sys_handler;
         FunctionNode* fnode;
 };
 #endif

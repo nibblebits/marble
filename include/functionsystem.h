@@ -31,13 +31,19 @@ class FunctionSystem
          * Creates and registers a NativeFunction into the FunctionSystem and when the function is called
          * the <b>entrypoint</b> lambda function provided will be invoked.
          * \param name The name of the function to create
+         * \param args The arguments this function takes.
          * \param entrypoint The entrypoint of the function.
          */
-        Function* registerFunction(std::string name, std::function<void(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)> entrypoint);
+        Function* registerFunction(std::string name, std::vector<VarType> args, std::function<void(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)> entrypoint);
         Function* registerFunction(FunctionNode* fnode);
         bool hasFunction(std::string name);
+        bool hasFunction(std::string name, std::vector<VarType> args);
         bool hasFunctionLocally(std::string name);
+        bool hasFunctionLocally(std::string name, std::vector<VarType> args);
         Function* getFunctionByName(std::string name);
+        Function* getFunctionByNameAndArguments(std::string name, std::vector<VarType> args);
+        Function* getFunctionLocallyByNameAndArguments(std::string name, std::vector<VarType> args);
+        
         std::shared_ptr<Object> currentObj; /*!< Set to an Object instance when calling an Object Class Function through an object access expression such as <i>Foo.Bar();</i> \note This is useful for when the right node of an expression needs to know the current object of the left node \attention this should only be used during an object access expression*/
     private:
         GroupedFunction* replaceFunctionWithGroup(std::string function_name);

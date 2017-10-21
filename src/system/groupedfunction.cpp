@@ -50,7 +50,6 @@ bool GroupedFunction::isValidFunctionForValues(SingleFunction* function, std::ve
         if (arg_value_type != value->type)
         {
             // The argument value type and the value type do not match this means they are incompatible;
-            std::cout << "fail typed" << std::endl;
             return false;
         }
         
@@ -69,7 +68,32 @@ bool GroupedFunction::isValidFunctionForValues(SingleFunction* function, std::ve
     return true;
 }
 
+
+Function* GroupedFunction::getFunctionForArguments(std::vector<VarType> types)
+{
+    for (int i = 0; i < this->functions.size(); i++)
+    {
+      SingleFunction* function = (SingleFunction*) this->functions.at(i).get();
+      if (types == function->argument_types)
+          return function;
+    }
+    return NULL;
+}
+
+bool GroupedFunction::hasFunctionWithArguments(std::vector<VarType> types)
+{
+    return getFunctionForArguments(types) != NULL;
+}
+
 void GroupedFunction::addFunction(std::unique_ptr<Function> function)
 {
+    // This is a bad way of doing it, the vector type should change to std::unique_ptr<SingleFunction>
+    if (function->type == FUNCTION_TYPE_GROUPED)
+        throw std::logic_error("Only single functions can be added to grouped functions");
+    
+    SingleFunction* single_function = (SingleFunction*) function.get();
+    if (hasFunctionWithArguments(single_function->argument_types))
+        throw std::logic_error("A function with the same name and arguments is already registered");
+        
     this->functions.push_back(std::move(function));
 }
