@@ -22,6 +22,7 @@ void FunctionNode::test(Validator* validator)
     std::vector<VarType> var_types;
     for (VarNode* node : this->args)
     {
+        node->test(validator);
         struct Evaluation evaluation = node->type->evaluate(validator, EVALUATION_TYPE_DATATYPE);
         var_types.push_back(evaluation.datatype);
     }   
