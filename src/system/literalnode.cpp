@@ -34,5 +34,10 @@ Value LiteralNode::interpret(Interpreter* interpreter)
 
 void LiteralNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)
 {
-    throw std::logic_error("Literal nodes cannot be evaluated");
+    if (expected_evaluation & EVALUATION_TYPE_DATATYPE)
+    {
+        // Since this is a literal node and they are expecting a datatype we should return a "number" type as this is the standard type for literal nodes.
+        evaluation->datatype.type = VARIABLE_TYPE_NUMBER;
+        evaluation->datatype.value = "number"; 
+    }
 }

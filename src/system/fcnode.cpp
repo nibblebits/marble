@@ -4,6 +4,7 @@
 #include "validator.h"
 #include "nodes.h"
 #include "function.h"
+#include "vartype.h"
 #include "exceptions/testerror.h"
 #include <iostream>
 #include <stdexcept>
@@ -22,9 +23,16 @@ void FunctionCallNode::test(Validator* validator)
 {
    // Lets ensure the function actually exists
    FunctionSystem* function_sys = validator->getFunctionSystem();
-   if (!function_sys->hasFunction(this->name->value))
+   std::vector<VarType> types;
+   for (ExpressionInterpretableNode* argument_node : this->arguments)
    {
-       throw TestError("The function " + this->name->value + " has not been declared");
+       struct Evaluation evaluation = argument_node->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE);
+       types.push_back(evaluation.datatype);
+   }
+   
+   if (!function_sys->hasFunction(this->name->value, types))
+   {
+       throw TestError("The function \"" + this->name->value + "\" has not been declared that takes the given arguments");
    }
    
    for (ExpressionInterpretableNode* argument_node : this->arguments)

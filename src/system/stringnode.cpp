@@ -34,5 +34,10 @@ Value StringNode::interpret(Interpreter* interpreter)
 
 void StringNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)
 {
-    throw std::logic_error("String nodes cannot be evaluated");
+    if (expected_evaluation & EVALUATION_TYPE_DATATYPE)
+    {
+        // Strings default to the STRING datatype.
+        evaluation->datatype.type = VARIABLE_TYPE_STRING;
+        evaluation->datatype.value = "string";
+    }
 }
