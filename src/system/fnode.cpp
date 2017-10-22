@@ -45,3 +45,4 @@ void FunctionNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expecte
 {
     throw std::logic_error("Evaluating of function nodes is not supported");
 }
+

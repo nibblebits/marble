@@ -26,6 +26,7 @@ void FunctionCallNode::test(Validator* validator)
    std::vector<VarType> types;
    for (ExpressionInterpretableNode* argument_node : this->arguments)
    {
+       argument_node->test(validator);
        struct Evaluation evaluation = argument_node->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE);
        types.push_back(evaluation.datatype);
    }

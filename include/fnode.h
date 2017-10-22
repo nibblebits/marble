@@ -14,9 +14,10 @@ public:
     virtual void test(Validator* validator);
     virtual Value interpret(Interpreter* interpreter);
     virtual void evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation);
+    
     std::string name;
     struct BodyNode* body;
     std::vector<VarNode*> args;
-    Node* return_type;
+    ExpressionInterpretableNode* return_type;
 };
 #endif
