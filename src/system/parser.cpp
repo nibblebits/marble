@@ -320,7 +320,7 @@ void Parser::parse_function()
 {
     IdentifierNode* name_node;
     std::vector<VarNode*> args;
-    Node* return_type;
+    ExpressionInterpretableNode* return_type;
     BodyNode* body;
     FunctionNode* function_node;
     if (!next()->isKeyword("function"))
@@ -357,7 +357,7 @@ void Parser::parse_function()
     {
         parse_error("Expecting a valid return type");
     }
-    return_type = convertToSingleNode(next());
+    return_type = (ExpressionInterpretableNode*) convertToSingleNode(next());
     parse_body();
     body = (BodyNode*) pop_node();
     function_node = (FunctionNode*) factory.createNode(NODE_TYPE_FUNCTION);

@@ -95,5 +95,4 @@ std::vector<Class*> ClassSystem::getAllClasses()
     }
     
     return all_classes;
-    
 }

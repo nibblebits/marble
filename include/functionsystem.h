@@ -34,8 +34,8 @@ class FunctionSystem
          * \param args The arguments this function takes.
          * \param entrypoint The entrypoint of the function.
          */
-        Function* registerFunction(std::string name, std::vector<VarType> args, std::function<void(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)> entrypoint);
-        Function* registerFunction(FunctionNode* fnode);
+        virtual Function* registerFunction(std::string name, std::vector<VarType> args, std::function<void(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)> entrypoint);
+        virtual Function* registerFunction(FunctionNode* fnode);
         bool hasFunction(std::string name);
         bool hasFunction(std::string name, std::vector<VarType> args);
         bool hasFunctionLocally(std::string name);

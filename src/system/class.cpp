@@ -1,4 +1,5 @@
 #include "class.h"
+#include "function.h"
 Class::Class(SystemHandler* sys_handler, std::string name, FunctionSystem* prev_fc_sys) : FunctionSystem(sys_handler, prev_fc_sys)
 {
     this->name = name;
@@ -26,6 +27,22 @@ Class* Class::getClassWhoHasVariable(std::string name)
     
     return NULL;
 }
+
+Function* Class::registerFunction(std::string name, std::vector<VarType> args, std::function<void(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)> entrypoint)
+{
+    Function* function = FunctionSystem::registerFunction(name, args, entrypoint);
+    function->cls = this;
+    return function;
+}
+
+Function* Class::registerFunction(FunctionNode* fnode)
+{
+    Function* function = FunctionSystem::registerFunction(fnode);
+    function->cls = this;
+    return function;
+}
+
+
 void Class::addVariable(Variable v)
 {
     this->local_variables.push_back(v);
@@ -72,3 +89,4 @@ bool Class::instanceOf(Class* c)
         return true;
     return false;
 }
+

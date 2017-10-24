@@ -79,8 +79,9 @@ Function* FunctionSystem::registerFunction(FunctionNode* fnode)
     // Has a function with the same variable argument types already been registered
     if (hasFunctionLocally(fnode->name, var_types))
         throw std::logic_error("The function: " + fnode->name + " has already been registered with the given arguments");
-        
-    std::unique_ptr<Function> function = std::unique_ptr<Function>(new WrittenFunction(sys_handler, fnode, var_types));
+    
+    Function* function_raw = new WrittenFunction(sys_handler, fnode, var_types);
+    std::unique_ptr<Function> function = std::unique_ptr<Function>(function_raw);
     if (hasFunctionLocally(fnode->name))
     {
         // So we already have this function registered so we may need to create a grouped function if it is not that already
@@ -100,7 +101,7 @@ Function* FunctionSystem::registerFunction(FunctionNode* fnode)
         this->functions[fnode->name] = std::move(function);
     }
     
-    return function.get();
+    return function_raw;
 }
 
 bool FunctionSystem::hasFunction(std::string name)
