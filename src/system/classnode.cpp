@@ -34,36 +34,33 @@ void ClassNode::test(Validator* validator)
     Class* c = class_sys->registerClass(name, parent_class);
  
     // We must create a temporary object to be used with the testing process. No methods or functions will be called.
-    std::shared_ptr<Object> object = std::make_shared<Object>(validator, c); 
-    
-    Scope* old_scope = validator->getCurrentScope();
-    FunctionSystem* old_function_system = validator->getFunctionSystem();
-    validator->setCurrentScope(object.get());  
-    validator->setFunctionSystem(c);
-    // Let's test the body of the class node
-    body->onBeforeLeave([&]() -> void {
-        // When leaving the body we should get all the variables that were created during testing this body and store them in the class.
-        for (Variable* var : validator->getCurrentScope()->getVariables())
+    std::shared_ptr<Object> object = std::make_shared<Object>(validator, c);   
+    object->runThis([&]() { 
+        // Let's test the body of the class node
+        body->onBeforeLeave([&]() -> void {
+            // When leaving the body we should get all the variables that were created during testing this body and store them in the class.
+            for (Variable* var : validator->getCurrentScope()->getVariables())
+            {
+                c->addVariable(Variable::getFromPointer(var));
+            }
+        });
+        
+        validator->giveClassObject(object);
+        validator->beginClass(c);
+        try
         {
-            c->addVariable(Variable::getFromPointer(var));
+            /* By testing the body of the class a new scope will be created. 
+             * we do not want this as we want the class object scope to be the scope of the object.
+             * if we do not instruct the body node to keep our scope then a new parented scope will be created
+             * and the "this" variable will then not work from within the object.*/
+            body->test(validator, KEEP_SCOPE);
+        } catch(TestError& e)
+        {
+            throw TestError(std::string(e.what()) + " at class " + name);
         }
-    });
-    
-    validator->giveClassObject(object);
-    validator->beginClass(c);
-    try
-    {
-        body->test(validator);
-    } catch(TestError& e)
-    {
-        throw TestError(std::string(e.what()) + " at class " + name);
-    }
-    validator->endClass();
-    validator->setCurrentScope(old_scope);
-    validator->setFunctionSystem(old_function_system);
-    
-    // The class at this point holds all the variables, lets create a new object instance and add it to the validator. We will need access to this later
-    object = std::make_shared<Object>(validator, c);
+        validator->endClass();
+    }, c);
+
     
 }
 

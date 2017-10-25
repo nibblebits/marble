@@ -1,6 +1,20 @@
 var searchData=
 [
-  ['right_5fto_5fleft',['RIGHT_TO_LEFT',['../statics_8h.html#a0411cd49bb5b71852cecd93bcbf0ca2da054986f32cd1cb5ade35758f8947c42c',1,'statics.h']]],
-  ['rule_5fparse_5farray',['RULE_PARSE_ARRAY',['../statics_8h.html#ab04a0655cd1e3bcac5e8f48c18df1a57abe138e46b8b7f932885978c3f27f2109',1,'statics.h']]],
-  ['rule_5fparse_5fcasting',['RULE_PARSE_CASTING',['../statics_8h.html#ab04a0655cd1e3bcac5e8f48c18df1a57a031c67cea5434164f0e8c5e9f3fb9de8',1,'statics.h']]]
+  ['node_5ftype_5farray',['NODE_TYPE_ARRAY',['../statics_8h.html#a99fb83031ce9923c84392b4e92f956b5aea6c674c869c495f6a70f5cc7f112f64',1,'statics.h']]],
+  ['node_5ftype_5fbody',['NODE_TYPE_BODY',['../statics_8h.html#a99fb83031ce9923c84392b4e92f956b5a3fe0bc832a83348710eec9224d6e1a95',1,'statics.h']]],
+  ['node_5ftype_5fcast',['NODE_TYPE_CAST',['../statics_8h.html#a99fb83031ce9923c84392b4e92f956b5ac6f9926fda81a85e995bd00fac7cfc34',1,'statics.h']]],
+  ['node_5ftype_5fclass',['NODE_TYPE_CLASS',['../statics_8h.html#a99fb83031ce9923c84392b4e92f956b5a8bc0966c42f92af1ee1a0a44a596ee9f',1,'statics.h']]],
+  ['node_5ftype_5fexpression',['NODE_TYPE_EXPRESSION',['../statics_8h.html#a99fb83031ce9923c84392b4e92f956b5a2d0ba5e1136613275698aa8e4096c5f9',1,'statics.h']]],
+  ['node_5ftype_5ffunction',['NODE_TYPE_FUNCTION',['../statics_8h.html#a99fb83031ce9923c84392b4e92f956b5aa0722b3a089966fb2121f42a294e4b4d',1,'statics.h']]],
+  ['node_5ftype_5ffunction_5fcall',['NODE_TYPE_FUNCTION_CALL',['../statics_8h.html#a99fb83031ce9923c84392b4e92f956b5a2676df9b727837a4cad511b7e211f221',1,'statics.h']]],
+  ['node_5ftype_5fidentifier',['NODE_TYPE_IDENTIFIER',['../statics_8h.html#a99fb83031ce9923c84392b4e92f956b5a087591f7e60eaa9d1d4f5ef9e22a57d3',1,'statics.h']]],
+  ['node_5ftype_5fif_5fstmt',['NODE_TYPE_IF_STMT',['../statics_8h.html#a99fb83031ce9923c84392b4e92f956b5aa1780beac4cd9e52c764d3c5cb029edb',1,'statics.h']]],
+  ['node_5ftype_5fkeyword',['NODE_TYPE_KEYWORD',['../statics_8h.html#a99fb83031ce9923c84392b4e92f956b5a2d82baa755064e4ce6fea2c879f042e8',1,'statics.h']]],
+  ['node_5ftype_5fliteral',['NODE_TYPE_LITERAL',['../statics_8h.html#a99fb83031ce9923c84392b4e92f956b5a65faa6ad96887e847d758ebef480fa6c',1,'statics.h']]],
+  ['node_5ftype_5fnegative',['NODE_TYPE_NEGATIVE',['../statics_8h.html#a99fb83031ce9923c84392b4e92f956b5a0f50ca170413904a279fbe1b179fc348',1,'statics.h']]],
+  ['node_5ftype_5fnew',['NODE_TYPE_NEW',['../statics_8h.html#a99fb83031ce9923c84392b4e92f956b5a6b7e7fbdf0127397a99a49e433e9b8b8',1,'statics.h']]],
+  ['node_5ftype_5freturn',['NODE_TYPE_RETURN',['../statics_8h.html#a99fb83031ce9923c84392b4e92f956b5aec1a1538fc11354beb3d9d5f79349728',1,'statics.h']]],
+  ['node_5ftype_5fstring',['NODE_TYPE_STRING',['../statics_8h.html#a99fb83031ce9923c84392b4e92f956b5a99a5a0f5142b463e9dc9c2dcd5804500',1,'statics.h']]],
+  ['node_5ftype_5fvariable_5fdeclaration',['NODE_TYPE_VARIABLE_DECLARATION',['../statics_8h.html#a99fb83031ce9923c84392b4e92f956b5a33eeb39261e1ec1d8aa030bdda180874',1,'statics.h']]],
+  ['non_5fassociative',['NON_ASSOCIATIVE',['../statics_8h.html#abed82baf7f470b522273a3e37c24c600af92dc91effb86ddcb411e2f6dc2d1b5c',1,'statics.h']]]
 ];

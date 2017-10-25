@@ -13,40 +13,33 @@ Inheritance diagram for Grouped\+Function\+:\begin{figure}[H]
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\hyperlink{classGroupedFunction_a5c0b6a884019fdf2eb5caab86e0fec9c}{Grouped\+Function} (std\+::string \hyperlink{classFunction_a161d1ceb4f67f3222caf429fea7b71f1}{name})
+\hyperlink{classGroupedFunction_a613f536552aeb5b85e363d8f5b24a87f}{Grouped\+Function} (std\+::string \hyperlink{classFunction_a161d1ceb4f67f3222caf429fea7b71f1}{name}, \hyperlink{classSystemHandler}{System\+Handler} $\ast$\hyperlink{classGroupedFunction_a932d46ac0e35f1a1c989427e51c1b2b4}{sys\+\_\+handler})
 \item 
 virtual \hyperlink{classGroupedFunction_a5f3c1ed74083a0b9f1dea5ae2f287e70}{$\sim$\+Grouped\+Function} ()
 \item 
 virtual void \hyperlink{classGroupedFunction_a90a74bd39250863046a7cb97ce013d2b}{invoke} (std\+::vector$<$ \hyperlink{classValue}{Value} $>$ values, \hyperlink{classValue}{Value} $\ast$return\+\_\+value, std\+::shared\+\_\+ptr$<$ \hyperlink{classObject}{Object} $>$ object)
+\item 
+\hyperlink{classFunction}{Function} $\ast$ \hyperlink{classGroupedFunction_a216ffc5f08fe1bc61968f4a5f5e99b49}{get\+Function\+For\+Values} (std\+::vector$<$ \hyperlink{classValue}{Value} $>$ values)
+\item 
+\hyperlink{classFunction}{Function} $\ast$ \hyperlink{classGroupedFunction_a4aa6efd8e1ec521964b7826249458f27}{get\+Function\+For\+Arguments} (std\+::vector$<$ \hyperlink{classVarType}{Var\+Type} $>$ types)
+\item 
+bool \hyperlink{classGroupedFunction_a40cb1ca76aaf883d8c8af39b33eaa74b}{has\+Function\+With\+Arguments} (std\+::vector$<$ \hyperlink{classVarType}{Var\+Type} $>$ types)
+\item 
+void \hyperlink{classGroupedFunction_ab019d13e239da992fc6fbe01bc5be8ef}{add\+Function} (std\+::unique\+\_\+ptr$<$ \hyperlink{classFunction}{Function} $>$ function)
 \end{DoxyCompactItemize}
 \subsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
-std\+::vector$<$ \hyperlink{classFunction}{Function} $\ast$ $>$ \hyperlink{classGroupedFunction_a34767023406ae622e9d33d81584e969a}{functions}
+\hyperlink{classSystemHandler}{System\+Handler} $\ast$ \hyperlink{classGroupedFunction_a932d46ac0e35f1a1c989427e51c1b2b4}{sys\+\_\+handler}
 \end{DoxyCompactItemize}
 
 
-\subsection{Detailed Description}
-A grouped function is a function that holds other functions with the same name. This is possible with function overloading. Take the following example
-
-
-\begin{DoxyCode}
-\textcolor{keyword}{function} \hyperlink{classFunction_a5b7d859d767e8a9c19fc5b81a0d10395}{getName}() : string \{ \textcolor{keywordflow}{return} this.\hyperlink{classFunction_a161d1ceb4f67f3222caf429fea7b71f1}{name}; \}
-\textcolor{keyword}{function} \hyperlink{classFunction_a5b7d859d767e8a9c19fc5b81a0d10395}{getName}(number size) \{ \textcolor{keywordtype}{string} new\_name = \textcolor{stringliteral}{""}; \textcolor{keywordflow}{for} (number i = 0; i < size; i+=1) \{ new\_name 
-      += this.\hyperlink{classFunction_a161d1ceb4f67f3222caf429fea7b71f1}{name}[i]; \} \} 
-\end{DoxyCode}
-
-
-As you can see from the two functions named \char`\"{}get\+Name\char`\"{} one of these functions returns the whole name and one of them returns the name up to a certain size. This is function overloading as both functions have the same name but different arguments and in the marble interpreter when registering a function with the same name with different arguments the function becomes a grouped function and all the different types of functions become functions in this grouped function.
-
-{\bfseries Upon invoking a \hyperlink{classGroupedFunction}{Grouped\+Function} the \hyperlink{classGroupedFunction}{Grouped\+Function} will automatically pick the correct function to invoke based on the input values this allows all functions to all be treated singular } 
-
 \subsection{Constructor \& Destructor Documentation}
-\mbox{\Hypertarget{classGroupedFunction_a5c0b6a884019fdf2eb5caab86e0fec9c}\label{classGroupedFunction_a5c0b6a884019fdf2eb5caab86e0fec9c}} 
+\mbox{\Hypertarget{classGroupedFunction_a613f536552aeb5b85e363d8f5b24a87f}\label{classGroupedFunction_a613f536552aeb5b85e363d8f5b24a87f}} 
 \index{Grouped\+Function@{Grouped\+Function}!Grouped\+Function@{Grouped\+Function}}
 \index{Grouped\+Function@{Grouped\+Function}!Grouped\+Function@{Grouped\+Function}}
 \subsubsection{\texorpdfstring{Grouped\+Function()}{GroupedFunction()}}
-{\footnotesize\ttfamily Grouped\+Function\+::\+Grouped\+Function (\begin{DoxyParamCaption}\item[{std\+::string}]{name }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily Grouped\+Function\+::\+Grouped\+Function (\begin{DoxyParamCaption}\item[{std\+::string}]{name,  }\item[{\hyperlink{classSystemHandler}{System\+Handler} $\ast$}]{sys\+\_\+handler }\end{DoxyParamCaption})}
 
 \mbox{\Hypertarget{classGroupedFunction_a5f3c1ed74083a0b9f1dea5ae2f287e70}\label{classGroupedFunction_a5f3c1ed74083a0b9f1dea5ae2f287e70}} 
 \index{Grouped\+Function@{Grouped\+Function}!````~Grouped\+Function@{$\sim$\+Grouped\+Function}}
@@ -57,6 +50,30 @@ As you can see from the two functions named \char`\"{}get\+Name\char`\"{} one of
 
 
 \subsection{Member Function Documentation}
+\mbox{\Hypertarget{classGroupedFunction_ab019d13e239da992fc6fbe01bc5be8ef}\label{classGroupedFunction_ab019d13e239da992fc6fbe01bc5be8ef}} 
+\index{Grouped\+Function@{Grouped\+Function}!add\+Function@{add\+Function}}
+\index{add\+Function@{add\+Function}!Grouped\+Function@{Grouped\+Function}}
+\subsubsection{\texorpdfstring{add\+Function()}{addFunction()}}
+{\footnotesize\ttfamily void Grouped\+Function\+::add\+Function (\begin{DoxyParamCaption}\item[{std\+::unique\+\_\+ptr$<$ \hyperlink{classFunction}{Function} $>$}]{function }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classGroupedFunction_a4aa6efd8e1ec521964b7826249458f27}\label{classGroupedFunction_a4aa6efd8e1ec521964b7826249458f27}} 
+\index{Grouped\+Function@{Grouped\+Function}!get\+Function\+For\+Arguments@{get\+Function\+For\+Arguments}}
+\index{get\+Function\+For\+Arguments@{get\+Function\+For\+Arguments}!Grouped\+Function@{Grouped\+Function}}
+\subsubsection{\texorpdfstring{get\+Function\+For\+Arguments()}{getFunctionForArguments()}}
+{\footnotesize\ttfamily \hyperlink{classFunction}{Function}$\ast$ Grouped\+Function\+::get\+Function\+For\+Arguments (\begin{DoxyParamCaption}\item[{std\+::vector$<$ \hyperlink{classVarType}{Var\+Type} $>$}]{types }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classGroupedFunction_a216ffc5f08fe1bc61968f4a5f5e99b49}\label{classGroupedFunction_a216ffc5f08fe1bc61968f4a5f5e99b49}} 
+\index{Grouped\+Function@{Grouped\+Function}!get\+Function\+For\+Values@{get\+Function\+For\+Values}}
+\index{get\+Function\+For\+Values@{get\+Function\+For\+Values}!Grouped\+Function@{Grouped\+Function}}
+\subsubsection{\texorpdfstring{get\+Function\+For\+Values()}{getFunctionForValues()}}
+{\footnotesize\ttfamily \hyperlink{classFunction}{Function}$\ast$ Grouped\+Function\+::get\+Function\+For\+Values (\begin{DoxyParamCaption}\item[{std\+::vector$<$ \hyperlink{classValue}{Value} $>$}]{values }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classGroupedFunction_a40cb1ca76aaf883d8c8af39b33eaa74b}\label{classGroupedFunction_a40cb1ca76aaf883d8c8af39b33eaa74b}} 
+\index{Grouped\+Function@{Grouped\+Function}!has\+Function\+With\+Arguments@{has\+Function\+With\+Arguments}}
+\index{has\+Function\+With\+Arguments@{has\+Function\+With\+Arguments}!Grouped\+Function@{Grouped\+Function}}
+\subsubsection{\texorpdfstring{has\+Function\+With\+Arguments()}{hasFunctionWithArguments()}}
+{\footnotesize\ttfamily bool Grouped\+Function\+::has\+Function\+With\+Arguments (\begin{DoxyParamCaption}\item[{std\+::vector$<$ \hyperlink{classVarType}{Var\+Type} $>$}]{types }\end{DoxyParamCaption})}
+
 \mbox{\Hypertarget{classGroupedFunction_a90a74bd39250863046a7cb97ce013d2b}\label{classGroupedFunction_a90a74bd39250863046a7cb97ce013d2b}} 
 \index{Grouped\+Function@{Grouped\+Function}!invoke@{invoke}}
 \index{invoke@{invoke}!Grouped\+Function@{Grouped\+Function}}
@@ -86,11 +103,11 @@ Implements \hyperlink{classFunction_a84f9a63e68becc27e58ea738ba4cd698}{Function}
 
 
 \subsection{Member Data Documentation}
-\mbox{\Hypertarget{classGroupedFunction_a34767023406ae622e9d33d81584e969a}\label{classGroupedFunction_a34767023406ae622e9d33d81584e969a}} 
-\index{Grouped\+Function@{Grouped\+Function}!functions@{functions}}
-\index{functions@{functions}!Grouped\+Function@{Grouped\+Function}}
-\subsubsection{\texorpdfstring{functions}{functions}}
-{\footnotesize\ttfamily std\+::vector$<$\hyperlink{classFunction}{Function}$\ast$$>$ Grouped\+Function\+::functions}
+\mbox{\Hypertarget{classGroupedFunction_a932d46ac0e35f1a1c989427e51c1b2b4}\label{classGroupedFunction_a932d46ac0e35f1a1c989427e51c1b2b4}} 
+\index{Grouped\+Function@{Grouped\+Function}!sys\+\_\+handler@{sys\+\_\+handler}}
+\index{sys\+\_\+handler@{sys\+\_\+handler}!Grouped\+Function@{Grouped\+Function}}
+\subsubsection{\texorpdfstring{sys\+\_\+handler}{sys\_handler}}
+{\footnotesize\ttfamily \hyperlink{classSystemHandler}{System\+Handler}$\ast$ Grouped\+Function\+::sys\+\_\+handler}
 
 
 

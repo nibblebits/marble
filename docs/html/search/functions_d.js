@@ -14,7 +14,7 @@ var searchData=
   ['operator_3c',['operator&lt;',['../classValue.html#ab8f33387ddbc00335cb96643e61643f6',1,'Value']]],
   ['operator_3c_3d',['operator&lt;=',['../classValue.html#a38e0f17676ad08e88bedffb1e931d543',1,'Value']]],
   ['operator_3d',['operator=',['../classSharedSelfHoldingPointer.html#afc954c0df268b48304658e3cc078a4d8',1,'SharedSelfHoldingPointer']]],
-  ['operator_3d_3d',['operator==',['../classValue.html#a872c51bf32543279f522426527b4c857',1,'Value']]],
+  ['operator_3d_3d',['operator==',['../classValue.html#a872c51bf32543279f522426527b4c857',1,'Value::operator==()'],['../classVarType.html#a28323b657730e9b806f4b87af777de43',1,'VarType::operator==()']]],
   ['operator_3e',['operator&gt;',['../classValue.html#a05800a20d5b799d1a81b28c950899aea',1,'Value']]],
   ['operator_3e_3d',['operator&gt;=',['../classValue.html#a85a296609b51245c4aec34ebf206a66d',1,'Value']]],
   ['operator_7c_7c',['operator||',['../classValue.html#a2bb40009194bb698b113dc71154d888a',1,'Value']]],

@@ -1,6 +1,7 @@
 var searchData=
 [
   ['addchild',['addChild',['../classBodyNode.html#ab8a99f9e2c7d33f7cf4cbb07a61bec0f',1,'BodyNode']]],
+  ['addfunction',['addFunction',['../classGroupedFunction.html#ab019d13e239da992fc6fbe01bc5be8ef',1,'GroupedFunction']]],
   ['addvariable',['addVariable',['../classClass.html#a0c10b6fc7440f229da43f013271c0506',1,'Class']]],
   ['apply_5fnode_5flistener',['apply_node_listener',['../classBodyNode.html#adf1536979d1a57a735cc75290117afa4',1,'BodyNode']]],
   ['applyposition',['applyPosition',['../classNodeFactory.html#a9eb2e94e99b0c087968e76775fbbdf07',1,'NodeFactory']]],

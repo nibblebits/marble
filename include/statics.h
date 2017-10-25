@@ -66,6 +66,11 @@ enum
     VALUE_TYPE_BYTE
 };
 
+enum
+{
+    KEEP_SCOPE = 0x01
+};
+
 // Bit masking is used for evaluation types
 enum
 {
@@ -120,6 +125,7 @@ typedef int SYSTEM_HANDLER_TYPE;
 typedef int TOKEN_TYPE;
 typedef int NODE_TYPE;
 typedef int VALUE_TYPE;
+typedef int SCOPE_PROPERTIES;
 typedef int VARIABLE_TYPE;
 typedef int EVALUATION_TYPE;
 typedef int FUNCTION_TYPE;

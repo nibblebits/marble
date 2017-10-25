@@ -10,6 +10,7 @@ public:
     BodyNode();
     virtual ~BodyNode();
     virtual void test(Validator* validator);
+    void test(Validator* validator, SCOPE_PROPERTIES scope_properties);
     virtual Value interpret(Interpreter* interpreter);
     virtual void evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation);
     

@@ -23,8 +23,14 @@ void BodyNode::onBeforeLeave(std::function<void()> before_leave_function)
 
 void BodyNode::test(Validator* validator)
 {
+    test(validator, 0);
+}
+
+void BodyNode::test(Validator* validator, SCOPE_PROPERTIES scope_properties)
+{
     // Let's create a new parented scope for this
-    validator->new_parented_scope();
+    if (!(scope_properties & KEEP_SCOPE))
+        validator->new_parented_scope();
     InterpretableNode* current_node = child;
     // Awesome now lets interpret!
     while(current_node != NULL)
@@ -40,7 +46,8 @@ void BodyNode::test(Validator* validator)
     }
     
     // We are done with this scope
-    validator->finish_parented_scope(); 
+    if (!(scope_properties & KEEP_SCOPE))
+        validator->finish_parented_scope(); 
 }
 
 

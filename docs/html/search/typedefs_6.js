@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['token_5ftype',['TOKEN_TYPE',['../statics_8h.html#adb8e9416fa8b5ea4961e9f171db14133',1,'statics.h']]]
+  ['system_5fhandler_5ftype',['SYSTEM_HANDLER_TYPE',['../statics_8h.html#a28f867553077bc713fdf8921a9226e2e',1,'statics.h']]]
 ];

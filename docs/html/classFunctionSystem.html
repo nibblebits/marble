@@ -94,16 +94,24 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a2304a8ecdf5ddad124779b75be69f4a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2c6914067d4eca5f9c039bed454d072f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classFunctionSystem.html">FunctionSystem</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFunctionSystem.html#a2c6914067d4eca5f9c039bed454d072f">getPreviousFunctionSystem</a> ()</td></tr>
 <tr class="separator:a2c6914067d4eca5f9c039bed454d072f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a975b09fef826151dd66dece595aa452b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classFunction.html">Function</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFunctionSystem.html#a975b09fef826151dd66dece595aa452b">registerFunction</a> (std::string name, std::function&lt; void(std::vector&lt; <a class="el" href="classValue.html">Value</a> &gt; values, <a class="el" href="classValue.html">Value</a> *return_value, std::shared_ptr&lt; <a class="el" href="classObject.html">Object</a> &gt; object)&gt; entrypoint)</td></tr>
-<tr class="separator:a975b09fef826151dd66dece595aa452b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1a3d54c912c91ea7656cc5a6185a9a6f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classFunction.html">Function</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFunctionSystem.html#a1a3d54c912c91ea7656cc5a6185a9a6f">registerFunction</a> (<a class="el" href="classFunctionNode.html">FunctionNode</a> *fnode)</td></tr>
-<tr class="separator:a1a3d54c912c91ea7656cc5a6185a9a6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37becc8c6067e6d7e4a1cc494e7d722f"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classFunction.html">Function</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFunctionSystem.html#a37becc8c6067e6d7e4a1cc494e7d722f">registerFunction</a> (std::string name, std::vector&lt; <a class="el" href="classVarType.html">VarType</a> &gt; args, std::function&lt; void(std::vector&lt; <a class="el" href="classValue.html">Value</a> &gt; values, <a class="el" href="classValue.html">Value</a> *return_value, std::shared_ptr&lt; <a class="el" href="classObject.html">Object</a> &gt; object)&gt; entrypoint)</td></tr>
+<tr class="separator:a37becc8c6067e6d7e4a1cc494e7d722f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7356903aa11df3b4c52f7d0c8f230d87"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classFunction.html">Function</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFunctionSystem.html#a7356903aa11df3b4c52f7d0c8f230d87">registerFunction</a> (<a class="el" href="classFunctionNode.html">FunctionNode</a> *fnode)</td></tr>
+<tr class="separator:a7356903aa11df3b4c52f7d0c8f230d87"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7248f494dea505ffaa2108b202f1efcb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFunctionSystem.html#a7248f494dea505ffaa2108b202f1efcb">hasFunction</a> (std::string name)</td></tr>
 <tr class="separator:a7248f494dea505ffaa2108b202f1efcb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a68dfda320aa807a9f1d16e4cfd4f25fb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFunctionSystem.html#a68dfda320aa807a9f1d16e4cfd4f25fb">hasFunction</a> (std::string name, std::vector&lt; <a class="el" href="classVarType.html">VarType</a> &gt; args)</td></tr>
+<tr class="separator:a68dfda320aa807a9f1d16e4cfd4f25fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5bb3f64848489ff7cc4c982c08a10eaa"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFunctionSystem.html#a5bb3f64848489ff7cc4c982c08a10eaa">hasFunctionLocally</a> (std::string name)</td></tr>
 <tr class="separator:a5bb3f64848489ff7cc4c982c08a10eaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac4d0a40304cfb5e34db9dd47057e06d2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFunctionSystem.html#ac4d0a40304cfb5e34db9dd47057e06d2">hasFunctionLocally</a> (std::string name, std::vector&lt; <a class="el" href="classVarType.html">VarType</a> &gt; args)</td></tr>
+<tr class="separator:ac4d0a40304cfb5e34db9dd47057e06d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6ccd76d0760272b64790d6f5c8cdc607"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classFunction.html">Function</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFunctionSystem.html#a6ccd76d0760272b64790d6f5c8cdc607">getFunctionByName</a> (std::string name)</td></tr>
 <tr class="separator:a6ccd76d0760272b64790d6f5c8cdc607"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e83f6c67d1aa5ecd7167058d78e43ae"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classFunction.html">Function</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFunctionSystem.html#a4e83f6c67d1aa5ecd7167058d78e43ae">getFunctionByNameAndArguments</a> (std::string name, std::vector&lt; <a class="el" href="classVarType.html">VarType</a> &gt; args)</td></tr>
+<tr class="separator:a4e83f6c67d1aa5ecd7167058d78e43ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2a2f39ce6f9e107e7efd5a54a5838dc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classFunction.html">Function</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFunctionSystem.html#ae2a2f39ce6f9e107e7efd5a54a5838dc">getFunctionLocallyByNameAndArguments</a> (std::string name, std::vector&lt; <a class="el" href="classVarType.html">VarType</a> &gt; args)</td></tr>
+<tr class="separator:ae2a2f39ce6f9e107e7efd5a54a5838dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -218,6 +226,62 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a4e83f6c67d1aa5ecd7167058d78e43ae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4e83f6c67d1aa5ecd7167058d78e43ae">&#9670;&nbsp;</a></span>getFunctionByNameAndArguments()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classFunction.html">Function</a>* FunctionSystem::getFunctionByNameAndArguments </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="classVarType.html">VarType</a> &gt;&#160;</td>
+          <td class="paramname"><em>args</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae2a2f39ce6f9e107e7efd5a54a5838dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae2a2f39ce6f9e107e7efd5a54a5838dc">&#9670;&nbsp;</a></span>getFunctionLocallyByNameAndArguments()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classFunction.html">Function</a>* FunctionSystem::getFunctionLocallyByNameAndArguments </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="classVarType.html">VarType</a> &gt;&#160;</td>
+          <td class="paramname"><em>args</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a2c6914067d4eca5f9c039bed454d072f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2c6914067d4eca5f9c039bed454d072f">&#9670;&nbsp;</a></span>getPreviousFunctionSystem()</h2>
 
@@ -236,7 +300,7 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a7248f494dea505ffaa2108b202f1efcb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7248f494dea505ffaa2108b202f1efcb">&#9670;&nbsp;</a></span>hasFunction()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a7248f494dea505ffaa2108b202f1efcb">&#9670;&nbsp;</a></span>hasFunction() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -253,8 +317,36 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a68dfda320aa807a9f1d16e4cfd4f25fb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a68dfda320aa807a9f1d16e4cfd4f25fb">&#9670;&nbsp;</a></span>hasFunction() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool FunctionSystem::hasFunction </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="classVarType.html">VarType</a> &gt;&#160;</td>
+          <td class="paramname"><em>args</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a5bb3f64848489ff7cc4c982c08a10eaa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5bb3f64848489ff7cc4c982c08a10eaa">&#9670;&nbsp;</a></span>hasFunctionLocally()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a5bb3f64848489ff7cc4c982c08a10eaa">&#9670;&nbsp;</a></span>hasFunctionLocally() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -271,17 +363,54 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a975b09fef826151dd66dece595aa452b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a975b09fef826151dd66dece595aa452b">&#9670;&nbsp;</a></span>registerFunction() <span class="overload">[1/2]</span></h2>
+<a id="ac4d0a40304cfb5e34db9dd47057e06d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac4d0a40304cfb5e34db9dd47057e06d2">&#9670;&nbsp;</a></span>hasFunctionLocally() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classFunction.html">Function</a>* FunctionSystem::registerFunction </td>
+          <td class="memname">bool FunctionSystem::hasFunctionLocally </td>
           <td>(</td>
           <td class="paramtype">std::string&#160;</td>
           <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="classVarType.html">VarType</a> &gt;&#160;</td>
+          <td class="paramname"><em>args</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a37becc8c6067e6d7e4a1cc494e7d722f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a37becc8c6067e6d7e4a1cc494e7d722f">&#9670;&nbsp;</a></span>registerFunction() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="classFunction.html">Function</a>* FunctionSystem::registerFunction </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="classVarType.html">VarType</a> &gt;&#160;</td>
+          <td class="paramname"><em>args</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -295,32 +424,50 @@ Public Attributes</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 <p>Creates and registers a <a class="el" href="classNativeFunction.html">NativeFunction</a> into the <a class="el" href="classFunctionSystem.html">FunctionSystem</a> and when the function is called the <b>entrypoint</b> lambda function provided will be invoked. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">name</td><td>The name of the function to create </td></tr>
+    <tr><td class="paramname">args</td><td>The arguments this function takes. </td></tr>
     <tr><td class="paramname">entrypoint</td><td>The entrypoint of the function. </td></tr>
   </table>
   </dd>
 </dl>
 
+<p>Reimplemented in <a class="el" href="classClass.html#a91798da1986d9f12a2d40a9997849542">Class</a>.</p>
+
 </div>
 </div>
-<a id="a1a3d54c912c91ea7656cc5a6185a9a6f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1a3d54c912c91ea7656cc5a6185a9a6f">&#9670;&nbsp;</a></span>registerFunction() <span class="overload">[2/2]</span></h2>
+<a id="a7356903aa11df3b4c52f7d0c8f230d87"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7356903aa11df3b4c52f7d0c8f230d87">&#9670;&nbsp;</a></span>registerFunction() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classFunction.html">Function</a>* FunctionSystem::registerFunction </td>
+          <td class="memname">virtual <a class="el" href="classFunction.html">Function</a>* FunctionSystem::registerFunction </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classFunctionNode.html">FunctionNode</a> *&#160;</td>
           <td class="paramname"><em>fnode</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="classClass.html#a757c7a4cb7e9e0b5486a087b953e919e">Class</a>.</p>
 
 </div>
 </div>

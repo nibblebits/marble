@@ -19,7 +19,7 @@ var searchData=
   ['setup',['setup',['../classArray.html#ac9828e89510c879b36acc6eca5efef51',1,'Array']]],
   ['setvalue',['setValue',['../classToken.html#a0c3a53668483200013e6a2c296fb15c1',1,'Token']]],
   ['sharedselfholdingpointer',['SharedSelfHoldingPointer',['../classSharedSelfHoldingPointer.html#a4a81e4be5cf4c074d92122b05ef1a7bf',1,'SharedSelfHoldingPointer::SharedSelfHoldingPointer()'],['../classSharedSelfHoldingPointer.html#af7081c7427461f6a84765a5c6373f2d4',1,'SharedSelfHoldingPointer::SharedSelfHoldingPointer(T *value)'],['../classSharedSelfHoldingPointer.html#a95944d9c7dc5d9b8c6a7efd481ac4906',1,'SharedSelfHoldingPointer::SharedSelfHoldingPointer(SharedSelfHoldingPointer&lt; T &gt; const &amp;sp)']]],
-  ['singlefunction',['SingleFunction',['../classSingleFunction.html#a05cebea02bb5f8ca44fcfe5a81c6336b',1,'SingleFunction']]],
+  ['singlefunction',['SingleFunction',['../classSingleFunction.html#a8c6cc400a8f83f317fa62de6886fde40',1,'SingleFunction']]],
   ['split',['split',['../structsplit.html#a63f2e1ea2dbcb9973b0f2424c4099d3a',1,'split::split()'],['../classSplitter.html#aec64e7219fdb1aaf94dfcf6b40a03efa',1,'Splitter::split()']]],
   ['splitter',['Splitter',['../classSplitter.html#a903043011add23292e7731192a48e768',1,'Splitter']]],
   ['statement',['Statement',['../classStatement.html#a6fb78974779f1f546206a6f301d0fbee',1,'Statement']]],

@@ -76,6 +76,7 @@ var menudata={children:[
 {text:"All",url:"globals.html",children:[
 {text:"d",url:"globals.html#index_d"},
 {text:"e",url:"globals.html#index_e"},
+{text:"f",url:"globals.html#index_f"},
 {text:"i",url:"globals.html#index_i"},
 {text:"l",url:"globals.html#index_l"},
 {text:"m",url:"globals.html#index_m"},
@@ -88,6 +89,7 @@ var menudata={children:[
 {text:"Typedefs",url:"globals_type.html"},
 {text:"Enumerator",url:"globals_eval.html",children:[
 {text:"e",url:"globals_eval.html#index_e"},
+{text:"f",url:"globals_eval.html#index_f"},
 {text:"i",url:"globals_eval.html#index_i"},
 {text:"l",url:"globals_eval.html#index_l"},
 {text:"m",url:"globals_eval.html#index_m"},

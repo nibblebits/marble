@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['system_5fhandler_5ftype',['SYSTEM_HANDLER_TYPE',['../statics_8h.html#a28f867553077bc713fdf8921a9226e2e',1,'statics.h']]]
+  ['output_5ffunction',['OUTPUT_FUNCTION',['../interpreter_8h.html#a57e80eaa218fd4f66b1d55c833119967',1,'interpreter.h']]]
 ];

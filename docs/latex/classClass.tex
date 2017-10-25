@@ -19,6 +19,10 @@ Inheritance diagram for Class\+:\begin{figure}[H]
 \item 
 virtual \hyperlink{classClass_aa3b9e4e0df41778f3d26777c1eb62898}{$\sim$\+Class} ()
 \item 
+virtual \hyperlink{classFunction}{Function} $\ast$ \hyperlink{classClass_a91798da1986d9f12a2d40a9997849542}{register\+Function} (std\+::string \hyperlink{classClass_aac209ee2e03afc3bc9e93fd1fd46256b}{name}, std\+::vector$<$ \hyperlink{classVarType}{Var\+Type} $>$ args, std\+::function$<$ void(std\+::vector$<$ \hyperlink{classValue}{Value} $>$ values, \hyperlink{classValue}{Value} $\ast$return\+\_\+value, std\+::shared\+\_\+ptr$<$ \hyperlink{classObject}{Object} $>$ object)$>$ entrypoint)
+\item 
+virtual \hyperlink{classFunction}{Function} $\ast$ \hyperlink{classClass_a757c7a4cb7e9e0b5486a087b953e919e}{register\+Function} (\hyperlink{classFunctionNode}{Function\+Node} $\ast$fnode)
+\item 
 void \hyperlink{classClass_a0c10b6fc7440f229da43f013271c0506}{add\+Variable} (\hyperlink{classVariable}{Variable} v)
 \item 
 bool \hyperlink{classClass_a0c5ffb0b7e3e95dedad01b8b4e91d93b}{has\+Variable\+With\+Name} (std\+::string \hyperlink{classClass_aac209ee2e03afc3bc9e93fd1fd46256b}{name})
@@ -97,6 +101,35 @@ std\+::string \hyperlink{classClass_aac209ee2e03afc3bc9e93fd1fd46256b}{name}
 \index{instance\+Of@{instance\+Of}!Class@{Class}}
 \subsubsection{\texorpdfstring{instance\+Of()}{instanceOf()}}
 {\footnotesize\ttfamily bool Class\+::instance\+Of (\begin{DoxyParamCaption}\item[{\hyperlink{classClass}{Class} $\ast$}]{c }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classClass_a91798da1986d9f12a2d40a9997849542}\label{classClass_a91798da1986d9f12a2d40a9997849542}} 
+\index{Class@{Class}!register\+Function@{register\+Function}}
+\index{register\+Function@{register\+Function}!Class@{Class}}
+\subsubsection{\texorpdfstring{register\+Function()}{registerFunction()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily virtual \hyperlink{classFunction}{Function}$\ast$ Class\+::register\+Function (\begin{DoxyParamCaption}\item[{std\+::string}]{name,  }\item[{std\+::vector$<$ \hyperlink{classVarType}{Var\+Type} $>$}]{args,  }\item[{std\+::function$<$ void(std\+::vector$<$ \hyperlink{classValue}{Value} $>$ values, \hyperlink{classValue}{Value} $\ast$return\+\_\+value, std\+::shared\+\_\+ptr$<$ \hyperlink{classObject}{Object} $>$ object)$>$}]{entrypoint }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Creates and registers a \hyperlink{classNativeFunction}{Native\+Function} into the \hyperlink{classFunctionSystem}{Function\+System} and when the function is called the {\bfseries entrypoint} lambda function provided will be invoked. 
+\begin{DoxyParams}{Parameters}
+{\em name} & The name of the function to create \\
+\hline
+{\em args} & The arguments this function takes. \\
+\hline
+{\em entrypoint} & The entrypoint of the function. \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \hyperlink{classFunctionSystem_a37becc8c6067e6d7e4a1cc494e7d722f}{Function\+System}.
+
+\mbox{\Hypertarget{classClass_a757c7a4cb7e9e0b5486a087b953e919e}\label{classClass_a757c7a4cb7e9e0b5486a087b953e919e}} 
+\index{Class@{Class}!register\+Function@{register\+Function}}
+\index{register\+Function@{register\+Function}!Class@{Class}}
+\subsubsection{\texorpdfstring{register\+Function()}{registerFunction()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily virtual \hyperlink{classFunction}{Function}$\ast$ Class\+::register\+Function (\begin{DoxyParamCaption}\item[{\hyperlink{classFunctionNode}{Function\+Node} $\ast$}]{fnode }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented from \hyperlink{classFunctionSystem_a7356903aa11df3b4c52f7d0c8f230d87}{Function\+System}.
 
 
 

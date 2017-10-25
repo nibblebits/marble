@@ -1,7 +1,7 @@
 var searchData=
 [
   ['save',['save',['../classValidator.html#a055e6bdb84438449655135b9166bcf2d',1,'Validator']]],
-  ['scope',['Scope',['../classScope.html',1,'Scope'],['../classScope.html#a17c806f9852bb4454ed5709564945373',1,'Scope::Scope()'],['../classVariable.html#a1d7f7a674747e42e4ecc5267252c12d4',1,'Variable::scope()']]],
+  ['scope',['Scope',['../classScope.html',1,'Scope'],['../classVariable.html#a1d7f7a674747e42e4ecc5267252c12d4',1,'Variable::scope()'],['../classScope.html#a17c806f9852bb4454ed5709564945373',1,'Scope::Scope()']]],
   ['scope_2eh',['scope.h',['../scope_8h.html',1,'']]],
   ['scopehandler',['ScopeHandler',['../classScopeHandler.html',1,'ScopeHandler'],['../classScopeHandler.html#a27b5c6a49bda76740ed06114eb250ed1',1,'ScopeHandler::ScopeHandler()']]],
   ['scopehandler_2eh',['scopehandler.h',['../scopehandler_8h.html',1,'']]],
@@ -21,7 +21,7 @@ var searchData=
   ['setup',['setup',['../classArray.html#ac9828e89510c879b36acc6eca5efef51',1,'Array']]],
   ['setvalue',['setValue',['../classToken.html#a0c3a53668483200013e6a2c296fb15c1',1,'Token']]],
   ['sharedselfholdingpointer',['SharedSelfHoldingPointer',['../classSharedSelfHoldingPointer.html',1,'SharedSelfHoldingPointer&lt; T &gt;'],['../classSharedSelfHoldingPointer.html#a4a81e4be5cf4c074d92122b05ef1a7bf',1,'SharedSelfHoldingPointer::SharedSelfHoldingPointer()'],['../classSharedSelfHoldingPointer.html#af7081c7427461f6a84765a5c6373f2d4',1,'SharedSelfHoldingPointer::SharedSelfHoldingPointer(T *value)'],['../classSharedSelfHoldingPointer.html#a95944d9c7dc5d9b8c6a7efd481ac4906',1,'SharedSelfHoldingPointer::SharedSelfHoldingPointer(SharedSelfHoldingPointer&lt; T &gt; const &amp;sp)']]],
-  ['singlefunction',['SingleFunction',['../classSingleFunction.html',1,'SingleFunction'],['../classSingleFunction.html#a05cebea02bb5f8ca44fcfe5a81c6336b',1,'SingleFunction::SingleFunction()']]],
+  ['singlefunction',['SingleFunction',['../classSingleFunction.html',1,'SingleFunction'],['../classSingleFunction.html#a8c6cc400a8f83f317fa62de6886fde40',1,'SingleFunction::SingleFunction()']]],
   ['singlefunction_2eh',['singlefunction.h',['../singlefunction_8h.html',1,'']]],
   ['size',['size',['../structdata__descriptor.html#a8020a1ab93f8785b3c291794ff9fe072',1,'data_descriptor']]],
   ['split',['split',['../structsplit.html',1,'split'],['../structdata__descriptor.html#aae971f7bfb2cd98392b69af23c2245b2',1,'data_descriptor::split()'],['../structsplit.html#a63f2e1ea2dbcb9973b0f2424c4099d3a',1,'split::split()'],['../classSplitter.html#aec64e7219fdb1aaf94dfcf6b40a03efa',1,'Splitter::split()']]],
@@ -34,6 +34,7 @@ var searchData=
   ['stringnode',['StringNode',['../classStringNode.html',1,'StringNode'],['../classStringNode.html#a3ac1767041e5519e52ada6e7c5ecbbe4',1,'StringNode::StringNode()']]],
   ['stringnode_2eh',['stringnode.h',['../stringnode_8h.html',1,'']]],
   ['svalue',['svalue',['../classValue.html#a033edf7ba7f753cf274565fac27f9c7d',1,'Value']]],
+  ['sys_5fhandler',['sys_handler',['../classGroupedFunction.html#a932d46ac0e35f1a1c989427e51c1b2b4',1,'GroupedFunction']]],
   ['system_5fhandler_5finterpreter',['SYSTEM_HANDLER_INTERPRETER',['../statics_8h.html#a06fc87d81c62e9abb8790b6e5713c55ba8120abce982a5d0f7a5cd2b2daffa32a',1,'statics.h']]],
   ['system_5fhandler_5ftype',['SYSTEM_HANDLER_TYPE',['../statics_8h.html#a28f867553077bc713fdf8921a9226e2e',1,'statics.h']]],
   ['system_5fhandler_5fvalidator',['SYSTEM_HANDLER_VALIDATOR',['../statics_8h.html#a06fc87d81c62e9abb8790b6e5713c55ba26f155f830094369c46c8c5351aa766d',1,'statics.h']]],

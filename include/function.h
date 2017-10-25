@@ -15,8 +15,8 @@ class Function
         virtual ~Function();
         std::string getName();
         virtual void invoke(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object) = 0;
-        
-        Class* cls; /** The Class that this function is a method of */
+        /** The Class that this function is a method of. Set to NULL if this is not a method just a function with no class. */
+        Class* cls; 
         FUNCTION_TYPE type;
         std::string name;
 };

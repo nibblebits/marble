@@ -19,6 +19,10 @@ var searchData=
   ['getexpectingvariabletype',['getExpectingVariableType',['../classValidator.html#a18f11aa871d35f7de943afe80935b660',1,'Validator']]],
   ['getfrompointer',['getFromPointer',['../classVariable.html#a9082f1e84cdaac510ddba4d491d990e0',1,'Variable']]],
   ['getfunctionbyname',['getFunctionByName',['../classFunctionSystem.html#a6ccd76d0760272b64790d6f5c8cdc607',1,'FunctionSystem']]],
+  ['getfunctionbynameandarguments',['getFunctionByNameAndArguments',['../classFunctionSystem.html#a4e83f6c67d1aa5ecd7167058d78e43ae',1,'FunctionSystem']]],
+  ['getfunctionforarguments',['getFunctionForArguments',['../classGroupedFunction.html#a4aa6efd8e1ec521964b7826249458f27',1,'GroupedFunction']]],
+  ['getfunctionforvalues',['getFunctionForValues',['../classGroupedFunction.html#a216ffc5f08fe1bc61968f4a5f5e99b49',1,'GroupedFunction']]],
+  ['getfunctionlocallybynameandarguments',['getFunctionLocallyByNameAndArguments',['../classFunctionSystem.html#ae2a2f39ce6f9e107e7efd5a54a5838dc',1,'FunctionSystem']]],
   ['getfunctionsystem',['getFunctionSystem',['../classSystemHandler.html#a052dfd8bfff27ed9bf12fd84e066ecb3',1,'SystemHandler']]],
   ['getglobalfunctionsystem',['getGlobalFunctionSystem',['../classSystemHandler.html#a6622a7fa3c494ec657448d0d3f01eb3b',1,'SystemHandler']]],
   ['getlogger',['getLogger',['../classParser.html#a87f0d3ea4178cfba8aaf9f898ce899e6',1,'Parser::getLogger()'],['../classSystemHandler.html#a2d30e2dd0efb6287ae14b36f1c6bb48b',1,'SystemHandler::getLogger()']]],
@@ -40,6 +44,6 @@ var searchData=
   ['getvariabletypeforstring',['getVariableTypeForString',['../classVariable.html#aa0be16097cea78860a025aeaac8f6d2e',1,'Variable']]],
   ['giveclassobject',['giveClassObject',['../classValidator.html#ad0a3d5e1c57840006e96c74c74eac0aa',1,'Validator']]],
   ['globalfunctionsystem',['globalFunctionSystem',['../classSystemHandler.html#a16b8444f364e1a4dd6db3b210fc8fa4e',1,'SystemHandler']]],
-  ['groupedfunction',['GroupedFunction',['../classGroupedFunction.html',1,'GroupedFunction'],['../classGroupedFunction.html#a5c0b6a884019fdf2eb5caab86e0fec9c',1,'GroupedFunction::GroupedFunction()']]],
+  ['groupedfunction',['GroupedFunction',['../classGroupedFunction.html',1,'GroupedFunction'],['../classGroupedFunction.html#a613f536552aeb5b85e363d8f5b24a87f',1,'GroupedFunction::GroupedFunction()']]],
   ['groupedfunction_2eh',['groupedfunction.h',['../groupedfunction_8h.html',1,'']]]
 ];

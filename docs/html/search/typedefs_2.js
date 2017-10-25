@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['modifier_5faccess',['MODIFIER_ACCESS',['../statics_8h.html#a0cbe4939ec6da73b52afbebd794d60ba',1,'statics.h']]]
+  ['log_5ftype',['LOG_TYPE',['../statics_8h.html#a4cb76ced721b70f0ecadc88b0ac66518',1,'statics.h']]]
 ];

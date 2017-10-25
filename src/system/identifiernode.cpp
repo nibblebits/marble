@@ -23,8 +23,9 @@ void IdentifierNode::test(Validator* validator)
     Scope* current_scope = validator->getCurrentScope();
     Variable* variable = current_scope->getVariableAnyScope(this->value);
     if (variable == NULL)
+    {
         throw TestError("variable \"" + this->value + "\" is not declared");
-    
+    }
     if (variable->access == MODIFIER_ACCESS_PRIVATE || variable->access == MODIFIER_ACCESS_PROTECTED)
     {
         Class* holder_class;

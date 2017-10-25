@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['log_5ftype',['LOG_TYPE',['../statics_8h.html#a4cb76ced721b70f0ecadc88b0ac66518',1,'statics.h']]]
+  ['function_5ftype',['FUNCTION_TYPE',['../statics_8h.html#a025d9866e39f51183a23b3e2165f0e77',1,'statics.h']]]
 ];
