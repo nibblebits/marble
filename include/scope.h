@@ -16,6 +16,12 @@ public:
     Variable* cloneCreate(Variable* variable);
     Variable* getVariable(std::string variable_name);
     Variable* getVariableAnyScope(std::string variable_name);
+    
+    /**
+    * Returns the last registered variable in this singular scope.
+    * \return Returns the last registered variable.
+    */
+    Variable* getLastRegisteredVariable();
     void removeVariable(Variable* variable);
     
     // Events
@@ -29,6 +35,7 @@ public:
     Scope* prev;
 private:
     std::vector<Variable*> variables;
+    Variable* last_registered_variable;
     // Holds unique pointers for anyone that called createVariable. Memory will be freed when the scope object leaves its scope
     std::vector<std::unique_ptr<Variable>> unique_variables;
 };

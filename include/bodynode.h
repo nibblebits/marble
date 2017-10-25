@@ -15,6 +15,7 @@ public:
     virtual void evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation);
     
     void onBeforeLeave(std::function<void()> before_leave_function);
+    void onAfterTestNode(std::function<void(Node* node)> on_test_node_function);
     void apply_node_listener(std::function<bool(Node* node, Value v)> node_listener_function);
 	bool interpret_body_node(Node* node);
     void interpret_body(BodyNode* node);
@@ -29,5 +30,6 @@ private:
     Interpreter* interpreter;
     std::function<bool(Node* node, Value v)> node_listener_function;
     std::function<void()> before_leave_function;
+    std::function<void(Node* node)> on_after_test_node_function;
 };
 #endif

@@ -37,11 +37,13 @@ void ClassNode::test(Validator* validator)
     std::shared_ptr<Object> object = std::make_shared<Object>(validator, c);   
     object->runThis([&]() { 
         // Let's test the body of the class node
-        body->onBeforeLeave([&]() -> void {
-            // When leaving the body we should get all the variables that were created during testing this body and store them in the class.
-            for (Variable* var : validator->getCurrentScope()->getVariables())
+        body->onAfterTestNode([&](Node* node) -> void {
+            /* The way I am creating class variables is a terrible way of doing it. This will work but a better way should be made. 
+             * I would of liked to have create a variable creation listener for scopes. This would be a much prefeered and future proof
+             * way of doing it. The only issue is upon creating variables you do not know there name and type. This may have to be changed in the future to allow for this*/
+            if (node->type == NODE_TYPE_VARIABLE_DECLARATION)
             {
-                c->addVariable(Variable::getFromPointer(var));
+                c->addVariable(Variable::getFromPointer(object->getLastRegisteredVariable()));
             }
         });
         

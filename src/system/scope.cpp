@@ -8,6 +8,7 @@
 Scope::Scope()
 {
     this->prev = NULL;
+    this->last_registered_variable = NULL;
 }
 Scope::~Scope()
 {
@@ -20,6 +21,7 @@ void Scope::registerVariable(Variable* variable)
         throw std::logic_error("NULL variables are not allowed");
     }
     variable->scope = this;
+    this->last_registered_variable = variable;
     this->variables.push_back(variable);
 }
 
@@ -79,6 +81,10 @@ Variable* Scope::getVariableAnyScope(std::string variable_name)
     return variable;
 }
 
+Variable* Scope::getLastRegisteredVariable()
+{
+    return this->last_registered_variable;
+}
 
 void Scope::removeVariable(Variable* variable)
 {

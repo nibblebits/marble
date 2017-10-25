@@ -8,6 +8,7 @@ BodyNode::BodyNode() : InterpretableNode(NODE_TYPE_BODY)
     this->child = NULL;
     this->before_leave_function = NULL;
     this->node_listener_function = NULL;
+    this->on_after_test_node_function = NULL;
 }
 
 BodyNode::~BodyNode()
@@ -19,6 +20,11 @@ BodyNode::~BodyNode()
 void BodyNode::onBeforeLeave(std::function<void()> before_leave_function)
 {
     this->before_leave_function = before_leave_function;
+}
+
+void BodyNode::onAfterTestNode(std::function<void(Node* node)> on_after_test_node_function)
+{
+    this->on_after_test_node_function = on_after_test_node_function;
 }
 
 void BodyNode::test(Validator* validator)
@@ -36,9 +42,14 @@ void BodyNode::test(Validator* validator, SCOPE_PROPERTIES scope_properties)
     while(current_node != NULL)
     {
         current_node->test(validator);
+        if (this->on_after_test_node_function != NULL)
+        {
+            this->on_after_test_node_function(current_node);
+        }
         current_node = (InterpretableNode*) current_node->next;
     }
-
+    
+    // Run the before leave function if one is specified
     if (before_leave_function != NULL)
     {
         before_leave_function();
@@ -94,6 +105,14 @@ void BodyNode::interpret_body(BodyNode* node)
     }
 
 end:
+
+    // Run the before leave function if one is specified
+    if (before_leave_function != NULL)
+    {
+        before_leave_function();
+        this->before_leave_function = NULL;
+    }
+    
     // We are done with this cope
     interpreter->finish_parented_scope(); 
     this->node_listener_function = NULL;
