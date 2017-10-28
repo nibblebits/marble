@@ -12,7 +12,7 @@ public:
     Class(SystemHandler* sys_handler, std::string name, FunctionSystem* prev_fc_sys);
     Class(SystemHandler* sys_handler, std::string name, Class* parent);
     virtual ~Class();
-    virtual Function* registerFunction(std::string name, std::vector<VarType> args, std::function<void(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)> entrypoint);
+    virtual Function* registerFunction(std::string name, std::vector<VarType> args, VarType return_type, std::function<void(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)> entrypoint);
     virtual Function* registerFunction(FunctionNode* fnode);
     void addVariable(Variable v);
     bool hasVariableWithName(std::string name);

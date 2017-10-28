@@ -2,5 +2,5 @@
 
 bool DataType::isPrimitiveDataType(std::string value)
 {
-    return value == "string" || value == "number" || value == "int" || value == "byte";
+    return value == "string" || value == "number" || value == "int" || value == "byte" || value == "void";
 }

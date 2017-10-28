@@ -36,7 +36,6 @@ Object* Validator::getClassObject(std::string name)
 {
     for (std::shared_ptr<Object> obj : this->class_objects)
     {
-        std::cout << obj->getClass()->name << std::endl;
         if (obj->getClass()->name == name)
             return obj.get();
     }

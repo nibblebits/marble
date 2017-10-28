@@ -3,7 +3,7 @@
 #include "fnode.h"
 #include "varnode.h"
 #include "bodynode.h"
-WrittenFunction::WrittenFunction(SystemHandler* sys_handler, FunctionNode* function_node, std::vector<VarType> argument_types) : SingleFunction(FUNCTION_TYPE_WRITTEN, function_node->name, argument_types)
+WrittenFunction::WrittenFunction(SystemHandler* sys_handler, FunctionNode* function_node, std::vector<VarType> argument_types, VarType return_type) : SingleFunction(FUNCTION_TYPE_WRITTEN, function_node->name, argument_types, return_type)
 {
     this->sys_handler = sys_handler;
     this->fnode = function_node;

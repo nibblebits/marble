@@ -3,7 +3,7 @@
 #include "interpreter.h"
 #include "validator.h"
 #include "nodes.h"
-#include "function.h"
+#include "singlefunction.h"
 #include "vartype.h"
 #include "exceptions/testerror.h"
 #include <iostream>
@@ -17,7 +17,6 @@ FunctionCallNode::~FunctionCallNode()
 {
 
 }
-
 
 void FunctionCallNode::test(Validator* validator)
 {
@@ -65,5 +64,21 @@ Value FunctionCallNode::interpret(Interpreter* interpreter)
 
 void FunctionCallNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)
 {
-    throw std::logic_error("Function calls do not support evaluation");
+
+    if (expected_evaluation & EVALUATION_TYPE_DATATYPE)
+    {
+        FunctionSystem* function_sys = handler->getFunctionSystem();
+        std::vector<VarType> types;
+        for (ExpressionInterpretableNode* argument_node : this->arguments)
+        {
+           struct Evaluation evaluation = argument_node->evaluate(handler, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE);
+           types.push_back(evaluation.datatype);
+        }
+        SingleFunction* function = (SingleFunction*) function_sys->getFunctionByNameAndArguments(this->name->value, types);
+        if (function == NULL)
+            throw std::logic_error("The function call to evaluate has a call to a function that does not exist");
+            
+        evaluation->datatype = function->return_type;
+        
+    }
 }

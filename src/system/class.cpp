@@ -28,9 +28,9 @@ Class* Class::getClassWhoHasVariable(std::string name)
     return NULL;
 }
 
-Function* Class::registerFunction(std::string name, std::vector<VarType> args, std::function<void(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)> entrypoint)
+Function* Class::registerFunction(std::string name, std::vector<VarType> args, VarType return_type, std::function<void(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)> entrypoint)
 {
-    Function* function = FunctionSystem::registerFunction(name, args, entrypoint);
+    Function* function = FunctionSystem::registerFunction(name, args, return_type, entrypoint);
     function->cls = this;
     return function;
 }

@@ -102,7 +102,6 @@ void CastNode::test(Validator* validator)
         
         if (!class_sys->hasClassWithName(casting_to_evaluation.datatype.value))
             throw TestError("the class with the name " + casting_to_evaluation.datatype.value + " has not been declared");
-        std::cout << to_cast_evaluation.datatype.value << std::endl;
         Class* to_cast_class = class_sys->getClassByName(to_cast_evaluation.datatype.value);
         Class* casting_class = class_sys->getClassByName(casting_to_evaluation.datatype.value);
         if ((casting_class->name != to_cast_evaluation.datatype.value) && (!casting_class->instanceOf(to_cast_class)))

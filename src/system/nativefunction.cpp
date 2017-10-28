@@ -1,5 +1,5 @@
 #include "nativefunction.h"
-NativeFunction::NativeFunction(std::string name, std::vector<VarType> argument_types, std::function<void(std::vector<Value>, Value* return_value, std::shared_ptr<Object> object)> entrypoint) : SingleFunction(FUNCTION_TYPE_NATIVE, name, argument_types)
+NativeFunction::NativeFunction(std::string name, std::vector<VarType> argument_types, VarType return_type, std::function<void(std::vector<Value>, Value* return_value, std::shared_ptr<Object> object)> entrypoint) : SingleFunction(FUNCTION_TYPE_NATIVE, name, argument_types, return_type)
 {
     this->entrypoint = entrypoint;
 }

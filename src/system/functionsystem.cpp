@@ -50,7 +50,7 @@ GroupedFunction* FunctionSystem::replaceFunctionWithGroup(std::string function_n
     return grouped_function;
 }
 
-Function* FunctionSystem::registerFunction(std::string name, std::vector<VarType> args, std::function<void(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)> entrypoint)
+Function* FunctionSystem::registerFunction(std::string name, std::vector<VarType> args, VarType return_type, std::function<void(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)> entrypoint)
 {
     if (hasFunctionLocally(name, args))
     {
@@ -58,7 +58,7 @@ Function* FunctionSystem::registerFunction(std::string name, std::vector<VarType
     }
 
     
-    Function* function = new NativeFunction(name, args, entrypoint);
+    Function* function = new NativeFunction(name, args, return_type, entrypoint);
     this->functions[name] = std::unique_ptr<Function>(function);
     return function;
 }
@@ -76,11 +76,15 @@ Function* FunctionSystem::registerFunction(FunctionNode* fnode)
         var_types.push_back(evaluation.datatype);
     }    
     
+    VarType return_type;
+    struct Evaluation evaluation = fnode->return_type->evaluate(this->sys_handler, EVALUATION_TYPE_DATATYPE);
+    return_type = evaluation.datatype;
+    
     // Has a function with the same variable argument types already been registered
     if (hasFunctionLocally(fnode->name, var_types))
         throw std::logic_error("The function: " + fnode->name + " has already been registered with the given arguments");
     
-    Function* function_raw = new WrittenFunction(sys_handler, fnode, var_types);
+    Function* function_raw = new WrittenFunction(sys_handler, fnode, var_types, return_type);
     std::unique_ptr<Function> function = std::unique_ptr<Function>(function_raw);
     if (hasFunctionLocally(fnode->name))
     {
