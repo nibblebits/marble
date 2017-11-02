@@ -18,12 +18,30 @@ FunctionSystem::FunctionSystem(SystemHandler* sys_handler, FunctionSystem* prev_
 {
     this->sys_handler = sys_handler;
     this->prev_fc_sys = prev_fc_sys;
+    this->current_function = NULL;
 }
 
 
 FunctionSystem::~FunctionSystem()
 {
 
+}
+
+void FunctionSystem::setCurrentFunction(Function* function)
+{
+    this->current_functions.push_back(this->current_function);
+    this->current_function = function;
+}
+
+void FunctionSystem::finishCurrentFunction()
+{
+    this->current_function = this->current_functions.back();
+    this->current_functions.pop_back();
+}
+
+Function* FunctionSystem::getCurrentFunction()
+{
+    return this->current_function;
 }
 
 void FunctionSystem::setSystemHandler(SystemHandler* sys_handler)
@@ -43,7 +61,7 @@ FunctionSystem* FunctionSystem::getPreviousFunctionSystem()
 
 GroupedFunction* FunctionSystem::replaceFunctionWithGroup(std::string function_name)
 {
-    GroupedFunction* grouped_function = new GroupedFunction(function_name, this->sys_handler);
+    GroupedFunction* grouped_function = new GroupedFunction(this->sys_handler, function_name);
     std::unique_ptr<Function> old_function = std::move(this->functions[function_name]);
     grouped_function->addFunction(std::move(old_function));
     this->functions[function_name] = std::unique_ptr<Function>(grouped_function);
@@ -58,7 +76,7 @@ Function* FunctionSystem::registerFunction(std::string name, std::vector<VarType
     }
 
     
-    Function* function = new NativeFunction(name, args, return_type, entrypoint);
+    Function* function = new NativeFunction(this->sys_handler, name, args, return_type, entrypoint);
     this->functions[name] = std::unique_ptr<Function>(function);
     return function;
 }

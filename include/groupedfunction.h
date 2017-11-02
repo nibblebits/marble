@@ -29,7 +29,7 @@ class SingleFunction;
 class GroupedFunction : public Function
 {
 public:
-    GroupedFunction(std::string name, SystemHandler* sys_handler);
+    GroupedFunction(SystemHandler* handler, std::string name);
     virtual ~GroupedFunction();
     /**
     * Invokes the correct function in this grouped function based on the values provided. If no function is found with the appropriate
@@ -40,7 +40,7 @@ public:
     * \param object The object this function was invoked on. Set to NULL if no object was provided.
     * \throw std::logic_error Thrown if no function can be found that can deal with the values provided.
     */
-    virtual void invoke(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object);
+    virtual void invoke_impl(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object);
     Function* getFunctionForValues(std::vector<Value> values);
     Function* getFunctionForArguments(std::vector<VarType> types);
     bool hasFunctionWithArguments(std::vector<VarType> types);

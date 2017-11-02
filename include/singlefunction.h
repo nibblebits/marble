@@ -11,7 +11,7 @@
 class SingleFunction : public Function
 {
     public:
-        SingleFunction(FUNCTION_TYPE type, std::string name, std::vector<VarType> argument_types, VarType return_type);
+        SingleFunction(SystemHandler* handler, FUNCTION_TYPE type, std::string name, std::vector<VarType> argument_types, VarType return_type);
         virtual ~SingleFunction();
         std::vector<VarType> argument_types;
         VarType return_type;

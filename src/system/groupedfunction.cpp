@@ -3,9 +3,9 @@
 #include "csystem.h"
 #include "systemhandler.h"
 #include "statics.h"
-GroupedFunction::GroupedFunction(std::string name, SystemHandler* sys_handler) : Function(FUNCTION_TYPE_GROUPED, name)
+GroupedFunction::GroupedFunction(SystemHandler* handler, std::string name) : Function(handler, FUNCTION_TYPE_GROUPED, name)
 {
-
+   this->sys_handler = handler;
 }
 
 GroupedFunction::~GroupedFunction()
@@ -14,7 +14,7 @@ GroupedFunction::~GroupedFunction()
 }
 
 
-void GroupedFunction::invoke(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)
+void GroupedFunction::invoke_impl(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)
 {
     Function* function = getFunctionForValues(values);
     if (function == NULL)

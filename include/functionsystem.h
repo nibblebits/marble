@@ -26,12 +26,31 @@ class FunctionSystem
         void setSystemHandler(SystemHandler* sys_handler);
         void setPreviousFunctionSystem(FunctionSystem* prev_fc_sys);
         FunctionSystem* getPreviousFunctionSystem();
+        /**
+        *
+        * Tells the FunctionSystem what the current function is. This should be set to the function that is being called
+        * \param function The function to set as this current function
+        * 
+        * \attention You must call finishCurrentFunction() if setCurrentFunction is used
+        */
+        void setCurrentFunction(Function* function);
+        /**
+        * Finishes the current function. This function must be called if setCurrentFunction is called.
+        */
+        void finishCurrentFunction();
+        /**
+        *
+        * Returns the current function that is being called 
+        * \return Function* The current function that is being called
+        */
+        Function* getCurrentFunction();
         // For native C++ marble functions
         /**
          * Creates and registers a NativeFunction into the FunctionSystem and when the function is called
          * the <b>entrypoint</b> lambda function provided will be invoked.
          * \param name The name of the function to create
          * \param args The arguments this function takes.
+         * \param return_type The return type this function will return.
          * \param entrypoint The entrypoint of the function.
          */
         virtual Function* registerFunction(std::string name, std::vector<VarType> args, VarType return_type, std::function<void(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)> entrypoint);
@@ -49,6 +68,8 @@ class FunctionSystem
         GroupedFunction* replaceFunctionWithGroup(std::string function_name);
         FunctionSystem* prev_fc_sys; /*!< The previous, parent function system. Set to NULL if no parent exists. \note This is used for classes that extend other classes \see getFunctionByName*/
         std::map<std::string, std::unique_ptr<Function>> functions;
+        Function* current_function;
+        std::vector<Function*> current_functions;
         SystemHandler* sys_handler;
 };
 #endif
