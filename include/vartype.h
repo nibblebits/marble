@@ -8,6 +8,7 @@ public:
     VarType();
     virtual ~VarType();
     bool operator==(const VarType &other) const;
+    bool operator!=(const VarType &other) const;
     static VarType fromString(std::string value);
     VARIABLE_TYPE type;
     std::string value;

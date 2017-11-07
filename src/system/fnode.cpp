@@ -31,8 +31,10 @@ void FunctionNode::test(Validator* validator)
     if(func_sys->hasFunctionLocally(this->name, var_types))
         throw TestError("The function with the name \"" + this->name + "\" has already been registered with the same arguments provided");
     // Let's add the function to the list
-    func_sys->registerFunction(this);
+    Function* function = func_sys->registerFunction(this);
+    func_sys->setCurrentFunction(function);
     this->body->test(validator);
+    func_sys->finishCurrentFunction();
 }
 
 Value FunctionNode::interpret(Interpreter* interpreter)

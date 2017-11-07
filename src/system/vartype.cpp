@@ -21,6 +21,13 @@ bool VarType::operator==(const VarType &other) const
     return true;
 }
 
+bool VarType::operator!=(const VarType &other) const
+{
+    if (this->type == other.type && this->value == other.value)
+        return false;
+    return true;
+}
+
 VarType VarType::fromString(std::string value)
 {
     VarType type;

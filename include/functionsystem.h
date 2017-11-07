@@ -28,7 +28,7 @@ class FunctionSystem
         FunctionSystem* getPreviousFunctionSystem();
         /**
         *
-        * Tells the FunctionSystem what the current function is. This should be set to the function that is being called
+        * Tells the FunctionSystem what the current function is. This should be set to the function that is being called or tested
         * \param function The function to set as this current function
         * 
         * \attention You must call finishCurrentFunction() if setCurrentFunction is used
@@ -40,10 +40,15 @@ class FunctionSystem
         void finishCurrentFunction();
         /**
         *
-        * Returns the current function that is being called 
-        * \return Function* The current function that is being called
+        * Returns the current function that is being called  or tested
+        * \return Function* The current function that is being called or tested
         */
         Function* getCurrentFunction();
+        /**
+        *
+        * Returns true if a function is currently being called or tested
+        * \return bool returns true if a function is being called or tested otherwise false.
+        */
         bool isInFunction();
         
         // For native C++ marble functions

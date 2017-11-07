@@ -3,7 +3,8 @@
 #include "functionsystem.h"
 #include "writtenfunction.h"
 #include "interpreter.h"
-
+#include "validator.h"
+#include "exceptions/testerror.h"
 #include <iostream>
 
 ReturnNode::ReturnNode() : InterpretableNode(NODE_TYPE_RETURN)
@@ -14,6 +15,18 @@ ReturnNode::ReturnNode() : InterpretableNode(NODE_TYPE_RETURN)
 ReturnNode::~ReturnNode()
 {
 
+}
+
+void ReturnNode::test(Validator* validator)
+{
+    FunctionSystem* function_system = validator->getFunctionSystem();
+    if (function_system->isInFunction())
+    {
+        SingleFunction* function = (SingleFunction*) function_system->getCurrentFunction();
+        struct Evaluation evaluation = this->exp->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE);
+        if (evaluation.datatype != function->return_type)
+            throw TestError("Invalid return expression for the given return type for function \"" + function->name + "\"");
+    }
 }
 
 Value ReturnNode::interpret(Interpreter* interpreter)
@@ -33,5 +46,5 @@ Value ReturnNode::interpret(Interpreter* interpreter)
 
 void ReturnNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)
 {
-    throw std::logic_error("Evaluating of return nodes is not yet implemented");
+    this->exp->evaluate(handler, expected_evaluation);
 }
