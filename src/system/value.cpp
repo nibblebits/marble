@@ -57,6 +57,7 @@ void Value::set(Value* v)
     this->ovalue = v->ovalue;
     this->avalue = v->avalue;
     this->dvalue = v->dvalue;
+    this->svalue = v->svalue;
 }
 
 bool Value::isObjectOrArray()

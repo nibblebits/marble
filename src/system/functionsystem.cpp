@@ -44,6 +44,11 @@ Function* FunctionSystem::getCurrentFunction()
     return this->current_function;
 }
 
+bool FunctionSystem::isInFunction()
+{
+    return this->current_function != NULL;
+}
+
 void FunctionSystem::setSystemHandler(SystemHandler* sys_handler)
 {
     this->sys_handler = sys_handler;

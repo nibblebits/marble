@@ -19,7 +19,10 @@ SystemHandler* Function::getSystemHandler() {
 
 void Function::invoke(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)
 {
+    FunctionSystem* function_system = this->sys_handler->getFunctionSystem();
+    function_system->setCurrentFunction(this);
     this->invoke_impl(values, return_value, object);
+    function_system->finishCurrentFunction();
 }
 
 std::string Function::getName()

@@ -44,6 +44,8 @@ class FunctionSystem
         * \return Function* The current function that is being called
         */
         Function* getCurrentFunction();
+        bool isInFunction();
+        
         // For native C++ marble functions
         /**
          * Creates and registers a NativeFunction into the FunctionSystem and when the function is called

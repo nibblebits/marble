@@ -3,6 +3,8 @@
 #include "statics.h"
 #include "interpreter.h"
 #include "validator.h"
+#include "writtenfunction.h"
+
 BodyNode::BodyNode() : InterpretableNode(NODE_TYPE_BODY)
 {
     this->child = NULL;
@@ -88,6 +90,14 @@ bool BodyNode::interpret_body_node(Node* node)
     if (node_listener_function != NULL && (!node_listener_function(inode, v))) 
         return false;
     
+    FunctionSystem* function_system = this->interpreter->getFunctionSystem();
+    if (function_system->isInFunction())
+    {
+        WrittenFunction* current_function = (WrittenFunction*) function_system->getCurrentFunction();
+        // If this function has returned then we should stop interpreting more nodes.
+        if (current_function->hasReturned())
+            return false;
+    }
     return true;
 }
 

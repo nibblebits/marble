@@ -6,11 +6,28 @@
 WrittenFunction::WrittenFunction(SystemHandler* handler, FunctionNode* function_node, std::vector<VarType> argument_types, VarType return_type) : SingleFunction(handler, FUNCTION_TYPE_WRITTEN, function_node->name, argument_types, return_type)
 {
     this->fnode = function_node;
+    this->return_node = NULL;
 }
 WrittenFunction::~WrittenFunction()
 {
 
 }
+
+bool WrittenFunction::hasReturned()
+{
+    return this->return_node != NULL;
+}
+
+void WrittenFunction::invoke(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)
+{
+    this->return_node = NULL;
+    Function::invoke(values, return_value, object);
+    if (this->return_node != NULL)
+    {
+        return_value->set(&this->return_value);
+    }
+}
+
 void WrittenFunction::invoke_impl(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)
 {
     if (this->sys_handler->getType() != SYSTEM_HANDLER_INTERPRETER)
@@ -35,16 +52,6 @@ void WrittenFunction::invoke_impl(std::vector<Value> values, Value* return_value
    
     // Bodys also need a scope of there own
     interpreter->new_parented_scope();
-    this->fnode->body->apply_node_listener([&](Node* node, Value v) -> bool {
-        if (node->type == NODE_TYPE_RETURN)
-        {
-            // The body just saw a return node, lets return its value
-            return_value->set(&v);
-            return false;
-        }
-        
-        return true;
-    });
     this->fnode->body->interpret(interpreter);
     // Finish the function body scope
     interpreter->finish_parented_scope();
