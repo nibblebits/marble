@@ -3,6 +3,7 @@
 IfStatementNode::IfStatementNode() : Statement(NODE_TYPE_IF_STMT)
 {
     this->exp = NULL;
+    this->next = NULL;
 }
 
 IfStatementNode::~IfStatementNode()
@@ -23,6 +24,14 @@ Value IfStatementNode::interpret(Interpreter* interpreter)
     {
         // We do lets execute
         body->interpret(interpreter);
+    }
+    else
+    {
+        // This is the next expression, it will be an else statement or an else if statement so lets interpret it
+        if (this->next != NULL)
+        {
+            this->next->interpret(interpreter);
+        }
     }   
     
     Value v;

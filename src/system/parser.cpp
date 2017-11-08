@@ -793,11 +793,38 @@ void Parser::parse_if_stmt()
     
     parse_body();
     BodyNode* body = (BodyNode*) pop_node();
-    
+    ExpressionInterpretableNode* next = NULL;
+    if (peek()->isKeyword("else"))
+    {
+       // We have an else or else if statement
+       parse_else();
+       next = (ExpressionInterpretableNode*) pop_node();
+    }
     IfStatementNode* if_stmt = (IfStatementNode*) factory.createNode(NODE_TYPE_IF_STMT);
     if_stmt->exp = exp;
     if_stmt->body = body;
+    if_stmt->next = next;
     push_node(if_stmt);
+}
+
+void Parser::parse_else()
+{
+    if (!peek()->isKeyword("else"))
+       parse_error("Expecting an else keyword for parsing an else statement");
+    // Clear the else keyword
+    next();
+
+    // Is this an else if?
+    if (peek()->isSymbol("if"))
+    {
+        // Ok this is an else if lets parse the if statement
+        parse_if_stmt();
+    }
+    else
+    {
+       // This is an else statement so lets parse the body
+       parse_body();
+    }
 }
 
 void Parser::parse_modifier_access()

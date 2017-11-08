@@ -1,5 +1,6 @@
 #ifndef PARSER_H
 #define PARSER_H
+
 #include <vector>
 #include <string>
 #include <memory>
@@ -39,6 +40,7 @@ private:
     void parse_negative_expression();
     void parse_single_token();
     void parse_if_stmt();
+    void parse_else();
     void parse_modifier_access();
     void parse_class_body();
     void parse_class_body_next();
