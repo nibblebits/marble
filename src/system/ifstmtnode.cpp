@@ -1,5 +1,7 @@
 #include "ifstmtnode.h"
 #include "interpreter.h"
+#include "validator.h"
+#include "exceptions/testerror.h"
 IfStatementNode::IfStatementNode() : Statement(NODE_TYPE_IF_STMT)
 {
     this->exp = NULL;
@@ -9,6 +11,18 @@ IfStatementNode::IfStatementNode() : Statement(NODE_TYPE_IF_STMT)
 IfStatementNode::~IfStatementNode()
 {
 
+}
+
+void IfStatementNode::test(Validator* validator)
+{
+    try {
+    	this->exp->test(validator);
+   	this->body->test(validator);
+    }
+    catch(TestError& ex)
+    {
+	throw TestError(ex.getMessage() + " for if statement");
+    }
 }
 
 
