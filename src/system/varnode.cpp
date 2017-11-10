@@ -57,6 +57,7 @@ void VarNode::test(Validator* validator)
    
    Variable* var = validator->getCurrentScope()->createVariable();
    var->type = Variable::getVariableTypeForString(type_str);
+   var->dimensions = this->dimensions;
    var->access = this->access;
    var->type_name = type_str;
    var->name = this->name;
@@ -134,6 +135,7 @@ Value VarNode::interpret(Interpreter* interpreter)
     variable->value.holder = variable;
     variable->name = name;
     variable->access = this->access;
+    variable->dimensions = this->dimensions;
     variable->type = Variable::getVariableTypeForString(type_str);
     variable->type_name = type_str;
     Value v = variable->value;

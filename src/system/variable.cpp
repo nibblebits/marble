@@ -5,6 +5,7 @@ Variable::Variable()
 {
     this->name = "";
     this->type = -1;
+    this->dimensions = 0;
     this->access = MODIFIER_ACCESS_PUBLIC;
     this->scope = NULL;
     this->object = NULL;
@@ -42,12 +43,17 @@ Variable Variable::getFromPointer(Variable* variable)
     Variable v;
     v.name = variable->name;
     v.type = variable->type;
+    v.dimensions = variable->dimensions;
     v.type_name = variable->type_name;
     v.access = variable->access;
     v.value.set(&variable->value);
     return v;
 }
 
+bool Variable::isArray()
+{
+    return this->dimensions > 0;
+}
 
 void Variable::set_value(Value value)
 {

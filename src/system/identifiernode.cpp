@@ -75,7 +75,7 @@ void IdentifierNode::test(Validator* validator)
     // We now need to check if the type is valid
     VARIABLE_TYPE expecting_type = validator->getExpectingVariableType();
     if (variable->type != expecting_type)
-        throw TestError("a " + variable->type_name + " was provided");
+        throw TestError("a " + variable->type_name + " " + (variable->isArray() ? " array" : "") + " was provided");
         
     if (variable->type == VARIABLE_TYPE_OBJECT)
     {
@@ -83,7 +83,7 @@ void IdentifierNode::test(Validator* validator)
         Class* expecting_class = class_sys->getClassByName(validator->getExpectingType());
         Class* var_class = class_sys->getClassByName(variable->type_name);
         if (variable->type_name != validator->getExpectingType() && !(var_class->instanceOf(expecting_class)))
-            throw TestError("a " + variable->type_name + " was provided");
+            throw TestError("a " + variable->type_name + " " + (variable->isArray() ? "array" : "") + " was provided");
     }
     
 }

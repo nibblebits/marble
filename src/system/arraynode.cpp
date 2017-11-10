@@ -1,6 +1,7 @@
 #include "arraynode.h"
 #include "variable.h"
 #include "array.h"
+#include "validator.h"
 #include <iostream>
 ArrayNode::ArrayNode() : ExpressionInterpretableNode(NODE_TYPE_ARRAY)
 {
@@ -11,6 +12,15 @@ ArrayNode::ArrayNode() : ExpressionInterpretableNode(NODE_TYPE_ARRAY)
 ArrayNode::~ArrayNode()
 {
 
+}
+
+void ArrayNode::test(Validator* validator)
+{
+    validator->save();
+    this->index_node->test(validator);
+    validator->restore();
+    
+    this->next_element->test(validator);
 }
 
 Value ArrayNode::interpret(Interpreter* interpreter)

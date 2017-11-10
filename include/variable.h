@@ -11,9 +11,13 @@ public:
     virtual ~Variable();
     static int getVariableTypeForString(std::string str);
     static Variable getFromPointer(Variable* variable);
+    bool isArray();
     std::string name;
     VARIABLE_TYPE type;
     std::string type_name;
+    
+    // The total array dimensions for this variable. Zero if not an array.
+    int dimensions;
     
     // The scope this is a part of. For example if this variable is declared in an IF statement the scope will be the IF statement scope.
     Scope* scope;
