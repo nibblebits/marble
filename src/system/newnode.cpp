@@ -70,6 +70,19 @@ void NewNode::test_for_array(Validator* validator)
     struct Evaluation eval = this->type_node->evaluate(validator, EVALUATION_TYPE_DATATYPE);
     if(expecting_type != eval.datatype.value)
     {
+        VALUE_TYPE expecting_value_type = validator->getExpectingValueType();
+        if (expecting_value_type == VALUE_TYPE_OBJECT 
+            && eval.datatype.type == VALUE_TYPE_OBJECT)
+        {
+            // Both the expecting value and the value provided are possibly objects so this may still be a legal array if it is an instance of the array class.
+            ClassSystem* class_sys = validator->getClassSystem();
+            Class* expecting_class = class_sys->getClassByName(expecting_type);
+            Class* value_class = class_sys->getClassByName(eval.datatype.value);
+            
+            // Is it an intance? If so its completely legal so return
+            if (value_class->instanceOf(expecting_class))
+                return;
+        }
         throw TestError("an array type of " + eval.datatype.value + " was provided");
     }   
 }
