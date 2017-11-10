@@ -450,7 +450,7 @@ void Parser::parse_value(int rules)
         if (peek()->isSymbol("["))
         {
             // Ok we have array access here
-            parse_array(node);
+            parse_array((ExpressionInterpretableNode*) node);
             node = pop_node();
         }
     }
@@ -476,7 +476,7 @@ void Parser::parse_cast(Node* casting_to)
 *      0
 *      func()
 */
-void Parser::parse_array(Node* related_node)
+void Parser::parse_array(ExpressionInterpretableNode* related_node)
 {
     if (!next()->isSymbol("["))
     {
@@ -501,7 +501,7 @@ void Parser::parse_array(Node* related_node)
     if (peek()->isSymbol("["))
     {
         // This is a nested array
-        parse_array(pop_node());
+        parse_array((ExpressionInterpretableNode*) pop_node());
     }
     
 }
@@ -927,7 +927,8 @@ void Parser::parse_body_next()
          * 4. A variable declaration with an object type
          */
          
-        if (peek(this->current_token, 1)->isIdentifier())
+        Token* next_token = peek(this->current_token, 1);
+        if (next_token->isIdentifier() || (next_token->isSymbol("[") && peek(this->current_token, 2)->isSymbol("]") && peek(this->current_token, 3)->isIdentifier()))
         {
             // This is a variable declaration
             parse_variable_declaration();

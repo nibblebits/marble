@@ -121,6 +121,12 @@ Value ExpNode::interpret(Interpreter* interpreter)
     {
         // Left_v has the object to access
         std::shared_ptr<Object> obj = left_v.ovalue;
+        if (obj == NULL)
+        {
+            // Throw a NULL pointer exception here. Temporary standard logic error for now.
+            throw std::logic_error("NULL POINTER EXCEPTION!");
+        }
+        
         Class* c = NULL;
         if (left_v.holder != NULL)
         {
@@ -161,7 +167,16 @@ void ExpNode::test(Validator* validator)
 
 void ExpNode::test_obj_access(Validator* validator)
 {
+    /* While testing the left node we don't really want to care about testing weather or not a type matches
+     * as we only care about this for the right operand. For example if an assignment is expecting a string it does not make sense
+     * to check for the string on the left operand. "obj.var" The left operand is "obj" it would basically be saying I expect the object to be a string for the expression: 
+     * "string str = obj.var;" This clearly does not make sense what we really want is to expect that the variable "var" of the object "obj" is a string.*/
+    
+    // Save the validators state and give us a blank state with no requirements. See comment above.
+    validator->save();
     left->test(validator);
+    validator->restore();
+    
     struct Evaluation evaluation = left->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_TYPE_VARIABLE | EVALUATION_FROM_VARIABLE);
     
     if (this->op == ".")

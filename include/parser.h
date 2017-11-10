@@ -48,7 +48,7 @@ private:
     void parse_body_next();
     void parse_value(int rules=0);
     void parse_cast(Node* casting_to);
-    void parse_array(Node* related_node);
+    void parse_array(ExpressionInterpretableNode* related_node);
     void parse_new();
     void parse_return();
     void parse_class();

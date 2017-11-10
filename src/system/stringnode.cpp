@@ -1,5 +1,6 @@
 #include "stringnode.h"
 #include "validator.h"
+#include "exceptions/testerror.h"
 
 StringNode::StringNode() : ExpressionInterpretableNode(NODE_TYPE_STRING)
 {
@@ -19,7 +20,7 @@ void StringNode::test(Validator* validator)
     VALUE_TYPE expecting_type = validator->getExpectingValueType();
     if (expecting_type != VALUE_TYPE_STRING)
     {
-        throw std::logic_error("a string was provided");
+        throw TestError("a string was provided");
     }
 
 }

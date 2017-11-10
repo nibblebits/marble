@@ -17,7 +17,7 @@ Value ArrayNode::interpret(Interpreter* interpreter)
 {
     Value index_exp = this->index_node->interpret(interpreter);
     // If this array node is being interpreted then the next_element is guaranteed to be an expression interpretable node.
-    Value next_elem_value = ((ExpressionInterpretableNode*)this->next_element)->interpret(interpreter);
+    Value next_elem_value = this->next_element->interpret(interpreter);
     if (index_exp.dvalue > 0xffffffff || index_exp.dvalue < 0)
     {
         throw std::logic_error("Array indexes must be below 0xffffffff and above zero");
@@ -31,5 +31,5 @@ Value ArrayNode::interpret(Interpreter* interpreter)
 
 void ArrayNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)
 {
-    throw std::logic_error("Evaluating of array nodes is not supported");
+    this->next_element->evaluate(handler, expected_evaluation, evaluation);
 }

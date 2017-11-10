@@ -51,15 +51,14 @@ Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionS
     });
 
     getClassSystem()->setDefaultBaseClass(c);
-   /* 
+   
     c = getClassSystem()->registerClass("array");
-    c->registerFunction("size",  [&](std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+    c->registerFunction("size", {}, VarType::fromString("number"), [&](std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
         std::shared_ptr<Array> array = std::dynamic_pointer_cast<Array>(object);
         return_value->type = VALUE_TYPE_NUMBER;
         return_value->dvalue = array->count;
     });
-    
-  */  
+
     getBaseFunctionSystem()->registerFunction("print", {VarType::fromString("string")}, VarType::fromString("void"), [&](std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
         std::stringstream ss;
         for (Value v : arguments)
