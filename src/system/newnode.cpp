@@ -102,7 +102,7 @@ std::shared_ptr<Array> NewNode::new_variable_array(Interpreter* interpreter, int
         var->value.type = Value::getValueTypeFromVariableType(var_type);
         var->value.holder = var;
     }
-    return std::make_shared<Array>(interpreter, interpreter->getClassSystem()->getClassByName("array"), variables, total_elements);
+    return std::make_shared<Array>(interpreter->getClassSystem()->getClassByName("array"), variables, total_elements);
 }
 
 
@@ -140,7 +140,7 @@ std::shared_ptr<Array> NewNode::new_array_array(Interpreter* interpreter, int to
         handle_array(interpreter, var->value, it+1);
         var->value.holder = var;
     }
-    std::shared_ptr<Array> array = std::make_shared<Array>(interpreter, interpreter->getClassSystem()->getClassByName("array"), variables, total_elements);
+    std::shared_ptr<Array> array = std::make_shared<Array>(interpreter->getClassSystem()->getClassByName("array"), variables, total_elements);
     return array;
 }
 

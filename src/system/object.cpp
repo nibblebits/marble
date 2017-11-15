@@ -4,11 +4,11 @@
 #include "systemhandler.h"
 #include <iostream>
 #include <memory>
-Object::Object(SystemHandler* sys_handler, Class* c)
+Object::Object(Class* c)
 {
-    this->sys_handler = sys_handler;
     if (c == NULL)
         throw std::logic_error("Expecting a non NULL class");
+    this->sys_handler = c->getSystemHandler();
     this->c = c;
     // Let's create variables for the object based by the class variables
     Class* current = c;
@@ -31,7 +31,7 @@ Object::~Object()
 
 std::shared_ptr<Object> Object::create(Class* object_class, std::vector<Value> constructor_values)
 {
-    std::shared_ptr<Object> object = std::make_shared<Object>(object_class->getSystemHandler(), object_class);
+    std::shared_ptr<Object> object = std::make_shared<Object>(object_class);
     
     // The constructor must now be called
     Function* constructor = object_class->getFunctionByName("__construct");

@@ -3,7 +3,7 @@
 #include "interpreter.h"
 #include <iostream>
 
-Array::Array(Interpreter* interpreter, Class* c, Variable* variables, int count) : Object(interpreter, c)
+Array::Array(Class* c, Variable* variables, int count) : Object(c)
 {
     this->variables = variables;
     this->count = count;

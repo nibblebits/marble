@@ -34,7 +34,7 @@ void ClassNode::test(Validator* validator)
     Class* c = class_sys->registerClass(name, parent_class);
  
     // We must create a temporary object to be used with the testing process. No methods or functions will be called.
-    std::shared_ptr<Object> object = std::make_shared<Object>(validator, c);   
+    std::shared_ptr<Object> object = std::make_shared<Object>(c);   
     object->runThis([&]() { 
         // Let's test the body of the class node
         body->onAfterTestNode([&](Node* node) -> void {
