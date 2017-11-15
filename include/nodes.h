@@ -20,4 +20,6 @@
 #include "retnode.h"
 #include "classnode.h"
 #include "evaluatingnode.h"
+#include "trynode.h"
+#include "thrownode.h"
 #endif

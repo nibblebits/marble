@@ -28,22 +28,23 @@ VarNode::~VarNode()
 void VarNode::test(Validator* validator)
 {
    std::string type_str = getTypeAsString();
-   if (this->value != NULL)
+
+   if (isArray())
    {
-       if (isArray())
-       {
-           validator->expectingArray(this->dimensions);
-       }
+       validator->expectingArray(this->dimensions);
+   }
        
+   if (!isPrimitive())
+   {
+       // Let's ensure this object exists
+       ClassSystem* class_sys = validator->getClassSystem();
+       if (!class_sys->hasClassWithName(type_str))
+            throw TestError("The class with the name \"" + type_str + "\" has not been declared");
+   }
+   
+   if (this->value != NULL)
+   {   
        validator->expecting(type_str);
-       if (!isPrimitive())
-       {
-           // Let's ensure this object exists
-           ClassSystem* class_sys = validator->getClassSystem();
-           if (!class_sys->hasClassWithName(type_str))
-                throw TestError("The class with the name \"" + type_str + "\" has not been declared");
-       }
-       
        try
        {
          this->value->test(validator);
@@ -65,7 +66,11 @@ void VarNode::test(Validator* validator)
 
 void VarNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)
 {
-    throw std::logic_error("Evaluation is not implemented for variable nodes");
+    if (expected_evaluation & EVALUATION_TYPE_DATATYPE)
+    {
+        evaluation->datatype.type = type->type;
+        evaluation->datatype.value = getTypeAsString();
+    }
 }
 
 std::string VarNode::getTypeAsString()
@@ -99,8 +104,7 @@ bool VarNode::isArray()
 
 bool VarNode::isPrimitive()
 {
-    std::string type_str = getTypeAsString();
-    return (type_str == "number" || type_str == "string");
+    return this->type->type == NODE_TYPE_KEYWORD;
 }
 
 

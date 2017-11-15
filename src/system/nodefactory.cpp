@@ -113,6 +113,18 @@ Node* NodeFactory::createNode(NODE_TYPE node_type)
     }
     break;
     
+    case NODE_TYPE_TRY:
+    {
+        node = new TryNode();
+    }
+    break;
+    
+    case NODE_TYPE_THROW:
+    {
+        node = new ThrowNode();
+    }
+    break;
+    
     default:
         throw std::logic_error("Invalid node type provided to NodeFactory::createNode");
     }

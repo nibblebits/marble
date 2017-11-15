@@ -109,26 +109,15 @@ std::shared_ptr<Array> NewNode::new_variable_array(Interpreter* interpreter, int
 void NewNode::new_object_variable(Interpreter* interpreter, Value& v, FunctionCallNode* fc_node)
 {
     Class* object_class = interpreter->getClassSystem()->getClassByName(fc_node->name->value);
-    std::shared_ptr<Object> object = std::make_shared<Object>(interpreter, object_class);
+    std::vector<Value> argument_results;
+    for (ExpressionInterpretableNode* argument_node : fc_node->arguments)
+    {
+        Value v = argument_node->interpret(interpreter);
+        argument_results.push_back(v);
+    }
+    std::shared_ptr<Object> object = Object::create(object_class, argument_results);
     v.type = VALUE_TYPE_OBJECT;
     v.ovalue = object;
-    
-    // The constructor must now be called
-    Function* constructor = object_class->getFunctionByName("__construct");
-    if (constructor != NULL)
-    {
-        object->runThis([&]
-        {
-            // Invoke that constructor!
-            std::vector<Value> argument_results;
-            for (ExpressionInterpretableNode* argument_node : fc_node->arguments)
-            {
-               Value v = argument_node->interpret(interpreter);
-               argument_results.push_back(v);
-            }
-            constructor->invoke(argument_results, NULL, object);
-        }, constructor->cls);
-    }
 }
 
 void NewNode::handle_new_variable(Interpreter* interpreter, Value& v)

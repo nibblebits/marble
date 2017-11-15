@@ -222,7 +222,7 @@ Token* Parser::next()
     Token* token = this->current_token;
     if (token == NULL)
     {
-        parse_error("Expecting input");
+        throw std::logic_error("Expecting input");
     }
     this->prev_token = token;
     this->current_token = this->current_token->next;
@@ -591,6 +591,59 @@ void Parser::parse_class()
     
     push_node(class_node);
 }
+
+void Parser::parse_try()
+{
+    if (!next()->isKeyword("try"))
+    {
+        parse_error("Expecting a try keyword for try and catch definitions");
+    }
+
+    parse_body();
+    BodyNode* try_body = (BodyNode*) pop_node();
+    if (!next()->isKeyword("catch"))
+    {
+        parse_error("Try statement but without a catch");
+    }
+    
+    // Now we expect a catch expression variable
+    if (!next()->isSymbol("("))
+    {
+        parse_error("catch's require expressions. try { } catch(Exception ex) { }");
+    }
+    // A variable declaration is what we need. E.g catch(Variable name)
+    parse_variable_declaration();
+    VarNode* catch_varnode = (VarNode*) pop_node();
+    if (!next()->isSymbol(")"))
+    {
+        parse_error("catch expression opened but never closed. Missing \")\"");
+    }
+    
+    parse_body();
+    BodyNode* catch_body = (BodyNode*) pop_node();
+    
+    TryNode* try_node = (TryNode*) factory.createNode(NODE_TYPE_TRY);
+    try_node->try_body = try_body;
+    try_node->catch_varnode = catch_varnode; 
+    try_node->catch_body = catch_body;
+    push_node(try_node);
+}
+
+void Parser::parse_throw()
+{
+    if (!next()->isKeyword("throw"))
+    {
+        parse_error("Expecting a throw keyword for try and catch definitions");
+    }
+    
+    // Parse the throw expression
+    parse_expression();
+    ExpressionInterpretableNode* exp = (ExpressionInterpretableNode*) pop_node();
+    ThrowNode* throw_node = (ThrowNode*) factory.createNode(NODE_TYPE_THROW);
+    throw_node->exp = exp;
+    push_node(throw_node);
+}
+
 void Parser::parse_semicolon()
 {
     Token* token = next();
@@ -917,6 +970,15 @@ void Parser::parse_body_next()
     else if(this->current_token->isKeyword("class"))
     {
         parse_class();
+    }
+    else if(this->current_token->isKeyword("try"))
+    {
+        parse_try();
+    }
+    else if(this->current_token->isKeyword("throw"))
+    {
+        parse_throw();
+        parse_semicolon();
     }
     else if(this->current_token->isIdentifier())
     {

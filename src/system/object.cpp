@@ -1,5 +1,6 @@
 #include "object.h"
 #include "variable.h"
+#include "function.h"
 #include "systemhandler.h"
 #include <iostream>
 #include <memory>
@@ -27,6 +28,24 @@ Object::~Object()
 {
 }
 
+
+std::shared_ptr<Object> Object::create(Class* object_class, std::vector<Value> constructor_values)
+{
+    std::shared_ptr<Object> object = std::make_shared<Object>(object_class->getSystemHandler(), object_class);
+    
+    // The constructor must now be called
+    Function* constructor = object_class->getFunctionByName("__construct");
+    if (constructor != NULL)
+    {
+        object->runThis([&]
+        {
+            // Invoke that constructor!
+            constructor->invoke(constructor_values, NULL, object);
+        }, constructor->cls);
+    }
+    
+    return object;
+}
 
 void Object::registerVariable(Variable* variable)
 {

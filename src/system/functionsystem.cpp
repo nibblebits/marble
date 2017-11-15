@@ -54,6 +54,11 @@ void FunctionSystem::setSystemHandler(SystemHandler* sys_handler)
     this->sys_handler = sys_handler;
 }
 
+SystemHandler* FunctionSystem::getSystemHandler()
+{
+    return this->sys_handler;
+}
+
 void FunctionSystem::setPreviousFunctionSystem(FunctionSystem* prev_fc_sys)
 {
     this->prev_fc_sys = prev_fc_sys;

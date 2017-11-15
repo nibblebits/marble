@@ -49,7 +49,12 @@ Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionS
         return_value->type = VALUE_TYPE_STRING;
         return_value->svalue = object->getClass()->name;
     });
-
+    
+    c->registerFunction("getClassName",{}, VarType::fromString("string"), [&](std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+        return_value->type = VALUE_TYPE_STRING;
+        return_value->svalue = object->getClass()->name;
+    });
+    
     getClassSystem()->setDefaultBaseClass(c);
    
     c = getClassSystem()->registerClass("array");
@@ -59,6 +64,17 @@ Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionS
         return_value->dvalue = array->count;
     });
 
+    /* Let's register an Exception class that is to be inherited by all classes that can be thrown*/
+    Class* exception_class = getClassSystem()->registerClass("Exception");
+    c->registerFunction("__construct", {}, VarType::fromString("void"), [&](std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+        
+    });
+    
+    // A NULL pointer exception will be a built in exception lets register it
+    c = getClassSystem()->registerClass("NullPointerException", exception_class);
+    c->registerFunction("__construct", {}, VarType::fromString("void"), [&](std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+    });
+    
     getBaseFunctionSystem()->registerFunction("print", {VarType::fromString("string")}, VarType::fromString("void"), [&](std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
         std::stringstream ss;
         for (Value v : arguments)

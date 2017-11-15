@@ -7,6 +7,7 @@
 #include "interpreter.h"
 #include "validator.h"
 #include "exceptions/testerror.h"
+#include "exceptions/systemexception.h"
 #include <iostream>
 #include <memory>
 ExpNode::ExpNode() : ExpressionInterpretableNode(NODE_TYPE_EXPRESSION)
@@ -123,8 +124,8 @@ Value ExpNode::interpret(Interpreter* interpreter)
         std::shared_ptr<Object> obj = left_v.ovalue;
         if (obj == NULL)
         {
-            // Throw a NULL pointer exception here. Temporary standard logic error for now.
-            throw std::logic_error("NULL POINTER EXCEPTION!");
+            // Throw a NULL pointer exception here. This will be a SystemException so it may be caught from within marble.
+            throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("NullPointerException")));
         }
         
         Class* c = NULL;

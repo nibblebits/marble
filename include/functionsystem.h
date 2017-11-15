@@ -24,6 +24,7 @@ class FunctionSystem
         FunctionSystem(SystemHandler* sys_handler, FunctionSystem* prev_fc_sys);
         virtual ~FunctionSystem();
         void setSystemHandler(SystemHandler* sys_handler);
+        SystemHandler* getSystemHandler();
         void setPreviousFunctionSystem(FunctionSystem* prev_fc_sys);
         FunctionSystem* getPreviousFunctionSystem();
         /**
