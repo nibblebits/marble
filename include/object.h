@@ -13,7 +13,8 @@ public:
     static std::shared_ptr<Object> create(Class* object_class, std::vector<Value> constructor_values=std::vector<Value>());
     virtual void registerVariable(Variable* variable);
     Class* getClass();
-    void runThis(std::function<void()> function, Class* c=NULL);
+
+    void runThis(std::function<void()> function, Class* c=NULL, SystemHandler* handler=NULL);
     virtual void onEnterScope();
     virtual void onLeaveScope();
 private:

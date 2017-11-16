@@ -62,8 +62,10 @@ Class* Object::getClass()
 }
 
 
-void Object::runThis(std::function<void()> function, Class* c)
+void Object::runThis(std::function<void()> function, Class* c, SystemHandler* sys_handler)
 {
+    if(sys_handler == NULL)
+	sys_handler = this->sys_handler;
     FunctionSystem* old_fc_system;
     Scope* old_scope;
     std::shared_ptr<Object> old_obj;

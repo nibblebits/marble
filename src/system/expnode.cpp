@@ -182,6 +182,7 @@ void ExpNode::test_obj_access(Validator* validator)
     
     Class* c = NULL;
     Object* obj = validator->getClassObject(evaluation.datatype.value);
+    c = obj->getClass();
     if (obj == NULL)
         throw std::logic_error("NULL object from validator: " + evaluation.datatype.value);
             
@@ -194,7 +195,7 @@ void ExpNode::test_obj_access(Validator* validator)
  
     obj->runThis([&] {
         this->right->test(validator);
-    }, c);   
+    }, c, validator);   
 }
 
 void ExpNode::test_assign(Validator* validator)
