@@ -60,6 +60,11 @@ Value CastNode::interpret(Interpreter* interpreter)
     struct Evaluation evaluation = this->casting_to->evaluate(interpreter, EVALUATION_TYPE_DATATYPE);
     if (evaluation.datatype.value == "number")
     {
+        v.dvalue = (double) get_double_value(&v);
+        v.type = VALUE_TYPE_NUMBER;
+    }
+    else if(evaluation.datatype.value == "int")
+    {
         v.dvalue = (int) get_double_value(&v);
         v.type = VALUE_TYPE_NUMBER;
     }

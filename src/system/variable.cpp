@@ -22,6 +22,10 @@ int Variable::getVariableTypeForString(std::string str)
     {
         type = VARIABLE_TYPE_NUMBER;
     }
+    else if(str == "int")
+    {
+        type = VARIABLE_TYPE_NUMBER;
+    }
     else if(str == "string")
     {
         type = VARIABLE_TYPE_STRING;
