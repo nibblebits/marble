@@ -44,7 +44,7 @@ void interpret()
     
     Logger* logger = interpreter.getLogger();
 
-        interpreter.runScript("./test.marble");    
+    interpreter.runScript("./test.marble");    
 
     for (LogEntry entry : logger->entries)
     {

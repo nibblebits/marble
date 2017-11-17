@@ -114,5 +114,5 @@ void CastNode::test(Validator* validator)
 
 void CastNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)
 {
-    throw std::logic_error("Evaluation is not supported for cast nodes");
+    this->casting_to->evaluate(handler, expected_evaluation, evaluation);
 }

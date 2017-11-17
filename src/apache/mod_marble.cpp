@@ -176,7 +176,7 @@ static int marble_handler(request_rec *req)
         return HTTP_NOT_FOUND;
     
     if (!req->header_only) {
-        Interpreter interpreter;
+        Interpreter interpreter(NULL, NULL);
         interpreter.setOutputFunction([&](const char* data) {
             ap_rputs(data, req);
         });
