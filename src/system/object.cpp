@@ -28,11 +28,14 @@ Object::~Object()
 {
 }
 
+std::shared_ptr<Object> Object::create(Class* object_class)
+{
+    return object_class->getDescriptorObject()->newInstance();
+}
 
 std::shared_ptr<Object> Object::create(Class* object_class, std::vector<Value> constructor_values)
 {
-    std::shared_ptr<Object> object = std::make_shared<Object>(object_class);
-    
+    std::shared_ptr<Object> object = object_class->getDescriptorObject()->newInstance();
     // The constructor must now be called
     Function* constructor = object_class->getFunctionByName("__construct");
     if (constructor != NULL)
@@ -62,6 +65,11 @@ Class* Object::getClass()
 }
 
 
+std::shared_ptr<Object> Object::newInstance()
+{
+    return std::make_shared<Object>(getClass());
+}
+
 void Object::runThis(std::function<void()> function, Class* c, SystemHandler* sys_handler)
 {
     if(sys_handler == NULL)
@@ -76,8 +84,8 @@ void Object::runThis(std::function<void()> function, Class* c, SystemHandler* sy
     else
     {
         // Let's ensure that this class is based on this object.
-        if (!this->getClass()->instanceOf(c))
-            throw std::logic_error("The class provided is not related to the class \"" + this->getClass()->name + "\"");
+        if (!c->instanceOf(getClass()))
+            throw std::logic_error("The class provided is not related to the class \"" + this->getClass()->name + "\". The class provided is: " + c->name);
     }  
     old_fc_system = sys_handler->getFunctionSystem();
     old_scope = sys_handler->getCurrentScope();
