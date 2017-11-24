@@ -2,17 +2,26 @@
 #include "nodes.h"
 #include "logger.h"
 #include "object.h"
+#include "class.h"
+#include <iostream>
 #include "exceptions/testerror.h"
-Validator::Validator(Logger* logger, ClassSystem* classSystem, FunctionSystem* baseFunctionSystem) : SystemHandler(SYSTEM_HANDLER_VALIDATOR, classSystem, baseFunctionSystem)
+Validator::Validator(Logger* logger, ClassSystem* baseClassSystem, FunctionSystem* baseFunctionSystem) : SystemHandler(SYSTEM_HANDLER_VALIDATOR, baseClassSystem, baseFunctionSystem)
 {
     this->logger = logger;
     this->current_class = NULL;
     
     // We must create class objects for all current classes so that they will be compatible with the validation system
-    for (Class* c : classSystem->getAllClasses())
+    for (Class* c : baseClassSystem->getAllClasses())
     {
-        giveClassObject(std::make_shared<Object>(c));
+        giveClassObject(Object::create(c));
     }
+    
+    // It is important that our default object descriptor matches that of the main class system.
+    std::shared_ptr<Object> default_obj_descriptor = baseClassSystem->getDefaultObjectDescriptor();
+    if (!default_obj_descriptor)
+        throw std::logic_error("The base class system must have a non NULL object descriptor before initializing a validator");
+        
+    getClassSystem()->setDefaultObjectDescriptor(baseClassSystem->getDefaultObjectDescriptor());
     
 }
 
@@ -24,6 +33,8 @@ Validator::~Validator()
 
 void Validator::giveClassObject(std::shared_ptr<Object> object)
 {
+    if (object == NULL)
+        throw std::logic_error("You must provide a non NULL object to the Validator when giving a class object. giveClassObject");
     this->class_objects.push_back(object);
 }
 
@@ -39,7 +50,7 @@ Object* Validator::getClassObject(std::string name)
         if (obj->getClass()->name == name)
             return obj.get();
     }
-    
+
     return NULL;
 }
 

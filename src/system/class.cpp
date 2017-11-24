@@ -1,15 +1,17 @@
 #include "class.h"
 #include "function.h"
-Class::Class(SystemHandler* sys_handler, std::string name, FunctionSystem* prev_fc_sys) : FunctionSystem(sys_handler, prev_fc_sys)
+Class::Class(SystemHandler* sys_handler, std::string name, FunctionSystem* prev_fc_sys, std::shared_ptr<Object> descriptor_obj) : FunctionSystem(sys_handler, prev_fc_sys)
 {
     this->name = name;
     this->parent = NULL;
+    this->descriptor_obj = descriptor_obj;
 }
 
-Class::Class(SystemHandler* sys_handler, std::string name, Class* parent) : FunctionSystem(sys_handler, parent)
+Class::Class(SystemHandler* sys_handler, std::string name, Class* parent, std::shared_ptr<Object> descriptor_obj) : FunctionSystem(sys_handler, parent)
 {
     this->name = name;
     this->parent = parent;
+    this->descriptor_obj = descriptor_obj;
 }
 
 Class::~Class()
@@ -26,6 +28,16 @@ Class* Class::getClassWhoHasVariable(std::string name)
         return this->parent->getClassWhoHasVariable(name); 
     
     return NULL;
+}
+
+void Class::setDescriptorObject(std::shared_ptr<Object> object)
+{
+    this->descriptor_obj = object;
+}
+
+std::shared_ptr<Object> Class::getDescriptorObject()
+{
+    return this->descriptor_obj;
 }
 
 Function* Class::registerFunction(std::string name, std::vector<VarType> args, VarType return_type, std::function<void(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)> entrypoint)

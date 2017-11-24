@@ -12,6 +12,7 @@ class WrittenFunction : public SingleFunction
         virtual void invoke(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object);
         virtual void invoke_impl(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object);
         bool hasReturned();        
+        FunctionNode* getFunctionNode();
         /** The return node that caused the function to terminate. NULL if none was present.*/
         ReturnNode* return_node;
         /** The value that was returned */

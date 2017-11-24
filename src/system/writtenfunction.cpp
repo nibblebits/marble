@@ -18,6 +18,12 @@ bool WrittenFunction::hasReturned()
     return this->return_node != NULL;
 }
 
+FunctionNode* WrittenFunction::getFunctionNode()
+{
+    return this->fnode;
+}
+
+
 void WrittenFunction::invoke(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)
 {
     this->return_node = NULL;

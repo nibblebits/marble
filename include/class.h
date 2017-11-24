@@ -9,8 +9,8 @@ class Function;
 class Class : public FunctionSystem
 {
 public:
-    Class(SystemHandler* sys_handler, std::string name, FunctionSystem* prev_fc_sys);
-    Class(SystemHandler* sys_handler, std::string name, Class* parent);
+    Class(SystemHandler* sys_handler, std::string name, FunctionSystem* prev_fc_sys, std::shared_ptr<Object> descriptor_obj);
+    Class(SystemHandler* sys_handler, std::string name, Class* parent, std::shared_ptr<Object> descriptor_obj);
     virtual ~Class();
     virtual Function* registerFunction(std::string name, std::vector<VarType> args, VarType return_type, std::function<void(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)> entrypoint);
     virtual Function* registerFunction(FunctionNode* fnode);
@@ -20,11 +20,15 @@ public:
     std::vector<Variable> getVariables();
     
     Class* getClassWhoHasVariable(std::string name);
+    void setDescriptorObject(std::shared_ptr<Object> object);
+    std::shared_ptr<Object> getDescriptorObject();
     
     bool instanceOf(Class* c);
     std::string name;
     Class* parent;
+    
 private:
+    std::shared_ptr<Object> descriptor_obj;
     std::vector<Variable> local_variables;
 };
 #endif

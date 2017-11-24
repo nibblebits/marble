@@ -1,6 +1,8 @@
 #include "thrownode.h"
 #include "einode.h"
 #include "validator.h"
+#include "interpreter.h"
+#include "exceptionobject.h"
 #include "exceptions/systemexception.h"
 #include "exceptions/testerror.h"
 ThrowNode::ThrowNode() : InterpretableNode(NODE_TYPE_THROW)
@@ -30,6 +32,9 @@ void ThrowNode::test(Validator* validator)
 Value ThrowNode::interpret(Interpreter* interpreter)
 {
     Value v = this->exp->interpret(interpreter);
+    std::shared_ptr<ExceptionObject> exception_obj = std::dynamic_pointer_cast<ExceptionObject>(v.ovalue);
+    exception_obj->setStackLog(interpreter->getStackTraceLog());
+    exception_obj->setThrowNode(this);
     // Lets throw this system exception
     throw SystemException(v.ovalue);
     return v;

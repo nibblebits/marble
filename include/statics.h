@@ -68,6 +68,12 @@ enum
     VALUE_TYPE_BYTE
 };
 
+// Class register rules
+enum
+{
+    CLASS_REGISTER_OBJECT_DESCRIPTOR_LATER = 0x01
+};
+
 enum
 {
     KEEP_SCOPE = 0x01
@@ -133,4 +139,5 @@ typedef int EVALUATION_TYPE;
 typedef int FUNCTION_TYPE;
 typedef int LOG_TYPE;
 typedef int MODIFIER_ACCESS;
+typedef int CLASS_REGISTER_RULES;
 #endif

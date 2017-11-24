@@ -11,9 +11,14 @@ class Node;
 class Validator : public SystemHandler
 {
 public:
-    Validator(Logger* logger, ClassSystem* classSystem, FunctionSystem* baseFunctionSystem);
+    Validator(Logger* logger, ClassSystem* baseClassSystem, FunctionSystem* baseFunctionSystem);
     virtual ~Validator();
     void validate(Node* root_node);
+    
+    /**
+    * All classes that should be validated should create a new object instance for that class
+    * and call this method. It is a requirement as the validator needs to maintain scopes which can only be done with an Object instance.
+    */
     void giveClassObject(std::shared_ptr<Object> object);
     bool isInClass();
     Object* getClassObject(std::string name);

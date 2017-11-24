@@ -17,7 +17,13 @@ public:
     void setFunctionSystem(FunctionSystem* current_fc_system);
     Logger* getLogger();
 
+    /**
+    * Gets the current Object that is currently being accessed. This object will be the value of the object that currently a method is being called on or an attribute being accessed on.. E.g obj.function();
+    */
     std::shared_ptr<Object> getCurrentObject();
+    /**
+    * Used to set the current Object that is currently being accessed. This object must be the value of the object that currently a method is being called on or an attribute being accessed on.. E.g obj.function();
+    */
     void setCurrentObject(std::shared_ptr<Object> object);
     FunctionSystem* getGlobalFunctionSystem();
     FunctionSystem* getFunctionSystem();

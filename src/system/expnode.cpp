@@ -125,7 +125,7 @@ Value ExpNode::interpret(Interpreter* interpreter)
         if (obj == NULL)
         {
             // Throw a NULL pointer exception here. This will be a SystemException so it may be caught from within marble.
-            throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("NullPointerException")));
+            throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("NullPointerException"), {}));
         }
         
         Class* c = NULL;
@@ -179,7 +179,7 @@ void ExpNode::test_obj_access(Validator* validator)
     validator->restore();
     
     struct Evaluation evaluation = left->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_TYPE_VARIABLE | EVALUATION_FROM_VARIABLE);
-    
+    std::cout << "Object datatype value: " << evaluation.datatype.value << std::endl;
     Class* c = NULL;
     Object* obj = validator->getClassObject(evaluation.datatype.value);
     c = obj->getClass();

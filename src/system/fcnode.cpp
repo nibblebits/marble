@@ -6,6 +6,7 @@
 #include "singlefunction.h"
 #include "vartype.h"
 #include "exceptions/testerror.h"
+#include "exceptions/systemexception.h"
 #include <iostream>
 #include <stdexcept>
 FunctionCallNode::FunctionCallNode() : ExpressionInterpretableNode(NODE_TYPE_FUNCTION_CALL)
@@ -50,6 +51,7 @@ Value FunctionCallNode::interpret(Interpreter* interpreter)
        argument_results.push_back(v);
    }
 
+   interpreter->setLastFunctionCallNode(this);
    FunctionSystem* functionSystem = interpreter->getFunctionSystem();
    Function* function = functionSystem->getFunctionByName(name->value);
    if (function == NULL)
@@ -57,8 +59,15 @@ Value FunctionCallNode::interpret(Interpreter* interpreter)
         throw std::logic_error("Value FunctionCallNode::interpret(Interpreter* interpreter): Attempting to invoke a function that has not been registered");
    }
 
-   // If the function invoked is not part 
-   function->invoke(argument_results, &value, interpreter->getCurrentObject());
+   try
+   {
+       function->invoke(argument_results, &value, interpreter->getCurrentObject());
+   }
+   catch(SystemException& ex)
+   {
+       throw ex;
+   }
+   
    return value;
 }
 

@@ -10,10 +10,23 @@ class Object : public Scope,  public std::enable_shared_from_this<Object>
 public:
     Object(Class* c);
     virtual ~Object();
-    static std::shared_ptr<Object> create(Class* object_class, std::vector<Value> constructor_values=std::vector<Value>());
+    
+    /**
+    * Creates an Object instance for the given object class but does not invoke its constructor
+    * This method is safe to call while not interpreting. If you are interpreting use the other "create" method that takes constructor values
+    * so that the constructor is called and interpreted.
+    */
+    static std::shared_ptr<Object> create(Class* object_class);
+      
+    /**
+    * Creates an Object instance for the given object_class and invokes its constructor.
+    * This should only be used while interpreting as marble code is run.
+    */
+    static std::shared_ptr<Object> create(Class* object_class, std::vector<Value> constructor_values);
     virtual void registerVariable(Variable* variable);
     Class* getClass();
 
+    virtual std::shared_ptr<Object> newInstance();
     void runThis(std::function<void()> function, Class* c=NULL, SystemHandler* handler=NULL);
     virtual void onEnterScope();
     virtual void onLeaveScope();

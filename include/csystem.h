@@ -20,15 +20,23 @@ public:
     virtual ~ClassSystem();
     void setSystemHandler(SystemHandler* sys_handler);
     void setPreviousClassSystem(ClassSystem* prev_sys);
+    /**
+    * Sets the default object descriptor Object that will become the default Object instance for all classes that are registered from the time of calling this method.
+    * All classes with a NULL object descriptor upon calling this method will have their object descriptor set to this one.
+    * Classes will have NULL object descriptors if the object descriptor has not been set yet and classes have still been registered.
+    */
+    void setDefaultObjectDescriptor(std::shared_ptr<Object> defaultObjectDescriptor);
+    std::shared_ptr<Object> getDefaultObjectDescriptor();
     ClassSystem* getPreviousClassSystem();
     void setDefaultBaseClass(Class* c);
     Class* getDefaultBaseClass();
-    Class* registerClass(std::string class_name, Class* parent=NULL);
+    Class* registerClass(std::string class_name, Class* parent=NULL, CLASS_REGISTER_RULES rules=0);
     Class* getClassByName(std::string name);
     bool hasClassWithName(std::string name);
     std::vector<Class*> getAllClasses();
     std::vector<std::unique_ptr<Class>> classes;
 private:
+    std::shared_ptr<Object> defaultObjectDescriptor;
     ClassSystem* prev_sys;
     SystemHandler* sys_handler;
     Class* defaultBaseClass;

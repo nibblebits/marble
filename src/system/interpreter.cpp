@@ -8,6 +8,7 @@
 #include <string>
 #include <vector>
 #include <sstream>
+
 #include <stdio.h>
 #include "interpreter.h"
 #include "splitter.h"
@@ -22,6 +23,7 @@
 #include "function.h"
 #include "class.h"
 #include "array.h"
+#include "exceptionobject.h"
 #include "exceptions/IOException.h"
     std::string getAllVariablesAsString(Scope* scope)
     {
@@ -44,11 +46,15 @@ Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionS
         std::cout << data;
     };
     // Lets create an Object base class that will be the base class of all objects, we should also create an array class that will be used for arrays
-    Class* c = getClassSystem()->registerClass("Object");
+    Class* c = getClassSystem()->registerClass("Object", NULL, CLASS_REGISTER_OBJECT_DESCRIPTOR_LATER);
     c->registerFunction("toString",{}, VarType::fromString("string"), [&](std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
         return_value->type = VALUE_TYPE_STRING;
         return_value->svalue = object->getClass()->name;
     });
+    
+
+    // The Object class is the default class in the system so we should also create the default object descriptor.
+    getClassSystem()->setDefaultObjectDescriptor(std::make_shared<Object>(c));
     
     c->registerFunction("getClassName",{}, VarType::fromString("string"), [&](std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
         return_value->type = VALUE_TYPE_STRING;
@@ -66,15 +72,20 @@ Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionS
 
     /* Let's register an Exception class that is to be inherited by all classes that can be thrown*/
     Class* exception_class = getClassSystem()->registerClass("Exception");
-    c->registerFunction("__construct", {}, VarType::fromString("void"), [&](std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+    exception_class->registerFunction("__construct", {}, VarType::fromString("void"), [&](std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
         
     });
+    exception_class->registerFunction("getStackTrace", {}, VarType::fromString("string"), [&](std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+        std::shared_ptr<ExceptionObject> exception_obj = std::dynamic_pointer_cast<ExceptionObject>(object);
+        return_value->type = VALUE_TYPE_STRING;
+        return_value->svalue = exception_obj->getStackTrace();
+    });
+    // The Exception class has the Exception object instance.
+    exception_class->setDescriptorObject(std::make_shared<ExceptionObject>(exception_class));
     
-    // A NULL pointer exception will be a built in exception lets register it
     c = getClassSystem()->registerClass("NullPointerException", exception_class);
     c->registerFunction("__construct", {}, VarType::fromString("void"), [&](std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
     });
-    
     getBaseFunctionSystem()->registerFunction("print", {VarType::fromString("string")}, VarType::fromString("void"), [&](std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
         std::stringstream ss;
         for (Value v : arguments)
@@ -97,6 +108,7 @@ Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionS
         return_value->dvalue = 1;
     });
    
+   this->lastFunctionCallNode = NULL;
 }
 
 Interpreter::~Interpreter()
@@ -116,6 +128,24 @@ void Interpreter::ready()
     {
         throw std::logic_error("Expecting an output function before running a script. Use setOutputFunction(OUTPUT_FUNCTION outputFunction)");
     }
+}
+
+void Interpreter::addToStackTrace(std::string function_name, PosInfo posInfo)
+{
+    struct stack_log_part part;
+    part.function_name = function_name;
+    part.posInfo = posInfo;
+    this->stack_log.push_back(part);    
+}
+
+void Interpreter::popFromStackTrace()
+{
+    this->stack_log.pop_back();
+}
+
+std::vector<struct stack_log_part> Interpreter::getStackTraceLog()
+{
+    return this->stack_log;
 }
 
 void Interpreter::run(const char* code, PosInfo posInfo)
@@ -234,3 +264,13 @@ void Interpreter::runScript(const char* filename)
     delete data;
 }
 
+
+void Interpreter::setLastFunctionCallNode(FunctionCallNode* fc_node)
+{
+    this->lastFunctionCallNode = fc_node;
+}
+
+FunctionCallNode* Interpreter::getLastFunctionCallNode()
+{
+    return this->lastFunctionCallNode;
+}
