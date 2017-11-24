@@ -67,7 +67,12 @@ Class* Object::getClass()
 
 std::shared_ptr<Object> Object::newInstance()
 {
-    return std::make_shared<Object>(getClass());
+    return newInstance(getClass());
+}
+
+std::shared_ptr<Object> Object::newInstance(Class* c)
+{
+    return std::make_shared<Object>(c);
 }
 
 void Object::runThis(std::function<void()> function, Class* c, SystemHandler* sys_handler)

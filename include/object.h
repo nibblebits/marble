@@ -26,7 +26,8 @@ public:
     virtual void registerVariable(Variable* variable);
     Class* getClass();
 
-    virtual std::shared_ptr<Object> newInstance();
+    std::shared_ptr<Object> newInstance();
+    virtual std::shared_ptr<Object> newInstance(Class* c);
     void runThis(std::function<void()> function, Class* c=NULL, SystemHandler* handler=NULL);
     virtual void onEnterScope();
     virtual void onLeaveScope();

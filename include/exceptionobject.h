@@ -22,7 +22,7 @@ public:
     * Used to set the throw node that threw this exception object. */
     void setThrowNode(ThrowNode* throwNode);
     
-    virtual std::shared_ptr<Object> newInstance();
+    virtual std::shared_ptr<Object> newInstance(Class* c);
     
     /**
     * Gets a stack trace based on the stack log provided

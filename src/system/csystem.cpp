@@ -66,27 +66,30 @@ Class* ClassSystem::registerClass(std::string class_name, Class* parent, CLASS_R
         throw std::logic_error("You must set a default object descriptor before registering a class. Either override with the rule CLASS_REGISTER_OBJECT_DESCRIPTOR_LATER or set a default object descriptor with the \"setDefaultObjectDescriptor\" method");
     }
     
-    // If a parent is provided then the object descriptor should equal the parents object descriptor.
-    std::shared_ptr<Object> descriptorObj = this->defaultObjectDescriptor;
-    if (parent != NULL)
-    {
-        descriptorObj = parent->getDescriptorObject();
-    }
-    
     if (hasClassWithName(class_name))
         throw std::logic_error("The class: " + class_name + " has already been registered");
     
     Class* c; 
     if (parent == NULL && this->defaultBaseClass == NULL)
     {
-        c = new Class(this->sys_handler, class_name, this->sys_handler->getGlobalFunctionSystem(), descriptorObj);
+        c = new Class(this->sys_handler, class_name, this->sys_handler->getGlobalFunctionSystem(), this->defaultObjectDescriptor);
     }
     else
     {
         if (parent == NULL)
             parent = this->defaultBaseClass;      
-        c = new Class(this->sys_handler, class_name, parent, descriptorObj);
+        c = new Class(this->sys_handler, class_name, parent, this->defaultObjectDescriptor);
     }
+    
+    
+    /* Do we have a parent? If so then the descriptor object should be changed to a new instance of the parents 
+     * This must be a new instance as otherwise when the object descriptor is returned its class will point to the parent class
+     * and not the one we just created. Probably not ideal and hopefully a better way of doing it will be made soon */
+    if (parent != NULL)
+    {
+        c->setDescriptorObject(parent->getDescriptorObject()->newInstance(c));
+    }
+    
     this->classes.push_back(std::unique_ptr<Class>(c));
     
     return c;

@@ -24,9 +24,9 @@ void ExceptionObject::setThrowNode(ThrowNode* throwNode)
 }
 
 
-std::shared_ptr<Object> ExceptionObject::newInstance()
+std::shared_ptr<Object> ExceptionObject::newInstance(Class* c)
 {
-    return std::make_shared<ExceptionObject>(getClass());
+    return std::make_shared<ExceptionObject>(c);
 }
 
 std::string ExceptionObject::getStackTrace()
