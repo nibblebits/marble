@@ -5,6 +5,7 @@
 #include "groupedfunction.h"
 #include "interpreter.h"
 #include "nodes.h"
+#include <iostream>
 FunctionSystem::FunctionSystem() : FunctionSystem(NULL, NULL)
 {
 

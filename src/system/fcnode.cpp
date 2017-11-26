@@ -31,6 +31,11 @@ void FunctionCallNode::test(Validator* validator)
        types.push_back(evaluation.datatype);
    }
    
+   if (function_sys->hasFunction(this->name->value))
+   {
+     std::cout << "HAS FUNCTION:" << this->name->value << std::endl;
+   }
+   
    if (!function_sys->hasFunction(this->name->value, types))
    {
        throw TestError("The function \"" + this->name->value + "\" has not been declared that takes the given arguments");

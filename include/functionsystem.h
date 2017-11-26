@@ -29,7 +29,7 @@ class FunctionSystem
         FunctionSystem* getPreviousFunctionSystem();
         /**
         *
-        * Tells the FunctionSystem what the current function is. This should be set to the function that is being called or tested
+        * Tells the FunctionSystem what the current function is. This should be set to the function that is being interpreted or tested
         * \param function The function to set as this current function
         * 
         * \attention You must call finishCurrentFunction() if setCurrentFunction is used

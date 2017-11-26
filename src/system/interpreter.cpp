@@ -51,7 +51,6 @@ Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionS
         return_value->type = VALUE_TYPE_STRING;
         return_value->svalue = object->getClass()->name;
     });
-    
 
     // The Object class is the default class in the system so we should also create the default object descriptor.
     getClassSystem()->setDefaultObjectDescriptor(std::make_shared<Object>(c));
