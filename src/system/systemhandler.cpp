@@ -3,8 +3,12 @@
 
 SystemHandler::SystemHandler(SYSTEM_HANDLER_TYPE type, ClassSystem* baseClassSystem, FunctionSystem* baseFunctionSystem)
 {
+    this->was_activated = false;
+    this->activated = false;
     this->type = type;
     this->current_obj = NULL;
+    this->passedBaseClassSystem = baseClassSystem;
+    this->creatorsOldBaseClassPrevFunctionSystem = NULL;
     if (baseFunctionSystem == NULL)
         this->baseFunctionSystem = &this->globalFunctionSystem;
     else
@@ -18,14 +22,25 @@ SystemHandler::SystemHandler(SYSTEM_HANDLER_TYPE type, ClassSystem* baseClassSys
     this->currentFunctionSystem->setPreviousFunctionSystem(baseFunctionSystem);
     this->classSystem.setPreviousClassSystem(baseClassSystem);
     this->classSystem.setSystemHandler(this);
-    if (baseClassSystem != NULL)
-        this->classSystem.setDefaultBaseClass(baseClassSystem->getDefaultBaseClass());
+
+    if (this->passedBaseClassSystem != NULL) {
+        this->creatorsOldBaseClassPrevFunctionSystem = this->passedBaseClassSystem->getDefaultBaseClass()->getPreviousFunctionSystem();
+        this->classSystem.setDefaultBaseClass(this->passedBaseClassSystem->getDefaultBaseClass());
+    }
     this->globalFunctionSystem.setSystemHandler(this);
 }
 
 SystemHandler::~SystemHandler()
 {
-
+    if (!this->was_activated)
+    {
+        throw std::logic_error("The SystemHandler provided was never activated, We don't know if this was intential but we thought you should know. Call activate() next time");
+    }
+    
+    if (this->isActive())
+    {
+        throw std::logic_error("The SystemHandler was never deactivated. Always deactivate the SystemHandler when you are done by calling deactivate()");
+    }
 }
 
 
@@ -49,6 +64,12 @@ ClassSystem* SystemHandler::getClassSystem()
     return &this->classSystem;
 }
 
+bool SystemHandler::isActive()
+{
+    return this->activated;
+}
+
+
 ClassSystem* SystemHandler::getBaseClassSystem()
 {
     return this->baseClassSystem;
@@ -63,6 +84,40 @@ void SystemHandler::setFunctionSystem(FunctionSystem* current_fc_system)
 Logger* SystemHandler::getLogger()
 {
     return &this->logger;
+}
+
+void SystemHandler::activate()
+{
+    if (this->isActive())
+        throw std::logic_error("The SystemHandler is already active");
+    
+    this->activated = true;
+    this->was_activated = true;
+    
+    if (this->passedBaseClassSystem == NULL)
+        return;
+    
+    if (this->passedBaseClassSystem->getDefaultBaseClass() == NULL)
+        return;
+        
+    /* We must set the previous class system of the default base class that was sent to us to our current function system so that 
+     * Functions can be found correctly */
+    this->passedBaseClassSystem->getDefaultBaseClass()->setPreviousFunctionSystem(this->currentFunctionSystem);
+}
+
+void SystemHandler::deactivate()
+{
+    if (!this->isActive())
+        throw std::logic_error("The SystemHandler was never activated");
+    this->activated = false;
+    
+    if (this->passedBaseClassSystem == NULL)
+        return;
+        
+    if (this->passedBaseClassSystem->getDefaultBaseClass() == NULL)
+        return;
+    // Now restore the creators old base class previous function system
+    this->passedBaseClassSystem->getDefaultBaseClass()->setPreviousFunctionSystem(this->creatorsOldBaseClassPrevFunctionSystem);
 }
 
 SYSTEM_HANDLER_TYPE SystemHandler::getType()

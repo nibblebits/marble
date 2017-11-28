@@ -70,18 +70,28 @@ void Validator::restore()
 
 void Validator::validate(Node* root_node)
 {
+    activate();
     InterpretableNode* current_node = (InterpretableNode*) root_node;
-    while(current_node != NULL)
+    try
     {
-        try
+        while(current_node != NULL)
         {
-            current_node->test(this);
-        } catch(TestError& ex)
-        {
-            this->logger->error(ex.what(), current_node->posInfo);
+            try
+            {
+                current_node->test(this);
+            } catch(TestError& ex)
+            {
+                this->logger->error(ex.what(), current_node->posInfo);
+            }
+            current_node = (InterpretableNode*) current_node->next;
         }
-        current_node = (InterpretableNode*) current_node->next;
     }
+    catch (...)
+    {
+        deactivate();
+        throw;
+    }
+    deactivate();
 }
 
 void Validator::beginClass(Class* current_class)

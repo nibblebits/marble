@@ -28,6 +28,7 @@ void FunctionNode::test(Validator* validator)
     }   
     
     FunctionSystem* func_sys = validator->getFunctionSystem();
+    
     if(func_sys->hasFunctionLocally(this->name, var_types))
         throw TestError("The function with the name \"" + this->name + "\" has already been registered with the same arguments provided");
     // Let's add the function to the list

@@ -149,6 +149,13 @@ std::vector<struct stack_log_part> Interpreter::getStackTraceLog()
 
 void Interpreter::run(const char* code, PosInfo posInfo)
 {
+    bool did_activate = false;
+    if (!isActive())
+    {
+        activate();
+        did_activate = true;
+    }
+    
     ready();
     Lexer lexer(&logger, posInfo);
     lexer.setInput(code, strlen(code));
@@ -176,6 +183,9 @@ void Interpreter::run(const char* code, PosInfo posInfo)
         current_node = (InterpretableNode*) current_node->next;
     }
 
+
+    if (did_activate)
+        deactivate();
 }
 
 
