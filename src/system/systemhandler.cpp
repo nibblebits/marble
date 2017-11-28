@@ -24,7 +24,6 @@ SystemHandler::SystemHandler(SYSTEM_HANDLER_TYPE type, ClassSystem* baseClassSys
     this->classSystem.setSystemHandler(this);
 
     if (this->passedBaseClassSystem != NULL) {
-        this->creatorsOldBaseClassPrevFunctionSystem = this->passedBaseClassSystem->getDefaultBaseClass()->getPreviousFunctionSystem();
         this->classSystem.setDefaultBaseClass(this->passedBaseClassSystem->getDefaultBaseClass());
     }
     this->globalFunctionSystem.setSystemHandler(this);
@@ -99,7 +98,9 @@ void SystemHandler::activate()
     
     if (this->passedBaseClassSystem->getDefaultBaseClass() == NULL)
         return;
-        
+    
+     this->creatorsOldBaseClassPrevFunctionSystem = this->passedBaseClassSystem->getDefaultBaseClass()->getPreviousFunctionSystem();
+            
     /* We must set the previous class system of the default base class that was sent to us to our current function system so that 
      * Functions can be found correctly */
     this->passedBaseClassSystem->getDefaultBaseClass()->setPreviousFunctionSystem(this->currentFunctionSystem);
