@@ -644,6 +644,35 @@ void Parser::parse_throw()
     push_node(throw_node);
 }
 
+void Parser::parse_while()
+{
+    if (!next()->isKeyword("while"))
+    {
+        parse_error("Expecting a while keyword for while statements");
+    }
+    
+    if (!next()->isSymbol("("))
+    {
+        parse_error("Expecting an \"(\" after while");
+    }
+    
+    // Parse the while expression
+    parse_expression();
+    ExpressionInterpretableNode* exp = (ExpressionInterpretableNode*) pop_node();
+    if(!next()->isSymbol(")"))
+    {
+        parse_error("Expecting an \")\" after while expression");
+    }
+    
+    // Parse the while body
+    parse_body();
+    BodyNode* body = (BodyNode*) pop_node();
+    WhileNode* while_node = (WhileNode*) factory.createNode(NODE_TYPE_WHILE);
+    while_node->exp = exp;
+    while_node->body = body;
+    push_node(while_node);
+}
+
 void Parser::parse_semicolon()
 {
     Token* token = next();
@@ -979,6 +1008,10 @@ void Parser::parse_body_next()
     {
         parse_throw();
         parse_semicolon();
+    }
+    else if(this->current_token->isKeyword("while"))
+    {
+        parse_while();
     }
     else if(this->current_token->isIdentifier())
     {

@@ -22,4 +22,5 @@
 #include "evaluatingnode.h"
 #include "trynode.h"
 #include "thrownode.h"
+#include "whilenode.h"
 #endif

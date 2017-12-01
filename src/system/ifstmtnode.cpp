@@ -15,13 +15,14 @@ IfStatementNode::~IfStatementNode()
 
 void IfStatementNode::test(Validator* validator)
 {
-    try {
+    try
+    {
     	this->exp->test(validator);
-   	this->body->test(validator);
+   	    this->body->test(validator);
     }
     catch(TestError& ex)
     {
-	throw TestError(ex.getMessage() + " for if statement");
+	    throw TestError(ex.getMessage() + " for if statement");
     }
 }
 
