@@ -41,7 +41,7 @@ class FunctionSystem
         void finishCurrentFunction();
         /**
         *
-        * Returns the current function that is being called  or tested
+        * Returns the current function that is being called or tested
         * \return Function* The current function that is being called or tested
         */
         Function* getCurrentFunction();

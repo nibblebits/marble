@@ -147,6 +147,28 @@ std::vector<struct stack_log_part> Interpreter::getStackTraceLog()
     return this->stack_log;
 }
 
+void Interpreter::setCurrentBreakable(Breakable* breakable)
+{
+    this->breakables.push_back(breakable);
+}
+
+bool Interpreter::hasBreakable()
+{
+    return this->breakables.size() != 0;
+}
+
+    
+Breakable* Interpreter::getCurrentBreakable()
+{
+    return this->breakables.back();
+}
+
+void Interpreter::finishBreakable()
+{
+    this->breakables.pop_back();
+}
+
+
 void Interpreter::run(const char* code, PosInfo posInfo)
 {
     bool did_activate = false;

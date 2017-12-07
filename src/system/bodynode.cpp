@@ -77,6 +77,11 @@ void BodyNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_ev
     throw std::logic_error("Evaluating of body nodes is not supported");
 }
 
+void BodyNode::didBreak(BREAK_TYPE type)
+{
+
+}
+
 void BodyNode::apply_node_listener(std::function<bool(Node* node, Value v)> node_listener_function)
 {
     this->node_listener_function = node_listener_function;
@@ -98,6 +103,11 @@ bool BodyNode::interpret_body_node(Node* node)
         if (current_function->hasReturned())
             return false;
     }
+    
+    // Are we broken? If so we are done
+    if (isBroken())
+        return false;
+        
     return true;
 }
 

@@ -673,6 +673,28 @@ void Parser::parse_while()
     push_node(while_node);
 }
 
+void Parser::parse_break()
+{
+    if (!next()->isKeyword("break"))
+    {
+        parse_error("Expecting a break keyword");
+    }
+    
+    BreakNode* break_node = (BreakNode*) factory.createNode(NODE_TYPE_BREAK);
+    push_node(break_node);
+}
+
+void Parser::parse_continue()
+{
+    if (!next()->isKeyword("continue"))
+    {
+        parse_error("Expecting a continue keyword");
+    }
+    
+    ContinueNode* continue_node = (ContinueNode*) factory.createNode(NODE_TYPE_CONTINUE);
+    push_node(continue_node);
+}
+
 void Parser::parse_semicolon()
 {
     Token* token = next();
@@ -1012,6 +1034,16 @@ void Parser::parse_body_next()
     else if(this->current_token->isKeyword("while"))
     {
         parse_while();
+    }
+    else if(this->current_token->isKeyword("break"))
+    {
+        parse_break();
+        parse_semicolon();
+    }
+    else if(this->current_token->isKeyword("continue"))
+    {
+        parse_continue();
+        parse_semicolon();
     }
     else if(this->current_token->isIdentifier())
     {

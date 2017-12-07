@@ -3,8 +3,9 @@
 #include <vector>
 #include <functional>
 #include "inode.h"
+#include "breakable.h"
 class Interpreter;
-class BodyNode : public InterpretableNode
+class BodyNode : public InterpretableNode, public Breakable
 {
 public:
     BodyNode();
@@ -13,6 +14,7 @@ public:
     void test(Validator* validator, SCOPE_PROPERTIES scope_properties);
     virtual Value interpret(Interpreter* interpreter);
     virtual void evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation);
+    virtual void didBreak(BREAK_TYPE type);
     
     void onBeforeLeave(std::function<void()> before_leave_function);
     void onAfterTestNode(std::function<void(Node* node)> on_test_node_function);

@@ -55,6 +55,8 @@ private:
     void parse_try();
     void parse_throw();
     void parse_while();
+    void parse_break();
+    void parse_continue();
     void parse_semicolon();
     void push_node(Node* node);
 

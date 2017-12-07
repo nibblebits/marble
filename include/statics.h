@@ -39,7 +39,9 @@ enum
     NODE_TYPE_CLASS,
     NODE_TYPE_TRY,
     NODE_TYPE_THROW,
-    NODE_TYPE_WHILE
+    NODE_TYPE_WHILE,
+    NODE_TYPE_BREAK,
+    NODE_TYPE_CONTINUE
 };
 
 enum
@@ -123,6 +125,14 @@ enum
     RULE_PARSE_ARRAY = 0x02
 };
 
+// The possible types of breaking
+enum
+{
+    BREAK_TYPE_NO_BREAK,
+    BREAK_TYPE_BREAK,
+    BREAK_TYPE_CONTINUE
+};
+
 enum
 {
     LOG_LEVEL_NOTICE,
@@ -141,4 +151,5 @@ typedef int FUNCTION_TYPE;
 typedef int LOG_TYPE;
 typedef int MODIFIER_ACCESS;
 typedef int CLASS_REGISTER_RULES;
+typedef int BREAK_TYPE;
 #endif

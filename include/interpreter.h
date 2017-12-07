@@ -11,6 +11,7 @@
 #include "systemhandler.h"
 #include "logger.h"
 #include "posinfo.h"
+#include "breakable.h"
 
 typedef std::function<void(const char* output)> OUTPUT_FUNCTION;
 
@@ -46,6 +47,28 @@ public:
     void addToStackTrace(std::string function_name, PosInfo posInfo);
     void popFromStackTrace();
     std::vector<struct stack_log_part> getStackTraceLog();
+    
+    /**
+    * Sets the current Breakable entity. This could be a while loop, for loop or something else.
+    * The Breakable entity that gets set is the entity that is currently being processed or dealt with such as interpreting the body of a while loop.
+    */
+    void setCurrentBreakable(Breakable* breakable); 
+    
+    /**
+    * Returns true if there is a Breakable available. Breakables are set using the setCurrentBreakable method.
+    */
+    bool hasBreakable();
+    
+    /**
+    *  Gets the current Breakable entity such as a while or for loop that is currently being interpreted
+    */
+    Breakable* getCurrentBreakable();
+    
+    /**
+    * Finishes the current Breakable and must be called at some point after the setCurrentBreakable method is called.
+    */
+    void finishBreakable();
+    
 private:
     void handleLineAndColumn(PosInfo* posInfo, const char* data, int length);
     void fail();
@@ -53,6 +76,7 @@ private:
     FunctionCallNode* lastFunctionCallNode;
     OUTPUT_FUNCTION output;
     std::vector<struct stack_log_part> stack_log;
+    std::vector<Breakable*> breakables;
 };
 
 #endif

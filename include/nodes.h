@@ -23,4 +23,6 @@
 #include "trynode.h"
 #include "thrownode.h"
 #include "whilenode.h"
+#include "breaknode.h"
+#include "continuenode.h"
 #endif
