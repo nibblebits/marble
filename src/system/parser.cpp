@@ -644,7 +644,7 @@ void Parser::parse_throw()
     push_node(throw_node);
 }
 
-void Parser::parse_while()
+ExpressionInterpretableNode* Parser::parse_while_stmt_exp()
 {
     if (!next()->isKeyword("while"))
     {
@@ -664,6 +664,11 @@ void Parser::parse_while()
         parse_error("Expecting an \")\" after while expression");
     }
     
+    return exp;
+}
+void Parser::parse_while()
+{
+    ExpressionInterpretableNode* exp = parse_while_stmt_exp();
     // Parse the while body
     parse_body();
     BodyNode* body = (BodyNode*) pop_node();
@@ -671,6 +676,26 @@ void Parser::parse_while()
     while_node->exp = exp;
     while_node->body = body;
     push_node(while_node);
+}
+
+void Parser::parse_do_while()
+{
+    if (!next()->isKeyword("do"))
+    {
+        parse_error("Expecting a do keyword for do while statements");
+    }
+    
+    // Parse the do while statement body
+    parse_body();
+    
+    BodyNode* body_node = (BodyNode*) pop_node();
+    
+    // Parse the while statement
+    ExpressionInterpretableNode* exp = parse_while_stmt_exp();
+    DoWhileNode* do_while_node = (DoWhileNode*) factory.createNode(NODE_TYPE_DO_WHILE);
+    do_while_node->exp = exp;
+    do_while_node->body = body_node;
+    push_node(do_while_node);
 }
 
 void Parser::parse_break()
@@ -1034,6 +1059,11 @@ void Parser::parse_body_next()
     else if(this->current_token->isKeyword("while"))
     {
         parse_while();
+    }
+    else if(this->current_token->isKeyword("do"))
+    {
+        parse_do_while();
+        parse_semicolon();
     }
     else if(this->current_token->isKeyword("break"))
     {

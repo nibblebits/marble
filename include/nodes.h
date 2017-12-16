@@ -25,4 +25,5 @@
 #include "whilenode.h"
 #include "breaknode.h"
 #include "continuenode.h"
+#include "dowhilenode.h"
 #endif

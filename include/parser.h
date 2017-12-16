@@ -54,7 +54,9 @@ private:
     void parse_class();
     void parse_try();
     void parse_throw();
+    ExpressionInterpretableNode* parse_while_stmt_exp();
     void parse_while();
+    void parse_do_while();
     void parse_break();
     void parse_continue();
     void parse_semicolon();
