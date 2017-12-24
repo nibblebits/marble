@@ -26,4 +26,5 @@
 #include "breaknode.h"
 #include "continuenode.h"
 #include "dowhilenode.h"
+#include "fornode.h"
 #endif

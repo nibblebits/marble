@@ -148,6 +148,12 @@ Node* NodeFactory::createNode(NODE_TYPE node_type)
         node = new DoWhileNode();
     }
     break;
+
+    case NODE_TYPE_FOR:
+    {
+        node = new ForNode();
+    }
+    break;
     
     default:
         throw std::logic_error("Invalid node type provided to NodeFactory::createNode");

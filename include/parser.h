@@ -57,6 +57,8 @@ private:
     ExpressionInterpretableNode* parse_while_stmt_exp();
     void parse_while();
     void parse_do_while();
+    std::vector<ExpressionInterpretableNode*> parse_multi_expression();
+    void parse_for();
     void parse_break();
     void parse_continue();
     void parse_semicolon();

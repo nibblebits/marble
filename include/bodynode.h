@@ -2,10 +2,10 @@
 #define BODYNODE_H
 #include <vector>
 #include <functional>
-#include "inode.h"
+#include "listnode.h"
 #include "breakable.h"
 class Interpreter;
-class BodyNode : public InterpretableNode, public Breakable
+class BodyNode : public ListNode, public Breakable
 {
 public:
     BodyNode();
@@ -22,11 +22,6 @@ public:
 	bool interpret_body_node(Node* node);
     void interpret_body(BodyNode* node);
     
-    // Add's a node to the nested children
-    void addChild(InterpretableNode* c);
-    
-    // Nested children of this body node
-    InterpretableNode* child;
     
 private:
     Interpreter* interpreter;

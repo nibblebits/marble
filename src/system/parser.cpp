@@ -698,6 +698,52 @@ void Parser::parse_do_while()
     push_node(do_while_node);
 }
 
+std::vector<ExpressionInterpretableNode*> Parser::parse_multi_expression()
+{
+    std::vector<ExpressionInterpretableNode*> expressions;
+    do
+    {
+        parse_expression();
+        expressions.push_back((ExpressionInterpretableNode*) pop_node());
+    }
+    while(next()->isSymbol(","));
+    return expressions;
+}
+void Parser::parse_for()
+{
+    if (!next()->isKeyword("for"))
+    {
+        parse_error("Expecting a for keyword for \"for\" statements");
+    }
+
+    if (!next()->isSymbol("("))
+    {
+        parse_error("Expecting a left bracket after the \"for\" keyword");
+    }
+
+    // Lets parse the init.
+    std::vector<ExpressionInterpretableNode*> init = parse_multi_expression();
+
+    // Now the condition
+    parse_expression();
+    ExpressionInterpretableNode* cond = (ExpressionInterpretableNode*) pop_node();
+    parse_semicolon();
+
+    // Now the loop
+    std::vector<ExpressionInterpretableNode*> loop = parse_multi_expression();
+
+    // And finally the body
+    parse_body();
+    BodyNode* body = (BodyNode*) pop_node();
+
+    ForNode* for_node = (ForNode*) factory.createNode(NODE_TYPE_FOR);
+    for_node->init = init;
+    for_node->cond = cond;
+    for_node->loop = loop;
+    for_node->body = body;
+    push_node(for_node);
+}
+
 void Parser::parse_break()
 {
     if (!next()->isKeyword("break"))
@@ -982,7 +1028,7 @@ void Parser::parse_class_body()
         else
         {
             parse_class_body_next();
-            body_node->addChild((InterpretableNode*) pop_node());
+            body_node->addNode((InterpretableNode*) pop_node());
         }
     }
     
@@ -1008,7 +1054,7 @@ void Parser::parse_body()
     while(!peek()->isSymbol("}"))
     {
         parse_body_next();
-        body_node->addChild((InterpretableNode*) pop_node());
+        body_node->addNode((InterpretableNode*) pop_node());
     }
     
     // Lets remove the "}" symbol
@@ -1064,6 +1110,10 @@ void Parser::parse_body_next()
     {
         parse_do_while();
         parse_semicolon();
+    }
+    else if(this->current_token->isKeyword("for"))
+    {
+        parse_for();
     }
     else if(this->current_token->isKeyword("break"))
     {

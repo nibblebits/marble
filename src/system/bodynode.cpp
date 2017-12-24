@@ -5,9 +5,8 @@
 #include "validator.h"
 #include "writtenfunction.h"
 
-BodyNode::BodyNode() : InterpretableNode(NODE_TYPE_BODY)
+BodyNode::BodyNode() : ListNode(NODE_TYPE_BODY)
 {
-    this->child = NULL;
     this->before_leave_function = NULL;
     this->node_listener_function = NULL;
     this->on_after_test_node_function = NULL;
@@ -39,7 +38,7 @@ void BodyNode::test(Validator* validator, SCOPE_PROPERTIES scope_properties)
     // Let's create a new parented scope for this
     if (!(scope_properties & KEEP_SCOPE))
         validator->new_parented_scope();
-    InterpretableNode* current_node = child;
+    InterpretableNode* current_node = ListNode::getRootNode();
     // Awesome now lets interpret!
     while(current_node != NULL)
     {
@@ -115,7 +114,8 @@ void BodyNode::interpret_body(BodyNode* node)
 {
     // Let's create a new parented scope for this
     interpreter->new_parented_scope();
-    Node* current_node = node->child;
+    // Get the root of the body. The first child.
+    Node* current_node = node->getRootNode();
 
     // Awesome now lets interpret!
     while(current_node != NULL)
@@ -139,19 +139,3 @@ end:
     return;
 }
 
-void BodyNode::addChild(InterpretableNode* c)
-{
-    if (this->child == NULL)
-    {
-        this->child = c;
-        return;
-    }
-
-
-    // Let's find the last current child
-    Node* current = this->child;
-    while(current->next != NULL) { current = current->next; }
-    
-    // At this point we are at the last child
-    current->next = c;
-}
