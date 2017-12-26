@@ -1,7 +1,7 @@
 #include "listnode.h"
 ListNode::ListNode() : ListNode(NODE_TYPE_LIST)
 {
-
+    this->root = NULL;
 }
 
 ListNode::ListNode(NODE_TYPE nodeType) : InterpretableNode(nodeType)
@@ -24,7 +24,7 @@ Value ListNode::interpret(Interpreter* interpreter)
 {
     Value v;
     InterpretableNode* current = this->root;
-    while(current->next != NULL) { current->interpret(interpreter); current = (InterpretableNode*) current->next;}
+    while(current != NULL) { current->interpret(interpreter); current = (InterpretableNode*) current->next;}
     return v;
 }
 
