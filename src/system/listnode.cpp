@@ -17,7 +17,7 @@ ListNode::~ListNode()
 void ListNode::test(Validator* validator)
 {
     InterpretableNode* current = this->root;
-    while(current->next != NULL) { current->test(validator); current = (InterpretableNode*) current->next;}
+    while(current != NULL) { current->test(validator); current = (InterpretableNode*) current->next;}
 }
 
 Value ListNode::interpret(Interpreter* interpreter)
