@@ -29,6 +29,12 @@ void VarNode::test(Validator* validator)
 {
    std::string type_str = getTypeAsString();
 
+   // We need to check if the variable already exists in this scope
+   if (validator->getCurrentScope()->getVariable(this->name) != NULL)
+   {
+       throw TestError("a variable with the name: \"" + this->name + "\" has already been declared in this scope");
+   }
+
    if (isArray())
    {
        validator->expectingArray(this->dimensions);
