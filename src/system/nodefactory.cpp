@@ -154,6 +154,12 @@ Node* NodeFactory::createNode(NODE_TYPE node_type)
         node = new ForNode();
     }
     break;
+
+    case NODE_TYPE_LIST:
+    {
+        node = new ListNode();
+    }
+    break;
     
     default:
         throw std::logic_error("Invalid node type provided to NodeFactory::createNode");

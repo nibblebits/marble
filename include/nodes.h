@@ -27,4 +27,5 @@
 #include "continuenode.h"
 #include "dowhilenode.h"
 #include "fornode.h"
+#include "listnode.h"
 #endif

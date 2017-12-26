@@ -2,6 +2,7 @@
 #include "nodes.h"
 #include "interpreter.h"
 #include "exceptions/testerror.h"
+#include "listnode.h"
 ForNode::ForNode() : InterpretableNode(NODE_TYPE_FOR)
 {
 
@@ -21,16 +22,9 @@ void ForNode::test(Validator* validator)
 {
     try
     {
-        for (ExpressionInterpretableNode* node : init)
-        {
-    	    node->test(validator);
-        }
+    	this->init->test(validator);
         this->cond->test(validator);
-
-        for (ExpressionInterpretableNode* node : loop)
-        {
-            node->test(validator);
-        }
+        this->loop->test(validator);
     }
     catch(TestError& ex)
     {
@@ -42,10 +36,8 @@ Value ForNode::interpret(Interpreter* interpreter)
 {
     // While nodes are breakable so lets tell the interpreter we are the current breakable
     interpreter->setCurrentBreakable(this);
-    for (ExpressionInterpretableNode* node : init)
-    {
-        node->interpret(interpreter);
-    }
+    init->interpret(interpreter);
+
     Value v = cond->interpret(interpreter);
     while (v.dvalue == 1)
     {
@@ -58,10 +50,7 @@ Value ForNode::interpret(Interpreter* interpreter)
             if (type == BREAK_TYPE_CONTINUE)
                 continue;
         }
-        for (ExpressionInterpretableNode* node : loop)
-        {
-            node->interpret(interpreter);
-        }
+        loop->interpret(interpreter);
         v = cond->interpret(interpreter);
     }
     interpreter->finishBreakable();

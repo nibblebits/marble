@@ -698,16 +698,16 @@ void Parser::parse_do_while()
     push_node(do_while_node);
 }
 
-std::vector<ExpressionInterpretableNode*> Parser::parse_multi_expression()
+void Parser::parse_multi_expression()
 {
-    std::vector<ExpressionInterpretableNode*> expressions;
+    ListNode* list_node = (ListNode*) factory.createNode(NODE_TYPE_LIST);
     do
     {
         parse_expression();
-        expressions.push_back((ExpressionInterpretableNode*) pop_node());
+        list_node->addNode((ExpressionInterpretableNode*) pop_node());
     }
     while(next()->isSymbol(","));
-    return expressions;
+    push_node(list_node);
 }
 void Parser::parse_for()
 {
@@ -722,15 +722,16 @@ void Parser::parse_for()
     }
 
     // Lets parse the init.
-    std::vector<ExpressionInterpretableNode*> init = parse_multi_expression();
-
+    parse_multi_expression();
+    ListNode* init = (ListNode*) pop_node();
     // Now the condition
     parse_expression();
     ExpressionInterpretableNode* cond = (ExpressionInterpretableNode*) pop_node();
     parse_semicolon();
 
     // Now the loop
-    std::vector<ExpressionInterpretableNode*> loop = parse_multi_expression();
+    parse_multi_expression();
+    ListNode* loop = (ListNode*) pop_node();
 
     // And finally the body
     parse_body();

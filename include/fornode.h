@@ -2,6 +2,7 @@
 #define FORNODE_H
 #include "inode.h"
 #include "breakable.h"
+class ListNode;
 class BodyNode;
 class ExpressionInterpretableNode;
 class ForNode : public InterpretableNode, public Breakable
@@ -13,9 +14,9 @@ public:
     virtual void test(Validator* validator);
     virtual Value interpret(Interpreter* interpreter);
     virtual void evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation);
-    std::vector<ExpressionInterpretableNode*> init;
+    ListNode* init;
     ExpressionInterpretableNode* cond;
-    std::vector<ExpressionInterpretableNode*> loop;
+    ListNode* loop;
     BodyNode* body;
 };
 #endif
