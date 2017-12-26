@@ -1,4 +1,5 @@
 #include "parser.h"
+#include "datatype.h"
 #include <iostream>
 struct order_of_operation o_of_operation[] =
 {
@@ -701,14 +702,28 @@ void Parser::parse_do_while()
 void Parser::parse_multi_expression()
 {
     ListNode* list_node = (ListNode*) factory.createNode(NODE_TYPE_LIST);
-    do
+    if (peek()->isSymbol(";"))
     {
-        parse_expression();
-        list_node->addNode((ExpressionInterpretableNode*) pop_node());
+        push_node(list_node);
+        return;
     }
-    while(next()->isSymbol(","));
+
+
+    while(1)
+    {
+        parse_expression_or_variable_declaration();
+        list_node->addNode((ExpressionInterpretableNode*) pop_node());
+        if (peek()->isSymbol(","))
+        {
+            next();
+            continue;
+        }
+
+        break;
+    }
     push_node(list_node);
 }
+
 void Parser::parse_for()
 {
     if (!next()->isKeyword("for"))
@@ -724,6 +739,8 @@ void Parser::parse_for()
     // Lets parse the init.
     parse_multi_expression();
     ListNode* init = (ListNode*) pop_node();
+    parse_semicolon();
+
     // Now the condition
     parse_expression();
     ExpressionInterpretableNode* cond = (ExpressionInterpretableNode*) pop_node();
@@ -733,6 +750,11 @@ void Parser::parse_for()
     parse_multi_expression();
     ListNode* loop = (ListNode*) pop_node();
 
+    // Lets get rid of the ")" symbol
+    if (!next()->isSymbol(")"))
+    {
+        parse_error("Expecting a final right bracket before for-loop body. \")\"");
+    }
     // And finally the body
     parse_body();
     BodyNode* body = (BodyNode*) pop_node();
@@ -1063,6 +1085,51 @@ void Parser::parse_body()
     
     push_node(body_node);
 }
+
+void Parser::parse_vafde_for_identifier()
+{
+    if (!peek()->isIdentifier())
+    {
+        parse_error("Expecting an identifier for a vafd parse");
+    }
+
+     /* The token is an identifier so this can be treated as an expression as it is one of the following
+         * 1. Representing a variable
+         * 2. An assignment
+         * 3. A function call
+         * 4. A variable declaration with an object type
+         * 5. An expression
+         */
+         
+    Token* next_token = peek(this->current_token, 1);
+    if (next_token->isIdentifier() || (next_token->isSymbol("[") && peek(this->current_token, 2)->isSymbol("]") && peek(this->current_token, 3)->isIdentifier()))
+    {
+        // This is a variable declaration
+        parse_variable_declaration();
+        return;
+    }
+
+    // As this is not a variable declaration it may be a valid expression equaling one of the following specified above.
+    parse_expression_for_value();
+}
+
+void Parser::parse_expression_or_variable_declaration()
+{
+    if (peek()->isKeyword() && DataType::isPrimitiveDataType(peek()->getValue()))
+    {
+        parse_variable_declaration();
+        return;
+    }
+
+    if (peek()->isIdentifier())
+    {
+        parse_vafde_for_identifier();
+        return;
+    }
+
+    parse_error("Expecting either a datatype keyword or an identifier");
+}
+
 void Parser::parse_body_next()
 {
     std::string token_value = this->current_token->getValue();
@@ -1128,22 +1195,7 @@ void Parser::parse_body_next()
     }
     else if(this->current_token->isIdentifier())
     {
-        /* The token is an identifier so this can be treated as an expression as it is one of the following
-         * 1. Representing a variable
-         * 2. An assignment
-         * 3. A function call
-         * 4. A variable declaration with an object type
-         */
-         
-        Token* next_token = peek(this->current_token, 1);
-        if (next_token->isIdentifier() || (next_token->isSymbol("[") && peek(this->current_token, 2)->isSymbol("]") && peek(this->current_token, 3)->isIdentifier()))
-        {
-            // This is a variable declaration
-            parse_variable_declaration();
-            parse_semicolon();
-            return;
-        }
-        parse_expression_for_value();
+        parse_vafde_for_identifier();
         parse_semicolon();
     }
     else

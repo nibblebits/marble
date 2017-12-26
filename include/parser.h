@@ -45,6 +45,21 @@ private:
     void parse_class_body();
     void parse_class_body_next();
     void parse_body();
+
+     /**
+     * Used to parse a series of nodes that represent one of the following:
+     * 1. A variable
+     * 2. An assignment
+     * 3. A function call
+     * 4. A variable declaration with an object type
+     * 5. An expression
+     * 
+     * A resulting node is then pushed to the stack with the resulting node being one of the above.
+     * 
+     * \attention An identifier must follow before this method is called or a parse error will be thrown.
+    */
+    void parse_vafde_for_identifier();
+    void parse_expression_or_variable_declaration();
     void parse_body_next();
     void parse_value(int rules=0);
     void parse_cast(Node* casting_to);
@@ -57,6 +72,11 @@ private:
     ExpressionInterpretableNode* parse_while_stmt_exp();
     void parse_while();
     void parse_do_while();
+    /**
+     * Parses multiple expressions seperated by commas ",". If the first token seen is a symbol of ";" then an empty ListNode is pushed to the stack.
+     * Multi-expressions also allow for variable declarations when calling this method.
+     * While traditional expressions "parse_expression()" do not.
+     **/
     void parse_multi_expression();
     void parse_for();
     void parse_break();

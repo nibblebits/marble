@@ -20,21 +20,27 @@ void ForNode::didBreak(BREAK_TYPE type)
 
 void ForNode::test(Validator* validator)
 {
+    // Let's create a new parented scope for this test
+    validator->new_parented_scope();
     try
     {
     	this->init->test(validator);
         this->cond->test(validator);
         this->loop->test(validator);
+        this->body->test(validator);
     }
     catch(TestError& ex)
     {
+        validator->finish_parented_scope();
 	    throw TestError(ex.getMessage() + " for \"for\" loop");
     }
+    validator->finish_parented_scope();
 }
 
 Value ForNode::interpret(Interpreter* interpreter)
 {
-    // While nodes are breakable so lets tell the interpreter we are the current breakable
+    interpreter->new_parented_scope();
+    // For nodes are breakable so lets tell the interpreter we are the current breakable
     interpreter->setCurrentBreakable(this);
     init->interpret(interpreter);
 
@@ -54,6 +60,7 @@ Value ForNode::interpret(Interpreter* interpreter)
         v = cond->interpret(interpreter);
     }
     interpreter->finishBreakable();
+    interpreter->finish_parented_scope();
     return v;
 }
 
