@@ -6,7 +6,7 @@ ListNode::ListNode() : ListNode(NODE_TYPE_LIST)
 
 ListNode::ListNode(NODE_TYPE nodeType) : InterpretableNode(nodeType)
 {
-
+    this->root = NULL;
 }
 ListNode::~ListNode()
 {
