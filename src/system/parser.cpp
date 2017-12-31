@@ -75,6 +75,11 @@ void Parser::parse_error(std::string message)
     logger->error(message, this->prev_token->posInfo);
 }
 
+void Parser::ensure_peek_non_dummy(std::string error_message)
+{
+    if (peek() == this->dummy_token.get())
+        parse_error(error_message);
+}
 void Parser::ensure_type(Token* token, int expected_type)
 {
     int token_type = token->getType();
@@ -1044,6 +1049,7 @@ void Parser::parse_class_body()
     BodyNode* body_node = (BodyNode*) factory.createNode(NODE_TYPE_BODY);
     while(!peek()->isSymbol("}"))
     {
+        ensure_peek_non_dummy("Bodies must be closed with the \"}\" symbol");
         if (this->current_token->isDataAccessKeyword())
         {
             parse_modifier_access();

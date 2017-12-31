@@ -29,6 +29,7 @@ private:
     bool is_datatype(std::string str);
     bool legal_value(Token* token);
     void parse_error(std::string message);
+    void ensure_peek_non_dummy(std::string error_message);
     void ensure_type(Token* token, int expected_type);
     MODIFIER_ACCESS get_modifier_access_for_string(std::string str);
     Token* get_identifier_token(std::string error_msg);
