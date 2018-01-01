@@ -16,6 +16,17 @@ class Function;
 class GroupedFunction;
 class Interpreter;
 
+/*
+* We will create some definitions to assist in using the function system
+*/
+
+/**
+ *  Registers a root function that can be called inside the marble language.
+ *  The function registered is not a method and will be called without an object.
+ */
+#define REGISTER_ROOT_FUNCTION(interpreter, function_name, arguments, return_type, native_function_name) \
+interpreter->getBaseFunctionSystem()->registerFunction(function_name, arguments, return_type, \
+ [&](std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object) { native_function_name(values, return_value, object); });  
 class FunctionSystem
 {
     public:

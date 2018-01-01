@@ -71,13 +71,19 @@ public:
     */
     void finishBreakable();
     
+    /**
+     * Calls the output function assigned to this Interpreter
+     * 
+     * This is used when you need to provide output to the user through the console or to send data to the users web browser or something else regarding sending output.
+     * Depending on the output functin will depend how the output is sent but the end goal of this function is to provide output to the user.
+     */
+    OUTPUT_FUNCTION output;
 private:
     void handleLineAndColumn(PosInfo* posInfo, const char* data, int length);
     void fail();
     const char* filename;
     ModuleSystem* moduleSystem;
     FunctionCallNode* lastFunctionCallNode;
-    OUTPUT_FUNCTION output;
     std::vector<struct stack_log_part> stack_log;
     std::vector<Breakable*> breakables;
 };

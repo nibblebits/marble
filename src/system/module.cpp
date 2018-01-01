@@ -1,6 +1,7 @@
 #include "module.h"
 Module::Module(std::string name, MODULE_TYPE type)
 {
+    this->moduleSystem = NULL;
     this->name = name;
     this->type = type;
 }

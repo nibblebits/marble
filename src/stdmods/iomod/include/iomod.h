@@ -7,5 +7,9 @@ public:
     IOModule();
     virtual ~IOModule();
     void Init();
+
+private:
+    // Native IO functions/methods
+    void print(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object);
 };
 #endif

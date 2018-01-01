@@ -85,7 +85,7 @@ Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionS
     c = getClassSystem()->registerClass("NullPointerException", exception_class);
     c->registerFunction("__construct", {}, VarType::fromString("void"), [&](std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
     });
-    getBaseFunctionSystem()->registerFunction("print", {VarType::fromString("string")}, VarType::fromString("void"), [&](std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+    getBaseFunctionSystem()->registerFunction("prints", {VarType::fromString("string")}, VarType::fromString("void"), [&](std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
         std::stringstream ss;
         for (Value v : arguments)
         {
