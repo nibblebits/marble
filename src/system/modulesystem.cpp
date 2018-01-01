@@ -31,11 +31,10 @@ void CoutLogHandler(Module* module, std::string message, LOG_TYPE log_type)
     std::cout << output_msg << std::endl;
 }
 
-ModuleSystem::ModuleSystem() : SystemHandler(SYSTEM_HANDLER_MODULE_SYSTEM, NULL, NULL)
+ModuleSystem::ModuleSystem()
 {
     this->setLogHandler(CoutLogHandler);
-    activate();
-    deactivate();
+    this->functionSystem = std::unique_ptr<FunctionSystem>(new FunctionSystem());
 }
 
 ModuleSystem::~ModuleSystem()
@@ -67,4 +66,9 @@ void ModuleSystem::setLogHandler(LOG_HANDLER_FUNCTION handler_func)
 void ModuleSystem::log(Module* module, std::string message, LOG_TYPE log_type)
 {
     this->log_handler(module, message, log_type);
+}
+
+FunctionSystem* ModuleSystem::getFunctionSystem()
+{
+    return this->functionSystem.get();
 }

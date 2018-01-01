@@ -72,7 +72,7 @@ FunctionSystem* FunctionSystem::getPreviousFunctionSystem()
 
 GroupedFunction* FunctionSystem::replaceFunctionWithGroup(std::string function_name)
 {
-    GroupedFunction* grouped_function = new GroupedFunction(this->sys_handler, function_name);
+    GroupedFunction* grouped_function = new GroupedFunction(function_name);
     std::unique_ptr<Function> old_function = std::move(this->functions[function_name]);
     grouped_function->addFunction(std::move(old_function));
     this->functions[function_name] = std::unique_ptr<Function>(grouped_function);
@@ -86,7 +86,7 @@ Function* FunctionSystem::registerFunction(std::string name, std::vector<VarType
         throw std::logic_error("The function: " + name + " has already been registered with the given arguments");
     }
 
-    Function* function = new NativeFunction(this->sys_handler, name, args, return_type, entrypoint);
+    Function* function = new NativeFunction(name, args, return_type, entrypoint);
     this->functions[name] = std::unique_ptr<Function>(function);
     return function;
 }
@@ -112,7 +112,7 @@ Function* FunctionSystem::registerFunction(FunctionNode* fnode)
     if (hasFunctionLocally(fnode->name, var_types))
         throw std::logic_error("The function: " + fnode->name + " has already been registered with the given arguments");
     
-    Function* function_raw = new WrittenFunction(sys_handler, fnode, var_types, return_type);
+    Function* function_raw = new WrittenFunction(fnode, var_types, return_type);
     std::unique_ptr<Function> function = std::unique_ptr<Function>(function_raw);
     if (hasFunctionLocally(fnode->name))
     {

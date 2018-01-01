@@ -38,7 +38,7 @@ void operator delete[](void* ptr)
 void interpret()
 {
     ModuleSystem moduleSystem;
-    Interpreter interpreter(moduleSystem.getClassSystem(), moduleSystem.getFunctionSystem());
+    Interpreter interpreter(NULL, moduleSystem.getFunctionSystem());
     interpreter.setOutputFunction([](const char* data) {
         std::cout << data;
     });

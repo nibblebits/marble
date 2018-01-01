@@ -3,7 +3,7 @@
 #include "fnode.h"
 #include "varnode.h"
 #include "bodynode.h"
-WrittenFunction::WrittenFunction(SystemHandler* handler, FunctionNode* function_node, std::vector<VarType> argument_types, VarType return_type) : SingleFunction(handler, FUNCTION_TYPE_WRITTEN, function_node->name, argument_types, return_type)
+WrittenFunction::WrittenFunction(FunctionNode* function_node, std::vector<VarType> argument_types, VarType return_type) : SingleFunction(FUNCTION_TYPE_WRITTEN, function_node->name, argument_types, return_type)
 {
     this->fnode = function_node;
     this->return_node = NULL;
@@ -36,9 +36,6 @@ void WrittenFunction::invoke(Interpreter* interpreter, std::vector<Value> values
 
 void WrittenFunction::invoke_impl(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)
 {
-    if (this->sys_handler->getType() != SYSTEM_HANDLER_INTERPRETER)
-        throw std::logic_error("Cannot invoke this written function as the system handler is not of type \"SYSTEM_HANDLER_INTERPRETER\"");
-        
     // Function arguments require there own scope
     interpreter->new_parented_scope();
     int count = 0;

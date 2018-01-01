@@ -1,5 +1,5 @@
 #include "nativefunction.h"
-NativeFunction::NativeFunction(SystemHandler* handler, std::string name, std::vector<VarType> argument_types, VarType return_type, NATIVE_FUNCTION_ENTRYPOINT entrypoint) : SingleFunction(handler, FUNCTION_TYPE_NATIVE, name, argument_types, return_type)
+NativeFunction::NativeFunction(std::string name, std::vector<VarType> argument_types, VarType return_type, NATIVE_FUNCTION_ENTRYPOINT entrypoint) : SingleFunction(FUNCTION_TYPE_NATIVE, name, argument_types, return_type)
 {
     this->entrypoint = entrypoint;
 }

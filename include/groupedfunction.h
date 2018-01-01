@@ -29,7 +29,7 @@ class SingleFunction;
 class GroupedFunction : public Function
 {
 public:
-    GroupedFunction(SystemHandler* handler, std::string name);
+    GroupedFunction(std::string name);
     virtual ~GroupedFunction();
     /**
     * Invokes the correct function in this grouped function based on the values provided. If no function is found with the appropriate
