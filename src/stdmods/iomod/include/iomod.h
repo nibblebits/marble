@@ -10,6 +10,6 @@ public:
 
 private:
     // Native IO functions/methods
-    void print(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object);
+    void print(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object);
 };
 #endif

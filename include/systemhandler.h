@@ -17,6 +17,8 @@ public:
     void setFunctionSystem(FunctionSystem* current_fc_system);
     Logger* getLogger();
 
+    // SLIGHT INHERITENCE ISSUE HERE. MAYBE MOVE ACTIVATE AND DEACTIVATE SOMEWHERE ELSE AS NOT ALL SYSTEM HANDLERS WILL NEED THESE METHODS
+
     /** Should be called when this SystemHandler is activate, e.g during validation or interpreting */
     void activate();
     /** Should be called when this SystemHandler is to be deactivated, e.g after validating or interpreting */

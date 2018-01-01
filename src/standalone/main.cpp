@@ -37,13 +37,13 @@ void operator delete[](void* ptr)
 
 void interpret()
 {
-    Interpreter interpreter(NULL, NULL);
+    ModuleSystem moduleSystem;
+    Interpreter interpreter(moduleSystem.getClassSystem(), moduleSystem.getFunctionSystem());
     interpreter.setOutputFunction([](const char* data) {
         std::cout << data;
     });
     
     Logger* logger = interpreter.getLogger();
-    ModuleSystem moduleSystem;
     interpreter.setModuleSystem(&moduleSystem);
     moduleSystem.loadModule("./mods/marble_iomod.so");
     interpreter.runScript("./test.marble");

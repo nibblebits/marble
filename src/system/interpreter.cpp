@@ -103,7 +103,6 @@ void Interpreter::setOutputFunction(OUTPUT_FUNCTION output)
 void Interpreter::setModuleSystem(ModuleSystem* moduleSystem)
 {
     this->moduleSystem = moduleSystem;
-    this->moduleSystem->setInterpreter(this);
 }
 
 void Interpreter::ready()

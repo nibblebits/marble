@@ -3,7 +3,7 @@
 #include "module.h"
 #include "../include/iomod.h"
 #include "main.h"
-Module* marble_mod_init(Interpreter* interpreter)
+Module* marble_mod_init()
 {
   return new IOModule();
 }

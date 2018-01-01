@@ -3,13 +3,14 @@
 
 #include <functional>
 #include <string>
+#include "systemhandler.h"
 
 class Interpreter;
 class Module;
 
 typedef std::function<void(Module*,std::string,LOG_TYPE)> LOG_HANDLER_FUNCTION;
 
-class ModuleSystem
+class ModuleSystem : public SystemHandler
 {
 public:
     ModuleSystem();

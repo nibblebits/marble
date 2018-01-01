@@ -1,7 +1,6 @@
 #ifndef MAIN_H
 #define MAIN_H
 #include "module.h"
-#include "interpreter.h"
 
 #if defined(_MSC_VER)
     //  Microsoft 
@@ -18,6 +17,6 @@
     #pragma warning Unknown dynamic link import/export semantics.
 #endif
 extern "C" {
-    EXPORT Module* marble_mod_init(Interpreter* interpreter);
+    EXPORT Module* marble_mod_init();
 }
 #endif
