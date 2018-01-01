@@ -6,6 +6,6 @@ class IOModule : public Module
 public:
     IOModule();
     virtual ~IOModule();
-    virtual void Init();
+    void Init();
 };
 #endif

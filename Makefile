@@ -148,3 +148,4 @@ apache2-install: apache2
 	sudo apxs -i -a -n mod_marble ./bin/mod_marble.so
 clean:
 	rm ${SYSTEM_OBJECT_FILES}
+	cd ./src/stdmods && $(MAKE) clean

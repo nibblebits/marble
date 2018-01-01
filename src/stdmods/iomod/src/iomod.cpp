@@ -12,5 +12,5 @@ IOModule::~IOModule()
 
 void IOModule::Init()
 {
-    std::cout << "IOModule INIT SUCCESS" << std::endl;
+  std::cout << "Init success!" << std::endl;
 }

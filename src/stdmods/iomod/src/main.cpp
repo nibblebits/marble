@@ -1,13 +1,9 @@
 #include <string>
 #include <iostream>
+#include "module.h"
+#include "../include/iomod.h"
 #include "main.h"
-#include "iomod.h"
 Module* marble_mod_init(Interpreter* interpreter)
 {
-    return new IOModule();
-}
-
-void test()
-{
-
+  return new IOModule();
 }
