@@ -2,14 +2,39 @@
 #include <string>
 #include <stdexcept>
 #include "module.h"
+#include "statics.h"
 #include "modulesystem.h"
 #include "interpreter.h"
 
 typedef Module* (*marble_mod_init) (Interpreter* interpreter);
 
+/**
+* A basic cout handler that is the default handler for outputting logs to the console for modules.
+*/
+void CoutLogHandler(Module* module, std::string message, LOG_TYPE log_type)
+{
+    std::string output_msg = "";
+    if(log_type == LOG_LEVEL_NOTICE)
+    {
+        output_msg = "NOTICE: ";
+    }
+    else if(log_type == LOG_LEVEL_WARNING)
+    {
+        output_msg = "WARNING: ";
+    }
+    else if(log_type == LOG_LEVEL_ERROR)
+    {
+        output_msg = "ERROR: ";
+    }
+
+    output_msg += message;
+    std::cout << output_msg << std::endl;
+}
+
 ModuleSystem::ModuleSystem()
 {
     this->interpreter = NULL;
+    this->setLogHandler(CoutLogHandler);
 }
 
 ModuleSystem::~ModuleSystem()
@@ -20,6 +45,11 @@ ModuleSystem::~ModuleSystem()
 void ModuleSystem::setInterpreter(Interpreter* interpreter)
 {
     this->interpreter = interpreter;
+}
+
+Interpreter* ModuleSystem::getInterpreter()
+{
+    return this->interpreter;
 }
 
 void ModuleSystem::loadModule(const char* filename)
@@ -37,5 +67,16 @@ void ModuleSystem::loadModule(const char* filename)
     Module* module = init(this->interpreter);
     if (!module)
         throw std::logic_error("The module: " + std::string(filename) + " returned a NULL module upon calling its init method \"marble_mod_init\"");
+    module->setModuleSystem(this);
     module->Init();
+}
+
+void ModuleSystem::setLogHandler(LOG_HANDLER_FUNCTION handler_func)
+{
+    this->log_handler = handler_func;
+}
+
+void ModuleSystem::log(Module* module, std::string message, LOG_TYPE log_type)
+{
+    this->log_handler(module, message, log_type);
 }

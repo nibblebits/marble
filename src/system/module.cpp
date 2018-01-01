@@ -19,3 +19,23 @@ MODULE_TYPE Module::getType()
 {
     return this->type;
 }
+
+void Module::log(std::string message, LOG_TYPE type)
+{
+    this->moduleSystem->log(this, message, type);
+}
+
+void Module::setModuleSystem(ModuleSystem* moduleSystem)
+{
+    this->moduleSystem = moduleSystem;
+}
+
+ModuleSystem* Module::getModuleSystem()
+{
+    return this->moduleSystem;
+}
+
+Interpreter* Module::getInterpreter()
+{
+    return this->moduleSystem->getInterpreter();
+}
