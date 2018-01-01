@@ -35,8 +35,3 @@ ModuleSystem* Module::getModuleSystem()
 {
     return this->moduleSystem;
 }
-
-Interpreter* Module::getInterpreter()
-{
-    return this->moduleSystem->getInterpreter();
-}

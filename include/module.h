@@ -14,7 +14,6 @@ public:
     void log(std::string message, LOG_TYPE type);
     void setModuleSystem(ModuleSystem* moduleSystem);
     ModuleSystem* getModuleSystem();
-    Interpreter* getInterpreter();
     virtual void Init() = 0;
 private:
     MODULE_TYPE type;

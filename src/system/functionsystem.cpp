@@ -86,7 +86,6 @@ Function* FunctionSystem::registerFunction(std::string name, std::vector<VarType
         throw std::logic_error("The function: " + name + " has already been registered with the given arguments");
     }
 
-    
     Function* function = new NativeFunction(this->sys_handler, name, args, return_type, entrypoint);
     this->functions[name] = std::unique_ptr<Function>(function);
     return function;

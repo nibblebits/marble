@@ -42,16 +42,6 @@ ModuleSystem::~ModuleSystem()
 
 }
 
-void ModuleSystem::setInterpreter(Interpreter* interpreter)
-{
-    this->interpreter = interpreter;
-}
-
-Interpreter* ModuleSystem::getInterpreter()
-{
-    return this->interpreter;
-}
-
 void ModuleSystem::loadModule(const char* filename)
 {
     if (!this->interpreter)
