@@ -6,6 +6,7 @@
 #include "value.h"
 #include "object.h"
 #include "statics.h"
+#include "typedef_func.h"
 
 class ReturnNode;
 class SystemHandler;
@@ -15,8 +16,8 @@ class Function
     public:
         Function(SystemHandler* handler, FUNCTION_TYPE type, std::string name);
         virtual ~Function();
-        virtual void invoke(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object);
-        virtual void invoke_impl(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object) = 0;
+        virtual void invoke(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object);
+        virtual void invoke_impl(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object) = 0;
         std::string getName();
         SystemHandler* getSystemHandler();
         

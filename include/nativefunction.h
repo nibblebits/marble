@@ -2,14 +2,16 @@
 #define NATIVEFUNCTION_H
 
 #include "singlefunction.h"
+#include "statics.h"
+#include "typedef_func.h"
 class NativeFunction : public SingleFunction
 {
     public:
-        NativeFunction(SystemHandler* handler, std::string name, std::vector<VarType> argument_types, VarType return_type, std::function<void(std::vector<Value>, Value* return_value, std::shared_ptr<Object> object)> entrypoint);
+        NativeFunction(SystemHandler* handler, std::string name, std::vector<VarType> argument_types, VarType return_type, NATIVE_FUNCTION_ENTRYPOINT entrypoint);
         virtual ~NativeFunction();
-        virtual void invoke_impl(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object);
+        virtual void invoke_impl(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object);
     private:
-        std::function<void(std::vector<Value>, Value* return_value, std::shared_ptr<Object> object)> entrypoint;
+        NATIVE_FUNCTION_ENTRYPOINT entrypoint;
 };
 
 #endif

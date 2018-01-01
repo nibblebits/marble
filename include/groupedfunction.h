@@ -40,7 +40,7 @@ public:
     * \param object The object this function was invoked on. Set to NULL if no object was provided.
     * \throw std::logic_error Thrown if no function can be found that can deal with the values provided.
     */
-    virtual void invoke_impl(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object);
+    virtual void invoke_impl(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object);
     Function* getFunctionForValues(std::vector<Value> values);
     Function* getFunctionForArguments(std::vector<VarType> types);
     bool hasFunctionWithArguments(std::vector<VarType> types);

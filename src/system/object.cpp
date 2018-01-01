@@ -33,7 +33,7 @@ std::shared_ptr<Object> Object::create(Class* object_class)
     return object_class->getDescriptorObject()->newInstance();
 }
 
-std::shared_ptr<Object> Object::create(Class* object_class, std::vector<Value> constructor_values)
+std::shared_ptr<Object> Object::create(Interpreter* interpreter, Class* object_class, std::vector<Value> constructor_values)
 {
     std::shared_ptr<Object> object = object_class->getDescriptorObject()->newInstance();
     // The constructor must now be called
@@ -43,7 +43,7 @@ std::shared_ptr<Object> Object::create(Class* object_class, std::vector<Value> c
         object->runThis([&]
         {
             // Invoke that constructor!
-            constructor->invoke(constructor_values, NULL, object);
+            constructor->invoke(interpreter, constructor_values, NULL, object);
         }, constructor->cls);
     }
     

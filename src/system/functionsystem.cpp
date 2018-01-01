@@ -79,7 +79,7 @@ GroupedFunction* FunctionSystem::replaceFunctionWithGroup(std::string function_n
     return grouped_function;
 }
 
-Function* FunctionSystem::registerFunction(std::string name, std::vector<VarType> args, VarType return_type, std::function<void(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)> entrypoint)
+Function* FunctionSystem::registerFunction(std::string name, std::vector<VarType> args, VarType return_type, NATIVE_FUNCTION_ENTRYPOINT entrypoint)
 {
     if (hasFunctionLocally(name, args))
     {

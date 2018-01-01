@@ -14,13 +14,13 @@ GroupedFunction::~GroupedFunction()
 }
 
 
-void GroupedFunction::invoke_impl(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)
+void GroupedFunction::invoke_impl(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)
 {
     Function* function = getFunctionForValues(values);
     if (function == NULL)
         throw std::logic_error("No function found to invoke for the given values");
     
-    function->invoke(values, return_value, object);
+    function->invoke(interpreter, values, return_value, object);
 }
 
 Function* GroupedFunction::getFunctionForValues(std::vector<Value> values)

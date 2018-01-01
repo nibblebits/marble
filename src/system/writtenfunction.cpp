@@ -24,22 +24,21 @@ FunctionNode* WrittenFunction::getFunctionNode()
 }
 
 
-void WrittenFunction::invoke(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)
+void WrittenFunction::invoke(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)
 {
     this->return_node = NULL;
-    Function::invoke(values, return_value, object);
+    Function::invoke(interpreter, values, return_value, object);
     if (this->return_node != NULL)
     {
         return_value->set(&this->return_value);
     }
 }
 
-void WrittenFunction::invoke_impl(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)
+void WrittenFunction::invoke_impl(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)
 {
     if (this->sys_handler->getType() != SYSTEM_HANDLER_INTERPRETER)
         throw std::logic_error("Cannot invoke this written function as the system handler is not of type \"SYSTEM_HANDLER_INTERPRETER\"");
         
-    Interpreter* interpreter = (Interpreter*) this->sys_handler;
     // Function arguments require there own scope
     interpreter->new_parented_scope();
     int count = 0;

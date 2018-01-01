@@ -161,4 +161,5 @@ typedef int LOG_TYPE;
 typedef int MODIFIER_ACCESS;
 typedef int CLASS_REGISTER_RULES;
 typedef int BREAK_TYPE;
+
 #endif

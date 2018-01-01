@@ -9,6 +9,8 @@
 #include <stdexcept>
 #include "value.h"
 #include "vartype.h"
+#include "statics.h"
+#include "typedef_func.h"
 
 class SystemHandler;
 class FunctionNode;
@@ -16,17 +18,6 @@ class Function;
 class GroupedFunction;
 class Interpreter;
 
-/*
-* We will create some definitions to assist in using the function system
-*/
-
-/**
- *  Registers a root function that can be called inside the marble language.
- *  The function registered is not a method and will be called without an object.
- */
-#define REGISTER_ROOT_FUNCTION(interpreter, function_name, arguments, return_type, native_function_name) \
-interpreter->getBaseFunctionSystem()->registerFunction(function_name, arguments, return_type, \
- [&](std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object) { native_function_name(values, return_value, object); });  
 class FunctionSystem
 {
     public:
@@ -72,7 +63,7 @@ class FunctionSystem
          * \param return_type The return type this function will return.
          * \param entrypoint The entrypoint of the function.
          */
-        virtual Function* registerFunction(std::string name, std::vector<VarType> args, VarType return_type, std::function<void(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)> entrypoint);
+        virtual Function* registerFunction(std::string name, std::vector<VarType> args, VarType return_type, NATIVE_FUNCTION_ENTRYPOINT entrypoint);
         virtual Function* registerFunction(FunctionNode* fnode);
         bool hasFunction(std::string name);
         bool hasFunction(std::string name, std::vector<VarType> args);

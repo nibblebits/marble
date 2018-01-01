@@ -22,9 +22,8 @@ SystemHandler* Function::getSystemHandler() {
     return this->sys_handler;
 }
 
-void Function::invoke(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)
+void Function::invoke(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)
 {
-    Interpreter* interpreter = (Interpreter*) getSystemHandler();
     // Lets keep a stack trace of this function call
     std::string address = (object != NULL ? object->getClass()->name : "Global") + "." + this->name;
     PosInfo posInfo;
@@ -39,7 +38,7 @@ void Function::invoke(std::vector<Value> values, Value* return_value, std::share
     {
         FunctionSystem* function_system = this->sys_handler->getFunctionSystem();
         function_system->setCurrentFunction(this);
-        this->invoke_impl(values, return_value, object);
+        this->invoke_impl(interpreter, values, return_value, object);
         function_system->finishCurrentFunction();
     }
     catch(SystemException& ex)

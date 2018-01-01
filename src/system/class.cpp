@@ -40,7 +40,7 @@ std::shared_ptr<Object> Class::getDescriptorObject()
     return this->descriptor_obj;
 }
 
-Function* Class::registerFunction(std::string name, std::vector<VarType> args, VarType return_type, std::function<void(std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)> entrypoint)
+Function* Class::registerFunction(std::string name, std::vector<VarType> args, VarType return_type, NATIVE_FUNCTION_ENTRYPOINT entrypoint)
 {
     Function* function = FunctionSystem::registerFunction(name, args, return_type, entrypoint);
     function->cls = this;

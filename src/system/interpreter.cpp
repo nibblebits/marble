@@ -47,7 +47,7 @@ Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionS
     };
     // Lets create an Object base class that will be the base class of all objects, we should also create an array class that will be used for arrays
     Class* c = getClassSystem()->registerClass("Object", NULL, CLASS_REGISTER_OBJECT_DESCRIPTOR_LATER);
-    c->registerFunction("toString",{}, VarType::fromString("string"), [&](std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+    c->registerFunction("toString",{}, VarType::fromString("string"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
         return_value->type = VALUE_TYPE_STRING;
         return_value->svalue = object->getClass()->name;
     });
@@ -55,7 +55,7 @@ Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionS
     // The Object class is the default class in the system so we should also create the default object descriptor.
     getClassSystem()->setDefaultObjectDescriptor(std::make_shared<Object>(c));
     
-    c->registerFunction("getClassName",{}, VarType::fromString("string"), [&](std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+    c->registerFunction("getClassName",{}, VarType::fromString("string"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
         return_value->type = VALUE_TYPE_STRING;
         return_value->svalue = object->getClass()->name;
     });
@@ -63,7 +63,7 @@ Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionS
     getClassSystem()->setDefaultBaseClass(c);
    
     c = getClassSystem()->registerClass("array");
-    c->registerFunction("size", {}, VarType::fromString("number"), [&](std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+    c->registerFunction("size", {}, VarType::fromString("number"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
         std::shared_ptr<Array> array = std::dynamic_pointer_cast<Array>(object);
         return_value->type = VALUE_TYPE_NUMBER;
         return_value->dvalue = array->count;
@@ -71,10 +71,10 @@ Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionS
 
     /* Let's register an Exception class that is to be inherited by all classes that can be thrown*/
     Class* exception_class = getClassSystem()->registerClass("Exception");
-    exception_class->registerFunction("__construct", {}, VarType::fromString("void"), [&](std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+    exception_class->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
         
     });
-    exception_class->registerFunction("getStackTrace", {}, VarType::fromString("string"), [&](std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+    exception_class->registerFunction("getStackTrace", {}, VarType::fromString("string"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
         std::shared_ptr<ExceptionObject> exception_obj = std::dynamic_pointer_cast<ExceptionObject>(object);
         return_value->type = VALUE_TYPE_STRING;
         return_value->svalue = exception_obj->getStackTrace();
@@ -83,28 +83,7 @@ Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionS
     exception_class->setDescriptorObject(std::make_shared<ExceptionObject>(exception_class));
     
     c = getClassSystem()->registerClass("NullPointerException", exception_class);
-    c->registerFunction("__construct", {}, VarType::fromString("void"), [&](std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
-    });
-    getBaseFunctionSystem()->registerFunction("prints", {VarType::fromString("string")}, VarType::fromString("void"), [&](std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
-        std::stringstream ss;
-        for (Value v : arguments)
-        {
-            if (v.type == VALUE_TYPE_NUMBER)
-            {
-               ss << v.dvalue;
-            }
-            else if(v.type == VALUE_TYPE_STRING)
-            {
-               ss << v.svalue;
-            }
-            else
-            {
-               ss << "Invalid value type: " << v.type;
-            } 
-        }
-        output(ss.str().c_str());
-        return_value->type = VALUE_TYPE_NUMBER;
-        return_value->dvalue = 1;
+    c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
     });
    
    this->lastFunctionCallNode = NULL;

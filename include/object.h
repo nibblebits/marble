@@ -22,7 +22,7 @@ public:
     * Creates an Object instance for the given object_class and invokes its constructor.
     * This should only be used while interpreting as marble code is run.
     */
-    static std::shared_ptr<Object> create(Class* object_class, std::vector<Value> constructor_values);
+    static std::shared_ptr<Object> create(Interpreter* interpreter, Class* object_class, std::vector<Value> constructor_values);
     virtual void registerVariable(Variable* variable);
     Class* getClass();
 
