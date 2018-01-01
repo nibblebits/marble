@@ -11,6 +11,11 @@ enum
 
 enum
 {
+    MODULE_TYPE_MARBLE_LIBRARY = 0x01
+};
+
+enum
+{
     TOKEN_TYPE_NUMBER,
     TOKEN_TYPE_OPERATOR,
     TOKEN_TYPE_STRING,
@@ -130,7 +135,7 @@ enum
 
 // The possible types of breaking
 enum
-{
+{   
     BREAK_TYPE_NO_BREAK,
     BREAK_TYPE_BREAK,
     BREAK_TYPE_CONTINUE
@@ -144,6 +149,7 @@ enum
 };
 
 typedef int SYSTEM_HANDLER_TYPE;
+typedef int MODULE_TYPE;
 typedef int TOKEN_TYPE;
 typedef int NODE_TYPE;
 typedef int VALUE_TYPE;

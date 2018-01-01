@@ -43,8 +43,10 @@ void interpret()
     });
     
     Logger* logger = interpreter.getLogger();
-
-    interpreter.runScript("./test.marble");    
+    ModuleSystem moduleSystem;
+    interpreter.setModuleSystem(&moduleSystem);
+    moduleSystem.loadModule("./mods/marble_iomod.so");
+    interpreter.runScript("./test.marble");
 
     for (LogEntry entry : logger->entries)
     {

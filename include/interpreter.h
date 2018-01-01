@@ -9,6 +9,7 @@
 #include "functionsystem.h"
 #include "csystem.h"
 #include "systemhandler.h"
+#include "modulesystem.h"
 #include "logger.h"
 #include "posinfo.h"
 #include "breakable.h"
@@ -33,6 +34,7 @@ public:
     Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionSystem);
     virtual ~Interpreter();
     void setOutputFunction(OUTPUT_FUNCTION output);
+    void setModuleSystem(ModuleSystem* moduleSystem);
     void ready();
     void run(const char* code, PosInfo posInfo);
     void runScript(const char* filename);
@@ -73,6 +75,7 @@ private:
     void handleLineAndColumn(PosInfo* posInfo, const char* data, int length);
     void fail();
     const char* filename;
+    ModuleSystem* moduleSystem;
     FunctionCallNode* lastFunctionCallNode;
     OUTPUT_FUNCTION output;
     std::vector<struct stack_log_part> stack_log;

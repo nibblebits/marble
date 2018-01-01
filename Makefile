@@ -1,4 +1,4 @@
-SYSTEM_OBJECT_FILES = ./build/system/token.o ./build/system/splitter.o ./build/system/interpreter.o ./build/system/lexer.o ./build/system/parser.o ./build/system/node.o ./build/system/expnode.o ./build/system/varnode.o ./build/system/literalnode.o ./build/system/identifiernode.o ./build/system/debug.o ./build/system/scope.o ./build/system/variable.o ./build/system/fcnode.o ./build/system/keywordnode.o ./build/system/nodefactory.o ./build/system/tokenfactory.o ./build/system/einode.o ./build/system/value.o ./build/system/function.o ./build/system/nativefunction.o ./build/system/functionsystem.o ./build/system/stringnode.o ./build/system/negnode.o ./build/system/statement.o ./build/system/ifstmtnode.o ./build/system/bodynode.o ./build/system/castnode.o ./build/system/arraynode.o ./build/system/newnode.o ./build/system/array.o ./build/system/object.o ./build/system/logger.o ./build/system/posinfo.o ./build/system/class.o ./build/system/csystem.o ./build/system/fnode.o ./build/system/inode.o ./build/system/writtenfunction.o ./build/system/retnode.o ./build/system/classnode.o ./build/system/validator.o ./build/system/scopehandler.o ./build/system/systemhandler.o ./build/system/evaluatingnode.o ./build/system/datatype.o ./build/system/groupedfunction.o ./build/system/singlefunction.o ./build/system/vartype.o ./build/system/exceptions/systemexception.o ./build/system/trynode.o ./build/system/thrownode.o ./build/system/exceptionobject.o ./build/system/whilenode.o ./build/system/breakable.o ./build/system/breaknode.o ./build/system/continuenode.o ./build/system/dowhilenode.o ./build/system/fornode.o ./build/system/listnode.o
+SYSTEM_OBJECT_FILES = ./build/system/token.o ./build/system/splitter.o ./build/system/interpreter.o ./build/system/lexer.o ./build/system/parser.o ./build/system/node.o ./build/system/expnode.o ./build/system/varnode.o ./build/system/literalnode.o ./build/system/identifiernode.o ./build/system/debug.o ./build/system/scope.o ./build/system/variable.o ./build/system/fcnode.o ./build/system/keywordnode.o ./build/system/nodefactory.o ./build/system/tokenfactory.o ./build/system/einode.o ./build/system/value.o ./build/system/function.o ./build/system/nativefunction.o ./build/system/functionsystem.o ./build/system/stringnode.o ./build/system/negnode.o ./build/system/statement.o ./build/system/ifstmtnode.o ./build/system/bodynode.o ./build/system/castnode.o ./build/system/arraynode.o ./build/system/newnode.o ./build/system/array.o ./build/system/object.o ./build/system/logger.o ./build/system/posinfo.o ./build/system/class.o ./build/system/csystem.o ./build/system/fnode.o ./build/system/inode.o ./build/system/writtenfunction.o ./build/system/retnode.o ./build/system/classnode.o ./build/system/validator.o ./build/system/scopehandler.o ./build/system/systemhandler.o ./build/system/evaluatingnode.o ./build/system/datatype.o ./build/system/groupedfunction.o ./build/system/singlefunction.o ./build/system/vartype.o ./build/system/exceptions/systemexception.o ./build/system/trynode.o ./build/system/thrownode.o ./build/system/exceptionobject.o ./build/system/whilenode.o ./build/system/breakable.o ./build/system/breaknode.o ./build/system/continuenode.o ./build/system/dowhilenode.o ./build/system/fornode.o ./build/system/listnode.o ./build/system/modulesystem.o ./build/system/module.o
 OBJECT_FILE_FLAGS = -c -g -fPIC -std=c++14 -g
 SYSTEM_LIB_LOCAL_FILENAME = libmarble.so
 SYSTEM_LIB_FILE_LOCATION = ./bin/${SYSTEM_LIB_LOCAL_FILENAME}
@@ -12,6 +12,10 @@ system: ${SYSTEM_OBJECT_FILES}
 	g++ -I ./include ./src/system/splitter.cpp -o ./build/system/splitter.o ${OBJECT_FILE_FLAGS}
 ./build/system/interpreter.o: ./src/system/interpreter.cpp
 	g++ -I ./include ./src/system/interpreter.cpp -o ./build/system/interpreter.o ${OBJECT_FILE_FLAGS}
+./build/system/modulesystem.o: ./src/system/modulesystem.cpp
+	g++ -I ./include ./src/system/modulesystem.cpp -o ./build/system/modulesystem.o ${OBJECT_FILE_FLAGS}
+./build/system/module.o: ./src/system/module.cpp
+	g++ -I ./include ./src/system/module.cpp -o ./build/system/module.o ${OBJECT_FILE_FLAGS}
 ./build/system/lexer.o: ./src/system/lexer.cpp
 	g++ -I ./include ./src/system/lexer.cpp -o ./build/system/lexer.o ${OBJECT_FILE_FLAGS}
 ./build/system/parser.o: ./src/system/parser.cpp
@@ -125,10 +129,18 @@ system: ${SYSTEM_OBJECT_FILES}
 ./build/system/fornode.o: ./src/system/fornode.cpp
 	g++ -I ./include ./src/system/fornode.cpp -o ./build/system/fornode.o ${OBJECT_FILE_FLAGS}		
 ./build/system/listnode.o: ./src/system/listnode.cpp
-	g++ -I ./include ./src/system/listnode.cpp -o ./build/system/listnode.o ${OBJECT_FILE_FLAGS}	
+	g++ -I ./include ./src/system/listnode.cpp -o ./build/system/listnode.o ${OBJECT_FILE_FLAGS}
+
+modules:
+	cd ./src/stdmods && $(MAKE) all
+	
 standalone: system
 	cd bin; \
-	g++ -g -I ../include ../src/standalone/main.cpp ./${SYSTEM_LIB_LOCAL_FILENAME}  -std=c++14 -o ./marble;
+	g++ -g -I ../include ../src/standalone/main.cpp ./${SYSTEM_LIB_LOCAL_FILENAME}  -ldl -std=c++14 -o ./marble;
+
+standalone-modules: standalone modules
+	cp -a ./src/stdmods/bin/. ./bin/mods
+
 apache2: system
 	sudo cp ${SYSTEM_LIB_FILE_LOCATION} /usr/lib/${SYSTEM_LIB_LOCAL_FILENAME}
 	g++ -fPIC -shared -std=c++14 -I /usr/include/apache2 -I /usr/include/apr-1.0 -I ./include ./src/apache/mod_marble.cpp /usr/lib/${SYSTEM_LIB_LOCAL_FILENAME} -o ./bin/mod_marble.so

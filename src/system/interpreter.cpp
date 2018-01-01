@@ -108,6 +108,7 @@ Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionS
     });
    
    this->lastFunctionCallNode = NULL;
+   this->moduleSystem = NULL;
 }
 
 Interpreter::~Interpreter()
@@ -120,6 +121,11 @@ void Interpreter::setOutputFunction(OUTPUT_FUNCTION output)
     this->output = output;
 }
 
+void Interpreter::setModuleSystem(ModuleSystem* moduleSystem)
+{
+    this->moduleSystem = moduleSystem;
+    this->moduleSystem->setInterpreter(this);
+}
 
 void Interpreter::ready()
 {
@@ -127,6 +133,9 @@ void Interpreter::ready()
     {
         throw std::logic_error("Expecting an output function before running a script. Use setOutputFunction(OUTPUT_FUNCTION outputFunction)");
     }
+
+    if (this->moduleSystem == NULL)
+        throw std::logic_error("The module system must be set. Use setModuleSystem");
 }
 
 void Interpreter::addToStackTrace(std::string function_name, PosInfo posInfo)
