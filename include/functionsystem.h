@@ -26,6 +26,11 @@ class FunctionSystem
         FunctionSystem(SystemHandler* sys_handler, FunctionSystem* prev_fc_sys);
         virtual ~FunctionSystem();
         void setSystemHandler(SystemHandler* sys_handler);
+
+        /**
+         *  Returns the SystemHandler associated with this FunctionSystem.
+         *  If none was provided then NULL is returned stating that this FunctionSystem is not related to a SystemHandler and cannot process FunctionNode's
+         */
         SystemHandler* getSystemHandler();
         void setPreviousFunctionSystem(FunctionSystem* prev_fc_sys);
         FunctionSystem* getPreviousFunctionSystem();
@@ -80,6 +85,7 @@ class FunctionSystem
         std::map<std::string, std::unique_ptr<Function>> functions;
         Function* current_function;
         std::vector<Function*> current_functions;
+        // Note that the FunctionSystem does not require a SystemHandler, therefore don't assume its non-null.
         SystemHandler* sys_handler;
 };
 #endif

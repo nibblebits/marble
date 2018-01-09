@@ -5,6 +5,9 @@
 #include "statics.h"
 #include "modulesystem.h"
 #include "interpreter.h"
+#include "object.h"
+#include "class.h"
+#include <memory>
 
 typedef Module* (*marble_mod_init) ();
 
@@ -35,6 +38,10 @@ ModuleSystem::ModuleSystem()
 {
     this->setLogHandler(CoutLogHandler);
     this->functionSystem = std::unique_ptr<FunctionSystem>(new FunctionSystem());
+    this->classSystem = std::unique_ptr<ClassSystem>(new ClassSystem());
+    Class* c = this->classSystem->registerClass("Object", NULL, CLASS_REGISTER_OBJECT_DESCRIPTOR_LATER);
+    this->classSystem->setDefaultObjectDescriptor(std::make_shared<Object>(c));
+    this->classSystem->setDefaultBaseClass(c);
 }
 
 ModuleSystem::~ModuleSystem()
@@ -71,4 +78,9 @@ void ModuleSystem::log(Module* module, std::string message, LOG_TYPE log_type)
 FunctionSystem* ModuleSystem::getFunctionSystem()
 {
     return this->functionSystem.get();
+}
+
+ClassSystem* ModuleSystem::getClassSystem()
+{
+    return this->classSystem.get();
 }

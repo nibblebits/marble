@@ -28,7 +28,7 @@ public:
 
     std::shared_ptr<Object> newInstance();
     virtual std::shared_ptr<Object> newInstance(Class* c);
-    void runThis(std::function<void()> function, Class* c=NULL, SystemHandler* handler=NULL);
+    void runThis(std::function<void()> function, SystemHandler* handler, Class* c=NULL);
     virtual void onEnterScope();
     virtual void onLeaveScope();
 private:

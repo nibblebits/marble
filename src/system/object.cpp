@@ -2,6 +2,7 @@
 #include "variable.h"
 #include "function.h"
 #include "systemhandler.h"
+#include "interpreter.h"
 #include <iostream>
 #include <memory>
 Object::Object(Class* c)
@@ -44,7 +45,7 @@ std::shared_ptr<Object> Object::create(Interpreter* interpreter, Class* object_c
         {
             // Invoke that constructor!
             constructor->invoke(interpreter, constructor_values, NULL, object);
-        }, constructor->cls);
+        }, interpreter, constructor->cls);
     }
     
     return object;
@@ -75,10 +76,8 @@ std::shared_ptr<Object> Object::newInstance(Class* c)
     return std::make_shared<Object>(c);
 }
 
-void Object::runThis(std::function<void()> function, Class* c, SystemHandler* sys_handler)
+void Object::runThis(std::function<void()> function, SystemHandler* sys_handler, Class* c)
 {
-    if(sys_handler == NULL)
-	    sys_handler = this->sys_handler;
     FunctionSystem* old_fc_system;
     Scope* old_scope;
     std::shared_ptr<Object> old_obj;

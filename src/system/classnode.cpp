@@ -61,7 +61,7 @@ void ClassNode::test(Validator* validator)
             throw TestError(std::string(e.what()) + " at class " + name);
         }
         validator->endClass();
-    }, c);
+    }, validator, c);
 
     
 }

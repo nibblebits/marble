@@ -38,31 +38,23 @@
         
         return return_val;
     }
-    
+
+
 Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionSystem) : SystemHandler(SYSTEM_HANDLER_INTERPRETER, classSystem, baseFunctionSystem)
 {   
     this->output = [](const char* data)
     {
         std::cout << data;
     };
-    // Lets create an Object base class that will be the base class of all objects, we should also create an array class that will be used for arrays
-    Class* c = getClassSystem()->registerClass("Object", NULL, CLASS_REGISTER_OBJECT_DESCRIPTOR_LATER);
-    c->registerFunction("toString",{}, VarType::fromString("string"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
-        return_value->type = VALUE_TYPE_STRING;
-        return_value->svalue = object->getClass()->name;
-    });
+  
+    if (!getClassSystem()->hasClassWithName("Object")) {
+        throw std::logic_error("The Interpreter requires that an Object class be registered. Please pass an appropiate ClassSystem to the constructor that has this class registered. Such as the ModuleSystem");
+    }
 
-    // The Object class is the default class in the system so we should also create the default object descriptor.
-    getClassSystem()->setDefaultObjectDescriptor(std::make_shared<Object>(c));
-    
-    c->registerFunction("getClassName",{}, VarType::fromString("string"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
-        return_value->type = VALUE_TYPE_STRING;
-        return_value->svalue = object->getClass()->name;
-    });
-    
-    getClassSystem()->setDefaultBaseClass(c);
+    Class* obj_class = getClassSystem()->getClassByName("Object");
+    getClassSystem()->setDefaultBaseClass(obj_class);
    
-    c = getClassSystem()->registerClass("array");
+    Class* c = getClassSystem()->registerClass("array");
     c->registerFunction("size", {}, VarType::fromString("number"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
         std::shared_ptr<Array> array = std::dynamic_pointer_cast<Array>(object);
         return_value->type = VALUE_TYPE_NUMBER;

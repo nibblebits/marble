@@ -15,7 +15,8 @@ void IOModule::Init()
 {
     log("IO Module Initialising...", LOG_LEVEL_NOTICE);
     log("--- Registering print function", LOG_LEVEL_NOTICE);
-    this->getModuleSystem()->getFunctionSystem()->registerFunction("print", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+    Class* c = this->getModuleSystem()->getClassSystem()->registerClass("IO");
+    c->registerFunction("print", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
         print(interpreter, arguments, return_value, object);
     });
     log("IO Module Initialised.", LOG_LEVEL_NOTICE);

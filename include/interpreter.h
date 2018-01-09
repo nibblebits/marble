@@ -28,11 +28,13 @@ class ExpNode;
 class BodyNode;
 class Object;
 class FunctionCallNode;
+class Class;
 class Interpreter : public SystemHandler
 {
 public:
     Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionSystem);
     virtual ~Interpreter();
+    static Class* getDefaultBaseClass();
     void setOutputFunction(OUTPUT_FUNCTION output);
     void setModuleSystem(ModuleSystem* moduleSystem);
     void ready();

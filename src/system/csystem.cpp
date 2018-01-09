@@ -51,6 +51,7 @@ void ClassSystem::setSystemHandler(SystemHandler* sys_handler)
 void ClassSystem::setDefaultBaseClass(Class* c)
 {
     this->defaultBaseClass = c;
+    this->setDefaultObjectDescriptor(std::make_shared<Object>(c));
 }
 
 

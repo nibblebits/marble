@@ -20,7 +20,9 @@ public:
     void setLogHandler(LOG_HANDLER_FUNCTION handler_func);
     void log(Module* module, std::string message, LOG_TYPE log_type);
     FunctionSystem* getFunctionSystem();
+    ClassSystem* getClassSystem();
 private:
+    std::unique_ptr<ClassSystem> classSystem;
     std::unique_ptr<FunctionSystem> functionSystem;
     LOG_HANDLER_FUNCTION log_handler;
 

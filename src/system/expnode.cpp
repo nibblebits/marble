@@ -139,7 +139,7 @@ Value ExpNode::interpret(Interpreter* interpreter)
         // Interpret the right node on the object scope and return the result.
         obj->runThis([&] {
             result = this->right->interpret(interpreter);
-        }, c);
+        }, interpreter, c);
         return result;
     }
     
@@ -194,7 +194,7 @@ void ExpNode::test_obj_access(Validator* validator)
  
     obj->runThis([&] {
         this->right->test(validator);
-    }, c, validator);   
+    }, validator, c);   
 }
 
 void ExpNode::test_assign(Validator* validator)
