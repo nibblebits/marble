@@ -48,6 +48,9 @@ void interpret()
     moduleSystem.loadModule("./mods/marble_iomod.so");
     interpreter.runScript("./test.marble");
 
+    if (moduleSystem.getClassSystem()->hasClassWithName("Exception"))
+        throw std::logic_error("Oh shit..");
+
     for (LogEntry entry : logger->entries)
     {
         std::cout << entry.message << " on line: " << entry.posInfo.line << ", col: " << entry.posInfo.col << std::endl;

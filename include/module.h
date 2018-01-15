@@ -14,6 +14,11 @@ public:
     void log(std::string message, LOG_TYPE type);
     void setModuleSystem(ModuleSystem* moduleSystem);
     ModuleSystem* getModuleSystem();
+    /**
+     * The newInterpreter method is called when a new Interpreter is created that may or may not have access to this module in the future.
+     * Here you can register any global variables or anything special that only this Interpreter should know about.
+     */
+    virtual void newInterpreter(Interpreter* interpreter) = 0;
     virtual void Init() = 0;
 private:
     MODULE_TYPE type;

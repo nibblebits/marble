@@ -10,8 +10,8 @@ public:
     virtual ~ScopeHandler();
     Scope* getCurrentScope();
     Scope* getRootScope();
+    
     void setCurrentScope(Scope* scope);
-    Scope* getActionScope();
     void new_parented_scope();
     void finish_parented_scope();
     Variable* getVariableByName(std::string name);

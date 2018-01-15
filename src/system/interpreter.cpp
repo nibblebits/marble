@@ -80,6 +80,7 @@ Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionS
    
    this->lastFunctionCallNode = NULL;
    this->moduleSystem = NULL;
+   this->first_run = true;
 }
 
 Interpreter::~Interpreter()
@@ -94,6 +95,8 @@ void Interpreter::setOutputFunction(OUTPUT_FUNCTION output)
 
 void Interpreter::setModuleSystem(ModuleSystem* moduleSystem)
 {
+    if (this->moduleSystem != NULL)
+        throw std::logic_error("This Interpreter is already bound to a ModuleSystem");
     this->moduleSystem = moduleSystem;
 }
 
@@ -150,6 +153,12 @@ void Interpreter::finishBreakable()
 
 void Interpreter::run(const char* code, PosInfo posInfo)
 {
+    if (this->first_run) {
+        // Let's tell the Modules about us!
+        this->moduleSystem->tellModules(this);
+        this->first_run = false;
+    }
+
     bool did_activate = false;
     if (!isActive())
     {
@@ -174,6 +183,8 @@ void Interpreter::run(const char* code, PosInfo posInfo)
     root_node = parser.parse(root_token);
     
     Validator validator(&logger, getClassSystem(), getBaseFunctionSystem());
+    // We must set the validators previous scope to our own so that native variables are recognised.
+    validator.getCurrentScope()->prev = this->getCurrentScope();
     validator.validate(root_node);
     
     InterpretableNode* current_node = (InterpretableNode*) root_node;

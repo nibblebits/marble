@@ -84,6 +84,7 @@ private:
     void handleLineAndColumn(PosInfo* posInfo, const char* data, int length);
     void fail();
     const char* filename;
+    bool first_run;
     ModuleSystem* moduleSystem;
     FunctionCallNode* lastFunctionCallNode;
     std::vector<struct stack_log_part> stack_log;

@@ -33,14 +33,8 @@ void ScopeHandler::setCurrentScope(Scope* scope)
     this->current_scope->onEnterScope();
 }
 
-Scope* ScopeHandler::getActionScope()
-{
-    return this->action_scope;
-}
-
 void ScopeHandler::new_parented_scope()
 {
-    this->action_scope = current_scope;
     Scope* new_prev = current_scope;
     current_scope = new Scope();
     current_scope->onEnterScope();
@@ -52,7 +46,6 @@ void ScopeHandler::finish_parented_scope()
     Scope* old_current = current_scope;
     old_current->onLeaveScope();
     current_scope = old_current->prev;
-    this->action_scope = current_scope;
     delete old_current;
 }
 

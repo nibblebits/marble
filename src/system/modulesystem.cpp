@@ -63,6 +63,15 @@ void ModuleSystem::loadModule(const char* filename)
         throw std::logic_error("The module: " + std::string(filename) + " returned a NULL module upon calling its init method \"marble_mod_init\"");
     module->setModuleSystem(this);
     module->Init();
+    this->modules.push_back(module);
+}
+
+void ModuleSystem::tellModules(Interpreter* interpreter)
+{
+    for (Module* module : this->modules)
+    {
+        module->newInterpreter(interpreter);
+    }
 }
 
 void ModuleSystem::setLogHandler(LOG_HANDLER_FUNCTION handler_func)
