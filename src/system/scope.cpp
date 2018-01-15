@@ -33,6 +33,37 @@ Variable* Scope::createVariable()
     return variable;
 }
 
+
+Variable* Scope::createVariable(std::string name, double value, MODIFIER_ACCESS modifier_access)
+{
+    Variable* variable = this->createVariable();
+    variable->value.type = VALUE_TYPE_NUMBER;
+    variable->value.dvalue = value;
+    variable->value.holder = variable;
+    variable->name = name;
+    variable->access = modifier_access;
+    variable->type = VARIABLE_TYPE_NUMBER;
+    variable->type_name = "number";
+    return variable;
+}
+
+Variable* Scope::createVariable(std::string name, std::string type, std::shared_ptr<Object> value, MODIFIER_ACCESS modifier_access)
+{
+    bool is_array = std::dynamic_pointer_cast<Array>(value) != NULL;
+    if (is_array)
+        throw std::logic_error("Array variables currently cannot be created with these quick methods as this functionality is not yet implemented");
+
+    Variable* variable = this->createVariable();
+    variable->value.type = VALUE_TYPE_OBJECT;
+    variable->value.ovalue = value;
+    variable->value.holder = variable;
+    variable->name = name;
+    variable->access = modifier_access;
+    variable->type = VARIABLE_TYPE_OBJECT;
+    variable->type_name = type;
+    return variable;
+}
+
 Variable* Scope::cloneCreate(Variable* variable)
 {
     Variable* new_variable = createVariable();

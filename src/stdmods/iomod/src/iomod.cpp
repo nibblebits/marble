@@ -32,14 +32,7 @@ void IOModule::newInterpreter(Interpreter* interpreter)
 {
     // Ok we have a new Interpreter that may use this module so we must create a global variable pointing to IO. 
     Scope* root_scope = interpreter->getRootScope();
-    Variable* variable = root_scope->createVariable();
-    variable->value.type = VALUE_TYPE_OBJECT;
-    variable->value.ovalue = std::make_shared<Object>(this->getModuleSystem()->getClassSystem()->getClassByName("IO"));
-    variable->value.holder = variable;
-    variable->name = "Io";
-    variable->access = MODIFIER_ACCESS_PUBLIC;
-    variable->type = VARIABLE_TYPE_OBJECT;
-    variable->type_name = "IO";
+    root_scope->createVariable("IO", "IO", std::make_shared<Object>(this->getModuleSystem()->getClassSystem()->getClassByName("IO")));
 }
 
 // Native IO functions/methods

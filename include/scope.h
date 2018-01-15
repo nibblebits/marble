@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include "variable.h"
+#include "statics.h"
 class Object;
 class Scope
 {
@@ -13,6 +14,8 @@ public:
     virtual ~Scope();
     virtual void registerVariable(Variable* variable);
     Variable* createVariable();
+    Variable* createVariable(std::string name, double value, MODIFIER_ACCESS modifier_access = MODIFIER_ACCESS_PUBLIC);
+    Variable* createVariable(std::string name, std::string type, std::shared_ptr<Object> value, MODIFIER_ACCESS modifier_access = MODIFIER_ACCESS_PUBLIC);
     Variable* cloneCreate(Variable* variable);
     Variable* getVariable(std::string variable_name);
     Variable* getVariableAnyScope(std::string variable_name);
