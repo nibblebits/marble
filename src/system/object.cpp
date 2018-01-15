@@ -88,7 +88,7 @@ void Object::runThis(std::function<void()> function, SystemHandler* sys_handler,
     else
     {
         // Let's ensure that this class is based on this object.
-        if (!c->instanceOf(getClass()))
+        if (!getClass()->instanceOf(c))
             throw std::logic_error("The class provided is not related to the class \"" + this->getClass()->name + "\". The class provided is: " + c->name);
     }  
     old_fc_system = sys_handler->getFunctionSystem();
