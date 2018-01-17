@@ -21,6 +21,11 @@ void IOModule::Init()
         setDefaultIO(interpreter, arguments, return_value, object);
     });
 
+    this->getModuleSystem()->getFunctionSystem()->registerFunction("print", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+        IO_print(interpreter, arguments, return_value, object);
+    });
+
+
     Class* c = this->getModuleSystem()->getClassSystem()->registerClass("IO");
     c->registerFunction("print", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
         IO_print(interpreter, arguments, return_value, object);
@@ -38,7 +43,9 @@ void IOModule::newInterpreter(Interpreter* interpreter)
 // Native IO functions/methods
 void IOModule::setDefaultIO(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)
 {
-    
+    Scope* root_scope = interpreter->getRootScope();
+    Variable* variable = root_scope->getVariable("IO");
+    variable->setValue(values[0].ovalue);
 }
 
 void IOModule::IO_print(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)

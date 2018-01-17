@@ -1,6 +1,7 @@
 #ifndef VARIABLE_H
 #define VARIABLE_H
 #include <string>
+#include <memory>
 #include "value.h"
 class Scope;
 class Object;
@@ -28,7 +29,9 @@ public:
     MODIFIER_ACCESS access;
     struct Value value;
     
-    void set_value(Value value);
+    void setValue(Value value);
+    void setValue(double value);
+    void setValue(std::shared_ptr<Object> value);
    
 };
 #endif

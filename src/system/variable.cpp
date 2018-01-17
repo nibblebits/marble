@@ -1,5 +1,6 @@
 #include "variable.h"
 #include "object.h"
+#include "array.h"
 #include "scope.h"
 Variable::Variable()
 {
@@ -59,8 +60,28 @@ bool Variable::isArray()
     return this->dimensions > 0;
 }
 
-void Variable::set_value(Value value)
+void Variable::setValue(Value value)
 {
     this->value = value;
     this->value.holder = this;
+}
+
+void Variable::setValue(double value)
+{
+    Value v;
+    v.type = VALUE_TYPE_NUMBER;
+    v.dvalue = value;
+    setValue(v);
+}
+
+void Variable::setValue(std::shared_ptr<Object> value)
+{
+    bool is_array = std::dynamic_pointer_cast<Array>(value) != NULL;
+    if (is_array)
+        throw std::logic_error("Arrays cannot currently be set using these helper methods as this functionality is not implemented");
+
+    Value v;
+    v.type = VALUE_TYPE_OBJECT;
+    v.ovalue = value;
+    setValue(v);
 }

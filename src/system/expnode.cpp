@@ -113,7 +113,7 @@ Value ExpNode::interpret(Interpreter* interpreter)
         {
             result = mathify(left_v, right_v, this->op);
         }
-        var_to_assign->set_value(result);
+        var_to_assign->setValue(result);
         return result;        
     }
 
