@@ -20,13 +20,14 @@ FunctionNode::~FunctionNode()
 void FunctionNode::test(Validator* validator)
 {
     std::vector<VarType> var_types;
+    validator->new_parented_scope();
     for (VarNode* node : this->args)
     {
         node->test(validator);
         struct Evaluation evaluation = node->type->evaluate(validator, EVALUATION_TYPE_DATATYPE);
         var_types.push_back(evaluation.datatype);
     }   
-    
+        
     FunctionSystem* func_sys = validator->getFunctionSystem();
     
     if(func_sys->hasFunctionLocally(this->name, var_types))
@@ -36,6 +37,7 @@ void FunctionNode::test(Validator* validator)
     func_sys->setCurrentFunction(function);
     this->body->test(validator);
     func_sys->finishCurrentFunction();
+    validator->finish_parented_scope();
 }
 
 Value FunctionNode::interpret(Interpreter* interpreter)

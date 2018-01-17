@@ -86,7 +86,7 @@ void Validator::validate(Node* root_node)
             current_node = (InterpretableNode*) current_node->next;
         }
     }
-    catch (...)
+    catch (TestError& ex)
     {
         deactivate();
         throw;

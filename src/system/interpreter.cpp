@@ -184,7 +184,7 @@ void Interpreter::run(const char* code, PosInfo posInfo)
     
     Validator validator(&logger, getClassSystem(), getBaseFunctionSystem());
     // We must set the validators previous scope to our own so that native variables are recognised.
- //   validator.getCurrentScope()->prev = this->getCurrentScope();
+    validator.getCurrentScope()->prev = this->getCurrentScope();
     validator.validate(root_node);
     
     InterpretableNode* current_node = (InterpretableNode*) root_node;
