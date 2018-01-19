@@ -148,3 +148,8 @@ void SystemHandler::finishCurrentObject()
     this->current_obj = this->current_obj_stack.back();
     this->current_obj_stack.pop_back();
 }
+
+bool SystemHandler::isAccessingObject()
+{
+    return getCurrentObject() != NULL;
+}
