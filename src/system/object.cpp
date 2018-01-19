@@ -80,7 +80,6 @@ void Object::runThis(std::function<void()> function, SystemHandler* sys_handler,
 {
     FunctionSystem* old_fc_system;
     Scope* old_scope;
-    std::shared_ptr<Object> old_obj;
     if (c == NULL)
     {
         c = this->getClass();
@@ -93,7 +92,6 @@ void Object::runThis(std::function<void()> function, SystemHandler* sys_handler,
     }  
     old_fc_system = sys_handler->getFunctionSystem();
     old_scope = sys_handler->getCurrentScope();
-    old_obj = sys_handler->getCurrentObject();
     sys_handler->setCurrentObject(shared_from_this());
     sys_handler->setCurrentScope(this);
     sys_handler->setFunctionSystem(c);
@@ -102,7 +100,7 @@ void Object::runThis(std::function<void()> function, SystemHandler* sys_handler,
     function();
     
     // and now restore
-    sys_handler->setCurrentObject(old_obj);
+    sys_handler->finishCurrentObject();
     sys_handler->setCurrentScope(old_scope);
     sys_handler->setFunctionSystem(old_fc_system);
     
