@@ -41,7 +41,8 @@ void FunctionCallNode::test(Validator* validator)
        argument_node->test(validator);
    }
 }
-Value FunctionCallNode::interpret(Interpreter* interpreter)
+
+Function* FunctionCallNode::interpret_args_get_function()
 {
    Value value;
    std::vector<Value> argument_results;
@@ -58,7 +59,26 @@ Value FunctionCallNode::interpret(Interpreter* interpreter)
    {
         throw std::logic_error("Value FunctionCallNode::interpret(Interpreter* interpreter): Attempting to invoke a function that has not been registered");
    }
+   return function;
+}
+Value FunctionCallNode::interpret(Interpreter* interpreter)
+{
+   Function* function = interpret_args_get_function();
+   try
+   {
+       function->invoke(interpreter, argument_results, &value, interpreter->getCurrentObject());
+   }
+   catch(SystemException& ex)
+   {
+       throw ex;
+   }
+   
+   return value;
+}
 
+Value FunctionCallNode::interpret(Interpreter* interpreter, Scope* local_scope)
+{
+   Function* function = interpret_args_get_function();
    try
    {
        function->invoke(interpreter, argument_results, &value, interpreter->getCurrentObject());

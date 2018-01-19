@@ -30,6 +30,11 @@ public:
     * Used to set the current Object that is currently being accessed. This object must be the value of the object that currently a method is being called on or an attribute being accessed on.. E.g obj.function();
     */
     void setCurrentObject(std::shared_ptr<Object> object);
+    /**
+    * Should be called upon finishing access to an object
+    */
+    void finishCurrentObject();
+
     FunctionSystem* getGlobalFunctionSystem();
     FunctionSystem* getFunctionSystem();
     FunctionSystem* getBaseFunctionSystem();
@@ -48,6 +53,7 @@ protected:
     FunctionSystem* currentFunctionSystem;
     Logger logger;
     SYSTEM_HANDLER_TYPE type;
+    std::vector<std::shared_ptr<Object>> current_obj_stack;
     std::shared_ptr<Object> current_obj;
 private:
     ClassSystem* passedBaseClassSystem;
