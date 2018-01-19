@@ -40,6 +40,12 @@ SystemHandler::~SystemHandler()
     {
         throw std::logic_error("The SystemHandler was never deactivated. Always deactivate the SystemHandler when you are done by calling deactivate()");
     }
+
+    if (!this->current_obj_stack.empty())
+    {
+        throw std::logic_error("A current object was set but never finished. please call finishCurrentObject when you are done with the object set with setCurrentObject");
+    }
+
 }
 
 
@@ -133,6 +139,12 @@ std::shared_ptr<Object> SystemHandler::getCurrentObject()
 
 void SystemHandler::setCurrentObject(std::shared_ptr<Object> object)
 {
+    this->current_obj_stack.push_back(getCurrentObject());
     this->current_obj = object;
 }
 
+void SystemHandler::finishCurrentObject()
+{
+    this->current_obj = this->current_obj_stack.back();
+    this->current_obj_stack.pop_back();
+}
