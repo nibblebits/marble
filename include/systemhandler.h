@@ -35,6 +35,13 @@ public:
     */
     void finishCurrentObject();
 
+    /**
+     * Returns true if their is an object being accessed
+     * Expression:
+     * return getCurrentObject() != NULL
+     */
+    inline bool isAccessingObject();
+
     FunctionSystem* getGlobalFunctionSystem();
     FunctionSystem* getFunctionSystem();
     FunctionSystem* getBaseFunctionSystem();
