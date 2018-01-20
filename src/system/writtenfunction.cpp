@@ -43,6 +43,7 @@ void WrittenFunction::invoke_impl(Interpreter* interpreter, std::vector<Value> v
     {
         // Interpret the variable node, this will end up creating a variable and adding it to our new scope
         Value var_value = arg->interpret(interpreter);
+        std::cout << "VAL: " + arg->name << std::endl;
         // Now we must apply the value given for this argument
         if (count < values.size())
         {
@@ -54,6 +55,7 @@ void WrittenFunction::invoke_impl(Interpreter* interpreter, std::vector<Value> v
    
     // Bodys also need a scope of there own
     interpreter->new_parented_scope();
+
     this->fnode->body->interpret(interpreter);
     // Finish the function body scope
     interpreter->finish_parented_scope();

@@ -1,4 +1,5 @@
 #include "systemhandler.h"
+#include "scope.h"
 
 
 SystemHandler::SystemHandler(SYSTEM_HANDLER_TYPE type, ClassSystem* baseClassSystem, FunctionSystem* baseFunctionSystem)
@@ -6,7 +7,9 @@ SystemHandler::SystemHandler(SYSTEM_HANDLER_TYPE type, ClassSystem* baseClassSys
     this->was_activated = false;
     this->activated = false;
     this->type = type;
-    this->current_obj = NULL;
+    this->current_obj.object = NULL;
+    this->current_obj.c = NULL;
+    this->current_obj.accessors_scope = NULL;
     this->passedBaseClassSystem = baseClassSystem;
     this->creatorsOldBaseClassPrevFunctionSystem = NULL;
     if (baseFunctionSystem == NULL)
@@ -134,19 +137,34 @@ SYSTEM_HANDLER_TYPE SystemHandler::getType()
 
 std::shared_ptr<Object> SystemHandler::getCurrentObject()
 {
-    return this->current_obj;
+    return this->current_obj.object;
 }
 
-void SystemHandler::setCurrentObject(std::shared_ptr<Object> object)
+Class* SystemHandler::getCurrentObjectClass()
 {
-    this->current_obj_stack.push_back(getCurrentObject());
-    this->current_obj = object;
+    return this->current_obj.c;
+}
+
+void SystemHandler::setCurrentObject(std::shared_ptr<Object> object, Class* c, Scope* accessors_scope)
+{
+    this->current_obj_stack.push_back(this->current_obj);
+
+    struct current_object obj;
+    obj.object = object;
+    obj.c = c;
+    obj.accessors_scope = accessors_scope;
+    this->current_obj = obj;
 }
 
 void SystemHandler::finishCurrentObject()
 {
     this->current_obj = this->current_obj_stack.back();
     this->current_obj_stack.pop_back();
+}
+
+Scope* SystemHandler::getAccessorsScope()
+{
+    return this->current_obj.accessors_scope;
 }
 
 bool SystemHandler::isAccessingObject()

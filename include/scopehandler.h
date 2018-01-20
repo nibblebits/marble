@@ -15,6 +15,8 @@ public:
     void new_parented_scope();
     void finish_parented_scope();
     Variable* getVariableByName(std::string name);
+
+    void useScope(std::function<void()> function, Scope* scope);
 private:
     Scope root_scope;
     Scope* current_scope;

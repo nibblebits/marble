@@ -76,7 +76,7 @@ std::shared_ptr<Object> Object::newInstance(Class* c)
     return std::make_shared<Object>(c);
 }
 
-void Object::runThis(std::function<void()> function, SystemHandler* sys_handler, Class* c)
+void Object::runThis(std::function<void()> function, SystemHandler* sys_handler, Class* c, OBJECT_ACCESS_TYPE access_type, Scope* accessors_scope)
 {
     FunctionSystem* old_fc_system;
     Scope* old_scope;
@@ -90,9 +90,17 @@ void Object::runThis(std::function<void()> function, SystemHandler* sys_handler,
         if (!getClass()->instanceOf(c))
             throw std::logic_error("The class provided is not related to the class \"" + this->getClass()->name + "\". The class provided is: " + c->name);
     }  
+
+    if (accessors_scope == NULL)
+    {
+        // No accessors scope is provided so we will default to the current scope
+        accessors_scope = sys_handler->getCurrentScope();
+    }
+
     old_fc_system = sys_handler->getFunctionSystem();
     old_scope = sys_handler->getCurrentScope();
-    sys_handler->setCurrentObject(shared_from_this());
+    if (access_type == OBJECT_ACCESS_TYPE_OBJECT_ACCESS)
+        sys_handler->setCurrentObject(shared_from_this(), c, accessors_scope);
     sys_handler->setCurrentScope(this);
     sys_handler->setFunctionSystem(c);
     
@@ -100,7 +108,8 @@ void Object::runThis(std::function<void()> function, SystemHandler* sys_handler,
     function();
     
     // and now restore
-    sys_handler->finishCurrentObject();
+    if (access_type == OBJECT_ACCESS_TYPE_OBJECT_ACCESS)
+        sys_handler->finishCurrentObject();
     sys_handler->setCurrentScope(old_scope);
     sys_handler->setFunctionSystem(old_fc_system);
     

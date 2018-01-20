@@ -3,11 +3,21 @@
 #include <string.h>
 #include <memory>
 #include <vector>
+#include <functional>
 #include "scope.h"
 #include "functionsystem.h"
 #include "csystem.h"
 #include "scopehandler.h"
 #include "logger.h"
+
+class Class;
+class Scope;
+struct current_object
+{
+    std::shared_ptr<Object> object;
+    Class* c;
+    Scope* accessors_scope;
+};
 
 class SystemHandler : public ScopeHandler
 {
@@ -26,21 +36,36 @@ public:
     * Gets the current Object that is currently being accessed. This object will be the value of the object that currently a method is being called on or an attribute being accessed on.. E.g obj.function();
     */
     std::shared_ptr<Object> getCurrentObject();
+
+    /**
+     *  Returns the current object class.
+     */
+    Class* getCurrentObjectClass();
+
     /**
     * Used to set the current Object that is currently being accessed. This object must be the value of the object that currently a method is being called on or an attribute being accessed on.. E.g obj.function();
+    * @param object The current object that is being accessed
+    * @param c The class of this object that is being accessed
+    * @param accessors_scope The scope of the object accessor. E.g the scope at the time before a method call.
     */
-    void setCurrentObject(std::shared_ptr<Object> object);
+    void setCurrentObject(std::shared_ptr<Object> object, Class* c, Scope* accessors_scope);
     /**
     * Should be called upon finishing access to an object
     */
     void finishCurrentObject();
+
+
+    /**
+     * Returns the scope of the object accessor.
+     */
+    Scope* getAccessorsScope();
 
     /**
      * Returns true if their is an object being accessed
      * Expression:
      * return getCurrentObject() != NULL
      */
-    inline bool isAccessingObject();
+     bool isAccessingObject();
 
     FunctionSystem* getGlobalFunctionSystem();
     FunctionSystem* getFunctionSystem();
@@ -60,8 +85,9 @@ protected:
     FunctionSystem* currentFunctionSystem;
     Logger logger;
     SYSTEM_HANDLER_TYPE type;
-    std::vector<std::shared_ptr<Object>> current_obj_stack;
-    std::shared_ptr<Object> current_obj;
+    std::vector<struct current_object> current_obj_stack;
+    struct current_object current_obj;
+
 private:
     ClassSystem* passedBaseClassSystem;
     FunctionSystem* creatorsOldBaseClassPrevFunctionSystem;

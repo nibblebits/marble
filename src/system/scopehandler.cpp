@@ -57,3 +57,11 @@ Variable* ScopeHandler::getVariableByName(std::string name)
 
     return variable;
 }
+
+void ScopeHandler::useScope(std::function<void()> function, Scope* scope)
+{
+    Scope* old_scope = getCurrentScope();
+    setCurrentScope(scope);
+    function();
+    setCurrentScope(old_scope);
+}

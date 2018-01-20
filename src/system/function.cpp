@@ -19,6 +19,9 @@ Function::~Function()
 
 void Function::invoke(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)
 {
+    // Now that a function has been invoked we are currently no longer accessing an object
+    interpreter->setCurrentObject(NULL, NULL, NULL);
+
     // Lets keep a stack trace of this function call
     std::string address = (object != NULL ? object->getClass()->name : "Global") + "." + this->name;
     PosInfo posInfo;
@@ -42,6 +45,9 @@ void Function::invoke(Interpreter* interpreter, std::vector<Value> values, Value
     
     // Now lets pop it off
     interpreter->popFromStackTrace();
+    
+    // We are done with our NULL current object
+    interpreter->finishCurrentObject();
 }
 
 std::string Function::getName()

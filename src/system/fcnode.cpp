@@ -19,39 +19,56 @@ FunctionCallNode::~FunctionCallNode()
 
 }
 
+void FunctionCallNode::test_args(Validator* validator, std::vector<VarType>* types)
+{
+    for (ExpressionInterpretableNode* argument_node : this->arguments)
+    {
+        argument_node->test(validator);
+        struct Evaluation evaluation = argument_node->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE);
+        types->push_back(evaluation.datatype);
+    }
+}
+
 void FunctionCallNode::test(Validator* validator)
 {
    // Lets ensure the function actually exists
    FunctionSystem* function_sys = validator->getFunctionSystem();
    std::vector<VarType> types;
-   for (ExpressionInterpretableNode* argument_node : this->arguments)
+   if (validator->isAccessingObject())
    {
-       argument_node->test(validator);
-       struct Evaluation evaluation = argument_node->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE);
-       types.push_back(evaluation.datatype);
+       std::cout << validator->getCurrentObject()->getClass()->name << std::endl;
+        validator->useScope([&] {
+            test_args(validator, &types);
+        }, validator->getAccessorsScope());
    }
-   
+   else
+   {
+       test_args(validator, &types);
+   }
+
    if (!function_sys->hasFunction(this->name->value, types))
    {
        throw TestError("The function \"" + this->name->value + "\" has not been declared that takes the given arguments");
    }
    
-   for (ExpressionInterpretableNode* argument_node : this->arguments)
-   {
-       argument_node->test(validator);
-   }
 }
 
-Function* FunctionCallNode::interpret_args_get_function()
+
+Value FunctionCallNode::interpret(Interpreter* interpreter)
 {
    Value value;
    std::vector<Value> argument_results;
-   for (ExpressionInterpretableNode* argument_node : this->arguments)
+   if (interpreter->isAccessingObject())
    {
-       Value v = argument_node->interpret(interpreter);
-       argument_results.push_back(v);
+      interpreter->useScope([&] {
+        interpret_args(interpreter, &argument_results);
+      }, interpreter->getAccessorsScope());
    }
-
+   else
+   {
+       std::cout << "FUNCTION:" << this->name->value << std::endl;
+       interpret_args(interpreter, &argument_results);
+   }
    interpreter->setLastFunctionCallNode(this);
    FunctionSystem* functionSystem = interpreter->getFunctionSystem();
    Function* function = functionSystem->getFunctionByName(name->value);
@@ -59,14 +76,10 @@ Function* FunctionCallNode::interpret_args_get_function()
    {
         throw std::logic_error("Value FunctionCallNode::interpret(Interpreter* interpreter): Attempting to invoke a function that has not been registered");
    }
-   return function;
-}
-Value FunctionCallNode::interpret(Interpreter* interpreter)
-{
-   Function* function = interpret_args_get_function();
+   
    try
    {
-       function->invoke(interpreter, argument_results, &value, interpreter->getCurrentObject());
+        function->invoke(interpreter, argument_results, &value, interpreter->getCurrentObject());
    }
    catch(SystemException& ex)
    {
@@ -76,19 +89,13 @@ Value FunctionCallNode::interpret(Interpreter* interpreter)
    return value;
 }
 
-Value FunctionCallNode::interpret(Interpreter* interpreter, Scope* local_scope)
+void FunctionCallNode::interpret_args(Interpreter* interpreter, std::vector<Value>* argument_results)
 {
-   Function* function = interpret_args_get_function();
-   try
-   {
-       function->invoke(interpreter, argument_results, &value, interpreter->getCurrentObject());
-   }
-   catch(SystemException& ex)
-   {
-       throw ex;
-   }
-   
-   return value;
+    for (ExpressionInterpretableNode* argument_node : this->arguments)
+    {
+        Value v = argument_node->interpret(interpreter);
+        argument_results->push_back(v);
+    }
 }
 
 void FunctionCallNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)

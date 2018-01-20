@@ -4,6 +4,8 @@
 #include <functional>
 #include "class.h"
 #include "scope.h"
+#include "statics.h"
+
 class SystemHandler;
 class Object : public Scope,  public std::enable_shared_from_this<Object>
 {
@@ -28,7 +30,7 @@ public:
 
     std::shared_ptr<Object> newInstance();
     virtual std::shared_ptr<Object> newInstance(Class* c);
-    void runThis(std::function<void()> function, SystemHandler* handler, Class* c=NULL);
+    void runThis(std::function<void()> function, SystemHandler* handler, Class* c=NULL, OBJECT_ACCESS_TYPE access_type=OBJECT_ACCESS_TYPE_OBJECT_ACCESS, Scope* accessors_scope=NULL);
     virtual void onEnterScope();
     virtual void onLeaveScope();
 private:

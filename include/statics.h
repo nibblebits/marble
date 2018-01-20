@@ -148,6 +148,12 @@ enum
     LOG_LEVEL_ERROR
 };
 
+enum
+{
+    OBJECT_ACCESS_TYPE_CLASS_SCAN,
+    OBJECT_ACCESS_TYPE_OBJECT_ACCESS
+};
+
 typedef int SYSTEM_HANDLER_TYPE;
 typedef int MODULE_TYPE;
 typedef int TOKEN_TYPE;
@@ -161,5 +167,6 @@ typedef int LOG_TYPE;
 typedef int MODIFIER_ACCESS;
 typedef int CLASS_REGISTER_RULES;
 typedef int BREAK_TYPE;
+typedef int OBJECT_ACCESS_TYPE;
 
 #endif
