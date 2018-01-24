@@ -32,8 +32,10 @@
 #include "http_protocol.h"
 #include "ap_config.h"
 #include "interpreter.h"
+#include "modulesystem.h"
 #include <string>
 #include <vector>
+#include <stdlib.h>
 
 // request handler example
 
@@ -48,12 +50,15 @@ typedef struct
 } configuration;
 
 static configuration config;
+ModuleSystem moduleSystem;
 
 static int marble_handler(request_rec *req);
 static void marble_register_hooks(apr_pool_t* p);
 const char* set_max_memory(cmd_parms *cmd, void *cfg_void, const char *arg);
 void *create_dir_conf(apr_pool_t *pool, char *context);
 void *merge_dir_conf(apr_pool_t *pool, void *BASE, void *ADD);
+
+bool first_run = true;
 
 static const command_rec directives[] =
 {
@@ -148,6 +153,13 @@ std::string format_log_entry(LogEntry entry)
 
 static int marble_handler(request_rec *req)
 {
+    // I am not aware of an init method for apache yet so this will have to do for now its far from ideal.
+    if (first_run)
+    {
+        moduleSystem.loadModule("/usr/lib/marble/marble_iomod.so");
+        first_run = false;
+    }
+
     configuration* config = (configuration*) ap_get_module_config(req->per_dir_config, &marble_module);
     int rc, exists;
     apr_finfo_t finfo;
@@ -176,7 +188,8 @@ static int marble_handler(request_rec *req)
         return HTTP_NOT_FOUND;
     
     if (!req->header_only) {
-        Interpreter interpreter(NULL, NULL);
+        Interpreter interpreter(moduleSystem.getClassSystem(), moduleSystem.getFunctionSystem());
+        interpreter.setModuleSystem(&moduleSystem);
         interpreter.setOutputFunction([&](const char* data) {
             ap_rputs(data, req);
         });

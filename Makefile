@@ -146,6 +146,7 @@ apache2: system
 	g++ -fPIC -shared -std=c++14 -I /usr/include/apache2 -I /usr/include/apr-1.0 -I ./include ./src/apache/mod_marble.cpp /usr/lib/${SYSTEM_LIB_LOCAL_FILENAME} -o ./bin/mod_marble.so
 apache2-install: apache2
 	sudo apxs -i -a -n mod_marble ./bin/mod_marble.so
+	sudo cp -a ./src/stdmods/bin/. /usr/lib/marble
 clean:
 	rm ${SYSTEM_OBJECT_FILES}
 	cd ./src/stdmods && $(MAKE) clean
