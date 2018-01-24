@@ -28,4 +28,5 @@
 #include "dowhilenode.h"
 #include "fornode.h"
 #include "listnode.h"
+#include "includenode.h"
 #endif
