@@ -1,6 +1,7 @@
 #ifndef SCOPEHANDLER_H
 #define SCOPEHANDLER_H
 #include "scope.h"
+#include <functional>
 
 class Variable;
 class ScopeHandler
