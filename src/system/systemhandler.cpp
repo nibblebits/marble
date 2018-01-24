@@ -2,7 +2,7 @@
 #include "scope.h"
 
 
-SystemHandler::SystemHandler(SYSTEM_HANDLER_TYPE type, ClassSystem* baseClassSystem, FunctionSystem* baseFunctionSystem)
+SystemHandler::SystemHandler(SYSTEM_HANDLER_TYPE type, ClassSystem* baseClassSystem, FunctionSystem* baseFunctionSystem, SYSTEM_HANDLER_RULES rules)
 {
     this->type = type;
     this->current_obj.object = NULL;
@@ -19,7 +19,7 @@ SystemHandler::SystemHandler(SYSTEM_HANDLER_TYPE type, ClassSystem* baseClassSys
     * Also so that classes created with this system handler can access functions in our current system handler we must also set the bases base class's previous function system
     * to our own. Note that the previous function system will only be set on the base class if it already doesn't have a previous function system.
     */
-    if (this->baseClassSystem != NULL) {
+    if (this->baseClassSystem != NULL && !(rules & SYSTEM_HANDLER_NO_PARENT_BASE_CLASS_LINK)) {
         Class* base_base_class = this->baseClassSystem->getDefaultBaseClass();
         this->classSystem.setDefaultBaseClass(base_base_class);
         if (base_base_class->getPreviousFunctionSystem() != NULL)

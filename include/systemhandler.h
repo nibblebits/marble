@@ -9,6 +9,7 @@
 #include "csystem.h"
 #include "scopehandler.h"
 #include "logger.h"
+#include "statics.h"
 
 class Class;
 class Scope;
@@ -22,7 +23,7 @@ struct current_object
 class SystemHandler : public ScopeHandler
 {
 public:
-    SystemHandler(SYSTEM_HANDLER_TYPE type, ClassSystem* baseClassSystem, FunctionSystem* baseFunctionSystem);
+    SystemHandler(SYSTEM_HANDLER_TYPE type, ClassSystem* baseClassSystem, FunctionSystem* baseFunctionSystem, SYSTEM_HANDLER_RULES rules=0);
     virtual ~SystemHandler();
     void setFunctionSystem(FunctionSystem* current_fc_system);
     Logger* getLogger();

@@ -155,6 +155,11 @@ enum
     OBJECT_ACCESS_TYPE_OBJECT_ACCESS
 };
 
+enum
+{
+    SYSTEM_HANDLER_NO_PARENT_BASE_CLASS_LINK = 0x01
+};
+
 typedef int SYSTEM_HANDLER_TYPE;
 typedef int MODULE_TYPE;
 typedef int TOKEN_TYPE;
@@ -169,5 +174,6 @@ typedef int MODIFIER_ACCESS;
 typedef int CLASS_REGISTER_RULES;
 typedef int BREAK_TYPE;
 typedef int OBJECT_ACCESS_TYPE;
+typedef int SYSTEM_HANDLER_RULES;
 
 #endif

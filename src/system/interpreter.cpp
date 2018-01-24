@@ -40,7 +40,7 @@
     }
 
 
-Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionSystem) : SystemHandler(SYSTEM_HANDLER_INTERPRETER, classSystem, baseFunctionSystem)
+Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionSystem) : SystemHandler(SYSTEM_HANDLER_INTERPRETER, classSystem, baseFunctionSystem, SYSTEM_HANDLER_NO_PARENT_BASE_CLASS_LINK)
 {   
     this->output = [](const char* data)
     {
