@@ -27,13 +27,6 @@ class Parser;
 class Lexer;
 class Validator;
 
-struct lex_par_val
-{
-    std::unique_ptr<Lexer> lexer;
-    std::unique_ptr<Parser> parser;
-    std::unique_ptr<Validator> validator;
-};
-
 class Node;
 class VarNode;
 class ExpNode;
@@ -101,6 +94,9 @@ public:
      */
     OUTPUT_FUNCTION output;
 private:
+    void push_lpv();
+    void pop_lpv();
+    
     void handleLineAndColumn(PosInfo* posInfo, const char* data, int length);
     void fail();
     const char* filename;
@@ -110,11 +106,9 @@ private:
     std::vector<struct stack_log_part> stack_log;
     std::vector<Breakable*> breakables;
 
-    // The current lexer, parsers and validators for this interpreter instance.
-    std::vector<struct lex_par_val> lpvs;
-
-    // The current lexer, parser and validator
-    struct lex_par_val lpv;
+    std::unique_ptr<Lexer> lexer;
+    std::unique_ptr<Parser> parser;
+    std::unique_ptr<Validator> validator;
 
 };
 

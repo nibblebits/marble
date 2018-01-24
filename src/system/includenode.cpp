@@ -3,6 +3,7 @@
 #include "interpreter.h"
 #include "validator.h"
 #include "statics.h"
+#include <iostream>
 IncludeNode::IncludeNode() : InterpretableNode(NODE_TYPE_INCLUDE)
 {
 
@@ -23,6 +24,7 @@ void IncludeNode::test(Validator* validator)
 Value IncludeNode::interpret(Interpreter* interpreter)
 {
     Value v = this->exp->interpret(interpreter);
+    std::cout << "include node interpreted" << std::endl;
     interpreter->runScript(v.svalue.c_str());
     return v;
 }

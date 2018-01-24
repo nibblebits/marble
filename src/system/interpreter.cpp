@@ -160,25 +160,28 @@ void Interpreter::run(const char* code, PosInfo posInfo)
     }
 
     ready();
-    Lexer lexer(&logger, posInfo);
-    lexer.setInput(code, strlen(code));
-    Token* root_token = lexer.lex();
+    if (lexer == NULL)
+        lexer = std::unique_ptr<Lexer>(new Lexer(&logger, posInfo));
+    lexer->setInput(code, strlen(code));
+    Token* root_token = lexer->lex();
     Token* token = root_token;
     while(token != NULL)
     {
         std::cout << token->getType() << ": " << token->getValue() << " :  line no: " << token->posInfo.line << ", col: " << token->posInfo.col << std::endl;
         token = token->next;
     }
-
-    Parser parser(&logger);
+    if (parser == NULL)
+        parser = std::unique_ptr<Parser>(new Parser(&logger));
     Node* root_node;
 
-    root_node = parser.parse(root_token);
-    
-    Validator validator(&logger, getClassSystem(), getBaseFunctionSystem());
-    // We must set the validators previous scope to our own so that native variables are recognised.
-    validator.getCurrentScope()->prev = this->getCurrentScope();
-    validator.validate(root_node);
+    root_node = parser->parse(root_token);
+    if (validator == NULL)
+    {
+        validator = std::unique_ptr<Validator>(new Validator(&logger, getClassSystem(), getBaseFunctionSystem()));
+        // We must set the validators previous scope to our own so that native variables are recognised.
+        validator->getCurrentScope()->prev = this->getCurrentScope();
+    }
+    validator->validate(root_node);
 
     InterpretableNode* current_node = (InterpretableNode*) root_node;
     // Awesome now lets interpret!
