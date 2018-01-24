@@ -73,6 +73,7 @@ private:
     ExpressionInterpretableNode* parse_while_stmt_exp();
     void parse_while();
     void parse_do_while();
+    void parse_include();
     /**
      * Parses multiple expressions seperated by commas ",". If the first token seen is a symbol of ";" then an empty ListNode is pushed to the stack.
      * Multi-expressions also allow for variable declarations when calling this method.

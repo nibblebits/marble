@@ -704,6 +704,21 @@ void Parser::parse_do_while()
     push_node(do_while_node);
 }
 
+void Parser::parse_include()
+{
+    if (!next()->isKeyword("include"))
+    {
+        parse_error("Expecting an include keyword for include statements");
+    }
+
+    parse_expression();
+
+    ExpressionInterpretableNode* exp = (ExpressionInterpretableNode*) pop_node();
+    IncludeNode* include_node = (IncludeNode*) factory.createNode(NODE_TYPE_INCLUDE);
+    include_node->exp = exp;
+    push_node(include_node);
+}
+
 void Parser::parse_multi_expression()
 {
     ListNode* list_node = (ListNode*) factory.createNode(NODE_TYPE_LIST);
@@ -1197,6 +1212,11 @@ void Parser::parse_body_next()
     else if(this->current_token->isKeyword("continue"))
     {
         parse_continue();
+        parse_semicolon();
+    }
+    else if(this->current_token->isKeyword("include"))
+    {
+        parse_include();
         parse_semicolon();
     }
     else if(this->current_token->isIdentifier())
