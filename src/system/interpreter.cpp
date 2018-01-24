@@ -150,7 +150,6 @@ void Interpreter::finishBreakable()
     this->breakables.pop_back();
 }
 
-
 void Interpreter::run(const char* code, PosInfo posInfo)
 {
     if (this->first_run) {
@@ -159,13 +158,6 @@ void Interpreter::run(const char* code, PosInfo posInfo)
         this->first_run = false;
     }
 
-    bool did_activate = false;
-    if (!isActive())
-    {
-        activate();
-        did_activate = true;
-    }
-    
     ready();
     Lexer lexer(&logger, posInfo);
     lexer.setInput(code, strlen(code));
@@ -187,6 +179,7 @@ void Interpreter::run(const char* code, PosInfo posInfo)
     validator.getCurrentScope()->prev = this->getCurrentScope();
     validator.validate(root_node);
     
+    std::cout << "VALIDATE SUCCESS!" << std::endl;
     InterpretableNode* current_node = (InterpretableNode*) root_node;
     // Awesome now lets interpret!
     while(current_node != NULL)
@@ -195,9 +188,6 @@ void Interpreter::run(const char* code, PosInfo posInfo)
         current_node = (InterpretableNode*) current_node->next;
     }
 
-
-    if (did_activate)
-        deactivate();
 }
 
 

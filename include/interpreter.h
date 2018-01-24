@@ -5,6 +5,7 @@
 #include <memory>
 #include <vector>
 #include <string>
+#include <memory>
 #include "scope.h"
 #include "functionsystem.h"
 #include "csystem.h"
@@ -20,6 +21,17 @@ struct stack_log_part
 {
     std::string function_name;
     PosInfo posInfo;
+};
+
+class Parser;
+class Lexer;
+class Validator;
+
+struct lex_par_val
+{
+    std::unique_ptr<Lexer> lexer;
+    std::unique_ptr<Parser> parser;
+    std::unique_ptr<Validator> validator;
 };
 
 class Node;
@@ -89,6 +101,13 @@ private:
     FunctionCallNode* lastFunctionCallNode;
     std::vector<struct stack_log_part> stack_log;
     std::vector<Breakable*> breakables;
+
+    // The current lexer, parsers and validators for this interpreter instance.
+    std::vector<struct lex_par_val> lpvs;
+
+    // The current lexer, parser and validator
+    struct lex_par_val lpv;
+
 };
 
 #endif

@@ -5,9 +5,10 @@
 #include <memory.h>
 #include "interpreter.h"
 
-std::vector<void*> allocations;
+/*std::vector<void*> allocations;
 bool wait = false;
 int size = 0;
+
 void* operator new(size_t size)
 {
     void* allocation = malloc(size);
@@ -34,22 +35,19 @@ void operator delete[](void* ptr)
     allocations.erase(std::remove(allocations.begin(), allocations.end(), ptr), allocations.end());
     free(ptr);
 }
-
+*/
 void interpret()
 {
-    ModuleSystem moduleSystem;
-    Interpreter interpreter(moduleSystem.getClassSystem(), moduleSystem.getFunctionSystem());
+    ModuleSystem* moduleSystem = new ModuleSystem();
+    Interpreter interpreter(moduleSystem->getClassSystem(), moduleSystem->getFunctionSystem());
     interpreter.setOutputFunction([](const char* data) {
         std::cout << data;
     });
     
     Logger* logger = interpreter.getLogger();
-    interpreter.setModuleSystem(&moduleSystem);
-    moduleSystem.loadModule("./mods/marble_iomod.so");
+    interpreter.setModuleSystem(moduleSystem);
+    moduleSystem->loadModule("./mods/marble_iomod.so");
     interpreter.runScript("./test.marble");
-
-    if (moduleSystem.getClassSystem()->hasClassWithName("Exception"))
-        throw std::logic_error("Oh shit..");
 
     for (LogEntry entry : logger->entries)
     {
@@ -61,6 +59,7 @@ int main(int argc, char** argv)
 {
     interpret();
     std::cout << "Program terminated" << std::endl;
+    /*
         std::cout << "ALLOCATIONS: " << allocations.size() << std::endl;
     if (allocations.size() > 0)
     {
@@ -69,5 +68,6 @@ int main(int argc, char** argv)
         for(void* ptr : allocations)
             free(ptr);
     }
+    */
     return 0;
 }

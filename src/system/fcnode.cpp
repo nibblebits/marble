@@ -66,7 +66,6 @@ Value FunctionCallNode::interpret(Interpreter* interpreter)
    }
    else
    {
-       std::cout << "FUNCTION:" << this->name->value << std::endl;
        interpret_args(interpreter, &argument_results);
    }
    interpreter->setLastFunctionCallNode(this);

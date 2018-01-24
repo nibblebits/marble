@@ -70,7 +70,6 @@ void Validator::restore()
 
 void Validator::validate(Node* root_node)
 {
-    activate();
     InterpretableNode* current_node = (InterpretableNode*) root_node;
     try
     {
@@ -88,10 +87,8 @@ void Validator::validate(Node* root_node)
     }
     catch (TestError& ex)
     {
-        deactivate();
         throw;
     }
-    deactivate();
 }
 
 void Validator::beginClass(Class* current_class)
