@@ -41,6 +41,7 @@ class BodyNode;
 class Object;
 class FunctionCallNode;
 class Class;
+class ClassSystem;
 class Interpreter : public SystemHandler
 {
 public:
@@ -52,6 +53,13 @@ public:
     void ready();
     void run(const char* code, PosInfo posInfo);
     void runScript(const char* filename);
+
+    /**
+     * Registers the default object class in the class_system provided and returns the Class.
+     * \note This does not set the default object descriptor in the class_system you must do this manually.
+     */
+    static Class* registerDefaultObjectClass(ClassSystem* class_system, std::string class_name);
+
     /**
     * Should be used to set the last FunctionCallNode that was interpreted
     */

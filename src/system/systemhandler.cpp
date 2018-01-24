@@ -17,12 +17,13 @@ SystemHandler::SystemHandler(SYSTEM_HANDLER_TYPE type, ClassSystem* baseClassSys
     /*
     * If a base class system is provided then we must set the default base class of our current class system to that of the base class system.
     * Also so that classes created with this system handler can access functions in our current system handler we must also set the bases base class's previous function system
-    * to our own. This will also mean that this base class system provided to us will lose its previous base class's function system which is important to note.
+    * to our own. Note that the previous function system will only be set on the base class if it already doesn't have a previous function system.
     */
     if (this->baseClassSystem != NULL) {
         Class* base_base_class = this->baseClassSystem->getDefaultBaseClass();
         this->classSystem.setDefaultBaseClass(base_base_class);
-        base_base_class->setPreviousFunctionSystem(this->currentFunctionSystem);
+        if (base_base_class->getPreviousFunctionSystem() != NULL)
+            base_base_class->setPreviousFunctionSystem(this->currentFunctionSystem);
     }
 
     if (baseFunctionSystem == NULL)

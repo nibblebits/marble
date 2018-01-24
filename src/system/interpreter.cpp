@@ -47,11 +47,11 @@ Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionS
         std::cout << data;
     };
   
-    if (!getClassSystem()->hasClassWithName("Object")) {
-        throw std::logic_error("The Interpreter requires that an Object class be registered. Please pass an appropiate ClassSystem to the constructor that has this class registered. Such as the ModuleSystem");
+    if (getClassSystem()->hasClassWithName("Object")) {
+        throw std::logic_error("The Interpreter will create a class of Object. However the class system provided to it already has a class named Object. Please rename this class and rebuild.");
     }
 
-    Class* obj_class = getClassSystem()->getClassByName("Object");
+    Class* obj_class = Interpreter::registerDefaultObjectClass(getClassSystem(), "Object");
     getClassSystem()->setDefaultBaseClass(obj_class);
    
     Class* c = getClassSystem()->registerClass("array");
@@ -81,6 +81,7 @@ Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionS
    this->lastFunctionCallNode = NULL;
    this->moduleSystem = NULL;
    this->first_run = true;
+
 }
 
 Interpreter::~Interpreter()
@@ -178,8 +179,7 @@ void Interpreter::run(const char* code, PosInfo posInfo)
     // We must set the validators previous scope to our own so that native variables are recognised.
     validator.getCurrentScope()->prev = this->getCurrentScope();
     validator.validate(root_node);
-    
-    std::cout << "VALIDATE SUCCESS!" << std::endl;
+
     InterpretableNode* current_node = (InterpretableNode*) root_node;
     // Awesome now lets interpret!
     while(current_node != NULL)
@@ -284,4 +284,12 @@ void Interpreter::setLastFunctionCallNode(FunctionCallNode* fc_node)
 FunctionCallNode* Interpreter::getLastFunctionCallNode()
 {
     return this->lastFunctionCallNode;
+}
+
+
+
+Class* Interpreter::registerDefaultObjectClass(ClassSystem* class_system, std::string class_name)
+{
+    Class* c = class_system->registerClass(class_name, NULL, CLASS_REGISTER_OBJECT_DESCRIPTOR_LATER);
+    return c;
 }

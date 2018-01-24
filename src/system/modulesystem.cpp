@@ -39,7 +39,7 @@ ModuleSystem::ModuleSystem()
     this->setLogHandler(CoutLogHandler);
     this->functionSystem = std::unique_ptr<FunctionSystem>(new FunctionSystem());
     this->classSystem = std::unique_ptr<ClassSystem>(new ClassSystem());
-    Class* c = this->classSystem->registerClass("Object", NULL, CLASS_REGISTER_OBJECT_DESCRIPTOR_LATER);
+    Class* c = Interpreter::registerDefaultObjectClass(getClassSystem(), "ModuleObject");
     this->classSystem->setDefaultObjectDescriptor(std::make_shared<Object>(c));
     this->classSystem->setDefaultBaseClass(c);
 }
