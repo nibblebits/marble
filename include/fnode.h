@@ -18,6 +18,7 @@ public:
     std::string name;
     struct BodyNode* body;
     std::vector<VarNode*> args;
+    bool is_pure;
     ExpressionInterpretableNode* return_type;
 };
 #endif

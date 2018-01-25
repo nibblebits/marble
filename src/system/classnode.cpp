@@ -8,10 +8,12 @@
 #include "object.h"
 #include "scope.h"
 #include "exceptions/testerror.h"
+#include "function.h"
 
 ClassNode::ClassNode() : InterpretableNode(NODE_TYPE_CLASS)
 {
     this->body = NULL;
+    this->is_pure = false;
 }
 
 ClassNode::~ClassNode()
@@ -32,6 +34,11 @@ void ClassNode::test(Validator* validator)
         
     Class* parent_class = class_sys->getClassByName(this->parent);
     Class* c = class_sys->registerClass(name, parent_class);
+    if (is_pure)
+    {
+        c->is_pure = true;
+    }
+
  
     // We must create a temporary object to be used with the testing process. No methods or functions will be called.
     std::shared_ptr<Object> object = Object::create(c); 
@@ -63,6 +70,19 @@ void ClassNode::test(Validator* validator)
         validator->endClass();
     }, validator, c, OBJECT_ACCESS_TYPE_CLASS_SCAN);
 
+
+    if (!is_pure && parent_class->is_pure)
+    {
+        // Our parent is pure so we need to check this class has overrided the pure methods in the parent class
+        for (Function* f : parent_class->getPureFunctions())
+        {
+            // This is fine for now but it needs to be changed to also check for arguments. As now multiple pure functions with the same name wont be validated correctly.
+            if (!c->hasFunctionLocally(f->name))
+            {
+                throw TestError("The class " + c->name + " extends " + parent_class->name + " but has not implemented the pure function " + f->name);
+            }
+        }
+    }
     
 }
 
@@ -71,6 +91,10 @@ Value ClassNode::interpret(Interpreter* interpreter)
     ClassSystem* c_system = interpreter->getClassSystem();
     Class* parent_class = c_system->getClassByName(this->parent);
     Class* c = c_system->registerClass(name, parent_class);
+    if (is_pure)
+    {
+        c->is_pure = true;
+    }
     // We need to create a local scope so that we can extract variables once we are done interpreting the class body.
     std::unique_ptr<Scope> tmp_scope = std::make_unique<Scope>();
     Scope* old_scope = interpreter->getCurrentScope();

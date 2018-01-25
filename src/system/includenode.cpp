@@ -4,6 +4,7 @@
 #include "validator.h"
 #include "statics.h"
 #include "exceptions/systemexception.h"
+#include "exceptions/IOException.h"
 #include "object.h"
 
 #include <iostream>
@@ -40,8 +41,9 @@ Value IncludeNode::interpret(Interpreter* interpreter)
     {
         interpreter->runScript(v.svalue.c_str());
     }
-    catch(...)
+    catch(IOException& e)
     {
+        std::cout << e.getMessage() << std::endl;
         throw SystemException(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {}));
     }
     return v;

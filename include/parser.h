@@ -99,6 +99,10 @@ private:
     void parse_function_call();
     void parse_arguments(std::vector<ExpressionInterpretableNode*>* argument_nodes);
     void parse_function();
+    void parse_pure();
+    void parse_pure_class();
+    void parse_pure_function();
+    void parse_function_declaration();
     std::vector<VarNode*> parse_declared_arguments();
 
     Token* next();

@@ -11,6 +11,7 @@ Function::Function(FUNCTION_TYPE type, std::string name)
 {
     this->type = type;
     this->name = name;
+    this->is_pure = false;
 }
 
 Function::~Function()

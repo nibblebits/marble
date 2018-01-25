@@ -77,6 +77,8 @@ class FunctionSystem
         Function* getFunctionByName(std::string name);
         Function* getFunctionByNameAndArguments(std::string name, std::vector<VarType> args);
         Function* getFunctionLocallyByNameAndArguments(std::string name, std::vector<VarType> args);
+        std::vector<Function*> getFunctions();
+        std::vector<Function*> getPureFunctions();
         
         std::shared_ptr<Object> currentObj; /*!< Set to an Object instance when calling an Object Class Function through an object access expression such as <i>Foo.Bar();</i> \note This is useful for when the right node of an expression needs to know the current object of the left node \attention this should only be used during an object access expression*/
     private:

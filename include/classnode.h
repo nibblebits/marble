@@ -14,6 +14,7 @@ public:
     std::string name;
     BodyNode* body;
     std::string parent;
+    bool is_pure;
 };
 #endif
 

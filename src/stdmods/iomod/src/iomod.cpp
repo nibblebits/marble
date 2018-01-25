@@ -33,9 +33,11 @@ void IOModule::Init()
     c->registerFunction("print", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
         IO_print(interpreter, arguments, return_value, object);
     });
+
     c->registerFunction("input", {}, VarType::fromString("string"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
         IO_input(interpreter, arguments, return_value, object);
     });
+    
     log("IO Module Initialised.", LOG_LEVEL_NOTICE);
 }
 

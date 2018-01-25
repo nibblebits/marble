@@ -97,3 +97,15 @@ void GroupedFunction::addFunction(std::unique_ptr<Function> function)
         
     this->functions.push_back(std::move(function));
 }
+
+
+std::vector<Function*> GroupedFunction::getFunctions()
+{
+    std::vector<Function*> _functions;
+    for (int i = 0; i < this->functions.size(); i++)
+    {
+        Function* function = this->functions[i].get();
+        _functions.push_back(function);
+    }
+    return _functions;
+}

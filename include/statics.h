@@ -57,7 +57,8 @@ enum
 {
     FUNCTION_TYPE_WRITTEN,
     FUNCTION_TYPE_NATIVE,
-    FUNCTION_TYPE_GROUPED
+    FUNCTION_TYPE_GROUPED,
+    FUNCTION_TYPE_PURE
 };
 
 // This enum should be aligned with the value enum so that using either will match with the other.

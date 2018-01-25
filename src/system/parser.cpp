@@ -324,10 +324,50 @@ void Parser::parse_arguments(std::vector<ExpressionInterpretableNode*>* argument
 
 void Parser::parse_function()
 {
+    parse_function_declaration();
+    FunctionNode* f_node = (FunctionNode*) pop_node();
+    parse_body();
+    f_node->body = (BodyNode*) pop_node();
+    push_node(f_node);
+}
+
+void Parser::parse_pure()
+{
+    if (!next()->isKeyword("pure"))
+        parse_error("Expecting a pure keyword for parsing pures");
+    
+    if (peek()->isKeyword("class"))
+        parse_pure_class();
+    else if(peek()->isKeyword("function"))
+        parse_pure_function();
+    else
+        parse_error("Invalid pure provided: " + peek()->value);
+}
+
+void Parser::parse_pure_class()
+{
+    parse_class();
+    ClassNode* c_node = (ClassNode*) pop_node();
+    c_node->is_pure = true;
+    push_node(c_node);
+}
+
+void Parser::parse_pure_function()
+{       
+    parse_function_declaration();
+    FunctionNode* f_node = (FunctionNode*) pop_node();
+    f_node->is_pure = true;
+    push_node(f_node);
+
+    // Let's get rid of that semicolon for this pure function.
+    parse_semicolon();
+}
+
+void Parser::parse_function_declaration()
+{
     IdentifierNode* name_node;
     std::vector<VarNode*> args;
     ExpressionInterpretableNode* return_type;
-    BodyNode* body;
     FunctionNode* function_node;
     if (!next()->isKeyword("function"))
     {
@@ -364,12 +404,9 @@ void Parser::parse_function()
         parse_error("Expecting a valid return type");
     }
     return_type = (ExpressionInterpretableNode*) convertToSingleNode(next());
-    parse_body();
-    body = (BodyNode*) pop_node();
     function_node = (FunctionNode*) factory.createNode(NODE_TYPE_FUNCTION);
     function_node->name = name_node->value;
     function_node->args = args;
-    function_node->body = body;
     function_node->return_type = return_type;
     push_node(function_node);   
 }
@@ -1177,6 +1214,11 @@ void Parser::parse_body_next()
     else if(this->current_token->isKeyword("function"))
     {
         parse_function();
+    }
+    else if(this->current_token->isKeyword("pure"))
+    {
+        // A pure entity is expected
+        parse_pure();
     }
     else if(this->current_token->isKeyword("class"))
     {

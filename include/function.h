@@ -24,5 +24,6 @@ class Function
         Class* cls; 
         FUNCTION_TYPE type;
         std::string name;
+        bool is_pure;
 };
 #endif

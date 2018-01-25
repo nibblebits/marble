@@ -3,6 +3,7 @@
 #include "nativefunction.h"
 #include "writtenfunction.h"
 #include "groupedfunction.h"
+#include "purefunction.h"
 #include "interpreter.h"
 #include "nodes.h"
 #include <iostream>
@@ -112,7 +113,17 @@ Function* FunctionSystem::registerFunction(FunctionNode* fnode)
     if (hasFunctionLocally(fnode->name, var_types))
         throw std::logic_error("The function: " + fnode->name + " has already been registered with the given arguments");
     
-    Function* function_raw = new WrittenFunction(fnode, var_types, return_type);
+    Function* function_raw;
+    if (fnode->is_pure)
+    {
+        // Pure functions can never be interpreted. They are like abstract methods.
+        function_raw = new PureFunction(fnode->name, var_types, return_type);
+    }
+    else
+    {
+        function_raw = new WrittenFunction(fnode, var_types, return_type);
+    }
+
     std::unique_ptr<Function> function = std::unique_ptr<Function>(function_raw);
     if (hasFunctionLocally(fnode->name))
     {
@@ -185,6 +196,7 @@ Function* FunctionSystem::getFunctionLocallyByNameAndArguments(std::string name,
         {
             case FUNCTION_TYPE_WRITTEN:
             case FUNCTION_TYPE_NATIVE:
+            case FUNCTION_TYPE_PURE:
             {
                 SingleFunction* single_function = (SingleFunction*) function;
                 if (args == single_function->argument_types)
@@ -218,4 +230,37 @@ Function* FunctionSystem::getFunctionByNameAndArguments(std::string name, std::v
     }
     
     return function;
+}
+
+
+std::vector<Function*> FunctionSystem::getFunctions()
+{
+    std::vector<Function*> _functions;
+    for (std::map<std::string, std::unique_ptr<Function>>::iterator it = this->functions.begin(); it != this->functions.end(); it++)
+    {
+        Function* f = it->second.get();
+        if (f->type == FUNCTION_TYPE_GROUPED)
+        {
+            std::vector<Function*> grouped_functions = ((GroupedFunction*)f)->getFunctions();
+            _functions.insert(_functions.begin(), grouped_functions.begin(), grouped_functions.end());
+        }
+        else
+            _functions.push_back(f);
+    }
+
+    return _functions;
+}
+
+std::vector<Function*> FunctionSystem::getPureFunctions()
+{
+    std::vector<Function*> _functions;
+    for (Function* f : getFunctions())
+    {
+        if (f->is_pure)
+        {
+            _functions.push_back(f);
+        }
+    }
+
+    return _functions;
 }

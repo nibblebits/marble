@@ -27,6 +27,7 @@ public:
     bool instanceOf(Class* c);
     std::string name;
     Class* parent;
+    bool is_pure;
     
 private:
     std::shared_ptr<Object> descriptor_obj;
