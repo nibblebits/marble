@@ -8,13 +8,15 @@
 class Class;
 class Logger;
 class Node;
+class Interpreter;
 class Validator : public SystemHandler
 {
 public:
-    Validator(Logger* logger, ClassSystem* baseClassSystem, FunctionSystem* baseFunctionSystem);
+    Validator(Logger* logger, Interpreter* interpreter);
     virtual ~Validator();
     void validate(Node* root_node);
     
+    Interpreter* getInterpreter();
     /**
     * All classes that should be validated should create a new object instance for that class
     * and call this method. It is a requirement as the validator needs to maintain scopes which can only be done with an Object instance.
@@ -37,6 +39,7 @@ public:
     VALUE_TYPE getExpectingValueType();
     VARIABLE_TYPE getExpectingVariableType();
 private:
+    Interpreter* interpreter;
     Logger* logger;
     
     // We must be able to stack the rules so that they can be reset for different operations

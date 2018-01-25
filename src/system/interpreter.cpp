@@ -25,6 +25,7 @@
 #include "array.h"
 #include "exceptionobject.h"
 #include "exceptions/IOException.h"
+#include "exceptions/systemexception.h"
     std::string getAllVariablesAsString(Scope* scope)
     {
         std::string return_val = "";
@@ -75,9 +76,12 @@ Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionS
     exception_class->setDescriptorObject(std::make_shared<ExceptionObject>(exception_class));
     
     c = getClassSystem()->registerClass("NullPointerException", exception_class);
-    c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+        c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
     });
    
+    c = getClassSystem()->registerClass("IOException", exception_class);
+        c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+    });
    this->lastFunctionCallNode = NULL;
    this->moduleSystem = NULL;
    this->first_run = true;
@@ -177,20 +181,26 @@ void Interpreter::run(const char* code, PosInfo posInfo)
     root_node = parser->parse(root_token);
     if (validator == NULL)
     {
-        validator = std::unique_ptr<Validator>(new Validator(&logger, getClassSystem(), getBaseFunctionSystem()));
+        validator = std::unique_ptr<Validator>(new Validator(&logger, this));
         // We must set the validators previous scope to our own so that native variables are recognised.
         validator->getCurrentScope()->prev = this->getCurrentScope();
     }
-    validator->validate(root_node);
 
     InterpretableNode* current_node = (InterpretableNode*) root_node;
-    // Awesome now lets interpret!
-    while(current_node != NULL)
+    try
     {
-        current_node->interpret(this);
-        current_node = (InterpretableNode*) current_node->next;
+        validator->validate(root_node);
+        // Awesome now lets interpret!
+        while(current_node != NULL)
+        {
+            current_node->interpret(this);
+            current_node = (InterpretableNode*) current_node->next;
+        }
+    } 
+    catch(SystemException& ex)
+    {
+        logger.error("System threw a " + ex.getObject()->getClass()->name + " exception" , current_node->posInfo);
     }
-
 }
 
 
