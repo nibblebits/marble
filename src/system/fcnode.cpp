@@ -78,7 +78,7 @@ Value FunctionCallNode::interpret(Interpreter* interpreter)
    
    try
    {
-        function->invoke(interpreter, argument_results, &value, interpreter->getCurrentObject());
+       function->invoke(interpreter, argument_results, &value, interpreter->getCurrentObject());
    }
    catch(SystemException& ex)
    {

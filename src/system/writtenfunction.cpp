@@ -26,12 +26,12 @@ FunctionNode* WrittenFunction::getFunctionNode()
 
 void WrittenFunction::invoke(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)
 {
-    this->return_node = NULL;
     Function::invoke(interpreter, values, return_value, object);
     if (this->return_node != NULL)
     {
         return_value->set(&this->return_value);
     }
+    this->return_node = NULL;
 }
 
 void WrittenFunction::invoke_impl(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)
@@ -43,7 +43,6 @@ void WrittenFunction::invoke_impl(Interpreter* interpreter, std::vector<Value> v
     {
         // Interpret the variable node, this will end up creating a variable and adding it to our new scope
         Value var_value = arg->interpret(interpreter);
-        std::cout << "VAL: " + arg->name << std::endl;
         // Now we must apply the value given for this argument
         if (count < values.size())
         {

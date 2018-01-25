@@ -22,6 +22,10 @@ void Function::invoke(Interpreter* interpreter, std::vector<Value> values, Value
     // Now that a function has been invoked we are currently no longer accessing an object
     interpreter->setCurrentObject(NULL, NULL, NULL);
 
+    FunctionSystem* f_system = interpreter->getFunctionSystem();
+    // We are also in a function
+    f_system->setCurrentFunction(this);
+
     // Lets keep a stack trace of this function call
     std::string address = (object != NULL ? object->getClass()->name : "Global") + "." + this->name;
     PosInfo posInfo;
@@ -45,7 +49,10 @@ void Function::invoke(Interpreter* interpreter, std::vector<Value> values, Value
     
     // Now lets pop it off
     interpreter->popFromStackTrace();
-    
+
+    // We are done with our function
+    f_system->finishCurrentFunction();
+
     // We are done with our NULL current object
     interpreter->finishCurrentObject();
 }
