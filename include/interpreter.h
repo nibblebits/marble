@@ -16,6 +16,7 @@
 #include "breakable.h"
 
 typedef std::function<void(const char* output)> OUTPUT_FUNCTION;
+typedef std::function<std::string()> INPUT_FUNCTION;
 
 struct stack_log_part
 {
@@ -42,6 +43,7 @@ public:
     virtual ~Interpreter();
     static Class* getDefaultBaseClass();
     void setOutputFunction(OUTPUT_FUNCTION output);
+    void setInputFunction(INPUT_FUNCTION input);
     void setModuleSystem(ModuleSystem* moduleSystem);
     void ready();
     void run(const char* code, PosInfo posInfo);
@@ -93,6 +95,13 @@ public:
      * Depending on the output functin will depend how the output is sent but the end goal of this function is to provide output to the user.
      */
     OUTPUT_FUNCTION output;
+
+    /**
+    * Calls the input function assinged to this Interpreter
+    * The input function should return a string based on the input of the interpreter.
+    * Such a string from std::cin to receive a string from the terminal.
+    */
+    INPUT_FUNCTION input;
 private:
     void push_lpv();
     void pop_lpv();

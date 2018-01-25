@@ -25,10 +25,16 @@ void IOModule::Init()
         IO_print(interpreter, arguments, return_value, object);
     });
 
+    this->getModuleSystem()->getFunctionSystem()->registerFunction("input", {}, VarType::fromString("string"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+        IO_input(interpreter, arguments, return_value, object);
+    });
 
     Class* c = this->getModuleSystem()->getClassSystem()->registerClass("IO");
     c->registerFunction("print", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
         IO_print(interpreter, arguments, return_value, object);
+    });
+    c->registerFunction("input", {}, VarType::fromString("string"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+        IO_input(interpreter, arguments, return_value, object);
     });
     log("IO Module Initialised.", LOG_LEVEL_NOTICE);
 }
@@ -70,4 +76,11 @@ void IOModule::IO_print(Interpreter* interpreter, std::vector<Value> values, Val
     interpreter->output(ss.str().c_str());
     return_value->type = VALUE_TYPE_NUMBER;
     return_value->dvalue = 1;
+}
+
+void IOModule::IO_input(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)
+{
+    std::string val = interpreter->input();
+    return_value->type = VALUE_TYPE_STRING;
+    return_value->svalue = val;
 }

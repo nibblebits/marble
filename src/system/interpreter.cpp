@@ -48,6 +48,12 @@ Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionS
         std::cout << data;
     };
   
+    this->input = []() -> std::string {
+        std::string s;
+        std::cin >> s;
+        return s;
+    };
+    
     if (getClassSystem()->hasClassWithName("Object")) {
         throw std::logic_error("The Interpreter will create a class of Object. However the class system provided to it already has a class named Object. Please rename this class and rebuild.");
     }
@@ -96,6 +102,11 @@ Interpreter::~Interpreter()
 void Interpreter::setOutputFunction(OUTPUT_FUNCTION output)
 {
     this->output = output;
+}
+
+void Interpreter::setInputFunction(INPUT_FUNCTION input)
+{
+    this->input = input;
 }
 
 void Interpreter::setModuleSystem(ModuleSystem* moduleSystem)

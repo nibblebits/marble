@@ -44,6 +44,12 @@ void interpret()
         std::cout << data;
     });
     
+    interpreter.setInputFunction([]()->std::string {
+        std::string s;
+        std::cin >> s;
+        return s;
+    });
+
     Logger* logger = interpreter.getLogger();
     interpreter.setModuleSystem(moduleSystem);
     moduleSystem->loadModule("./mods/marble_iomod.so");
