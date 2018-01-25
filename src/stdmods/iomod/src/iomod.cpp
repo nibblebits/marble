@@ -15,7 +15,7 @@ IOModule::~IOModule()
 void IOModule::Init()
 {
     log("IO Module Initialising...", LOG_LEVEL_NOTICE);
-    log("--- Registering print function", LOG_LEVEL_NOTICE);
+    log("--- Registering functions and classes", LOG_LEVEL_NOTICE);
     
     this->getModuleSystem()->getFunctionSystem()->registerFunction("setDefaultIO", {VarType::fromString("IO")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
         setDefaultIO(interpreter, arguments, return_value, object);
