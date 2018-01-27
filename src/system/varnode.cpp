@@ -44,8 +44,13 @@ void VarNode::test(Validator* validator)
    {
        // Let's ensure this object exists
        ClassSystem* class_sys = validator->getClassSystem();
-       if (!class_sys->hasClassWithName(type_str))
-            throw TestError("The class with the name \"" + type_str + "\" has not been declared");
+       if (!shouldIgnoreValidation())
+       {
+         if (!class_sys->hasClassWithName(type_str))
+                throw TestError("The class with the name \"" + type_str + "\" has not been declared");
+       }
+       else
+         validator->ignoreClass(type_str);
    }
    
    if (this->value != NULL)
@@ -68,6 +73,7 @@ void VarNode::test(Validator* validator)
    var->access = this->access;
    var->type_name = type_str;
    var->name = this->name;
+
 }
 
 void VarNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)

@@ -180,21 +180,24 @@ void ExpNode::test_obj_access(Validator* validator)
     
     struct Evaluation evaluation = left->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_TYPE_VARIABLE | EVALUATION_FROM_VARIABLE);
     Class* c = NULL;
-    Object* obj = validator->getClassObject(evaluation.datatype.value);
-    c = obj->getClass();
-    if (obj == NULL)
-        throw std::logic_error("NULL object from validator: " + evaluation.datatype.value);
-            
-    if (evaluation.variable != NULL)
+    if (!validator->isClassIgnored(evaluation.datatype.value))
     {
-        // If the evaluated variables name is "super" then we must be accessing a super-class and we should take the parent's class.
-        if (evaluation.variable->name == "super")
-            c = obj->getClass()->parent;
+        Object* obj = validator->getClassObject(evaluation.datatype.value);
+        c = obj->getClass();
+        if (obj == NULL)
+            throw std::logic_error("NULL object from validator: " + evaluation.datatype.value);
+                
+        if (evaluation.variable != NULL)
+        {
+            // If the evaluated variables name is "super" then we must be accessing a super-class and we should take the parent's class.
+            if (evaluation.variable->name == "super")
+                c = obj->getClass()->parent;
+        }
+
+        obj->runThis([&] {
+            this->right->test(validator);
+        }, validator, c);   
     }
- 
-    obj->runThis([&] {
-        this->right->test(validator);
-    }, validator, c);   
 }
 
 void ExpNode::test_assign(Validator* validator)

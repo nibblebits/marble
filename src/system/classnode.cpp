@@ -71,7 +71,7 @@ void ClassNode::test(Validator* validator)
     }, validator, c, OBJECT_ACCESS_TYPE_CLASS_SCAN);
 
 
-    if (!is_pure && parent_class->is_pure)
+    if (!is_pure && parent_class != NULL && parent_class->is_pure)
     {
         // Our parent is pure so we need to check this class has overrided the pure methods in the parent class
         for (Function* f : parent_class->getPureFunctions())

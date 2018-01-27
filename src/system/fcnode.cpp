@@ -31,6 +31,11 @@ void FunctionCallNode::test_args(Validator* validator, std::vector<VarType>* typ
 
 void FunctionCallNode::test(Validator* validator)
 {
+   if (shouldIgnoreValidation())
+   {
+       return;
+   }
+
    // Lets ensure the function actually exists
    FunctionSystem* function_sys = validator->getFunctionSystem();
    std::vector<VarType> types;

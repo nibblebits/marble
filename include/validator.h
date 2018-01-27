@@ -38,6 +38,9 @@ public:
     std::string getExpectingType();
     VALUE_TYPE getExpectingValueType();
     VARIABLE_TYPE getExpectingVariableType();
+
+    void ignoreClass(std::string class_name);
+    bool isClassIgnored(std::string class_name);
 private:
     Interpreter* interpreter;
     Logger* logger;
@@ -55,6 +58,9 @@ private:
     struct rules rules;
     std::vector<struct rules> rules_stack;
     std::vector<std::shared_ptr<Object>> class_objects;
+
+    // The ignored classes that validation should be ignored for as they are not declared classes.
+    std::vector<std::string> ignored_classes;
     Class* current_class;
 };
 

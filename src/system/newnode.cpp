@@ -47,20 +47,24 @@ void NewNode::test_for_object(Validator* validator)
         /* It is natural for this type node to be a function call node as it will be calling a constructor, e.g new Object();
      * the difference is we will not be interpreting instead we will be using it*/ 
         FunctionCallNode* fc_node = (FunctionCallNode*) this->type_node;
-        ClassSystem* class_sys = validator->getClassSystem();
-        Class* expecting_class = class_sys->getClassByName(expecting_object);
-        Class* fc_node_class = class_sys->getClassByName(fc_node->name->value);
-        if (fc_node_class == NULL)
-            throw TestError("The class with the name \"" + fc_node->name->value + "\" has not been declared");
+        if (!fc_node->shouldIgnoreValidation())
+        {
+            ClassSystem* class_sys = validator->getClassSystem();
+            Class* expecting_class = class_sys->getClassByName(expecting_object);
+            Class* fc_node_class = class_sys->getClassByName(fc_node->name->value);
 
-        if (fc_node_class->is_pure)
-        {
-            throw TestError("The class " + fc_node_class->name + " could not be initialised because it is a pure class and contains pure methods. Extend this class and implement the pure methods then initialise that class instead");
-        }
-        
-        if (expecting_object != fc_node->name->value && !fc_node_class->instanceOf(expecting_class))
-        {
-            throw TestError("a " + fc_node->name->value + " was provided which does not extend " + expecting_object);
+            if (fc_node_class == NULL)
+                throw TestError("The class with the name \"" + fc_node->name->value + "\" has not been declared");
+
+            if (fc_node_class->is_pure)
+            {
+                throw TestError("The class " + fc_node_class->name + " could not be initialised because it is a pure class and contains pure methods. Extend this class and implement the pure methods then initialise that class instead");
+            }
+            
+            if (expecting_object != fc_node->name->value && !fc_node_class->instanceOf(expecting_class))
+            {
+                throw TestError("a " + fc_node->name->value + " was provided which does not extend " + expecting_object);
+            }
         }
     }
 }

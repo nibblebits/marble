@@ -168,3 +168,22 @@ VARIABLE_TYPE Validator::getExpectingVariableType()
 {
     return this->rules.expecting_variable_type;
 }
+
+
+void Validator::ignoreClass(std::string class_name)
+{
+    if (isClassIgnored(class_name))
+        return;
+    this->ignored_classes.push_back(class_name);
+}
+
+bool Validator::isClassIgnored(std::string class_name)
+{
+    for (std::string c : this->ignored_classes)
+    {
+        if (c == class_name)
+            return true;
+    }
+
+    return false;
+}

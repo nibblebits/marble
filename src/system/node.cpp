@@ -14,4 +14,3 @@ int Node::getType()
 {
     return this->type;
 }
-

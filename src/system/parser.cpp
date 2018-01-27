@@ -331,6 +331,23 @@ void Parser::parse_function()
     push_node(f_node);
 }
 
+void Parser::parse_ignore_validation(bool is_in_value)
+{
+    if (!next()->isSymbol("@"))
+    {
+        parse_error("Expecting ignored validations to start with @");
+    }
+
+    if (is_in_value)
+        parse_value();
+    else
+        parse_body_next();
+
+    InterpretableNode* inode = (InterpretableNode*) pop_node();
+    inode->ignoreValidation();
+    push_node(inode);
+}
+
 void Parser::parse_pure()
 {
     if (!next()->isKeyword("pure"))
@@ -462,6 +479,14 @@ void Parser::parse_value(int rules)
             parse_cast(node);
             node = pop_node();
         }
+    }
+    else if(token->isSymbol("@"))
+    {
+        /*
+         * This is the ignore validation symbol so lets parse it
+         */
+        parse_ignore_validation(true);
+        node = pop_node();
     }
     else if(token->isIdentifier() && peek(1)->isSymbol("("))
     {
@@ -1195,6 +1220,10 @@ void Parser::parse_body_next()
     {
         parse_variable_declaration();
         parse_semicolon();
+    }
+    else if(this->current_token->isSymbol("@"))
+    {
+        parse_ignore_validation(false);
     }
     else if(this->current_token->isKeyword("if"))
     {

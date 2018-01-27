@@ -9,7 +9,10 @@ class InterpretableNode : public EvaluatingNode, public Interpretable
 	InterpretableNode(int type);
 	virtual ~InterpretableNode();
 	virtual Value interpret(Interpreter* interpreter) = 0;
-
+	void ignoreValidation();
+    bool shouldIgnoreValidation();
+private:
+	bool ignore_validation;
 };
 
 #endif
