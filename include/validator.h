@@ -39,7 +39,18 @@ public:
     VALUE_TYPE getExpectingValueType();
     VARIABLE_TYPE getExpectingVariableType();
 
+    /**
+     *  Tells the validator to ignore validation when accessing an object with an instance of the class with the name provided.
+     *  \param class_name The class name to ignore
+     * 
+     *  \note This ignore system exists because when you include a file you cannot guarantee at validation time that the class will exist
+     *   as the file to include might only be known at runtime.
+     */
     void ignoreClass(std::string class_name);
+    /**
+     *  Returns true if the class provided should be ignored for validation when accessing an instance of this class.
+     *  \param class_name The class name to check is ignored
+     */
     bool isClassIgnored(std::string class_name);
 private:
     Interpreter* interpreter;
