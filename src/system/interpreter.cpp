@@ -10,6 +10,7 @@
 #include <sstream>
 
 #include <stdio.h>
+
 #include "interpreter.h"
 #include "splitter.h"
 #include "lexer.h"
@@ -23,6 +24,7 @@
 #include "function.h"
 #include "class.h"
 #include "array.h"
+#include "misc.h"
 #include "exceptionobject.h"
 #include "exceptions/IOException.h"
 #include "exceptions/systemexception.h"
@@ -166,6 +168,18 @@ void Interpreter::finishBreakable()
     this->breakables.pop_back();
 }
 
+bool Interpreter::hasRunScript(std::string script_address)
+{
+    std::string abs_address = getAbsolutePath(script_address);
+    for (std::string val : this->scripts_run)
+    {
+        if (val == abs_address)
+            return true;
+    }
+
+    return false;
+}
+
 void Interpreter::run(const char* code, PosInfo posInfo)
 {
     if (this->first_run) {
@@ -242,6 +256,7 @@ void Interpreter::handleLineAndColumn(PosInfo* posInfo, const char* data, int le
 void Interpreter::runScript(const char* filename)
 {
     this->filename = filename;
+    this->scripts_run.push_back(getAbsolutePath(std::string(filename)));
     // Lets load this script
     FILE* file = fopen(filename, "r");
     if (!file)

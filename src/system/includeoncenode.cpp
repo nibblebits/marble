@@ -1,4 +1,4 @@
-#include "includenode.h"
+#include "includeoncenode.h"
 #include "einode.h"
 #include "interpreter.h"
 #include "validator.h"
@@ -6,19 +6,20 @@
 #include "exceptions/systemexception.h"
 #include "exceptions/IOException.h"
 #include "object.h"
+#include "misc.h"
 
 #include <iostream>
-IncludeNode::IncludeNode() : InterpretableNode(NODE_TYPE_INCLUDE)
+IncludeOnceNode::IncludeOnceNode() : InterpretableNode(NODE_TYPE_INCLUDE_ONCE)
 {
 
 }
 
-IncludeNode::~IncludeNode()
+IncludeOnceNode::~IncludeOnceNode()
 {
 
 }
 
-void IncludeNode::test(Validator* validator)
+void IncludeOnceNode::test(Validator* validator)
 {
     validator->expecting("string");
     this->exp->test(validator);
@@ -26,25 +27,26 @@ void IncludeNode::test(Validator* validator)
 
 }
 
-Value IncludeNode::interpret(Interpreter* interpreter)
+Value IncludeOnceNode::interpret(Interpreter* interpreter)
 {
     Value v;
     v = this->exp->interpret(interpreter);
-    interpreter->new_parented_scope();
     try
     {
-        interpreter->runScript(v.svalue.c_str());
+        std::string script_address = v.svalue;
+        if (interpreter->hasRunScript(script_address))
+            return v;
+        interpreter->runScript(script_address.c_str());
     }
     catch(IOException& e)
     {
         std::cout << e.getMessage() << std::endl;
         throw SystemException(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {}));
     }
-    interpreter->finish_parented_scope();
     return v;
 }
 
-void IncludeNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)
+void IncludeOnceNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)
 {
 
 }

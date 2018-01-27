@@ -781,6 +781,21 @@ void Parser::parse_include()
     push_node(include_node);
 }
 
+void Parser::parse_include_once()
+{
+    if (!next()->isKeyword("include_once"))
+    {
+        parse_error("Expecting an include_once keyword for include_once statements");
+    }
+
+    parse_expression();
+
+    ExpressionInterpretableNode* exp = (ExpressionInterpretableNode*) pop_node();
+    IncludeOnceNode* include_once_node = (IncludeOnceNode*) factory.createNode(NODE_TYPE_INCLUDE_ONCE);
+    include_once_node->exp = exp;
+    push_node(include_once_node);
+}
+
 void Parser::parse_multi_expression()
 {
     ListNode* list_node = (ListNode*) factory.createNode(NODE_TYPE_LIST);
@@ -1288,6 +1303,11 @@ void Parser::parse_body_next()
     else if(this->current_token->isKeyword("include"))
     {
         parse_include();
+        parse_semicolon();
+    }
+    else if(this->current_token->isKeyword("include_once"))
+    {
+        parse_include_once();
         parse_semicolon();
     }
     else if(this->current_token->isIdentifier())

@@ -24,6 +24,7 @@ struct stack_log_part
     PosInfo posInfo;
 };
 
+
 class Parser;
 class Lexer;
 class Validator;
@@ -89,6 +90,12 @@ public:
     void finishBreakable();
     
     /**
+     * Returns true if this Interpreter instance has run the script with the address provided.
+     * \param script_address A local URI to the script that you wish to check has been run.
+     */
+    bool hasRunScript(std::string script_address);
+
+    /**
      * Calls the output function assigned to this Interpreter
      * 
      * This is used when you need to provide output to the user through the console or to send data to the users web browser or something else regarding sending output.
@@ -112,6 +119,7 @@ private:
     bool first_run;
     ModuleSystem* moduleSystem;
     FunctionCallNode* lastFunctionCallNode;
+    std::vector<std::string> scripts_run;
     std::vector<struct stack_log_part> stack_log;
     std::vector<Breakable*> breakables;
 

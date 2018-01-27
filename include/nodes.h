@@ -29,4 +29,5 @@
 #include "fornode.h"
 #include "listnode.h"
 #include "includenode.h"
+#include "includeoncenode.h"
 #endif
