@@ -60,7 +60,7 @@ void FunctionNode::test(Validator* validator)
 Value FunctionNode::interpret(Interpreter* interpreter)
 {
     interpreter->getFunctionSystem()->registerFunction(this);
-    Value v;    
+    Value v;
     return v;
 }
 

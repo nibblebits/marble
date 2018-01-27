@@ -51,11 +51,6 @@ void FunctionCallNode::test(Validator* validator)
        throw TestError("The function \"" + this->name->value + "\" has not been declared that takes the given arguments");
    }
    
-   Function* function = function_sys->getFunctionByNameAndArguments(this->name->value, types);
-   if (function->is_pure)
-   {
-       throw TestError("You cannot call the function \"" + this->name->value + "\" as it is pure");
-   }
 }
 
 
