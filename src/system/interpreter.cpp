@@ -193,9 +193,10 @@ void Interpreter::run(const char* code, PosInfo posInfo)
     if (validator == NULL)
     {
         validator = std::unique_ptr<Validator>(new Validator(&logger, this));
-        // We must set the validators previous scope to our own so that native variables are recognised.
-        validator->getCurrentScope()->prev = this->getCurrentScope();
     }
+
+    // We must set the validators previous scope to our own so that native variables are recognised.
+    validator->getCurrentScope()->prev = this->getCurrentScope();
 
     InterpretableNode* current_node = (InterpretableNode*) root_node;
     try
