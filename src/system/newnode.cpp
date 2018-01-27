@@ -50,13 +50,14 @@ void NewNode::test_for_object(Validator* validator)
         ClassSystem* class_sys = validator->getClassSystem();
         Class* expecting_class = class_sys->getClassByName(expecting_object);
         Class* fc_node_class = class_sys->getClassByName(fc_node->name->value);
+        if (fc_node_class == NULL)
+            throw TestError("The class with the name \"" + fc_node->name->value + "\" has not been declared");
+
         if (fc_node_class->is_pure)
         {
             throw TestError("The class " + fc_node_class->name + " could not be initialised because it is a pure class and contains pure methods. Extend this class and implement the pure methods then initialise that class instead");
         }
-
-        if (fc_node_class == NULL)
-            throw TestError("The class with the name \"" + fc_node->name->value + "\" has not been declared");
+        
         if (expecting_object != fc_node->name->value && !fc_node_class->instanceOf(expecting_class))
         {
             throw TestError("a " + fc_node->name->value + " was provided which does not extend " + expecting_object);
