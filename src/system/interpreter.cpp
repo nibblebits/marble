@@ -90,6 +90,10 @@ Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionS
     c = getClassSystem()->registerClass("IOException", exception_class);
         c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
     });
+
+    c = getClassSystem()->registerClass("InfiniteLoopException", exception_class);
+        c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+    });
    this->lastFunctionCallNode = NULL;
    this->moduleSystem = NULL;
    this->first_run = true;
@@ -180,6 +184,17 @@ bool Interpreter::hasRunScript(std::string script_address)
     return false;
 }
 
+bool Interpreter::isNestedScript(std::string script_address)
+{
+    std::string abs_address = getAbsolutePath(script_address);
+    for (std::string val : this->nested_scripts_run)
+    {
+        if (val == abs_address)
+            return true;
+    }
+
+    return false;
+}
 void Interpreter::run(const char* code, PosInfo posInfo)
 {
     if (this->first_run) {
@@ -255,8 +270,14 @@ void Interpreter::handleLineAndColumn(PosInfo* posInfo, const char* data, int le
 
 void Interpreter::runScript(const char* filename)
 {
+    if (this->isNestedScript(std::string(filename)))
+    {
+        throw IOException("The script: " + std::string(filename) + " has already run once before in this run session. This script cannot run again as its possible this can result in an infinite loop");
+    }
+    this->nested_scripts_run.push_back(getAbsolutePath(filename));
     this->filename = filename;
-    this->scripts_run.push_back(getAbsolutePath(std::string(filename)));
+    if (!hasRunScript(filename))
+        this->scripts_run.push_back(getAbsolutePath(std::string(filename)));
     // Lets load this script
     FILE* file = fopen(filename, "r");
     if (!file)
@@ -313,6 +334,8 @@ void Interpreter::runScript(const char* filename)
     // Close and clean up
     fclose(file);
     delete data;
+    this->filename = this->nested_scripts_run.back().c_str();
+    this->nested_scripts_run.pop_back();
 }
 
 

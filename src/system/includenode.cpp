@@ -33,6 +33,10 @@ Value IncludeNode::interpret(Interpreter* interpreter)
     interpreter->new_parented_scope();
     try
     {
+        if (interpreter->isNestedScript(v.svalue))
+        {
+            throw SystemException(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("InfiniteLoopException"), {}));
+        }
         interpreter->runScript(v.svalue.c_str());
     }
     catch(IOException& e)

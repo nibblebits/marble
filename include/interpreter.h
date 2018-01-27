@@ -94,6 +94,11 @@ public:
      * \param script_address A local URI to the script that you wish to check has been run.
      */
     bool hasRunScript(std::string script_address);
+    /**
+     * Returns true if this Interpreter instance has not finished running the script with the address provided.
+     * \param script_address A local URI to the script that you wish to check is currently running
+     */
+    bool isNestedScript(std::string script_address);
 
     /**
      * Calls the output function assigned to this Interpreter
@@ -110,15 +115,13 @@ public:
     */
     INPUT_FUNCTION input;
 private:
-    void push_lpv();
-    void pop_lpv();
-    
     void handleLineAndColumn(PosInfo* posInfo, const char* data, int length);
     void fail();
     const char* filename;
     bool first_run;
     ModuleSystem* moduleSystem;
     FunctionCallNode* lastFunctionCallNode;
+    std::vector<std::string> nested_scripts_run;
     std::vector<std::string> scripts_run;
     std::vector<struct stack_log_part> stack_log;
     std::vector<Breakable*> breakables;
