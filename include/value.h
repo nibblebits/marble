@@ -2,7 +2,6 @@
 #define VALUE_H
 
 #include "statics.h"
-#include "cpointers.h"
 #include <string>
 #include <vector>
 #include <memory>
