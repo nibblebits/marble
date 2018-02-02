@@ -34,8 +34,8 @@ public:
     Class* getClassByName(std::string name);
     bool hasClassWithName(std::string name);
     std::vector<Class*> getAllClasses();
-    std::vector<std::unique_ptr<Class>> classes;
 private:
+    std::vector<std::unique_ptr<Class>> classes;
     std::shared_ptr<Object> defaultObjectDescriptor;
     ClassSystem* prev_sys;
     SystemHandler* sys_handler;
