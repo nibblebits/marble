@@ -92,7 +92,9 @@ Value FunctionCallNode::interpret(Interpreter* interpreter)
    Function* function = functionSystem->getFunctionByName(name->value);
    if (function == NULL)
    {
-        throw SystemException(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("EntityNotRegisteredException"), {}));
+        Value except_value;
+        except_value.set("The function with the name " + name->value + " has not been registered");
+        throw SystemException(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("EntityNotRegisteredException"), {except_value}));
    }
    
    try

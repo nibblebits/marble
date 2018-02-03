@@ -66,6 +66,14 @@ void Variable::setValue(Value value)
     this->value.holder = this;
 }
 
+void Variable::setValue(std::string value)
+{
+    Value v;
+    v.type = VALUE_TYPE_STRING;
+    v.svalue = value;
+    setValue(v);
+}
+
 void Variable::setValue(double value)
 {
     Value v;

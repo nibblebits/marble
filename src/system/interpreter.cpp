@@ -72,8 +72,13 @@ Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionS
 
     /* Let's register an Exception class that is to be inherited by all classes that can be thrown*/
     Class* exception_class = getClassSystem()->registerClass("Exception");
-    exception_class->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
-        
+    Variable msg_var;
+    msg_var.type = VARIABLE_TYPE_STRING;
+    msg_var.name = "message";
+    msg_var.setValue("");
+    exception_class->addVariable(msg_var);
+    exception_class->registerFunction("__construct", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+        object->getVariable("message")->setValue(arguments[0].svalue);
     });
     exception_class->registerFunction("getStackTrace", {}, VarType::fromString("string"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
         std::shared_ptr<ExceptionObject> exception_obj = std::dynamic_pointer_cast<ExceptionObject>(object);
@@ -97,6 +102,8 @@ Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionS
 
     c = getClassSystem()->registerClass("EntityNotRegisteredException", exception_class);
         c->registerFunction("__construct", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+        Function* parent_constructor = object->getClass()->parent->getFunctionByNameAndArguments("__construct", {VarType::fromString("string")});
+        parent_constructor->invoke(interpreter, arguments, return_value, object);
     });
 
    this->lastFunctionCallNode = NULL;

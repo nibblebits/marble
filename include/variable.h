@@ -31,6 +31,7 @@ public:
     
     void setValue(Value value);
     void setValue(double value);
+    void setValue(std::string value);
     void setValue(std::shared_ptr<Object> value);
    
 };
