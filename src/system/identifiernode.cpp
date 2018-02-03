@@ -80,9 +80,7 @@ void IdentifierNode::test(Validator* validator)
     if (variable->type == VARIABLE_TYPE_OBJECT)
     {
         // We must ensure the object types are compatible
-        Class* expecting_class = class_sys->getClassByName(validator->getExpectingType());
-        Class* var_class = class_sys->getClassByName(variable->type_name);
-        if (variable->type_name != validator->getExpectingType() && !(var_class->instanceOf(expecting_class)))
+        if (!class_sys->isClassInstanceOf(variable->type_name, validator->getExpectingType()))
             throw TestError("a " + variable->type_name + " " + (variable->isArray() ? "array" : "") + " was provided");
     }
     

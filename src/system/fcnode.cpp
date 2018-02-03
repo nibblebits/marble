@@ -41,7 +41,6 @@ void FunctionCallNode::test(Validator* validator)
    std::vector<VarType> types;
    if (validator->isAccessingObject())
    {
-       std::cout << validator->getCurrentObject()->getClass()->name << std::endl;
         validator->useScope([&] {
             test_args(validator, &types);
         }, validator->getAccessorsScope());
@@ -56,6 +55,21 @@ void FunctionCallNode::test(Validator* validator)
        throw TestError("The function \"" + this->name->value + "\" has not been declared that takes the given arguments");
    }
    
+   if (validator->isExpecting())
+   {
+       // We must check the return type is valid 
+       VARIABLE_TYPE expecting_type = validator->getExpectingVariableType();
+       SingleFunction* function = (SingleFunction*) function_sys->getFunctionByNameAndArguments(this->name->value, types);
+       if (function->return_type.type != expecting_type)
+           throw TestError("The function " + this->name->value + " returns a " + function->return_type.value);
+
+       if (expecting_type == VARIABLE_TYPE_OBJECT)
+       {
+           if (!validator->getClassSystem()->isClassInstanceOf(function->return_type.value, validator->getExpectingType()))
+               throw TestError("The function " + function->name + " returns a " + function->return_type.value);
+       }
+
+   }
 }
 
 

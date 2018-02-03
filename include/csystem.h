@@ -34,6 +34,13 @@ public:
     Class* getClassByName(std::string name);
     bool hasClassWithName(std::string name);
     std::vector<Class*> getAllClasses();
+
+    // Helper functions
+
+    /**
+     * Returns true if class1 == class2 or class1 is an instance of class2
+     */
+    bool isClassInstanceOf(std::string class1, std::string class2);
 private:
     std::vector<std::unique_ptr<Class>> classes;
     std::shared_ptr<Object> defaultObjectDescriptor;

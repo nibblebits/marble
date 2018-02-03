@@ -8,6 +8,7 @@
 #include "object.h"
 #include "class.h"
 #include <memory>
+#include <iostream>
 
 typedef Module* (*marble_mod_init) ();
 
