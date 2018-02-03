@@ -65,6 +65,21 @@ void NewNode::test_for_object(Validator* validator)
             {
                 throw TestError("a " + fc_node->name->value + " was provided which does not extend " + expecting_object);
             }
+
+            // Now lets test the constructor to see if a valid constructor for us to be able to call.
+            std::vector<VarType> types;
+            validator->save();
+            fc_node->test_args(validator, &types);
+
+            // If we don't have any constructor then we can ignore this validation as no constructors is legal
+            if (fc_node_class->hasFunction("__construct"))
+            {
+                if (!fc_node_class->hasFunction("__construct", types))
+                {
+                    throw TestError("A constructor with the given arguments does not exist within the " + fc_node_class->name + " class");
+                }
+            }
+            validator->restore();
         }
     }
 }
