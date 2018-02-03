@@ -18,6 +18,8 @@ public:
     
     static std::string getValueStringForType(VALUE_TYPE type);
     void set(Value* v);
+    void set(std::string s);
+    void set(double v);
     VALUE_TYPE type;
     // The variable who holds this value (NULL if the value stands without a variable)
     Variable* holder;

@@ -60,6 +60,18 @@ void Value::set(Value* v)
     this->svalue = v->svalue;
 }
 
+void Value::set(std::string s)
+{
+    this->type = VALUE_TYPE_STRING;
+    this->svalue = s;
+}
+
+void Value::set(double v)
+{
+    this->type = VALUE_TYPE_NUMBER;
+    this->dvalue = v;
+}
+
 bool Value::isObjectOrArray()
 {
     return this->type == VALUE_TYPE_OBJECT || this->type == VALUE_TYPE_ARRAY;
