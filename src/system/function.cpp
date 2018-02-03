@@ -32,8 +32,11 @@ void Function::invoke(Interpreter* interpreter, std::vector<Value> values, Value
     PosInfo posInfo;
     if (this->type == FUNCTION_TYPE_WRITTEN)
     {
-        // This is a written function lets get the interpreters last function call node's position
-        posInfo = interpreter->getLastFunctionCallNode()->posInfo;
+        /* This is a written function lets get the interpreters last function call node's position.
+         * if there is one. As this function may have been called natively*/
+        FunctionCallNode* fc_node = interpreter->getLastFunctionCallNode();
+        if (fc_node != NULL)
+            posInfo = fc_node->posInfo;
     }
     
     interpreter->addToStackTrace(address, posInfo);
