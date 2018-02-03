@@ -94,6 +94,11 @@ Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionS
     c = getClassSystem()->registerClass("InfiniteLoopException", exception_class);
         c->registerFunction("__construct", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
     });
+
+    c = getClassSystem()->registerClass("EntityNotRegisteredException", exception_class);
+        c->registerFunction("__construct", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+    });
+
    this->lastFunctionCallNode = NULL;
    this->moduleSystem = NULL;
    this->first_run = true;
@@ -209,11 +214,7 @@ void Interpreter::run(const char* code, PosInfo posInfo)
     lexer->setInput(code, strlen(code));
     Token* root_token = lexer->lex();
     Token* token = root_token;
-    while(token != NULL)
-    {
-        std::cout << token->getType() << ": " << token->getValue() << " :  line no: " << token->posInfo.line << ", col: " << token->posInfo.col << std::endl;
-        token = token->next;
-    }
+
     if (parser == NULL)
         parser = std::unique_ptr<Parser>(new Parser(&logger));
     Node* root_node;

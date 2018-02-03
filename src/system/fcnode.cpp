@@ -92,7 +92,7 @@ Value FunctionCallNode::interpret(Interpreter* interpreter)
    Function* function = functionSystem->getFunctionByName(name->value);
    if (function == NULL)
    {
-        throw std::logic_error("Value FunctionCallNode::interpret(Interpreter* interpreter): Attempting to invoke a function that has not been registered");
+        throw SystemException(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("EntityNotRegisteredException"), {}));
    }
    
    try
