@@ -2,6 +2,8 @@
 #include "nodes.h"
 #include "interpreter.h"
 #include "exceptions/testerror.h"
+#include "exceptions/systemexception.h"
+#include "object.h"
 #include <iostream>
 CastNode::CastNode() : ExpressionInterpretableNode(NODE_TYPE_CAST)
 {
@@ -58,20 +60,27 @@ Value CastNode::interpret(Interpreter* interpreter)
 {
     Value v = this->to_cast->interpret(interpreter);
     struct Evaluation evaluation = this->casting_to->evaluate(interpreter, EVALUATION_TYPE_DATATYPE);
-    if (evaluation.datatype.value == "number")
+    try
     {
-        v.dvalue = (double) get_double_value(&v);
-        v.type = VALUE_TYPE_NUMBER;
+        if (evaluation.datatype.value == "number")
+        {
+            v.dvalue = (double) get_double_value(&v);
+            v.type = VALUE_TYPE_NUMBER;
+        }
+        else if(evaluation.datatype.value == "int")
+        {
+            v.dvalue = (int) get_double_value(&v);
+            v.type = VALUE_TYPE_NUMBER;
+        }
+        else if(evaluation.datatype.value == "string")
+        {
+            v.svalue = get_string_value(&v);
+            v.type = VALUE_TYPE_STRING;
+        }
     }
-    else if(evaluation.datatype.value == "int")
+    catch(...)
     {
-        v.dvalue = (int) get_double_value(&v);
-        v.type = VALUE_TYPE_NUMBER;
-    }
-    else if(evaluation.datatype.value == "string")
-    {
-        v.svalue = get_string_value(&v);
-        v.type = VALUE_TYPE_STRING;
+        throw SystemException(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("InvalidCastException"), {}));
     }
 
     // Objects don't need to be casted this will work fine without any conversion.
