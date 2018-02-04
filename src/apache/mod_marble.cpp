@@ -29,14 +29,27 @@
 
 #include "httpd.h"
 #include "http_config.h"
+#include "http_core.h"
 #include "http_protocol.h"
-#include "ap_config.h"
-#include "interpreter.h"
-#include "modulesystem.h"
+#include "http_request.h"
+
+#include "apr_strings.h"
+#include "apr_network_io.h"
+#include "apr_md5.h"
+#include "apr_sha1.h"
+#include "apr_hash.h"
+#include "apr_base64.h"
+#include "apr_dbd.h"
+#include <apr_file_info.h>
+#include <apr_file_io.h>
+#include <apr_tables.h>
+
 #include <string>
 #include <vector>
 #include <stdlib.h>
 
+#include "ap_config.h"
+#include "interpreter.h"
 // request handler example
 
 // request_rec Struct Reference

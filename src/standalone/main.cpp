@@ -53,6 +53,7 @@ void interpret()
     Logger* logger = interpreter.getLogger();
     interpreter.setModuleSystem(moduleSystem);
     moduleSystem->loadModule("./mods/marble_iomod.so");
+    moduleSystem->loadModule("./mods/marble_timemod.so");
     interpreter.runScript("./test.marble");
 
     for (LogEntry entry : logger->entries)
