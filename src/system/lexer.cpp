@@ -210,7 +210,7 @@ std::string Lexer::get_string(const char** ptr)
     std::string value = "";
 
     // Lets loop until we find an ending string seperator.
-    while(!is_string_seperator(c))
+    while(bounds_safe(our_ptr) && !is_string_seperator(c))
     {
         value += c;
         our_ptr++;
