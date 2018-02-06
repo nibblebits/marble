@@ -1,5 +1,6 @@
 #include "parser.h"
 #include "datatype.h"
+#include "debug.h"
 #include <iostream>
 struct order_of_operation o_of_operation[] =
 {
@@ -528,7 +529,7 @@ void Parser::parse_value(int rules)
 void Parser::parse_cast(Node* casting_to)
 {   
     // Ok now lets get what we are casting from
-    parse_expression(RULE_PARSE_CASTING | RULE_PARSE_ARRAY);
+    parse_expression_for_value(RULE_PARSE_EXPRESSIONS_OBJECT_ACCESS_ONLY);
     ExpressionInterpretableNode* to_cast = (ExpressionInterpretableNode*) pop_node();
     
     CastNode* node = (CastNode*) factory.createNode(NODE_TYPE_CAST);
@@ -991,11 +992,19 @@ void Parser::parse_expression(int rules)
         
     if (peeked_token->isOperator())
     {
+        if (rules & RULE_PARSE_EXPRESSIONS_OBJECT_ACCESS_ONLY && peeked_token->value != ".")
+        {
+            // We are to parse object expressions only so as it does not apply lets return
+            return;
+        }
+        
         // Lets remove the operator from the token stream
         std::string op = next()->value;
 
         // We now need the last expression as it needs to become our left parameter
         ExpressionInterpretableNode* left = (ExpressionInterpretableNode*) pop_node();
+        Debug::PrintValueForNode(left);
+
         ExpNode* left_exp = (ExpNode*)(left);
 
         // We got more to go!
@@ -1023,6 +1032,12 @@ void Parser::parse_expression_part(int rules)
     {
         if (peeked_token->isOperator())
         {
+            if (rules & RULE_PARSE_EXPRESSIONS_OBJECT_ACCESS_ONLY && peeked_token->value != ".")
+            {
+                // We are only allowed to do object access expressions here so lets finish up
+                push_node(node);
+                return;
+            }
             // We have a right part of the expression "l + r"
             std::string op = next()->value;
             struct order_of_operation* operation = get_order_of_operation(op);
