@@ -8,6 +8,7 @@
 #include "validator.h"
 #include "exceptions/testerror.h"
 #include "exceptions/systemexception.h"
+#include "debug.h"
 #include <iostream>
 #include <memory>
 ExpNode::ExpNode() : ExpressionInterpretableNode(NODE_TYPE_EXPRESSION)
@@ -149,7 +150,7 @@ Value ExpNode::interpret(Interpreter* interpreter)
 }
 
 void ExpNode::test(Validator* validator)
-{    
+{  
    if (this->op == ".")
    {
       test_obj_access(validator);
@@ -183,10 +184,10 @@ void ExpNode::test_obj_access(Validator* validator)
     if (!validator->isClassIgnored(evaluation.datatype.value))
     {
         Object* obj = validator->getClassObject(evaluation.datatype.value);
-        c = obj->getClass();
         if (obj == NULL)
             throw std::logic_error("NULL object from validator: " + evaluation.datatype.value);
-                
+
+        c = obj->getClass();
         if (evaluation.variable != NULL)
         {
             // If the evaluated variables name is "super" then we must be accessing a super-class and we should take the parent's class.

@@ -528,7 +528,7 @@ void Parser::parse_value(int rules)
 void Parser::parse_cast(Node* casting_to)
 {   
     // Ok now lets get what we are casting from
-    parse_value(RULE_PARSE_CASTING | RULE_PARSE_ARRAY);
+    parse_expression(RULE_PARSE_CASTING | RULE_PARSE_ARRAY);
     ExpressionInterpretableNode* to_cast = (ExpressionInterpretableNode*) pop_node();
     
     CastNode* node = (CastNode*) factory.createNode(NODE_TYPE_CAST);
