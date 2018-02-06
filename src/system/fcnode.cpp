@@ -7,6 +7,7 @@
 #include "vartype.h"
 #include "exceptions/testerror.h"
 #include "exceptions/systemexception.h"
+#include "exceptions/evaluationexception.h"
 #include <iostream>
 #include <stdexcept>
 FunctionCallNode::FunctionCallNode() : ExpressionInterpretableNode(NODE_TYPE_FUNCTION_CALL)
@@ -24,8 +25,15 @@ void FunctionCallNode::test_args(Validator* validator, std::vector<VarType>* typ
     for (ExpressionInterpretableNode* argument_node : this->arguments)
     {
         argument_node->test(validator);
-        struct Evaluation evaluation = argument_node->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE);
-        types->push_back(evaluation.datatype);
+        try
+        {
+           struct Evaluation evaluation = argument_node->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE);
+           types->push_back(evaluation.datatype);
+        }
+        catch(EvaluationException& ex)
+        {
+            throw TestError("The value provided for the function call is multityped. Ensure you cast where types differ");
+        }
     }
 }
 

@@ -8,6 +8,7 @@
 #include "validator.h"
 #include "exceptions/testerror.h"
 #include "exceptions/systemexception.h"
+#include "exceptions/evaluationexception.h"
 #include "debug.h"
 #include <iostream>
 #include <memory>
@@ -227,7 +228,9 @@ void ExpNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_eva
 {
     if (expected_evaluation & EVALUATION_TYPE_DATATYPE)
     {
+        VarType left_vartype;
         left->evaluate(handler, expected_evaluation, evaluation);
+        left_vartype = evaluation->datatype;
         FunctionSystem* old_fc_system;
         Scope* old_scope;
         if (this->op == ".")
@@ -244,7 +247,11 @@ void ExpNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_eva
             handler->setFunctionSystem(obj->getClass());
         }
         right->evaluate(handler, expected_evaluation, evaluation);
-        
+        if (left_vartype != evaluation->datatype)
+        {
+            throw EvaluationException("Evaluation error as both expression nodes differ in types");
+        }
+
         if (this->op == ".")
         {
             handler->setCurrentScope(old_scope);
