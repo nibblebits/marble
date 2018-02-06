@@ -155,7 +155,7 @@ void ExpNode::test(Validator* validator)
    {
       test_obj_access(validator);
    }
-   else if(this->op == "=")
+   else if(this->isAssignmentOperator())
    {
       test_assign(validator);
    }
