@@ -247,9 +247,12 @@ void ExpNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_eva
             handler->setFunctionSystem(obj->getClass());
         }
         right->evaluate(handler, expected_evaluation, evaluation);
-        if (left_vartype != evaluation->datatype)
+        if (this->op != ".")
         {
-            throw EvaluationException("Evaluation error as both expression nodes differ in types");
+            if (left_vartype != evaluation->datatype)
+            {
+                throw EvaluationException("Evaluation error as both expression nodes differ in types", left_vartype.value, evaluation->datatype.value);
+            }
         }
 
         if (this->op == ".")

@@ -32,7 +32,7 @@ void FunctionCallNode::test_args(Validator* validator, std::vector<VarType>* typ
         }
         catch(EvaluationException& ex)
         {
-            throw TestError("The value provided for the function call is multityped. Ensure you cast where types differ");
+            throw TestError("The value provided for the function call is multityped. Ensure you cast where types differ. First type is: " + ex.type1 + " second is: " + ex.type2);
         }
     }
 }
