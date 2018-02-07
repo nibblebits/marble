@@ -229,7 +229,7 @@ std::string Lexer::get_while(const char** ptr, int expected)
     std::string tokenValue = "";
     char c = **ptr;
     int type = get_type_of_char(c);
-    if (type != expected)
+    if (!(type & expected))
     {
         error("While calling \"get_while\" the first character must be of the expected type", posInfo);
     }
@@ -237,7 +237,7 @@ std::string Lexer::get_while(const char** ptr, int expected)
     {
         c = **ptr;
         type = get_type_of_char(c);
-        if (type != expected)
+        if (!(type & expected))
         {
             // Numbers can have decimal points which is seen as an operator
             if (expected == IS_NUMBER && type == IS_OPERATOR && c == '.')
@@ -304,7 +304,7 @@ Token* Lexer::stage1()
                     token_value = get_while(&ptr, IS_OPERATOR);
                 break;
                 case IS_CHARACTER:
-                    token_value = get_while(&ptr, IS_CHARACTER);
+                    token_value = get_while(&ptr, IS_CHARACTER | IS_NUMBER);
                     if (is_keyword(token_value))
                     {
                         token_type = TOKEN_TYPE_KEYWORD;

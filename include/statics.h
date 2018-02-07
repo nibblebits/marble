@@ -122,11 +122,11 @@ enum
 // For the lexer
 enum
 {
-    IS_CHARACTER,
-    IS_NUMBER,
-    IS_OPERATOR,
-    IS_SYMBOL,
-    IS_WHITESPACE
+    IS_CHARACTER = 0x01,
+    IS_NUMBER = 0x02,
+    IS_OPERATOR = 0x04,
+    IS_SYMBOL = 0x10,
+    IS_WHITESPACE = 0x20
 };
 
 // Rules for the parser
