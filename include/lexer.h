@@ -31,6 +31,7 @@ private:
     bool is_number(std::string number);
     bool is_string_seperator(char c);
     bool is_symbol(char c);
+    bool is_comment(char c);
     int is_character(char c);
     bool is_stackable(int token_type);
     void error(std::string message, PosInfo posInfo);
@@ -39,6 +40,7 @@ private:
     std::string get_number(const char** ptr);
     std::string get_string(const char** ptr);
     std::string get_while(const char** ptr, int expected);
+    void ignore_line(const char** ptr);
 
 private:
     TokenFactory tokenFactory;

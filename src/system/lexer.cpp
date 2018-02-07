@@ -111,6 +111,12 @@ bool Lexer::is_symbol(char c)
     return false;
 }
 
+
+bool Lexer::is_comment(char c)
+{
+    return c == '#';
+}
+
 int Lexer::is_character(char c)
 {
     return !is_operator(c) && !is_symbol(c) && !is_number(c) && !is_whitespace(c);
@@ -259,6 +265,11 @@ next:
     return tokenValue;
 }
 
+void Lexer::ignore_line(const char** ptr)
+{
+    while(**ptr != 0x0a) *ptr+=1;
+}
+
 /**
  * Stage 1 will remove all comments, and create tokens based on the input
 */
@@ -293,6 +304,11 @@ Token* Lexer::stage1()
         {
             token_type = TOKEN_TYPE_STRING;
             token_value = get_string(&ptr);
+        }
+        if(is_comment(c))
+        {
+            ignore_line(&ptr);
+            continue;
         }
         else
         {
