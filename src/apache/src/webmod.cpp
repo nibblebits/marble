@@ -1,4 +1,5 @@
 #include "webmod.h"
+#include "exceptions/systemexception.h"
 
 WebModuleRequestArgumentsObject::WebModuleRequestArgumentsObject(Class* c) : Object(c)
 {
@@ -35,10 +36,16 @@ void WebModule::Init()
 {
     log("Web Module initialised", LOG_LEVEL_NOTICE);
     Class* c = this->getModuleSystem()->getClassSystem()->registerClass("RequestArguments");
-    c->registerFunction("toString", {VarType::fromString("string")}, VarType::fromString("string"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+    c->registerFunction("get", {VarType::fromString("string")}, VarType::fromString("string"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
         std::shared_ptr<WebModuleRequestArgumentsObject> args_obj = std::dynamic_pointer_cast<WebModuleRequestArgumentsObject>(object);
         return_value->type = VALUE_TYPE_STRING;
-        return_value->svalue = "nothing yet";
+
+        if (args_obj->arguments.find(arguments[0].svalue) == args_obj->arguments.end())
+        {
+            throw SystemException(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("InvalidIndexException"), {}));
+        }
+
+        return_value->svalue = args_obj->arguments[arguments[0].svalue];
     });
 
     c->registerFunction("testing", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {

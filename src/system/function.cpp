@@ -48,6 +48,13 @@ void Function::invoke(Interpreter* interpreter, std::vector<Value> values, Value
     {
         // An exception was thrown! Lets pop us off the stack trace and rethrow it
         interpreter->popFromStackTrace();
+
+        // We are done with our function
+        f_system->finishCurrentFunction();
+
+        // We are done with our NULL current object
+        interpreter->finishCurrentObject();
+
         throw ex;
     }
     

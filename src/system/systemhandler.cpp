@@ -1,6 +1,6 @@
 #include "systemhandler.h"
 #include "scope.h"
-
+#include <iostream>
 
 SystemHandler::SystemHandler(SYSTEM_HANDLER_TYPE type, ClassSystem* baseClassSystem, FunctionSystem* baseFunctionSystem, SYSTEM_HANDLER_RULES rules)
 {
@@ -44,10 +44,16 @@ SystemHandler::SystemHandler(SYSTEM_HANDLER_TYPE type, ClassSystem* baseClassSys
 
 SystemHandler::~SystemHandler()
 {
-
     if (!this->current_obj_stack.empty())
     {
-        throw std::logic_error("A current object was set but never finished. please call finishCurrentObject when you are done with the object set with setCurrentObject");
+        std::string obj_class_names = "";
+        for (int i = 0; i < this->current_obj_stack.size(); i++)
+        {
+        //    struct current_object obj = this->current_obj_stack[i];
+          //  if (obj)
+           // obj_class_names += obj.c->name + ", ";
+        }
+        throw std::logic_error("A current object was set but never finished. please call finishCurrentObject when you are done with the object set with setCurrentObject: " + obj_class_names + " size: " + std::to_string(this->current_obj_stack.size()) + " SystemHandlerType: " + std::to_string(this->type));
     }
 
 }

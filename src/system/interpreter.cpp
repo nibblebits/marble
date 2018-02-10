@@ -88,6 +88,10 @@ Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionS
     // The Exception class has the Exception object instance.
     exception_class->setDescriptorObject(std::make_shared<ExceptionObject>(exception_class));
     
+    c = getClassSystem()->registerClass("InvalidIndexException", exception_class);
+        c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+    });
+
     c = getClassSystem()->registerClass("NullPointerException", exception_class);
         c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
     });
@@ -254,6 +258,11 @@ void Interpreter::run(const char* code, PosInfo posInfo)
     catch(SystemException& ex)
     {
         logger.error("System threw a " + ex.getObject()->getClass()->name + " exception" , current_node->posInfo);
+    }
+    catch(...)
+    {
+        logger.error("System through an unknown exception. This is likely a bug in the interpreter.", current_node->posInfo);
+        throw;
     }
 }
 

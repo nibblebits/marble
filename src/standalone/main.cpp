@@ -64,7 +64,14 @@ void interpret()
 }
 int main(int argc, char** argv)
 {
-    interpret();
+    try
+    {
+        interpret();
+    }
+    catch(...)
+    {
+        throw;
+    }
     std::cout << "Program terminated" << std::endl;
     /*
         std::cout << "ALLOCATIONS: " << allocations.size() << std::endl;
