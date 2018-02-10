@@ -1,4 +1,5 @@
 SYSTEM_OBJECT_FILES = ./build/system/token.o ./build/system/splitter.o ./build/system/interpreter.o ./build/system/lexer.o ./build/system/parser.o ./build/system/node.o ./build/system/expnode.o ./build/system/varnode.o ./build/system/literalnode.o ./build/system/identifiernode.o ./build/system/debug.o ./build/system/scope.o ./build/system/variable.o ./build/system/fcnode.o ./build/system/keywordnode.o ./build/system/nodefactory.o ./build/system/tokenfactory.o ./build/system/einode.o ./build/system/value.o ./build/system/function.o ./build/system/nativefunction.o ./build/system/functionsystem.o ./build/system/stringnode.o ./build/system/negnode.o ./build/system/statement.o ./build/system/ifstmtnode.o ./build/system/bodynode.o ./build/system/castnode.o ./build/system/arraynode.o ./build/system/newnode.o ./build/system/array.o ./build/system/object.o ./build/system/logger.o ./build/system/posinfo.o ./build/system/class.o ./build/system/csystem.o ./build/system/fnode.o ./build/system/inode.o ./build/system/writtenfunction.o ./build/system/retnode.o ./build/system/classnode.o ./build/system/validator.o ./build/system/scopehandler.o ./build/system/systemhandler.o ./build/system/evaluatingnode.o ./build/system/datatype.o ./build/system/groupedfunction.o ./build/system/singlefunction.o ./build/system/vartype.o ./build/system/exceptions/systemexception.o ./build/system/trynode.o ./build/system/thrownode.o ./build/system/exceptionobject.o ./build/system/whilenode.o ./build/system/breakable.o ./build/system/breaknode.o ./build/system/continuenode.o ./build/system/dowhilenode.o ./build/system/fornode.o ./build/system/listnode.o ./build/system/modulesystem.o ./build/system/module.o ./build/system/includenode.o ./build/system/purefunction.o ./build/system/includeoncenode.o ./build/system/misc.o
+APACHE_OBJECT_FILES = ./src/apache/build/webmod.o
 OBJECT_FILE_FLAGS = -c -g -fPIC -std=c++14 -g
 SYSTEM_LIB_LOCAL_FILENAME = libmarble.so
 SYSTEM_LIB_FILE_LOCATION = ./bin/${SYSTEM_LIB_LOCAL_FILENAME}
@@ -150,7 +151,8 @@ standalone-modules: standalone modules
 
 apache2: system
 	sudo cp ${SYSTEM_LIB_FILE_LOCATION} /usr/lib/${SYSTEM_LIB_LOCAL_FILENAME}
-	g++ -fPIC -shared -std=c++14 -I /usr/include/apache2 -I /usr/include/apr-1.0 -I ./include ./src/apache/mod_marble.cpp /usr/lib/${SYSTEM_LIB_LOCAL_FILENAME} -o ./bin/mod_marble.so
+	cd ./src/apache && $(MAKE) all
+	g++ -fPIC -shared -std=c++14 -I /usr/include/apache2 -I /usr/include/apr-1.0 -I ./include -I ./src/apache/include ./src/apache/src/mod_marble.cpp /usr/lib/${SYSTEM_LIB_LOCAL_FILENAME} -o ./bin/mod_marble.so ${APACHE_OBJECT_FILES}
 apache2-install: apache2
 	sudo apxs -i -a -n mod_marble ./bin/mod_marble.so
 	sudo cp -a ./src/stdmods/bin/. /usr/lib/marble

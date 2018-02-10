@@ -50,6 +50,7 @@
 
 #include "ap_config.h"
 #include "interpreter.h"
+#include "webmod.h"
 // request handler example
 
 // request_rec Struct Reference
@@ -93,7 +94,7 @@ module AP_MODULE_DECLARE_DATA mod_marble_module = {
 
 /* Sadly apxs does not compile with G++. I have had to compile with g++ instead of apxs and therefore I have had to duplicate the AP_MODULE_DECLARE_DATA structure as apache requires two symbols. "mod_modulename" and "modulename". Which is usually handled automatically by apxs upon compiling.
 */
-module AP_MODULE_DECLARE_DATA marble_module = {
+module AP_MODULE_DECLARE_DATA webModulemarble_module = {
     STANDARD20_MODULE_STUFF, 
     create_dir_conf, /* create per-dir    config structures */
     merge_dir_conf, /* merge  per-dir    config structures */
@@ -166,14 +167,16 @@ std::string format_log_entry(LogEntry entry)
 
 static int marble_handler(request_rec *req)
 {
+    WebModule* webModule;
     // I am not aware of an init method for apache yet so this will have to do for now its far from ideal.
     if (first_run)
     {
         moduleSystem.loadModule("/usr/lib/marble/marble_iomod.so");
+        webModule = new WebModule();
+        moduleSystem.addModule(webModule);
         first_run = false;
     }
 
-    configuration* config = (configuration*) ap_get_module_config(req->per_dir_config, &marble_module);
     int rc, exists;
     apr_finfo_t finfo;
     
@@ -206,11 +209,15 @@ static int marble_handler(request_rec *req)
         interpreter.setOutputFunction([&](const char* data) {
             ap_rputs(data, req);
         });
+
+        // Let's let the WebModule know about our request
+        webModule->parseRequest(&interpreter, req);
+
         Logger* logger = interpreter.getLogger();
         try
         {
             interpreter.runScript(req->filename);
-        } catch(std::exception &ex)
+        } catch(...)
         {
             // If the logger has errors then this exception was thrown because of them. This wouldnt be an internal server error we will output these errors later.
             if (!logger->hasErrors())

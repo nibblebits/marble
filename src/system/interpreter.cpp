@@ -136,6 +136,8 @@ void Interpreter::setModuleSystem(ModuleSystem* moduleSystem)
     if (this->moduleSystem != NULL)
         throw std::logic_error("This Interpreter is already bound to a ModuleSystem");
     this->moduleSystem = moduleSystem;
+
+    this->moduleSystem->tellModules(this);
 }
 
 void Interpreter::ready()
@@ -213,18 +215,17 @@ bool Interpreter::isNestedScript(std::string script_address)
 }
 void Interpreter::run(const char* code, PosInfo posInfo)
 {
-    if (this->first_run) {
-        // Let's tell the Modules about us!
-        this->moduleSystem->tellModules(this);
-        this->first_run = false;
-    }
-
     ready();
     if (lexer == NULL)
         lexer = std::unique_ptr<Lexer>(new Lexer(&logger, posInfo));
     lexer->setInput(code, strlen(code));
     Token* root_token = lexer->lex();
     Token* token = root_token;
+    while (token != NULL)
+    {
+        std::cout << "TOken value: " << token->value << std::endl;
+        token = token->next;
+    }
 
     if (parser == NULL)
         parser = std::unique_ptr<Parser>(new Parser(&logger));

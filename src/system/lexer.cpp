@@ -305,7 +305,7 @@ Token* Lexer::stage1()
             token_type = TOKEN_TYPE_STRING;
             token_value = get_string(&ptr);
         }
-        if(is_comment(c))
+        else if(is_comment(c))
         {
             ignore_line(&ptr);
             continue;
