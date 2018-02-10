@@ -27,6 +27,7 @@ public:
 
     std::string request_uri;
     std::string requester_ip;
+    std::string request_method;
     std::shared_ptr<WebModuleRequestArgumentsObject> request_arguments;
 };
 
@@ -38,6 +39,7 @@ public:
     void Init();
     void newInterpreter(Interpreter* interpreter);
     void parseRequest(Interpreter* interpreter, request_rec* req);
+    std::map<std::string, std::string> parseGet(request_rec* req);
 private:
 };
 #endif

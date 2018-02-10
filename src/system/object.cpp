@@ -106,8 +106,8 @@ void Object::runThis(std::function<void()> function, SystemHandler* sys_handler,
     
     try
     {
-    // Now the scopes have been adjusted to run on this object we should invoke the function provided
-    function();
+        // Now the scopes have been adjusted to run on this object we should invoke the function provided
+        function();
     }
     catch(...)
     {
