@@ -1003,7 +1003,6 @@ void Parser::parse_expression(int rules)
 
         // We now need the last expression as it needs to become our left parameter
         ExpressionInterpretableNode* left = (ExpressionInterpretableNode*) pop_node();
-        Debug::PrintValueForNode(left);
 
         ExpNode* left_exp = (ExpNode*)(left);
 

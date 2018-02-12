@@ -51,9 +51,9 @@ void interpret()
     });
 
     Logger* logger = interpreter.getLogger();
-    interpreter.setModuleSystem(moduleSystem);
     moduleSystem->loadModule("./mods/marble_iomod.so");
     moduleSystem->loadModule("./mods/marble_timemod.so");
+    interpreter.setModuleSystem(moduleSystem);
     interpreter.runScript("./test.marble");
 
     for (LogEntry entry : logger->entries)
@@ -64,14 +64,9 @@ void interpret()
 }
 int main(int argc, char** argv)
 {
-    try
-    {
+  
         interpret();
-    }
-    catch(...)
-    {
-        throw;
-    }
+  
     std::cout << "Program terminated" << std::endl;
     /*
         std::cout << "ALLOCATIONS: " << allocations.size() << std::endl;

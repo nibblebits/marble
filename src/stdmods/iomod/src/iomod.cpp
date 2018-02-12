@@ -46,12 +46,13 @@ void IOModule::newInterpreter(Interpreter* interpreter)
     // Ok we have a new Interpreter that may use this module so we must create a global variable pointing to IO. 
     Scope* root_scope = interpreter->getRootScope();
     root_scope->createVariable("IO", "IO", std::make_shared<Object>(this->getModuleSystem()->getClassSystem()->getClassByName("IO")));
+    log("VARIABLE IO CREATED IN ROOT SCOPE", LOG_LEVEL_NOTICE);
 }
 
 // Native IO functions/methods
 void IOModule::setDefaultIO(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)
 {
-    Scope* root_scope = interpreter->getRootScope();
+    Scope* root_scope = interpreter->getCurrentScope();
     Variable* variable = root_scope->getVariable("IO");
     variable->setValue(values[0].ovalue);
 }

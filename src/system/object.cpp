@@ -10,6 +10,7 @@ Object::Object(Class* c)
     if (c == NULL)
         throw std::logic_error("Expecting a non NULL class");
     this->sys_handler = c->getSystemHandler();
+
     this->c = c;
     // Let's create variables for the object based by the class variables
     Class* current = c;
@@ -21,7 +22,9 @@ Object::Object(Class* c)
         }
         current = current->parent;
     }
-    prev = sys_handler->getRootScope();
+
+    if (this->sys_handler != NULL)
+        prev = sys_handler->getRootScope();
     
 }
 

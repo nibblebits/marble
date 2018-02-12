@@ -259,11 +259,6 @@ void Interpreter::run(const char* code, PosInfo posInfo)
     {
         logger.error("System threw a " + ex.getObject()->getClass()->name + " exception" , current_node->posInfo);
     }
-    catch(...)
-    {
-        logger.error("System through an unknown exception. This is likely a bug in the interpreter.", current_node->posInfo);
-        throw;
-    }
 }
 
 

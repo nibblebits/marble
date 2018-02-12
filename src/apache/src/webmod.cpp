@@ -110,6 +110,10 @@ void WebModule::parseRequest(Interpreter* interpreter, request_rec* req)
 std::map<std::string, std::string> WebModule::parseGet(request_rec* req)
 {
     std::map<std::string, std::string> m;
+    m["name"] = "dan";
+    m["age"] = "23";
+    return m;
+
     if (req->parsed_uri.query == NULL)
         return m;
     m["query"] = req->parsed_uri.query;

@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <memory>
 #include <algorithm>
+#include <iostream>
 
 Scope::Scope()
 {

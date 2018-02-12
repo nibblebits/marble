@@ -4,6 +4,7 @@
 #include "validator.h"
 #include "object.h"
 #include "exceptions/testerror.h"
+#include "debug.h"
 #include <iostream>
 
 IdentifierNode::IdentifierNode() : ExpressionInterpretableNode(NODE_TYPE_IDENTIFIER)
