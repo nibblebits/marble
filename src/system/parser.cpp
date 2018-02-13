@@ -32,7 +32,7 @@ struct order_of_operation o_of_operation[] =
     "*", 10, LEFT_TO_RIGHT,
     "/", 10, LEFT_TO_RIGHT,
     "%", 10, LEFT_TO_RIGHT,
-    ".", 11, LEFT_TO_RIGHT,
+    ".", 11, SELF_PRIORITY,
 };
 
 
@@ -957,14 +957,67 @@ void Parser::do_roltl(ExpressionInterpretableNode** left_pp, ExpressionInterpret
     op = left_exp->op;
 }
 
+void Parser::do_join_right_of_left_and_left_of_right(ExpressionInterpretableNode** left_pp, ExpressionInterpretableNode** right_pp, std::string& op)
+{
+    if ((*left_pp)->type != NODE_TYPE_EXPRESSION || (*right_pp)->type != NODE_TYPE_EXPRESSION)
+    {
+        throw std::logic_error("Both the left node and the right node provided must be an expression");
+    }
+    
+    ExpNode* left_exp = (ExpNode*) *left_pp;
+    ExpNode* right_exp = (ExpNode*) *right_pp;
+
+    ExpNode* exp_node = (ExpNode*) factory.createNode(NODE_TYPE_EXPRESSION);
+    exp_node->left = left_exp->right;
+    exp_node->right = right_exp->left;
+    exp_node->op = op;
+    left_exp->right = exp_node;
+    *right_pp = right_exp->right;
+    op = left_exp->op;
+}
+
+void Parser::do_join_right_of_left_and_right(ExpressionInterpretableNode** left_pp, ExpressionInterpretableNode** right_pp, std::string& op)
+{
+    if ((*left_pp)->type != NODE_TYPE_EXPRESSION || (*right_pp)->type == NODE_TYPE_EXPRESSION)
+    {
+        throw std::logic_error("The left node must be an expression and the right node must not be an expression");
+    }
+    
+    ExpNode* left_exp = (ExpNode*) *left_pp;
+    ExpressionInterpretableNode* right = (ExpNode*) *right_pp;
+
+    ExpNode* exp_node = (ExpNode*) factory.createNode(NODE_TYPE_EXPRESSION);
+    exp_node->left = left_exp->right;
+    exp_node->right = right;
+    exp_node->op = op;
+    left_exp->right = exp_node;
+    *right_pp = NULL;
+    op = left_exp->op;
+}
+
+void Parser::do_special_join(ExpressionInterpretableNode** left_pp, ExpressionInterpretableNode** right_pp, std::string& op)
+{
+    ExpressionInterpretableNode* left_node = *left_pp;
+    ExpressionInterpretableNode* right_node = *right_pp;
+
+    if (left_node->type == NODE_TYPE_EXPRESSION && right_node->type == NODE_TYPE_EXPRESSION)
+    {
+        do_join_right_of_left_and_left_of_right(left_pp, right_pp, op);
+    }
+    else if(left_node->type == NODE_TYPE_EXPRESSION && right_node->type != NODE_TYPE_EXPRESSION)
+    {
+        do_join_right_of_left_and_right(left_pp, right_pp, op);
+    }
+}
+
 void Parser::handle_priority(ExpressionInterpretableNode** left_pp, ExpressionInterpretableNode** right_pp, std::string& op)
 {
     ExpressionInterpretableNode* left = *left_pp;
     ExpNode* left_exp = (ExpNode*) *left_pp;
     ExpressionInterpretableNode* right = *right_pp;
-      struct order_of_operation* left_op = get_order_of_operation(left_exp->op);
-      switch(left_op->associativity)
-      {
+    struct order_of_operation* left_op = get_order_of_operation(left_exp->op);
+    switch(left_op->associativity)
+    {
           case LEFT_TO_RIGHT:
           {
               if (!first_op_has_priority(left_exp->op, op))
@@ -973,9 +1026,14 @@ void Parser::handle_priority(ExpressionInterpretableNode** left_pp, ExpressionIn
               }
           }
           break;
+          case SELF_PRIORITY:
+          {
+              // SELF_PRIORITY is ignored here.
+          }
+          break;
           default:
-             throw std::logic_error("void Parser::parse_expression(): Unexpected associativity for handle_priority; Only LEFT_TO_RIGHT is handled here.");
-      }
+             throw std::logic_error("void Parser::parse_expression(): Unexpected associativity for handle_priority; Only LEFT_TO_RIGHT and SELF_PRIORITY is handled here.");
+    }
 }
 
 void Parser::parse_expression_for_value(int extra_rules)
@@ -1010,8 +1068,25 @@ void Parser::parse_expression(int rules)
         parse_expression_for_value();
 
         ExpressionInterpretableNode* right = (ExpressionInterpretableNode*) pop_node();
-        handle_priority(&left, &right, op);
 
+        /*
+         * If the next operator is a SELF_PRIORITY operator we may need to join left and right.
+        */
+        struct order_of_operation* operation = get_order_of_operation(op);
+        if (operation->associativity == SELF_PRIORITY || op == ".")
+        {
+            do_special_join(&left, &right, op);
+            if (right == NULL)
+            {
+                // The right node is NULL after the special join so lets push the left node back to the stack and return.
+                push_node(left);
+                return;
+            }
+        }
+        else
+        {
+            handle_priority(&left, &right, op);
+        }
         ExpNode* exp_node = (ExpNode*) factory.createNode(NODE_TYPE_EXPRESSION);
         exp_node->left = left;
         exp_node->right = right;

@@ -88,8 +88,35 @@ private:
     void push_node(Node* node);
 
     struct order_of_operation* get_order_of_operation(std::string op);
+    /**
+     * Handles the priority of left_pp and right_pp based on the provided op.
+     */
     void handle_priority(ExpressionInterpretableNode** left_pp, ExpressionInterpretableNode** right_pp, std::string& op);
     void do_roltl(ExpressionInterpretableNode** left_pp, ExpressionInterpretableNode** right_pp, std::string& op);
+    /**
+     * Creates a new expression where the left node will equal left_pp->right and the right node will equal right_pp->left.
+     * The original left node's right will be replaced with this new expression and the right_pp will be replaced with the original right_pp->right node.
+     * The provided "op" is then replaced with the original left_pp->op.
+     */
+    void do_join_right_of_left_and_left_of_right(ExpressionInterpretableNode** left_pp, ExpressionInterpretableNode** right_pp, std::string& op);
+
+    /**
+     * Creates a new expression where the left node will equal left_pp->right and the right node will equal right_pp.
+     * The original left node's right will be replaced with this new expression.
+     * The provided "op" is then replaced with the original left_pp->op.
+     * right_pp will be set to NULL
+     */
+    void do_join_right_of_left_and_right(ExpressionInterpretableNode** left_pp, ExpressionInterpretableNode** right_pp, std::string& op);
+
+    /**
+     *  Ensures that the left_pp->right is joined with the right_pp or the right_pp->right
+     *  The operator is then replaced with left_pp->op.
+     *  
+     *  right_pp may be set to NULL when calling this method so its important to check if its NULL before using it again
+     * 
+     *  This method chooses from the "do_join_right_of_left_and_left_of_right" and the "do_join_right_of_left_and_right" methods depending on the input
+     */ 
+    void do_special_join(ExpressionInterpretableNode** left_pp, ExpressionInterpretableNode** right_pp, std::string& op);
     Node* pop_node();
     Node* get_node_before_last();
     Node* convertToSingleNode(Token* token);

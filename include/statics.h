@@ -115,7 +115,7 @@ enum
 {
     LEFT_TO_RIGHT,
     RIGHT_TO_LEFT,
-    NON_ASSOCIATIVE
+    SELF_PRIORITY
 };
 
 
