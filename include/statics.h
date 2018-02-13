@@ -134,7 +134,6 @@ enum
 {
     RULE_PARSE_CASTING = 0x01,
     RULE_PARSE_ARRAY = 0x02,
-    RULE_PARSE_EXPRESSIONS_OBJECT_ACCESS_ONLY = 0x04
 };
 
 // The possible types of breaking

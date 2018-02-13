@@ -469,7 +469,7 @@ void Parser::parse_value(int rules)
         token = next();
         if (!token->isSymbol(")"))
         {
-            parse_error("Expecting an expression terminator for the given expression");
+            parse_error("Expecting an expression terminator for the given expression: " + token->value);
         }
 
         node = pop_node();
@@ -529,7 +529,7 @@ void Parser::parse_value(int rules)
 void Parser::parse_cast(Node* casting_to)
 {   
     // Ok now lets get what we are casting from
-    parse_expression_for_value(RULE_PARSE_EXPRESSIONS_OBJECT_ACCESS_ONLY);
+    parse_value();
     ExpressionInterpretableNode* to_cast = (ExpressionInterpretableNode*) pop_node();
     
     CastNode* node = (CastNode*) factory.createNode(NODE_TYPE_CAST);
@@ -1050,12 +1050,6 @@ void Parser::parse_expression(int rules)
         
     if (peeked_token->isOperator())
     {
-        if (rules & RULE_PARSE_EXPRESSIONS_OBJECT_ACCESS_ONLY && peeked_token->value != ".")
-        {
-            // We are to parse object expressions only so as it does not apply lets return
-            return;
-        }
-        
         // Lets remove the operator from the token stream
         std::string op = next()->value;
 
@@ -1106,12 +1100,6 @@ void Parser::parse_expression_part(int rules)
     {
         if (peeked_token->isOperator())
         {
-            if (rules & RULE_PARSE_EXPRESSIONS_OBJECT_ACCESS_ONLY && peeked_token->value != ".")
-            {
-                // We are only allowed to do object access expressions here so lets finish up
-                push_node(node);
-                return;
-            }
             // We have a right part of the expression "l + r"
             std::string op = next()->value;
             struct order_of_operation* operation = get_order_of_operation(op);
