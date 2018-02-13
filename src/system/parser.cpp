@@ -462,14 +462,14 @@ void Parser::parse_value(int rules)
     {
         // Let's get rid of the "(" symbol ready for parse_expression
         next();
-        // Yes we have an expression lets process it
-        parse_expression(rules);
+        // Yes we have an expression lets process it. We also want to clear the RULE_PARSE_EXPRESSIONS_OBJECT_ACCESS_ONLY flag as this is a new expression.
+        parse_expression(rules &= ~RULE_PARSE_EXPRESSIONS_OBJECT_ACCESS_ONLY);
 
         // Now we must get rid of the expression terminator ")"
         token = next();
         if (!token->isSymbol(")"))
         {
-            parse_error("Expecting an expression terminator for the given expression: " + token->value);
+            parse_error("Expecting an expression terminator for the given expression");
         }
 
         node = pop_node();
@@ -529,7 +529,7 @@ void Parser::parse_value(int rules)
 void Parser::parse_cast(Node* casting_to)
 {   
     // Ok now lets get what we are casting from
-    parse_value();
+    parse_expression_for_value(RULE_PARSE_EXPRESSIONS_OBJECT_ACCESS_ONLY);
     ExpressionInterpretableNode* to_cast = (ExpressionInterpretableNode*) pop_node();
     
     CastNode* node = (CastNode*) factory.createNode(NODE_TYPE_CAST);
@@ -1050,6 +1050,12 @@ void Parser::parse_expression(int rules)
         
     if (peeked_token->isOperator())
     {
+        if (rules & RULE_PARSE_EXPRESSIONS_OBJECT_ACCESS_ONLY && peeked_token->value != ".")
+        {
+            // We are to parse object expressions only so as it does not apply lets return
+            return;
+        }
+        
         // Lets remove the operator from the token stream
         std::string op = next()->value;
 
@@ -1100,6 +1106,12 @@ void Parser::parse_expression_part(int rules)
     {
         if (peeked_token->isOperator())
         {
+            if (rules & RULE_PARSE_EXPRESSIONS_OBJECT_ACCESS_ONLY && peeked_token->value != ".")
+            {
+                // We are only allowed to do object access expressions here so lets finish up
+                push_node(node);
+                return;
+            }
             // We have a right part of the expression "l + r"
             std::string op = next()->value;
             struct order_of_operation* operation = get_order_of_operation(op);
