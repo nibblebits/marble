@@ -39,7 +39,6 @@ ModuleSystem::ModuleSystem() : SystemHandler(SYSTEM_HANDLER_MODULE_SYSTEM, NULL,
 {
     this->setLogHandler(CoutLogHandler);
     ClassSystem* classSystem = getClassSystem();
-    classSystem->setSystemHandler(this);
     Class* c = Interpreter::registerDefaultObjectClass(getClassSystem(), "ModuleObject");
     classSystem->setDefaultObjectDescriptor(std::make_shared<Object>(c));
     classSystem->setDefaultBaseClass(c);
