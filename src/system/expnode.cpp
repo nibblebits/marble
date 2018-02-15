@@ -120,6 +120,23 @@ Value ExpNode::interpret(Interpreter* interpreter)
     }
 
     Value left_v = this->left->interpret(interpreter);
+
+    /* Logical operators have rules for when we should continue or not */
+    if (this->op == "&&" || this->op == "||")
+    {
+        if (this->op == "||")
+        {
+            // If our left expression is true then we can just return left_v here as the expression is true.
+            if (left_v.dvalue)
+                return left_v;
+        }
+        else
+        {
+            // If the left expression is false then we should not continue to the next expression as this is an AND operator
+            if (!left_v.dvalue)
+                return left_v;
+        }
+    }
     if (this->op == ".")
     {
         // Left_v has the object to access
