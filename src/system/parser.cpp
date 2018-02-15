@@ -32,7 +32,7 @@ struct order_of_operation o_of_operation[] =
     "*", 10, LEFT_TO_RIGHT,
     "/", 10, LEFT_TO_RIGHT,
     "%", 10, LEFT_TO_RIGHT,
-    ".", 11, SELF_PRIORITY,
+    ".", 11, LEFT_TO_RIGHT,
 };
 
 
@@ -462,7 +462,7 @@ void Parser::parse_value(int rules)
     {
         // Let's get rid of the "(" symbol ready for parse_expression
         next();
-        // Yes we have an expression lets process it. We also want to clear the RULE_PARSE_EXPRESSIONS_OBJECT_ACCESS_ONLY flag as this is a new expression.
+        // Yes we have an expression lets process it. We also want to clear the RULE_PARSE_EXPRESSIONS_OBJECT_ACCESS_ONLY flag as this is a new expression
         parse_expression(rules &= ~RULE_PARSE_EXPRESSIONS_OBJECT_ACCESS_ONLY);
 
         // Now we must get rid of the expression terminator ")"
@@ -892,7 +892,7 @@ void Parser::parse_semicolon()
     Token* token = next();
     if (token == NULL || !token->isSymbol(";"))
     {
-        parse_error("Expecting a semicolon");
+        parse_error("Expecting a semicolon but " + (token == NULL ? "nothing" : token->value) + " was provided");
     }
 }
 
@@ -941,101 +941,6 @@ struct order_of_operation* Parser::get_order_of_operation(std::string op)
     return 0;
 }
 
-
-void Parser::do_roltl(ExpressionInterpretableNode** left_pp, ExpressionInterpretableNode** right_pp, std::string& op)
-{
-    ExpNode* left_exp = (ExpNode*) *left_pp;
-    ExpressionInterpretableNode* right = *right_pp;
-
-    ExpressionInterpretableNode* right_of_left = left_exp->right;
-    ExpNode* exp_node = (ExpNode*) factory.createNode(NODE_TYPE_EXPRESSION);
-    exp_node->left = right_of_left;
-    exp_node->right = right;
-    exp_node->op = op;
-    *left_pp = left_exp->left;
-    *right_pp = exp_node;
-    op = left_exp->op;
-}
-
-void Parser::do_join_right_of_left_and_left_of_right(ExpressionInterpretableNode** left_pp, ExpressionInterpretableNode** right_pp, std::string& op)
-{
-    if ((*left_pp)->type != NODE_TYPE_EXPRESSION || (*right_pp)->type != NODE_TYPE_EXPRESSION)
-    {
-        throw std::logic_error("Both the left node and the right node provided must be an expression");
-    }
-    
-    ExpNode* left_exp = (ExpNode*) *left_pp;
-    ExpNode* right_exp = (ExpNode*) *right_pp;
-
-    ExpNode* exp_node = (ExpNode*) factory.createNode(NODE_TYPE_EXPRESSION);
-    exp_node->left = left_exp->right;
-    exp_node->right = right_exp->left;
-    exp_node->op = op;
-    left_exp->right = exp_node;
-    *right_pp = right_exp->right;
-    op = left_exp->op;
-}
-
-void Parser::do_join_right_of_left_and_right(ExpressionInterpretableNode** left_pp, ExpressionInterpretableNode** right_pp, std::string& op)
-{
-    if ((*left_pp)->type != NODE_TYPE_EXPRESSION || (*right_pp)->type == NODE_TYPE_EXPRESSION)
-    {
-        throw std::logic_error("The left node must be an expression and the right node must not be an expression");
-    }
-    
-    ExpNode* left_exp = (ExpNode*) *left_pp;
-    ExpressionInterpretableNode* right = (ExpNode*) *right_pp;
-
-    ExpNode* exp_node = (ExpNode*) factory.createNode(NODE_TYPE_EXPRESSION);
-    exp_node->left = left_exp->right;
-    exp_node->right = right;
-    exp_node->op = op;
-    left_exp->right = exp_node;
-    *right_pp = NULL;
-    op = left_exp->op;
-}
-
-void Parser::do_special_join(ExpressionInterpretableNode** left_pp, ExpressionInterpretableNode** right_pp, std::string& op)
-{
-    ExpressionInterpretableNode* left_node = *left_pp;
-    ExpressionInterpretableNode* right_node = *right_pp;
-
-    if (left_node->type == NODE_TYPE_EXPRESSION && right_node->type == NODE_TYPE_EXPRESSION)
-    {
-        do_join_right_of_left_and_left_of_right(left_pp, right_pp, op);
-    }
-    else if(left_node->type == NODE_TYPE_EXPRESSION && right_node->type != NODE_TYPE_EXPRESSION)
-    {
-        do_join_right_of_left_and_right(left_pp, right_pp, op);
-    }
-}
-
-void Parser::handle_priority(ExpressionInterpretableNode** left_pp, ExpressionInterpretableNode** right_pp, std::string& op)
-{
-    ExpressionInterpretableNode* left = *left_pp;
-    ExpNode* left_exp = (ExpNode*) *left_pp;
-    ExpressionInterpretableNode* right = *right_pp;
-    struct order_of_operation* left_op = get_order_of_operation(left_exp->op);
-    switch(left_op->associativity)
-    {
-          case LEFT_TO_RIGHT:
-          {
-              if (!first_op_has_priority(left_exp->op, op))
-              {
-                do_roltl(left_pp, right_pp, op);
-              }
-          }
-          break;
-          case SELF_PRIORITY:
-          {
-              // SELF_PRIORITY is ignored here.
-          }
-          break;
-          default:
-             throw std::logic_error("void Parser::parse_expression(): Unexpected associativity for handle_priority; Only LEFT_TO_RIGHT and SELF_PRIORITY is handled here.");
-    }
-}
-
 void Parser::parse_expression_for_value(int extra_rules)
 {
     parse_expression(RULE_PARSE_CASTING | RULE_PARSE_ARRAY | extra_rules);
@@ -1065,32 +970,30 @@ void Parser::parse_expression(int rules)
         ExpNode* left_exp = (ExpNode*)(left);
 
         // We got more to go!
-        parse_expression_for_value();
+        parse_expression_part();
 
         ExpressionInterpretableNode* right = (ExpressionInterpretableNode*) pop_node();
 
-        /*
-         * If the next operator is a SELF_PRIORITY operator we may need to join left and right.
-        */
-        struct order_of_operation* operation = get_order_of_operation(op);
-        if (operation->associativity == SELF_PRIORITY || op == ".")
-        {
-            do_special_join(&left, &right, op);
-            if (right == NULL)
-            {
-                // The right node is NULL after the special join so lets push the left node back to the stack and return.
-                push_node(left);
-                return;
-            }
-        }
-        else
-        {
-            handle_priority(&left, &right, op);
-        }
         ExpNode* exp_node = (ExpNode*) factory.createNode(NODE_TYPE_EXPRESSION);
         exp_node->left = left;
         exp_node->right = right;
         exp_node->op = op;
+
+        /**
+         * This is not the best solution for dealing with logical operators and really it should rely entirely on the array
+         * but this solution is the best I could come up with for now.
+         */
+        if (peek()->isLogicalOperator())
+        {
+            op = next()->value;
+            parse_expression();
+            ExpNode* new_exp_node = (ExpNode*) factory.createNode(NODE_TYPE_EXPRESSION);
+            new_exp_node->op = op;
+            new_exp_node->left = exp_node;
+            new_exp_node->right = (ExpressionInterpretableNode*) pop_node();
+            exp_node = new_exp_node;
+        }
+
         push_node(exp_node);
     }
 }
@@ -1106,24 +1009,47 @@ void Parser::parse_expression_part(int rules)
     {
         if (peeked_token->isOperator())
         {
-            if (rules & RULE_PARSE_EXPRESSIONS_OBJECT_ACCESS_ONLY && peeked_token->value != ".")
+
+            /**
+             * We don't want to deal with logical operators here so lets push the current node and return
+             */
+            if (peeked_token->isLogicalOperator())
             {
-                // We are only allowed to do object access expressions here so lets finish up
                 push_node(node);
                 return;
             }
+
             // We have a right part of the expression "l + r"
             std::string op = next()->value;
+
             struct order_of_operation* operation = get_order_of_operation(op);
-            // Left to right associativity should be treated as an expression a = 5 * 5, a = (5 * 5)
+            // Right to left associativity should be treated as an expression a = 5 * 5, a = (5 * 5)
             if (operation->associativity == RIGHT_TO_LEFT)
             {
-                parse_expression_for_value();
+                parse_expression_for_value(rules);
             } 
             else 
             {
-                // We are non RIGHT_TO_LEFT associativity therefore we expect only a value
-                parse_value(rules);
+                if (peek(1)->isOperator())
+                {
+                    std::string future_op = peek(1)->value;
+                    if (!first_op_has_priority(op, future_op))
+                    {
+                        std::cout << op << " has less priority than " << future_op << std::endl;
+                        parse_expression_part(rules);
+                    }
+                    else
+                    {
+                        std::cout << op << " has more priority than " << future_op << std::endl;
+                        parse_value(rules);
+                    }
+
+                }
+                else
+                {
+                    // We are non RIGHT_TO_LEFT associativity therefore we expect only a value
+                    parse_value(rules);
+                }
             }
             ExpressionInterpretableNode* exp_right = (ExpressionInterpretableNode*) pop_node();
             ExpNode* exp_node = (ExpNode*) factory.createNode(NODE_TYPE_EXPRESSION);
@@ -1424,6 +1350,7 @@ Node* Parser::parse(Token* root_token)
     {
         global_parse_next();
     }
+
     return this->root_node;
 }
 

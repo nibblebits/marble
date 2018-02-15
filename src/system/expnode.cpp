@@ -175,7 +175,7 @@ void ExpNode::test_obj_access(Validator* validator)
      * to check for the string on the left operand. "obj.var" The left operand is "obj" it would basically be saying I expect the object to be a string for the expression: 
      * "string str = obj.var;" This clearly does not make sense what we really want is to expect that the variable "var" of the object "obj" is a string.*/
     
-    Debug::PrintValueForNode(this);
+
     // Save the validators state and give us a blank state with no requirements. See comment above.
     validator->save();
     left->test(validator);

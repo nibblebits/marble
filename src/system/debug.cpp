@@ -105,6 +105,11 @@ void Debug::PrintValueForNode(Node* value_node, int tabbing)
 	        std::cout << "KEYWORD NODE: " << keyword_node->value << std::endl;
 	   
 	    }
+        else if(value_node->type == NODE_TYPE_STRING)
+        {
+            StringNode* string_node = (StringNode*) value_node;
+            std::cout << "STRING NODE: " << string_node->value << std::endl;
+        }
 	    else
 	    {
 	        OutputTabbing(tabbing);

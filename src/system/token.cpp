@@ -89,6 +89,11 @@ bool Token::isOperator()
     return getType() == TOKEN_TYPE_OPERATOR;
 }
 
+bool Token::isLogicalOperator()
+{
+    return isOperator("&&") || isOperator("||");
+}
+
 bool Token::isOperator(std::string value)
 {
     return getType() == TOKEN_TYPE_OPERATOR && getValue() == value;

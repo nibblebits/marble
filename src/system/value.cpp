@@ -2,6 +2,7 @@
 #include "array.h"
 #include "object.h"
 #include <stdexcept>
+
 Value::Value()
 {
     this->type = -1;
@@ -265,7 +266,7 @@ void Value::ensure_valid_type(int type, std::vector<int> valid_types)
             return;
     }
 
-    throw std::logic_error("void Value::ensure_valid_type(int type, std::vector<int> valid_types): Invalid type provided"); 
+    throw std::logic_error("void Value::ensure_valid_type(int type, std::vector<int> valid_types): Invalid type provided: " + std::to_string(type)); 
 }
 void Value::ensure_same_type(int type1, int type2)
 {

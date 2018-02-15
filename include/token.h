@@ -26,6 +26,7 @@ public:
     bool isKeyword();
     bool isKeyword(std::string value);
     bool isOperator();
+    bool isLogicalOperator();
     bool isOperator(std::string value);
     bool isNumber();
     bool isNumber(std::string value);
