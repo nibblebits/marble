@@ -462,8 +462,8 @@ void Parser::parse_value(int rules)
     {
         // Let's get rid of the "(" symbol ready for parse_expression
         next();
-        // Yes we have an expression lets process it. We also want to clear the RULE_PARSE_EXPRESSIONS_OBJECT_ACCESS_ONLY flag as this is a new expression
-        parse_expression(rules &= ~RULE_PARSE_EXPRESSIONS_OBJECT_ACCESS_ONLY);
+        // Yes we have an expression lets process it.
+        parse_expression(rules);
 
         // Now we must get rid of the expression terminator ")"
         token = next();
@@ -529,7 +529,7 @@ void Parser::parse_value(int rules)
 void Parser::parse_cast(Node* casting_to)
 {   
     // Ok now lets get what we are casting from
-    parse_expression_for_value(RULE_PARSE_EXPRESSIONS_OBJECT_ACCESS_ONLY);
+    parse_expression_for_value();
     ExpressionInterpretableNode* to_cast = (ExpressionInterpretableNode*) pop_node();
     
     CastNode* node = (CastNode*) factory.createNode(NODE_TYPE_CAST);
@@ -955,12 +955,6 @@ void Parser::parse_expression(int rules)
         
     if (peeked_token->isOperator())
     {
-        if (rules & RULE_PARSE_EXPRESSIONS_OBJECT_ACCESS_ONLY && peeked_token->value != ".")
-        {
-            // We are to parse object expressions only so as it does not apply lets return
-            return;
-        }
-        
         // Lets remove the operator from the token stream
         std::string op = next()->value;
 

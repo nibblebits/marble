@@ -11,6 +11,9 @@ Object::Object(Class* c)
         throw std::logic_error("Expecting a non NULL class");
     this->sys_handler = c->getSystemHandler();
 
+    if (this->sys_handler == NULL)
+        throw std::logic_error("Attempting to create an object for the class " + c->name + " but this class does not have a SystemHandler");
+
     this->c = c;
     // Let's create variables for the object based by the class variables
     Class* current = c;

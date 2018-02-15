@@ -35,14 +35,14 @@ void CoutLogHandler(Module* module, std::string message, LOG_TYPE log_type)
     std::cout << output_msg << std::endl;
 }
 
-ModuleSystem::ModuleSystem()
+ModuleSystem::ModuleSystem() : SystemHandler(SYSTEM_HANDLER_MODULE_SYSTEM, NULL, NULL)
 {
     this->setLogHandler(CoutLogHandler);
-    this->functionSystem = std::unique_ptr<FunctionSystem>(new FunctionSystem());
-    this->classSystem = std::unique_ptr<ClassSystem>(new ClassSystem());
+    ClassSystem* classSystem = getClassSystem();
+    classSystem->setSystemHandler(this);
     Class* c = Interpreter::registerDefaultObjectClass(getClassSystem(), "ModuleObject");
-    this->classSystem->setDefaultObjectDescriptor(std::make_shared<Object>(c));
-    this->classSystem->setDefaultBaseClass(c);
+    classSystem->setDefaultObjectDescriptor(std::make_shared<Object>(c));
+    classSystem->setDefaultBaseClass(c);
 }
 
 ModuleSystem::~ModuleSystem()
@@ -88,14 +88,4 @@ void ModuleSystem::setLogHandler(LOG_HANDLER_FUNCTION handler_func)
 void ModuleSystem::log(Module* module, std::string message, LOG_TYPE log_type)
 {
     this->log_handler(module, message, log_type);
-}
-
-FunctionSystem* ModuleSystem::getFunctionSystem()
-{
-    return this->functionSystem.get();
-}
-
-ClassSystem* ModuleSystem::getClassSystem()
-{
-    return this->classSystem.get();
 }
