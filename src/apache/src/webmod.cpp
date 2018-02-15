@@ -1,4 +1,5 @@
 #include "webmod.h"
+#include "apache_mod.h"
 #include "exceptions/systemexception.h"
 #include "misc.h"
 
@@ -8,6 +9,16 @@ WebModuleRequestArgumentsObject::WebModuleRequestArgumentsObject(Class* c) : Obj
 }
 
 WebModuleRequestArgumentsObject::~WebModuleRequestArgumentsObject()
+{
+
+}
+
+WebModulePOSTContentObject::WebModulePOSTContentObject(Class* c) : Object(c)
+{
+    
+}
+
+WebModulePOSTContentObject::~WebModulePOSTContentObject()
 {
 
 }
@@ -23,6 +34,8 @@ WebModuleObject::~WebModuleObject()
 
 }
 
+
+
 WebModule::WebModule() : Module("Web Module", MODULE_TYPE_MARBLE_LIBRARY)
 {
 
@@ -36,6 +49,8 @@ WebModule::~WebModule()
 void WebModule::Init()
 {
     log("Web Module initialised", LOG_LEVEL_NOTICE);
+
+    /* RequestArguments Class*/
     Class* c = this->getModuleSystem()->getClassSystem()->registerClass("RequestArguments");
     c->registerFunction("get", {VarType::fromString("string")}, VarType::fromString("string"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
         std::shared_ptr<WebModuleRequestArgumentsObject> args_obj = std::dynamic_pointer_cast<WebModuleRequestArgumentsObject>(object);
@@ -54,11 +69,31 @@ void WebModule::Init()
         return_value->type = VALUE_TYPE_NUMBER;
         return_value->dvalue = (args_obj->arguments.find(arguments[0].svalue) != args_obj->arguments.end());
     });
+    /* End of RequestArguments Class */
 
-    c->registerFunction("testing", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
-       
+
+    /* POSTContent class */
+    c = this->getModuleSystem()->getClassSystem()->registerClass("POSTContent");
+    c->registerFunction("get", {VarType::fromString("string")}, VarType::fromString("string"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+        std::shared_ptr<WebModulePOSTContentObject> post_obj = std::dynamic_pointer_cast<WebModulePOSTContentObject>(object);
+        return_value->type = VALUE_TYPE_STRING;
+
+        if (post_obj->content.find(arguments[0].svalue) == post_obj->content.end())
+        {
+            throw SystemException(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("InvalidIndexException"), {}));
+        }
+
+        return_value->svalue = post_obj->content[arguments[0].svalue];
     });
 
+    c->registerFunction("has", {VarType::fromString("string")}, VarType::fromString("number"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+        std::shared_ptr<WebModulePOSTContentObject> post_obj = std::dynamic_pointer_cast<WebModulePOSTContentObject>(object);
+        return_value->type = VALUE_TYPE_NUMBER;
+        return_value->dvalue = (post_obj->content.find(arguments[0].svalue) != post_obj->content.end());
+    });
+    /* End of POSTContent class */
+
+    /* Request class */
     c = this->getModuleSystem()->getClassSystem()->registerClass("Request");
     c->registerFunction("getUri", {}, VarType::fromString("string"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
         std::shared_ptr<WebModuleObject> web_mod_obj = std::dynamic_pointer_cast<WebModuleObject>(object);
@@ -78,11 +113,19 @@ void WebModule::Init()
         return_value->ovalue = web_mod_obj->request_arguments;
     });
 
+    c->registerFunction("getContent", {}, VarType::fromString("POSTContent"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+        std::shared_ptr<WebModuleObject> web_mod_obj = std::dynamic_pointer_cast<WebModuleObject>(object);
+        return_value->type = VALUE_TYPE_OBJECT;
+        return_value->ovalue = web_mod_obj->content;
+    });
+
     c->registerFunction("getRequesterIP", {}, VarType::fromString("string"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
         std::shared_ptr<WebModuleObject> web_mod_obj = std::dynamic_pointer_cast<WebModuleObject>(object);
         return_value->type = VALUE_TYPE_STRING;
         return_value->svalue = web_mod_obj->requester_ip;
     });
+
+    /* End of Request class */
 
 }
 
@@ -92,6 +135,7 @@ void WebModule::newInterpreter(Interpreter* interpreter)
     Scope* root_scope = interpreter->getRootScope();
     std::shared_ptr<WebModuleObject> object = std::make_shared<WebModuleObject>(this->getModuleSystem()->getClassSystem()->getClassByName("Request"));
     object->request_arguments = std::make_shared<WebModuleRequestArgumentsObject>(this->getModuleSystem()->getClassSystem()->getClassByName("RequestArguments"));
+    object->content = std::make_shared<WebModulePOSTContentObject>(this->getModuleSystem()->getClassSystem()->getClassByName("POSTContent"));
     root_scope->createVariable("Request", "Request", object);
 }
 
@@ -105,6 +149,25 @@ void WebModule::parseRequest(Interpreter* interpreter, request_rec* req)
     object->requester_ip = req->useragent_ip;
     object->request_method = req->method;
     object->request_arguments->arguments = parseGet(req);
+    object->content->content = parsePost(req);
+}
+
+std::map<std::string, std::string> WebModule::parsePost(request_rec* req)
+{
+    std::map<std::string, std::string> m;
+    keyValuePair* kvp = readPost(req);
+    if (kvp == NULL)
+        return m;
+
+     for (int i = 0; &kvp[i]; i++) {
+        if (kvp[i].key) {
+            m[kvp[i].key] = (kvp[i].value ? kvp[i].value : "");
+        }
+        else
+            break;
+     }
+
+     return m;
 }
 
 std::map<std::string, std::string> WebModule::parseGet(request_rec* req)

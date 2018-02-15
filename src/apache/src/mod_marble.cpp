@@ -27,28 +27,12 @@
  *    $ lynx -mime_header http://localhost/hello
  */ 
 
-#include "httpd.h"
-#include "http_config.h"
-#include "http_core.h"
-#include "http_protocol.h"
-#include "http_request.h"
-
-#include "apr_strings.h"
-#include "apr_network_io.h"
-#include "apr_md5.h"
-#include "apr_sha1.h"
-#include "apr_hash.h"
-#include "apr_base64.h"
-#include "apr_dbd.h"
-#include <apr_file_info.h>
-#include <apr_file_io.h>
-#include <apr_tables.h>
 
 #include <string>
 #include <vector>
 #include <stdlib.h>
 
-#include "ap_config.h"
+#include "apache_mod.h"
 #include "interpreter.h"
 #include "webmod.h"
 // request handler example
@@ -121,6 +105,35 @@ std::vector<std::string> split(std::string str, std::string delim)
         splits.push_back(str.substr(last_pos, str.size()-1));
         
     return splits;
+}
+
+
+
+
+keyValuePair *readPost(request_rec *r) {
+    apr_array_header_t *pairs = NULL;
+    apr_off_t len;
+    apr_size_t size;
+    int res;
+    int i = 0;
+    char *buffer;
+    keyValuePair *kvp;
+
+    res = ap_parse_form_data(r, NULL, &pairs, -1, HUGE_STRING_LEN);
+    if (res != OK || !pairs) return NULL; /* Return NULL if we failed or if there are is no POST data */
+    kvp = (keyValuePair*) apr_pcalloc((apr_pool_t*) r->pool, sizeof(keyValuePair) * (pairs->nelts + 1));
+    while (pairs && !apr_is_empty_array(pairs)) {
+        ap_form_pair_t *pair = (ap_form_pair_t *) apr_array_pop(pairs);
+        apr_brigade_length(pair->value, 1, &len);
+        size = (apr_size_t) len;
+        buffer = (char*)apr_palloc(r->pool, size + 1);
+        apr_brigade_flatten(pair->value, buffer, &size);
+        buffer[len] = 0;
+        kvp[i].key = apr_pstrdup(r->pool, pair->name);
+        kvp[i].value = buffer;
+        i++;
+    }
+    return kvp;
 }
 
 static bool valid_filename(std::string filename)

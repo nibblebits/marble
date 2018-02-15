@@ -19,6 +19,16 @@ public:
     std::map<std::string, std::string> arguments;
 };
 
+class WebModulePOSTContentObject : public Object
+{
+public:
+    WebModulePOSTContentObject(Class* c);
+    virtual ~WebModulePOSTContentObject();
+
+    std::map<std::string, std::string> content;
+};
+
+
 class WebModuleObject : public Object
 {
 public:
@@ -28,6 +38,7 @@ public:
     std::string request_uri;
     std::string requester_ip;
     std::string request_method;
+    std::shared_ptr<WebModulePOSTContentObject> content;
     std::shared_ptr<WebModuleRequestArgumentsObject> request_arguments;
 };
 
@@ -39,6 +50,7 @@ public:
     void Init();
     void newInterpreter(Interpreter* interpreter);
     void parseRequest(Interpreter* interpreter, request_rec* req);
+    std::map<std::string, std::string> parsePost(request_rec* req);
     std::map<std::string, std::string> parseGet(request_rec* req);
 private:
 };
