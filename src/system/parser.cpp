@@ -964,7 +964,7 @@ void Parser::parse_expression(int rules)
         ExpNode* left_exp = (ExpNode*)(left);
 
         // We got more to go!
-        parse_expression_part();
+        parse_expression();
 
         ExpressionInterpretableNode* right = (ExpressionInterpretableNode*) pop_node();
 
@@ -988,6 +988,7 @@ void Parser::parse_expression(int rules)
             exp_node = new_exp_node;
         }
 
+        Debug::PrintValueForNode(exp_node);
         push_node(exp_node);
     }
 }
@@ -1009,8 +1010,8 @@ void Parser::parse_expression_part(int rules)
              */
             if (peeked_token->isLogicalOperator())
             {
-                push_node(node);
-                return;
+            //    push_node(node);
+              //  return;
             }
 
             // We have a right part of the expression "l + r"
@@ -1027,7 +1028,7 @@ void Parser::parse_expression_part(int rules)
                 if (peek(1)->isOperator())
                 {
                     std::string future_op = peek(1)->value;
-                    if (!first_op_has_priority(op, future_op))
+                    if ((op == future_op) || !first_op_has_priority(op, future_op))
                     {
                         std::cout << op << " has less priority than " << future_op << std::endl;
                         parse_expression_part(rules);

@@ -185,6 +185,7 @@ static int marble_handler(request_rec *req)
     if (first_run)
     {
         moduleSystem.loadModule("/usr/lib/marble/marble_iomod.so");
+        moduleSystem.loadModule("/usr/lib/marble/marble_timemod.so");
         webModule = new WebModule();
         moduleSystem.addModule(webModule);
         first_run = false;
