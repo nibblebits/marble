@@ -4,35 +4,35 @@
 #include <iostream>
 struct order_of_operation o_of_operation[] =
 {
-    "=", 0, RIGHT_TO_LEFT,
-    "+=", 0, RIGHT_TO_LEFT,
-    "-=", 0, RIGHT_TO_LEFT,
-    "*=", 0, RIGHT_TO_LEFT,
-    "/=", 0, RIGHT_TO_LEFT,
-    "%=", 0, RIGHT_TO_LEFT,
-    "^=", 0, RIGHT_TO_LEFT,
-    "&=", 0, RIGHT_TO_LEFT,
-    "<<=", 0, RIGHT_TO_LEFT,
-    ">>=", 0, RIGHT_TO_LEFT,
-    "||", 1, LEFT_TO_RIGHT,
-    "&&", 2, LEFT_TO_RIGHT,
-    "|", 3, LEFT_TO_RIGHT,
-    "^", 4, LEFT_TO_RIGHT,
-    "&", 5, LEFT_TO_RIGHT,
-    "==", 6, LEFT_TO_RIGHT,
-    "!=", 6, LEFT_TO_RIGHT,
-    "<", 7, LEFT_TO_RIGHT,
-    "<=", 7, LEFT_TO_RIGHT,
-    ">", 7, LEFT_TO_RIGHT,
-    ">=", 7, LEFT_TO_RIGHT,
-    "<<", 8, LEFT_TO_RIGHT,
-    ">>", 8, LEFT_TO_RIGHT,
-    "+", 9, LEFT_TO_RIGHT,
-    "-", 9, LEFT_TO_RIGHT,
-    "*", 10, LEFT_TO_RIGHT,
-    "/", 10, LEFT_TO_RIGHT,
-    "%", 10, LEFT_TO_RIGHT,
-    ".", 11, LEFT_TO_RIGHT,
+    "=", 14, RIGHT_TO_LEFT,
+    "+=", 14, RIGHT_TO_LEFT,
+    "-=", 14, RIGHT_TO_LEFT,
+    "*=", 14, RIGHT_TO_LEFT,
+    "/=", 14, RIGHT_TO_LEFT,
+    "%=", 14, RIGHT_TO_LEFT,
+    "^=", 14, RIGHT_TO_LEFT,
+    "&=", 14, RIGHT_TO_LEFT,
+    "<<=", 14, RIGHT_TO_LEFT,
+    ">>=", 14, RIGHT_TO_LEFT,
+    "||", 12, LEFT_TO_RIGHT,
+    "&&", 11, LEFT_TO_RIGHT,
+    "|", 10, LEFT_TO_RIGHT,
+    "^", 9, LEFT_TO_RIGHT,
+    "&", 8, LEFT_TO_RIGHT,
+    "==", 7, LEFT_TO_RIGHT,
+    "!=", 7, LEFT_TO_RIGHT,
+    "<", 6, LEFT_TO_RIGHT,
+    "<=", 6, LEFT_TO_RIGHT,
+    ">", 6, LEFT_TO_RIGHT,
+    ">=", 6, LEFT_TO_RIGHT,
+    "<<", 5, LEFT_TO_RIGHT,
+    ">>", 5, LEFT_TO_RIGHT,
+    "+", 4, LEFT_TO_RIGHT,
+    "-", 4, LEFT_TO_RIGHT,
+    "*", 3, LEFT_TO_RIGHT,
+    "/", 3, LEFT_TO_RIGHT,
+    "%", 3, LEFT_TO_RIGHT,
+    ".", 1, LEFT_TO_RIGHT,
 };
 
 
@@ -211,7 +211,7 @@ bool Parser::first_op_has_priority(std::string op1, std::string op2)
     int op1_priority = get_priority_for_op(op1);
     int op2_priority = get_priority_for_op(op2);
 
-    return op1_priority >= op2_priority;
+    return op1_priority <= op2_priority;
 }
 
 int Parser::get_priority_for_op(std::string op)
@@ -946,51 +946,76 @@ void Parser::parse_expression_for_value(int extra_rules)
     parse_expression(RULE_PARSE_CASTING | RULE_PARSE_ARRAY | extra_rules);
 }
 
+void Parser::sort_priority(ExpressionInterpretableNode** left, ExpressionInterpretableNode** right, std::string new_op)
+{
+    ExpNode* left_exp = (ExpNode*) *left;
+    ExpressionInterpretableNode* right_node = (ExpressionInterpretableNode*) *right;
+
+    ExpressionInterpretableNode* new_left, *new_right;
+    if (right_node->type != NODE_TYPE_EXPRESSION)
+    {
+        new_left = left_exp->left;
+        new_right = factory.createExpNode(left_exp->right, right_node, new_op);
+    }
+    else
+    {
+        ExpNode* right_exp = (ExpNode*) right_node;
+        new_left = left_exp->left;
+        new_right = factory.createExpNode(left_exp->right, right_exp->left, new_op);
+        new_right = factory.createExpNode(new_right, right_exp->right, right_exp->op);
+    }
+
+    *left = new_left;
+    *right = new_right;
+}
+
+void Parser::handle_expression_next(ExpNode* last_exp, int rules)
+{
+    ExpressionInterpretableNode* first_node = last_exp;
+    ExpNode* first_exp_node = last_exp;
+    std::string fo = first_exp_node->op;
+    std::string so = next()->value;
+    std::string op = so;
+    // Let's parse the next expression
+    parse_expression_part(rules);
+    ExpressionInterpretableNode* second_node = (ExpressionInterpretableNode*) pop_node();
+    if (!first_op_has_priority(fo, so))
+    {
+        sort_priority(&first_node, &second_node, so);
+        op = fo;
+    }
+
+    ExpressionInterpretableNode* exp_node = factory.createExpNode(first_node, second_node, op);
+    push_node(exp_node);
+}
 void Parser::parse_expression(int rules)
 {
     parse_expression_part(rules);
-    Token* peeked_token = peek();
-    if (peeked_token == NULL)
+    if (peek() == NULL)
         return;
-        
-    if (peeked_token->isOperator())
+
+    ExpNode* last_exp = (ExpNode*) pop_node();
+    ExpNode* first_exp = last_exp;
+
+    if (peek()->isOperator())
     {
-        // Lets remove the operator from the token stream
-        std::string op = next()->value;
-
-        // We now need the last expression as it needs to become our left parameter
-        ExpressionInterpretableNode* left = (ExpressionInterpretableNode*) pop_node();
-
-        ExpNode* left_exp = (ExpNode*)(left);
-
-        // We got more to go!
-        parse_expression();
-
-        ExpressionInterpretableNode* right = (ExpressionInterpretableNode*) pop_node();
-
-        ExpNode* exp_node = (ExpNode*) factory.createNode(NODE_TYPE_EXPRESSION);
-        exp_node->left = left;
-        exp_node->right = right;
-        exp_node->op = op;
-
-        /**
-         * This is not the best solution for dealing with logical operators and really it should rely entirely on the array
-         * but this solution is the best I could come up with for now.
-         */
-        if (peek()->isLogicalOperator())
-        {
-            op = next()->value;
-            parse_expression();
-            ExpNode* new_exp_node = (ExpNode*) factory.createNode(NODE_TYPE_EXPRESSION);
-            new_exp_node->op = op;
-            new_exp_node->left = exp_node;
-            new_exp_node->right = (ExpressionInterpretableNode*) pop_node();
-            exp_node = new_exp_node;
-        }
-
-        Debug::PrintValueForNode(exp_node);
-        push_node(exp_node);
+        handle_expression_next(last_exp, rules);
+        last_exp = (ExpNode*) pop_node();
+        first_exp = last_exp;
     }
+
+    while (peek()->isOperator())
+    {
+        handle_expression_next((ExpNode*) last_exp->right, rules);
+        last_exp->right = (ExpressionInterpretableNode*) pop_node();
+        last_exp = (ExpNode*) last_exp->right; 
+    }
+
+    push_node(first_exp);
+
+    Node* node = pop_node();
+    Debug::PrintValueForNode(node);
+    push_node(node);
 }
 
 void Parser::parse_expression_part(int rules)
@@ -1004,53 +1029,10 @@ void Parser::parse_expression_part(int rules)
     {
         if (peeked_token->isOperator())
         {
-
-            /**
-             * We don't want to deal with logical operators here so lets push the current node and return
-             */
-            if (peeked_token->isLogicalOperator())
-            {
-            //    push_node(node);
-              //  return;
-            }
-
-            // We have a right part of the expression "l + r"
             std::string op = next()->value;
-
-            struct order_of_operation* operation = get_order_of_operation(op);
-            // Right to left associativity should be treated as an expression a = 5 * 5, a = (5 * 5)
-            if (operation->associativity == RIGHT_TO_LEFT)
-            {
-                parse_expression_for_value(rules);
-            } 
-            else 
-            {
-                if (peek(1)->isOperator())
-                {
-                    std::string future_op = peek(1)->value;
-                    if ((op == future_op) || !first_op_has_priority(op, future_op))
-                    {
-                        std::cout << op << " has less priority than " << future_op << std::endl;
-                        parse_expression_part(rules);
-                    }
-                    else
-                    {
-                        std::cout << op << " has more priority than " << future_op << std::endl;
-                        parse_value(rules);
-                    }
-
-                }
-                else
-                {
-                    // We are non RIGHT_TO_LEFT associativity therefore we expect only a value
-                    parse_value(rules);
-                }
-            }
+            parse_value(rules);
             ExpressionInterpretableNode* exp_right = (ExpressionInterpretableNode*) pop_node();
-            ExpNode* exp_node = (ExpNode*) factory.createNode(NODE_TYPE_EXPRESSION);
-            exp_node->left = exp_left;
-            exp_node->right = exp_right;
-            exp_node->op = op;
+            ExpNode* exp_node = factory.createExpNode(exp_left, exp_right, op);
             node = exp_node;
         }
     }

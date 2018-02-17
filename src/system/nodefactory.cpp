@@ -182,3 +182,13 @@ Node* NodeFactory::createNode(NODE_TYPE node_type)
     this->nodes.push_back(std::unique_ptr<Node>(node));
     return node;
 }
+
+
+ExpNode* NodeFactory::createExpNode(ExpressionInterpretableNode* left, ExpressionInterpretableNode* right, std::string op)
+{
+    ExpNode* exp_node = (ExpNode*) createNode(NODE_TYPE_EXPRESSION);
+    exp_node->left = left;
+    exp_node->right = right;
+    exp_node->op = op;
+    return exp_node;
+}

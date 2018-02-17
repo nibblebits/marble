@@ -10,6 +10,8 @@
 */
 
 class Node;
+class ExpNode;
+class ExpressionInterpretableNode;
 class NodeFactory
 {
 public:
@@ -17,6 +19,7 @@ public:
     virtual ~NodeFactory();
     void applyPosition(PosInfo posInfo);
     Node* createNode(NODE_TYPE node_type);
+    ExpNode* createExpNode(ExpressionInterpretableNode* left, ExpressionInterpretableNode* right, std::string op);
 private:
     std::vector<std::unique_ptr<Node>> nodes;
     PosInfo defaultPosInfo;

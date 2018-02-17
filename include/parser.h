@@ -36,6 +36,8 @@ private:
     
     void parse_variable_declaration();
     void parse_expression_for_value(int extra_rules=0);
+    void sort_priority(ExpressionInterpretableNode** left, ExpressionInterpretableNode** right, std::string new_op);
+    void handle_expression_next(ExpNode* last_exp, int rules=0);
     void parse_expression(int rules=0);
     void parse_expression_part(int rules=0);
     void parse_negative_expression();
