@@ -990,32 +990,49 @@ void Parser::handle_expression_next(ExpNode* last_exp, int rules)
 }
 void Parser::parse_expression(int rules)
 {
-    parse_expression_part(rules);
-    if (peek() == NULL)
-        return;
-
-    ExpNode* last_exp = (ExpNode*) pop_node();
-    ExpNode* first_exp = last_exp;
-
-    if (peek()->isOperator())
+    std::vector<ExpressionInterpretableNode*> nodes;
+    std::vector<std::string> operators;
+    while(1)
     {
-        handle_expression_next(last_exp, rules);
-        last_exp = (ExpNode*) pop_node();
-        first_exp = last_exp;
+        parse_value(rules);
+        ExpressionInterpretableNode* node = (ExpressionInterpretableNode*) pop_node();
+        nodes.push_back(node);
+
+        if(!peek()->isOperator())
+        {
+            break;
+        }
+
+        std::string next_op = next()->value;
+        if (!operators.empty())
+        {
+            std::string top_op = operators.back();
+            if (first_op_has_priority(top_op, next_op) || top_op == next_op)
+            {
+                ExpressionInterpretableNode* right_node = nodes.back();
+                nodes.pop_back();
+                ExpressionInterpretableNode* left_node = nodes.back();
+                nodes.pop_back();
+                nodes.push_back(factory.createExpNode(left_node, right_node, top_op));
+                operators.pop_back();
+            }
+        }
+        operators.push_back(next_op);
     }
 
-    while (peek()->isOperator())
+    while(!operators.empty())
     {
-        handle_expression_next((ExpNode*) last_exp->right, rules);
-        last_exp->right = (ExpressionInterpretableNode*) pop_node();
-        last_exp = (ExpNode*) last_exp->right; 
+        std::string top_op = operators.back();
+        ExpressionInterpretableNode* right_node = nodes.back();
+        nodes.pop_back();
+        ExpressionInterpretableNode* left_node = nodes.back();
+        nodes.pop_back();
+        nodes.push_back(factory.createExpNode(left_node, right_node, top_op));
+        operators.pop_back();
     }
 
-    push_node(first_exp);
-
-    Node* node = pop_node();
-    Debug::PrintValueForNode(node);
-    push_node(node);
+    ExpressionInterpretableNode* final_node = nodes.back();
+    push_node(final_node);
 }
 
 void Parser::parse_expression_part(int rules)
