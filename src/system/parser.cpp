@@ -946,48 +946,7 @@ void Parser::parse_expression_for_value(int extra_rules)
     parse_expression(RULE_PARSE_CASTING | RULE_PARSE_ARRAY | extra_rules);
 }
 
-void Parser::sort_priority(ExpressionInterpretableNode** left, ExpressionInterpretableNode** right, std::string new_op)
-{
-    ExpNode* left_exp = (ExpNode*) *left;
-    ExpressionInterpretableNode* right_node = (ExpressionInterpretableNode*) *right;
 
-    ExpressionInterpretableNode* new_left, *new_right;
-    if (right_node->type != NODE_TYPE_EXPRESSION)
-    {
-        new_left = left_exp->left;
-        new_right = factory.createExpNode(left_exp->right, right_node, new_op);
-    }
-    else
-    {
-        ExpNode* right_exp = (ExpNode*) right_node;
-        new_left = left_exp->left;
-        new_right = factory.createExpNode(left_exp->right, right_exp->left, new_op);
-        new_right = factory.createExpNode(new_right, right_exp->right, right_exp->op);
-    }
-
-    *left = new_left;
-    *right = new_right;
-}
-
-void Parser::handle_expression_next(ExpNode* last_exp, int rules)
-{
-    ExpressionInterpretableNode* first_node = last_exp;
-    ExpNode* first_exp_node = last_exp;
-    std::string fo = first_exp_node->op;
-    std::string so = next()->value;
-    std::string op = so;
-    // Let's parse the next expression
-    parse_expression_part(rules);
-    ExpressionInterpretableNode* second_node = (ExpressionInterpretableNode*) pop_node();
-    if (!first_op_has_priority(fo, so))
-    {
-        sort_priority(&first_node, &second_node, so);
-        op = fo;
-    }
-
-    ExpressionInterpretableNode* exp_node = factory.createExpNode(first_node, second_node, op);
-    push_node(exp_node);
-}
 void Parser::parse_expression(int rules)
 {
     std::vector<ExpressionInterpretableNode*> nodes;
@@ -1035,27 +994,6 @@ void Parser::parse_expression(int rules)
     push_node(final_node);
 }
 
-void Parser::parse_expression_part(int rules)
-{
-    // Parse the left value
-    parse_value(rules);
-    ExpressionInterpretableNode* exp_left = (ExpressionInterpretableNode*) pop_node();
-    ExpressionInterpretableNode* node = (ExpressionInterpretableNode*) exp_left;
-    Token* peeked_token = peek();
-    if (peeked_token != NULL)
-    {
-        if (peeked_token->isOperator())
-        {
-            std::string op = next()->value;
-            parse_value(rules);
-            ExpressionInterpretableNode* exp_right = (ExpressionInterpretableNode*) pop_node();
-            ExpNode* exp_node = factory.createExpNode(exp_left, exp_right, op);
-            node = exp_node;
-        }
-    }
-    push_node(node);
-
-}
 
 void Parser::parse_negative_expression()
 {
