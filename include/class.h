@@ -28,6 +28,7 @@ public:
     std::string name;
     Class* parent;
     bool is_pure;
+    bool is_final;
     
 private:
     std::shared_ptr<Object> descriptor_obj;

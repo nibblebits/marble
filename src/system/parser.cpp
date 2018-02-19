@@ -349,6 +349,20 @@ void Parser::parse_ignore_validation(bool is_in_value)
     push_node(inode);
 }
 
+void Parser::parse_final()
+{
+    if (!next()->isKeyword("final"))
+        parse_error("Expecting a final keyword");
+    
+    if (!peek()->isKeyword("class"))
+        parse_error("Only classes can be final");
+    
+    parse_class();
+    ClassNode* c_node = (ClassNode*) pop_node();
+    c_node->is_final = true;
+    push_node(c_node);
+}
+
 void Parser::parse_pure()
 {
     if (!next()->isKeyword("pure"))
@@ -1205,6 +1219,10 @@ void Parser::parse_body_next()
     else if(this->current_token->isKeyword("function"))
     {
         parse_function();
+    }
+    else if(this->current_token->isKeyword("final"))
+    {
+        parse_final();
     }
     else if(this->current_token->isKeyword("pure"))
     {

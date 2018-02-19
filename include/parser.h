@@ -102,6 +102,7 @@ private:
      * If is_in_value == TRUE then we treat it as a value such as parse_value. Otherwise we use parse_body_next.
      */
     void parse_ignore_validation(bool is_in_value);
+    void parse_final();
     void parse_pure();
     void parse_pure_class();
     void parse_pure_function();

@@ -6,6 +6,7 @@ Class::Class(SystemHandler* sys_handler, std::string name, FunctionSystem* prev_
     this->parent = NULL;
     this->descriptor_obj = descriptor_obj;
     this->is_pure = false;
+    this->is_final = false;
 }
 
 Class::Class(SystemHandler* sys_handler, std::string name, Class* parent, std::shared_ptr<Object> descriptor_obj) : FunctionSystem(sys_handler, parent)
@@ -14,6 +15,7 @@ Class::Class(SystemHandler* sys_handler, std::string name, Class* parent, std::s
     this->parent = parent;
     this->descriptor_obj = descriptor_obj;
     this->is_pure = false;
+    this->is_final = false;
 }
 
 Class::~Class()
