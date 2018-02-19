@@ -1,11 +1,12 @@
 #ifndef FILEMODULE_H
 #define FILEMODULE_H
 #include "module.h"
+#include "../../commonmod/include/commonmod.h"
 #include "object.h"
 #include <stdio.h>
 #include <string>
 
-class FileModule_File : public Object
+class FileModule_File : public CommonModule_OutputStream
 {
 public:
     FileModule_File(Class* c);

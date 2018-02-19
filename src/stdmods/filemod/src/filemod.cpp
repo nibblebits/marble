@@ -4,7 +4,7 @@
 #include <time.h>
 #include <stdio.h>
 
-FileModule_File::FileModule_File(Class* c) : Object(c)
+FileModule_File::FileModule_File(Class* c) : CommonModule_OutputStream(c)
 {
     this->fp = NULL;
 }
