@@ -2,7 +2,7 @@
 #include "object.h"
 #include <sstream>
 #include <time.h>
-TimeModule::TimeModule() : Module("Time Module", MODULE_TYPE_MARBLE_LIBRARY)
+TimeModule::TimeModule() : Module("timemod", "Time Module", MODULE_TYPE_MARBLE_LIBRARY)
 {
 
 }

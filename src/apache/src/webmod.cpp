@@ -36,7 +36,7 @@ WebModuleObject::~WebModuleObject()
 
 
 
-WebModule::WebModule() : Module("Web Module", MODULE_TYPE_MARBLE_LIBRARY)
+WebModule::WebModule() : Module("webmod", "Web Module", MODULE_TYPE_MARBLE_LIBRARY)
 {
 
 }

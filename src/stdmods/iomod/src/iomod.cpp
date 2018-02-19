@@ -2,7 +2,7 @@
 #include "object.h"
 #include <sstream>
 #include <iostream>
-IOModule::IOModule() : Module("IO Module", MODULE_TYPE_MARBLE_LIBRARY)
+IOModule::IOModule() : Module("iomod", "IO Module", MODULE_TYPE_MARBLE_LIBRARY)
 {
 
 }

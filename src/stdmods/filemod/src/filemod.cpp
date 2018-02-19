@@ -19,7 +19,7 @@ std::shared_ptr<Object> FileModule_File::newInstance(Class* c)
     return std::make_shared<FileModule_File>(c);
 }
 
-FileModule::FileModule() : Module("File Module", MODULE_TYPE_MARBLE_LIBRARY)
+FileModule::FileModule() : Module("filemod", "File Module", MODULE_TYPE_MARBLE_LIBRARY)
 {
 
 }

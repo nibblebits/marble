@@ -7,9 +7,10 @@
 class Module
 {
 public:
-    Module(std::string name, MODULE_TYPE type);
+    Module(std::string name, std::string module_descriptor, MODULE_TYPE type);
     virtual ~Module();
     std::string getName();
+    std::string getDescriptor();
     MODULE_TYPE getType();
     void log(std::string message, LOG_TYPE type);
     void setModuleSystem(ModuleSystem* moduleSystem);
@@ -22,6 +23,7 @@ public:
     virtual void Init() = 0;
 private:
     MODULE_TYPE type;
+    std::string descriptor;
     std::string name;
     ModuleSystem* moduleSystem;
 };
