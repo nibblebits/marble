@@ -11,7 +11,6 @@ public:
     CommonModule_OutputStream(Class* c);
     virtual ~CommonModule_OutputStream();
     virtual std::shared_ptr<Object> newInstance(Class* c);
-
 };
 
 class CommonModule : public Module

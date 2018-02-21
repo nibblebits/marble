@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <string>
 
-class FileModule_File : public CommonModule_OutputStream
+class FileModule_File : public Object
 {
 public:
     FileModule_File(Class* c);
@@ -15,6 +15,7 @@ public:
 
     FILE* fp;
     std::string filename;
+    std::shared_ptr<Object> output;
 };
 
 class FileModule : public Module

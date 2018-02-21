@@ -1,6 +1,6 @@
 SYSTEM_OBJECT_FILES = ./build/main.o ./build/filemod.o
 INCLUDES = -I ../../../include -I ./include
-OBJECT_FILE_FLAGS = -c -g -fPIC -std=c++14 -g
+OBJECT_FILE_FLAGS = -c -g -fPIC -std=c++14
 SYSTEM_LIB_LOCAL_FILENAME = libmarble.so
 SYSTEM_LIB_FILE_LOCATION = ../../../bin/${SYSTEM_LIB_LOCAL_FILENAME}
 

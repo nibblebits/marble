@@ -4,9 +4,11 @@
 #include <time.h>
 #include <stdio.h>
 
-FileModule_File::FileModule_File(Class* c) : CommonModule_OutputStream(c)
+
+FileModule_File::FileModule_File(Class* c) : Object(c)
 {
     this->fp = NULL;
+    this->output = std::make_shared<CommonModule_OutputStream>(c);
 }
 
 FileModule_File::~FileModule_File()
