@@ -11,7 +11,7 @@ class InterpretableNode : public EvaluatingNode, public Interpretable
 	virtual ~InterpretableNode();
 	void test(Validator* validator);
     Value interpret(Interpreter* interpreter);
-    Value interpret(Interpreter* interpreter, struct extras extra);
+    virtual Value interpret(Interpreter* interpreter, struct extras extra) = 0;
 	void ignoreValidation();
     bool shouldIgnoreValidation();
 private:
