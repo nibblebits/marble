@@ -48,10 +48,13 @@ void WrittenFunction::invoke_impl(Interpreter* interpreter, std::vector<Value> v
         {
             Variable* var = var_value.holder;
             var->value = values[count];
+            // The new values holder must be to the variable we just created.
+            var->value.holder = var;
         }
         count++;
     }
    
+    std::cout << "WRITTEN FUNCTION INVOKED: " + this->name << std::endl;
     // Bodys also need a scope of there own
     interpreter->new_parented_scope();
 

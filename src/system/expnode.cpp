@@ -103,6 +103,8 @@ Value ExpNode::interpret(Interpreter* interpreter)
         // This is to be an assignment. We must interpret the left node and then we will have the variable we need to assign to the right node
         Value left_v = left->interpret(interpreter);
         Variable* var_to_assign = left_v.holder;
+        if (var_to_assign == NULL)
+            throw std::logic_error("Problem as the value returned when interpreting the left node of this assignment does not have a holder: Value string: " + left_v.svalue);
         
         // Ok now lets get the value and assign it to the variable
         Value right_v = right->interpret(interpreter);

@@ -25,9 +25,6 @@ void Function::invoke(Interpreter* interpreter, std::vector<Value> values, Value
     {
         return_value = &fake_value;
     }
-    
-    // Now that a function has been invoked we are currently no longer accessing an object
-    interpreter->setCurrentObject(NULL, NULL, NULL);
 
     FunctionSystem* f_system = interpreter->getFunctionSystem();
     // We are also in a function
@@ -46,32 +43,52 @@ void Function::invoke(Interpreter* interpreter, std::vector<Value> values, Value
     }
     
     interpreter->addToStackTrace(address, posInfo);
+
+    Scope* old_scope;
+    
+    /*
+    * If this function is invoked inside an object then it is very important to set the current scope to the object scope
+    * to avoid invalid scopes when calling a function.
+    */
+    if (object != NULL)
+    {
+        old_scope = interpreter->getCurrentScope();
+        interpreter->setCurrentScope(object.get());
+    }
+
     try
     {
         this->invoke_impl(interpreter, values, return_value, object);
     }
     catch(SystemException& ex)
     {
+        if (object != NULL)
+        {
+            // Let's restore the scope
+            interpreter->setCurrentScope(old_scope);
+        }
         // An exception was thrown! Lets pop us off the stack trace and rethrow it
         interpreter->popFromStackTrace();
 
         // We are done with our function
         f_system->finishCurrentFunction();
 
-        // We are done with our NULL current object
-        interpreter->finishCurrentObject();
-
         throw ex;
     }
     
+
+    if (object != NULL)
+    {
+        // Let's restore the scope
+        interpreter->setCurrentScope(old_scope);
+    }
+
     // Now lets pop it off
     interpreter->popFromStackTrace();
 
     // We are done with our function
     f_system->finishCurrentFunction();
 
-    // We are done with our NULL current object
-    interpreter->finishCurrentObject();
 }
 
 std::string Function::getName()
