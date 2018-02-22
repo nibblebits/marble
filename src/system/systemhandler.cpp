@@ -22,7 +22,7 @@ SystemHandler::SystemHandler(SYSTEM_HANDLER_TYPE type, ClassSystem* baseClassSys
     if (this->baseClassSystem != NULL && !(rules & SYSTEM_HANDLER_NO_PARENT_BASE_CLASS_LINK)) {
         Class* base_base_class = this->baseClassSystem->getDefaultBaseClass();
         this->classSystem.setDefaultBaseClass(base_base_class);
-        if (base_base_class->getPreviousFunctionSystem() != NULL)
+        if (base_base_class->getPreviousFunctionSystem() == NULL)
             base_base_class->setPreviousFunctionSystem(this->currentFunctionSystem);
     }
 

@@ -104,11 +104,15 @@ Value FunctionCallNode::interpret(Interpreter* interpreter)
    Function* function = functionSystem->getFunctionByName(name->value, interpreter->getGlobalFunctionSystem());
    if (function == NULL)
    {
+       for (Function* f : interpreter->getGlobalFunctionSystem()->getFunctions())
+       {
+           std::cout << "FUNCTION NAME IN GLOBAL FS: " << f->name << std::endl;
+       }
         Value except_value;
         except_value.set("The function with the name " + name->value + " has not been registered");
         throw SystemException(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("EntityNotRegisteredException"), {except_value}));
    }
-   
+    
    try
    {
        function->invoke(interpreter, argument_results, &value, interpreter->getCurrentObject());

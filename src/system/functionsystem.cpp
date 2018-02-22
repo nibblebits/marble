@@ -173,24 +173,26 @@ Function* FunctionSystem::getFunctionByName(std::string name, FunctionSystem* fi
    // If final_fs points to self then we cannot use it.
    if (final_fs == this)
       final_fs = NULL;
+
+   Function* function = NULL;
    
    std::map<std::string, std::unique_ptr<Function>>::iterator it = this->functions.find(name); 
    if (it != this->functions.end())
    {
-       Function* function = it->second.get();
+       function = it->second.get();
        if (function != NULL)
           return function;
    }
     
    if (this->prev_fc_sys != NULL)
-        return this->prev_fc_sys->getFunctionByName(name);
+   {
+        function = this->prev_fc_sys->getFunctionByName(name);
+        if (function != NULL)
+            return function;
+   }
     
    if (final_fs != NULL)
    {
-                   for (Function* f : final_fs->getFunctions())
-            {
-                std::cout << "NAME: " << f->name << std::endl;
-            }
        return final_fs->getFunctionByName(name);
    }
    return NULL;
