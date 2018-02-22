@@ -5,6 +5,7 @@
 #include "statics.h"
 #include "modulesystem.h"
 #include "interpreter.h"
+#include "../commonmod/include/commonmod.h"
 #include "object.h"
 #include "class.h"
 #include <memory>
@@ -42,6 +43,8 @@ ModuleSystem::ModuleSystem() : SystemHandler(SYSTEM_HANDLER_MODULE_SYSTEM, NULL,
     Class* c = Interpreter::registerDefaultObjectClass(getClassSystem(), "ModuleObject");
     classSystem->setDefaultObjectDescriptor(std::make_shared<Object>(c));
     classSystem->setDefaultBaseClass(c);
+
+    addModule(new CommonModule());
 }
 
 ModuleSystem::~ModuleSystem()

@@ -1,7 +1,7 @@
 #ifndef FILEMODULE_H
 #define FILEMODULE_H
 #include "module.h"
-#include "../../commonmod/include/commonmod.h"
+#include "../../../commonmod/include/commonmod.h"
 #include "object.h"
 #include <stdio.h>
 #include <string>
@@ -15,7 +15,7 @@ public:
 
     FILE* fp;
     std::string filename;
-    std::shared_ptr<Object> output;
+    std::shared_ptr<CommonModule_OutputStream> output;
 };
 
 class FileModule : public Module

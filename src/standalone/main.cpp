@@ -51,7 +51,6 @@ void interpret()
     });
 
     Logger* logger = interpreter.getLogger();
-    moduleSystem->loadModule("./mods/marble_commonmod.so");
     moduleSystem->loadModule("./mods/marble_filemod.so");
     moduleSystem->loadModule("./mods/marble_iomod.so");
     moduleSystem->loadModule("./mods/marble_timemod.so");

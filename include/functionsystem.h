@@ -70,12 +70,23 @@ class FunctionSystem
          */
         virtual Function* registerFunction(std::string name, std::vector<VarType> args, VarType return_type, NATIVE_FUNCTION_ENTRYPOINT entrypoint);
         virtual Function* registerFunction(FunctionNode* fnode);
-        bool hasFunction(std::string name);
-        bool hasFunction(std::string name, std::vector<VarType> args);
+        bool hasFunction(std::string name, FunctionSystem* final_fs=NULL);
+        bool hasFunction(std::string name, std::vector<VarType> args, FunctionSystem* final_fs=NULL);
         bool hasFunctionLocally(std::string name);
         bool hasFunctionLocally(std::string name, std::vector<VarType> args);
-        Function* getFunctionByName(std::string name);
-        Function* getFunctionByNameAndArguments(std::string name, std::vector<VarType> args);
+        /**
+         * Returns a function by the given name
+         * \name The name of the function
+         * \final_fs The final FunctionSystem to check for this Function if all other attempts fail. 
+         */
+        Function* getFunctionByName(std::string name, FunctionSystem* final_fs=NULL);
+        /**
+         * Returns a function by the given name and arguments
+         * \name The name of the function
+         * \args The Function that has the given argument types that you wish to get
+         * \final_fs The final FunctionSystem to check for this Function if all other attempts fail. 
+         */
+        Function* getFunctionByNameAndArguments(std::string name, std::vector<VarType> args, FunctionSystem* final_fs=NULL);
         Function* getFunctionLocallyByNameAndArguments(std::string name, std::vector<VarType> args);
         std::vector<Function*> getFunctions();
         std::vector<Function*> getPureFunctions();

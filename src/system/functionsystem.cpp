@@ -147,14 +147,14 @@ Function* FunctionSystem::registerFunction(FunctionNode* fnode)
     return function_raw;
 }
 
-bool FunctionSystem::hasFunction(std::string name)
+bool FunctionSystem::hasFunction(std::string name, FunctionSystem* final_fs)
 {
-    return getFunctionByName(name) != NULL;
+    return getFunctionByName(name, final_fs) != NULL;
 }
 
-bool FunctionSystem::hasFunction(std::string name, std::vector<VarType> args)
+bool FunctionSystem::hasFunction(std::string name, std::vector<VarType> args, FunctionSystem* final_fs)
 {
-    return this->getFunctionByNameAndArguments(name, args) != NULL;
+    return this->getFunctionByNameAndArguments(name, args, final_fs) != NULL;
 }
 
 bool FunctionSystem::hasFunctionLocally(std::string name)
@@ -168,8 +168,12 @@ bool FunctionSystem::hasFunctionLocally(std::string name, std::vector<VarType> a
     return function != NULL;
 }
 
-Function* FunctionSystem::getFunctionByName(std::string name)
+Function* FunctionSystem::getFunctionByName(std::string name, FunctionSystem* final_fs)
 {
+   // If final_fs points to self then we cannot use it.
+   if (final_fs == this)
+      final_fs = NULL;
+   
    std::map<std::string, std::unique_ptr<Function>>::iterator it = this->functions.find(name); 
    if (it != this->functions.end())
    {
@@ -180,7 +184,16 @@ Function* FunctionSystem::getFunctionByName(std::string name)
     
    if (this->prev_fc_sys != NULL)
         return this->prev_fc_sys->getFunctionByName(name);
-    return NULL;
+    
+   if (final_fs != NULL)
+   {
+                   for (Function* f : final_fs->getFunctions())
+            {
+                std::cout << "NAME: " << f->name << std::endl;
+            }
+       return final_fs->getFunctionByName(name);
+   }
+   return NULL;
 }
 
 Function* FunctionSystem::getFunctionLocallyByNameAndArguments(std::string name, std::vector<VarType> args)
@@ -216,19 +229,30 @@ Function* FunctionSystem::getFunctionLocallyByNameAndArguments(std::string name,
         } 
         
     }
-    
-    return NULL;   
+
+   return NULL;   
 }
 
-Function* FunctionSystem::getFunctionByNameAndArguments(std::string name, std::vector<VarType> args)
+Function* FunctionSystem::getFunctionByNameAndArguments(std::string name, std::vector<VarType> args, FunctionSystem* final_fs)
 {
+   // If final_fs points to self then we cannot use it.
+   if (final_fs == this)
+      final_fs = NULL;
+
     Function* function = getFunctionLocallyByNameAndArguments(name, args);
     if (function == NULL)
     { 
         if (this->prev_fc_sys != NULL)
-            return this->prev_fc_sys->getFunctionByNameAndArguments(name, args);
+        {
+            function = this->prev_fc_sys->getFunctionByNameAndArguments(name, args);
+            if (function != NULL)
+                return function;
+        }
+        if (final_fs != NULL)
+        {
+            return final_fs->getFunctionByNameAndArguments(name, args);
+        }
     }
-    
     return function;
 }
 

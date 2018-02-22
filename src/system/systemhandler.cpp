@@ -38,7 +38,7 @@ SystemHandler::SystemHandler(SYSTEM_HANDLER_TYPE type, ClassSystem* baseClassSys
 
     this->currentFunctionSystem->setPreviousFunctionSystem(baseFunctionSystem);
     this->globalFunctionSystem.setSystemHandler(this);
-   
+
 
 }
 

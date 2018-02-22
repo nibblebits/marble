@@ -57,9 +57,13 @@ void FunctionCallNode::test(Validator* validator)
    {
        test_args(validator, &types);
    }
-
-   if (!function_sys->hasFunction(this->name->value, types))
+   std::cout << validator->getBaseFunctionSystem() << " : " << function_sys << std::endl;
+   if (!function_sys->hasFunction(this->name->value, types, validator->getGlobalFunctionSystem()))
    {
+       if (!function_sys->hasFunction(this->name->value, validator->getGlobalFunctionSystem()))
+       {
+           throw TestError("The function \"" + this->name->value + "\" has not been declared");
+       }
        throw TestError("The function \"" + this->name->value + "\" has not been declared that takes the given arguments");
    }
    
@@ -67,7 +71,7 @@ void FunctionCallNode::test(Validator* validator)
    {
        // We must check the return type is valid 
        VARIABLE_TYPE expecting_type = validator->getExpectingVariableType();
-       SingleFunction* function = (SingleFunction*) function_sys->getFunctionByNameAndArguments(this->name->value, types);
+       SingleFunction* function = (SingleFunction*) function_sys->getFunctionByNameAndArguments(this->name->value, types, validator->getGlobalFunctionSystem());
        if (function->return_type.type != expecting_type)
            throw TestError("The function " + this->name->value + " returns a " + function->return_type.value);
 
@@ -97,7 +101,7 @@ Value FunctionCallNode::interpret(Interpreter* interpreter)
    }
    interpreter->setLastFunctionCallNode(this);
    FunctionSystem* functionSystem = interpreter->getFunctionSystem();
-   Function* function = functionSystem->getFunctionByName(name->value);
+   Function* function = functionSystem->getFunctionByName(name->value, interpreter->getGlobalFunctionSystem());
    if (function == NULL)
    {
         Value except_value;

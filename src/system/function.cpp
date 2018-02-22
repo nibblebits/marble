@@ -20,6 +20,12 @@ Function::~Function()
 
 void Function::invoke(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)
 {
+    Value fake_value;
+    if (return_value == NULL)
+    {
+        return_value = &fake_value;
+    }
+    
     // Now that a function has been invoked we are currently no longer accessing an object
     interpreter->setCurrentObject(NULL, NULL, NULL);
 

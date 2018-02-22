@@ -5,6 +5,8 @@ OBJECT_FILE_FLAGS = -c -g -fPIC -std=c++14 -g
 SYSTEM_LIB_LOCAL_FILENAME = libmarble.so
 SYSTEM_LIB_FILE_LOCATION = ./bin/${SYSTEM_LIB_LOCAL_FILENAME}
 
+common_mod:
+	cd ./src/commonmod && $(MAKE) standalone
 system: ${SYSTEM_OBJECT_FILES}
 	g++ ${SYSTEM_OBJECT_FILES} ${EXTERNAL_OBJECT_FILES} -g -o ${SYSTEM_LIB_FILE_LOCATION} -shared -Wl,-rpath,'./lib'-export-dynamic
 	
@@ -143,8 +145,7 @@ system: ${SYSTEM_OBJECT_FILES}
 modules:
 	cd ./src/stdmods && $(MAKE) all
 	
-standalone: system
-	cd ./src/commonmod && $(MAKE) standalone
+standalone: common_mod system
 	cd bin; \
 	g++ -g -I ../include ../src/standalone/main.cpp ./${SYSTEM_LIB_LOCAL_FILENAME}  -ldl -std=c++14 -o ./marble;
 
@@ -161,3 +162,4 @@ apache2-install: apache2
 clean:
 	rm ${SYSTEM_OBJECT_FILES}
 	cd ./src/stdmods && $(MAKE) clean
+	cd ./src/commonmod && $(MAKE) clean
