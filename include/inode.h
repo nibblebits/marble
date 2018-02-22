@@ -3,12 +3,15 @@
 
 #include "evaluatingnode.h"
 #include "interpretable.h"
+class Interpreter;
 class InterpretableNode : public EvaluatingNode, public Interpretable
 {
  public:
 	InterpretableNode(int type);
 	virtual ~InterpretableNode();
-	virtual Value interpret(Interpreter* interpreter) = 0;
+	void test(Validator* validator);
+    Value interpret(Interpreter* interpreter);
+    Value interpret(Interpreter* interpreter, struct extras extra);
 	void ignoreValidation();
     bool shouldIgnoreValidation();
 private:

@@ -28,13 +28,22 @@ public:
     virtual void registerVariable(Variable* variable);
     Class* getClass();
 
+    /**
+    * Returns true if this Object is currently having code run on it using the runThis method. 
+    */
+    bool isRunning();
+
     std::shared_ptr<Object> newInstance();
     virtual std::shared_ptr<Object> newInstance(Class* c);
     void runThis(std::function<void()> function, SystemHandler* handler, Class* c=NULL, OBJECT_ACCESS_TYPE access_type=OBJECT_ACCESS_TYPE_OBJECT_ACCESS, Scope* accessors_scope=NULL);
     virtual void onEnterScope();
     virtual void onLeaveScope();
 private:
+    void newRun();
+    void finishRun();
     SystemHandler* sys_handler;
+    bool is_running;
+    std::vector<bool> run_stack;
     Class* c;
 };
 

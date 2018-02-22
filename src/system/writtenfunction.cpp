@@ -50,15 +50,16 @@ void WrittenFunction::invoke_impl(Interpreter* interpreter, std::vector<Value> v
             var->value = values[count];
             // The new values holder must be to the variable we just created.
             var->value.holder = var;
+            std::cout << "Variable: " << var->value.svalue << " holder" << var->value.holder->name << std::endl;
         }
         count++;
     }
    
-    std::cout << "WRITTEN FUNCTION INVOKED: " + this->name << std::endl;
+
     // Bodys also need a scope of there own
     interpreter->new_parented_scope();
-
     this->fnode->body->interpret(interpreter);
+    
     // Finish the function body scope
     interpreter->finish_parented_scope();
     // Finish the function arguments scope

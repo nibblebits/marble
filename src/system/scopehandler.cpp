@@ -53,7 +53,13 @@ Variable* ScopeHandler::getVariableByName(std::string name)
 {
     Variable* variable = getCurrentScope()->getVariableAnyScope(name);
     if (variable == NULL)
+    {
+        for (Variable* var : getCurrentScope()->getVariables())
+        {
+            std::cout << "VARIABLE IN SCOPE: " << var->name << std::endl;
+        }
         throw std::logic_error("Variable not found: " + name);
+    }
 
     return variable;
 }

@@ -18,7 +18,7 @@ TryNode::~TryNode()
 
 }
 
-void TryNode::test(Validator* validator)
+void TryNode::test(Validator* validator, struct extras extra)
 {
     this->try_body->test(validator);
     this->catch_varnode->test(validator);
@@ -41,7 +41,7 @@ void TryNode::test(Validator* validator)
     this->catch_body->test(validator);
 }
 
-Value TryNode::interpret(Interpreter* interpreter)
+Value TryNode::interpret(Interpreter* interpreter, struct extras extra)
 {
     try
     {

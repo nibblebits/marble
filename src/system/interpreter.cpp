@@ -118,11 +118,13 @@ Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionS
    this->moduleSystem = NULL;
    this->first_run = true;
 
+   this->setCallingScope(getCurrentScope());
+
 }
 
 Interpreter::~Interpreter()
 {
-
+    this->finishCallingScope();
 }
 
 void Interpreter::setOutputFunction(OUTPUT_FUNCTION output)

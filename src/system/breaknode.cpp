@@ -10,12 +10,12 @@ BreakNode::~BreakNode()
 
 }
 
-void BreakNode::test(Validator* validator)
+void BreakNode::test(Validator* validator, struct extras extra)
 {
    // Nothing to test break is always valid.
 }
 
-Value BreakNode::interpret(Interpreter* interpreter)
+Value BreakNode::interpret(Interpreter* interpreter, struct extras extra)
 {
     if (interpreter->hasBreakable())
     {

@@ -95,7 +95,7 @@ Value ExpNode::mathify(Value& value1, Value& value2, std::string op)
 /*
 * this must be split into multiple methods in the same way the test routine is.
 */
-Value ExpNode::interpret(Interpreter* interpreter)
+Value ExpNode::interpret(Interpreter* interpreter, struct extras extra)
 {
     Value result;
     if (isAssignmentOperator())
@@ -157,10 +157,13 @@ Value ExpNode::interpret(Interpreter* interpreter)
                 c = obj->getClass()->parent;
         }
         
+        // We must set the calling scope to the current scope as a function may be about to be called
+        interpreter->setCallingScope(interpreter->getCurrentScope());
         // Interpret the right node on the object scope and return the result.
         obj->runThis([&] {
             result = this->right->interpret(interpreter);
         }, interpreter, c);
+        interpreter->finishCallingScope();
         return result;
     }
     
@@ -169,7 +172,7 @@ Value ExpNode::interpret(Interpreter* interpreter)
     return result;
 }
 
-void ExpNode::test(Validator* validator)
+void ExpNode::test(Validator* validator, struct extras extra)
 {  
    if (this->op == ".")
    {

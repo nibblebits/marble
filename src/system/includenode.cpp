@@ -18,7 +18,7 @@ IncludeNode::~IncludeNode()
 
 }
 
-void IncludeNode::test(Validator* validator)
+void IncludeNode::test(Validator* validator, struct extras extra)
 {
     validator->expecting("string");
     this->exp->test(validator);
@@ -26,7 +26,7 @@ void IncludeNode::test(Validator* validator)
 
 }
 
-Value IncludeNode::interpret(Interpreter* interpreter)
+Value IncludeNode::interpret(Interpreter* interpreter, struct extras extra)
 {
     Value v;
     v = this->exp->interpret(interpreter);

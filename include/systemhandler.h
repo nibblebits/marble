@@ -57,6 +57,19 @@ public:
     Scope* getAccessorsScope();
 
     /**
+    * Should be used just before calling a function and should point to the scope of the function caller.
+    * \attention You must call finishCallingScope() when you are finished with the calling scope.
+    */
+    void setCallingScope(Scope* scope);
+
+    void finishCallingScope();
+
+    /**
+    * Gets the scope of where the last function call happend.
+    */
+    Scope* getCallingScope();
+
+    /**
      * Returns true if their is an object being accessed
      * Expression:
      * return getCurrentObject() != NULL
@@ -80,6 +93,8 @@ protected:
     FunctionSystem* currentFunctionSystem;
     Logger logger;
     SYSTEM_HANDLER_TYPE type;
+    Scope* current_calling_scope;
+    std::vector<Scope*> calling_scopes;
     std::vector<struct current_object> current_obj_stack;
     struct current_object current_obj;
 };

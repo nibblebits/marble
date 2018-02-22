@@ -22,7 +22,7 @@ ClassNode::~ClassNode()
 
 }
 
-void ClassNode::test(Validator* validator)
+void ClassNode::test(Validator* validator, struct extras extra)
 {
     // Check to see if class already exists
     ClassSystem* class_sys = validator->getClassSystem();
@@ -95,7 +95,7 @@ void ClassNode::test(Validator* validator)
     
 }
 
-Value ClassNode::interpret(Interpreter* interpreter)
+Value ClassNode::interpret(Interpreter* interpreter, struct extras extra)
 {
     ClassSystem* c_system = interpreter->getClassSystem();
     Class* parent_class = c_system->getClassByName(this->parent);

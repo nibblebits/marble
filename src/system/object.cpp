@@ -28,6 +28,8 @@ Object::Object(Class* c)
 
     if (this->sys_handler != NULL)
         prev = sys_handler->getRootScope();
+
+    this->is_running = false;
     
 }
 
@@ -82,8 +84,15 @@ std::shared_ptr<Object> Object::newInstance(Class* c)
     return std::make_shared<Object>(c);
 }
 
+bool Object::isRunning()
+{
+    return this->is_running;
+}
+
 void Object::runThis(std::function<void()> function, SystemHandler* sys_handler, Class* c, OBJECT_ACCESS_TYPE access_type, Scope* accessors_scope)
 {
+    newRun();
+
     FunctionSystem* old_fc_system;
     Scope* old_scope;
     if (c == NULL)
@@ -122,6 +131,7 @@ void Object::runThis(std::function<void()> function, SystemHandler* sys_handler,
             sys_handler->finishCurrentObject();
         sys_handler->setCurrentScope(old_scope);
         sys_handler->setFunctionSystem(old_fc_system);
+        finishRun();
         throw;
     }
     
@@ -130,6 +140,8 @@ void Object::runThis(std::function<void()> function, SystemHandler* sys_handler,
         sys_handler->finishCurrentObject();
     sys_handler->setCurrentScope(old_scope);
     sys_handler->setFunctionSystem(old_fc_system);
+
+    finishRun();
     
 }
 
@@ -156,3 +168,14 @@ void Object::onLeaveScope()
     removeVariable(getVariable("super"));
 }
 
+void Object::newRun()
+{
+    this->run_stack.push_back(this->is_running);
+    this->is_running = true;
+}
+
+void Object::finishRun()
+{
+    this->is_running = this->run_stack.back();
+    this->run_stack.pop_back();
+}

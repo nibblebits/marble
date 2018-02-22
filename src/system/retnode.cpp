@@ -17,7 +17,7 @@ ReturnNode::~ReturnNode()
 
 }
 
-void ReturnNode::test(Validator* validator)
+void ReturnNode::test(Validator* validator, struct extras extra)
 {
     FunctionSystem* function_system = validator->getFunctionSystem();
     if (function_system->isInFunction())
@@ -29,7 +29,7 @@ void ReturnNode::test(Validator* validator)
     }
 }
 
-Value ReturnNode::interpret(Interpreter* interpreter)
+Value ReturnNode::interpret(Interpreter* interpreter, struct extras extra)
 {
     Value v;
     if (this->exp != NULL)

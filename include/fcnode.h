@@ -15,9 +15,9 @@ class FunctionCallNode : public ExpressionInterpretableNode
 public:
     FunctionCallNode();
     virtual ~FunctionCallNode();
-    virtual void test(Validator* validator);
+    virtual void test(Validator* validator, struct extras extra);
     void test_args(Validator* validator, std::vector<VarType>* types);
-    virtual Value interpret(Interpreter* interpreter);
+    virtual Value interpret(Interpreter* interpreter, struct extras extra);
     void interpret_args(Interpreter* interpreter, std::vector<Value>* argument_results);
 
     virtual void evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation);

@@ -25,7 +25,7 @@ VarNode::~VarNode()
 * Validates that this variable node is valid and safe to use.
 */
 
-void VarNode::test(Validator* validator)
+void VarNode::test(Validator* validator, struct extras extra)
 {
    std::string type_str = getTypeAsString();
 
@@ -130,7 +130,7 @@ bool VarNode::isObject()
 * Interprets the variable node and creates a variable
 * then it returns the value of the variable that it just set.
 */
-Value VarNode::interpret(Interpreter* interpreter)
+Value VarNode::interpret(Interpreter* interpreter, struct extras extra)
 {
     Node* type_node = type;
     std::string type_str = getTypeAsString();

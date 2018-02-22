@@ -13,7 +13,7 @@ IfStatementNode::~IfStatementNode()
 
 }
 
-void IfStatementNode::test(Validator* validator)
+void IfStatementNode::test(Validator* validator, struct extras extra)
 {
     try
     {
@@ -27,7 +27,7 @@ void IfStatementNode::test(Validator* validator)
 }
 
 
-Value IfStatementNode::interpret(Interpreter* interpreter)
+Value IfStatementNode::interpret(Interpreter* interpreter, struct extras extra)
 {
     if (exp == NULL)
         throw std::logic_error("Expecting an expression");

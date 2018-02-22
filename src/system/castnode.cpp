@@ -56,7 +56,7 @@ std::string CastNode::get_string_value(Value* from)
     };
 }
 
-Value CastNode::interpret(Interpreter* interpreter)
+Value CastNode::interpret(Interpreter* interpreter, struct extras extra)
 {
     Value v = this->to_cast->interpret(interpreter);
     struct Evaluation evaluation = this->casting_to->evaluate(interpreter, EVALUATION_TYPE_DATATYPE);
@@ -89,7 +89,7 @@ Value CastNode::interpret(Interpreter* interpreter)
     return v;
 }
 
-void CastNode::test(Validator* validator)
+void CastNode::test(Validator* validator, struct extras extra)
 {    
     // Let's test what we are casting
     validator->save();

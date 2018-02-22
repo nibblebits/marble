@@ -18,7 +18,7 @@ void ForNode::didBreak(BREAK_TYPE type)
     this->body->breakNow(type);
 }
 
-void ForNode::test(Validator* validator)
+void ForNode::test(Validator* validator, struct extras extra)
 {
     // Let's create a new parented scope for this test
     validator->new_parented_scope();
@@ -37,7 +37,7 @@ void ForNode::test(Validator* validator)
     validator->finish_parented_scope();
 }
 
-Value ForNode::interpret(Interpreter* interpreter)
+Value ForNode::interpret(Interpreter* interpreter, struct extras extra)
 {
     interpreter->new_parented_scope();
     // For nodes are breakable so lets tell the interpreter we are the current breakable

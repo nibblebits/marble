@@ -19,7 +19,7 @@ IncludeOnceNode::~IncludeOnceNode()
 
 }
 
-void IncludeOnceNode::test(Validator* validator)
+void IncludeOnceNode::test(Validator* validator, struct extras extra)
 {
     validator->expecting("string");
     this->exp->test(validator);
@@ -27,7 +27,7 @@ void IncludeOnceNode::test(Validator* validator)
 
 }
 
-Value IncludeOnceNode::interpret(Interpreter* interpreter)
+Value IncludeOnceNode::interpret(Interpreter* interpreter, struct extras extra)
 {
     Value v;
     v = this->exp->interpret(interpreter);

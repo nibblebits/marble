@@ -17,7 +17,7 @@ void DoWhileNode::didBreak(BREAK_TYPE type)
     this->body->breakNow(type);
 }
 
-void DoWhileNode::test(Validator* validator)
+void DoWhileNode::test(Validator* validator, struct extras extra)
 {
     try
     {
@@ -30,7 +30,7 @@ void DoWhileNode::test(Validator* validator)
     }
 }
 
-Value DoWhileNode::interpret(Interpreter* interpreter)
+Value DoWhileNode::interpret(Interpreter* interpreter, struct extras extra)
 {
     // Do while nodes are breakable so lets tell the interpreter we are the current breakable
     interpreter->setCurrentBreakable(this);

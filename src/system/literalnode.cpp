@@ -14,7 +14,7 @@ LiteralNode::~LiteralNode()
 
 }
 
-void LiteralNode::test(Validator* validator)
+void LiteralNode::test(Validator* validator, struct extras extra)
 {
     if (!validator->isExpecting())
         return;
@@ -24,7 +24,7 @@ void LiteralNode::test(Validator* validator)
         throw TestError("a number was provided");
     }
 }
-Value LiteralNode::interpret(Interpreter* interpreter)
+Value LiteralNode::interpret(Interpreter* interpreter, struct extras extra)
 {
     Value v;
     v.type = VALUE_TYPE_NUMBER;

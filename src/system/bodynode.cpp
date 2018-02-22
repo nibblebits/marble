@@ -28,7 +28,7 @@ void BodyNode::onAfterTestNode(std::function<void(Node* node)> on_after_test_nod
     this->on_after_test_node_function = on_after_test_node_function;
 }
 
-void BodyNode::test(Validator* validator)
+void BodyNode::test(Validator* validator, struct extras extra)
 {
     test(validator, 0);
 }
@@ -63,7 +63,7 @@ void BodyNode::test(Validator* validator, SCOPE_PROPERTIES scope_properties)
 }
 
 
-Value BodyNode::interpret(Interpreter* interpreter)
+Value BodyNode::interpret(Interpreter* interpreter, struct extras extra)
 {
     Value v;
     this->interpreter = interpreter;
@@ -121,7 +121,7 @@ void BodyNode::interpret_body(BodyNode* node)
     while(current_node != NULL)
     {
         if(!interpret_body_node(current_node)) goto end;
-            current_node = current_node->next;
+        current_node = current_node->next;
     }
 
 end:

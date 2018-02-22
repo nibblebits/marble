@@ -17,7 +17,7 @@ IdentifierNode::~IdentifierNode()
 
 }
 
-void IdentifierNode::test(Validator* validator)
+void IdentifierNode::test(Validator* validator, struct extras extra)
 {
     ClassSystem* class_sys = validator->getClassSystem();
     // Let's first see if the variable is declared
@@ -87,7 +87,7 @@ void IdentifierNode::test(Validator* validator)
     
 }
 
-Value IdentifierNode::interpret(Interpreter* interpreter)
+Value IdentifierNode::interpret(Interpreter* interpreter, struct extras extra)
 {
     Variable* var = interpreter->getVariableByName(this->value);
     Value v = var->value;

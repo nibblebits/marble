@@ -14,7 +14,7 @@ ArrayNode::~ArrayNode()
 
 }
 
-void ArrayNode::test(Validator* validator)
+void ArrayNode::test(Validator* validator, struct extras extra)
 {
     validator->save();
     this->index_node->test(validator);
@@ -23,7 +23,7 @@ void ArrayNode::test(Validator* validator)
     this->next_element->test(validator);
 }
 
-Value ArrayNode::interpret(Interpreter* interpreter)
+Value ArrayNode::interpret(Interpreter* interpreter, struct extras extra)
 {
     Value index_exp = this->index_node->interpret(interpreter);
     // If this array node is being interpreted then the next_element is guaranteed to be an expression interpretable node.

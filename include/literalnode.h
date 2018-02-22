@@ -8,9 +8,9 @@ class LiteralNode : public ExpressionInterpretableNode
 public:
     LiteralNode();
     virtual ~LiteralNode();
-    virtual void test(Validator* validator);
+    virtual void test(Validator* validator, struct extras extra);
     double value;
-    virtual Value interpret(Interpreter* interpreter);
+    virtual Value interpret(Interpreter* interpreter, struct extras extra);
     virtual void evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation);
 private:
 };

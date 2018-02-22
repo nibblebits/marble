@@ -13,7 +13,7 @@ StringNode::~StringNode()
 }
 
 
-void StringNode::test(Validator* validator)
+void StringNode::test(Validator* validator, struct extras extra)
 {
     if (!validator->isExpecting())
         return;
@@ -25,7 +25,7 @@ void StringNode::test(Validator* validator)
 
 }
 
-Value StringNode::interpret(Interpreter* interpreter)
+Value StringNode::interpret(Interpreter* interpreter, struct extras extra)
 {
     Value result;
     result.type = VALUE_TYPE_STRING;

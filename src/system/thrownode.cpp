@@ -15,7 +15,7 @@ ThrowNode::~ThrowNode()
 
 }
 
-void ThrowNode::test(Validator* validator)
+void ThrowNode::test(Validator* validator, struct extras extra)
 {
     try
     {
@@ -29,7 +29,7 @@ void ThrowNode::test(Validator* validator)
     }
 }
 
-Value ThrowNode::interpret(Interpreter* interpreter)
+Value ThrowNode::interpret(Interpreter* interpreter, struct extras extra)
 {
     Value v = this->exp->interpret(interpreter);
     std::shared_ptr<ExceptionObject> exception_obj = std::dynamic_pointer_cast<ExceptionObject>(v.ovalue);

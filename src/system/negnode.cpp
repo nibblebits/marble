@@ -11,7 +11,7 @@ NegNode::~NegNode()
 
 }
 
-Value NegNode::interpret(Interpreter* interpreter)
+Value NegNode::interpret(Interpreter* interpreter, struct extras extra)
 {
     Value v;
     v.type = VALUE_TYPE_NUMBER;

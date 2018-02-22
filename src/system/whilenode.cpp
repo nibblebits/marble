@@ -17,7 +17,7 @@ void WhileNode::didBreak(BREAK_TYPE type)
     this->body->breakNow(type);
 }
 
-void WhileNode::test(Validator* validator)
+void WhileNode::test(Validator* validator, struct extras extra)
 {
     try
     {
@@ -30,7 +30,7 @@ void WhileNode::test(Validator* validator)
     }
 }
 
-Value WhileNode::interpret(Interpreter* interpreter)
+Value WhileNode::interpret(Interpreter* interpreter, struct extras extra)
 {
     // While nodes are breakable so lets tell the interpreter we are the current breakable
     interpreter->setCurrentBreakable(this);

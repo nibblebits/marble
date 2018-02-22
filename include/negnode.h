@@ -8,7 +8,7 @@ class NegNode : public ExpressionInterpretableNode
         NegNode();
         virtual ~NegNode();
         ExpressionInterpretableNode* node;
-        virtual Value interpret(Interpreter* interpreter);
+        virtual Value interpret(Interpreter* interpreter, struct extras extra);
         virtual void evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation);
 };
 #endif

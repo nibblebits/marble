@@ -11,8 +11,8 @@ class TryNode : public InterpretableNode
     public:
         TryNode();
         virtual ~TryNode();
-        virtual void test(Validator* validator);
-        virtual Value interpret(Interpreter* interpreter);
+        virtual void test(Validator* validator, struct extras extra);
+        virtual Value interpret(Interpreter* interpreter, struct extras extra);
         virtual void evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation);
         BodyNode* try_body;
         /** The variable node representing the variable that the exception that was thrown should be stored in */

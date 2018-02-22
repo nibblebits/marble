@@ -14,13 +14,13 @@ ListNode::~ListNode()
 }
 
 
-void ListNode::test(Validator* validator)
+void ListNode::test(Validator* validator, struct extras extra)
 {
     InterpretableNode* current = this->root;
     while(current != NULL) { current->test(validator); current = (InterpretableNode*) current->next;}
 }
 
-Value ListNode::interpret(Interpreter* interpreter)
+Value ListNode::interpret(Interpreter* interpreter, struct extras extra)
 {
     Value v;
     InterpretableNode* current = this->root;

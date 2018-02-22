@@ -19,7 +19,7 @@ NewNode::~NewNode()
 
 }
 
-void NewNode::test(Validator* validator)
+void NewNode::test(Validator* validator, struct extras extra)
 {
     if (!validator->isExpecting())
         return;
@@ -206,7 +206,7 @@ void NewNode::handle_array(Interpreter* interpreter, Value& v, std::vector<Expre
     v.ovalue = v.avalue;
  
 }
-Value NewNode::interpret(Interpreter* interpreter)
+Value NewNode::interpret(Interpreter* interpreter, struct extras extra)
 {
     Value v;
     if (this->isArray())

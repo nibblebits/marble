@@ -18,7 +18,7 @@ FunctionNode::~FunctionNode()
 
 }
 
-void FunctionNode::test(Validator* validator)
+void FunctionNode::test(Validator* validator, struct extras extra)
 {
     std::vector<VarType> var_types;
     validator->new_parented_scope();
@@ -57,7 +57,7 @@ void FunctionNode::test(Validator* validator)
     validator->finish_parented_scope();
 }
 
-Value FunctionNode::interpret(Interpreter* interpreter)
+Value FunctionNode::interpret(Interpreter* interpreter, struct extras extra)
 {
     interpreter->getFunctionSystem()->registerFunction(this);
     Value v;

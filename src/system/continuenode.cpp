@@ -10,12 +10,12 @@ ContinueNode::~ContinueNode()
 
 }
 
-void ContinueNode::test(Validator* validator)
+void ContinueNode::test(Validator* validator, struct extras extra)
 {
    // Nothing to test break is always valid.
 }
 
-Value ContinueNode::interpret(Interpreter* interpreter)
+Value ContinueNode::interpret(Interpreter* interpreter, struct extras extra)
 {
     if (interpreter->hasBreakable())
     {

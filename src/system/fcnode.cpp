@@ -37,7 +37,7 @@ void FunctionCallNode::test_args(Validator* validator, std::vector<VarType>* typ
     }
 }
 
-void FunctionCallNode::test(Validator* validator)
+void FunctionCallNode::test(Validator* validator, struct extras extra)
 {
    if (shouldIgnoreValidation())
    {
@@ -85,20 +85,17 @@ void FunctionCallNode::test(Validator* validator)
 }
 
 
-Value FunctionCallNode::interpret(Interpreter* interpreter)
+Value FunctionCallNode::interpret(Interpreter* interpreter, struct extras extra)
 {
    Value value;
    std::vector<Value> argument_results;
-   if (interpreter->isAccessingObject())
-   {
-      interpreter->useScope([&] {
+   /* If accessing an object the current scope
+    * may have become something else so we need to use the calling scope which is where the function call took place */
+   interpreter->useScope([&] {
         interpret_args(interpreter, &argument_results);
-      }, interpreter->getAccessorsScope());
-   }
-   else
-   {
-       interpret_args(interpreter, &argument_results);
-   }
+   }, interpreter->getCallingScope());
+   
+
    interpreter->setLastFunctionCallNode(this);
    FunctionSystem* functionSystem = interpreter->getFunctionSystem();
    Function* function = functionSystem->getFunctionByName(name->value, interpreter->getGlobalFunctionSystem());

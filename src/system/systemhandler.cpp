@@ -38,6 +38,7 @@ SystemHandler::SystemHandler(SYSTEM_HANDLER_TYPE type, ClassSystem* baseClassSys
 
     this->currentFunctionSystem->setPreviousFunctionSystem(baseFunctionSystem);
     this->globalFunctionSystem.setSystemHandler(this);
+    this->current_calling_scope = NULL;
 
 
 }
@@ -54,6 +55,11 @@ SystemHandler::~SystemHandler()
            // obj_class_names += obj.c->name + ", ";
         }
         throw std::logic_error("A current object was set but never finished. please call finishCurrentObject when you are done with the object set with setCurrentObject: " + obj_class_names + " size: " + std::to_string(this->current_obj_stack.size()) + " SystemHandlerType: " + std::to_string(this->type));
+    }
+
+    if (!this->calling_scopes.empty())
+    {
+        throw std::logic_error("When calling setCallingScope you must eventually call finishCallingScope");
     }
 
 }
@@ -132,6 +138,23 @@ void SystemHandler::finishCurrentObject()
 Scope* SystemHandler::getAccessorsScope()
 {
     return this->current_obj.accessors_scope;
+}
+
+void SystemHandler::setCallingScope(Scope* scope)
+{
+    this->calling_scopes.push_back(this->current_calling_scope);
+    this->current_calling_scope = scope;
+}
+
+void SystemHandler::finishCallingScope()
+{
+    this->current_calling_scope = this->calling_scopes.back();
+    this->calling_scopes.pop_back();
+}
+
+Scope* SystemHandler::getCallingScope()
+{
+    return this->current_calling_scope;
 }
 
 bool SystemHandler::isAccessingObject()
