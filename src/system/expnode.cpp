@@ -160,7 +160,7 @@ Value ExpNode::interpret(Interpreter* interpreter, struct extras extra)
         Scope* accessors_scope = (extra.accessors_scope != NULL ? extra.accessors_scope : interpreter->getCurrentScope());
         // Interpret the right node on the object scope and return the result.
         obj->runThis([&] {
-            result = this->right->interpret(interpreter, {.accessors_scope = accessors_scope});
+            result = this->right->interpret(interpreter, {.accessors_scope = accessors_scope, .is_object_exp=true});
         }, interpreter, c);
         return result;
     }
@@ -174,7 +174,7 @@ void ExpNode::test(Validator* validator, struct extras extra)
 {  
    if (this->op == ".")
    {
-      test_obj_access(validator);
+      test_obj_access(validator, extra);
    }
    else if(this->isAssignmentOperator())
    {
@@ -188,7 +188,7 @@ void ExpNode::test(Validator* validator, struct extras extra)
 }
 
 
-void ExpNode::test_obj_access(Validator* validator)
+void ExpNode::test_obj_access(Validator* validator, struct extras extra)
 {
     /* While testing the left node we don't really want to care about testing weather or not a type matches
      * as we only care about this for the right operand. For example if an assignment is expecting a string it does not make sense
@@ -217,8 +217,10 @@ void ExpNode::test_obj_access(Validator* validator)
                 c = obj->getClass()->parent;
         }
 
+
+        Scope* accessors_scope = (extra.accessors_scope != NULL ? extra.accessors_scope : validator->getCurrentScope());
         obj->runThis([&] {
-            this->right->test(validator);
+            this->right->test(validator, {.accessors_scope = accessors_scope, .is_object_exp=true});
         }, validator, c);   
     }
 }

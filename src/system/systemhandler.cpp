@@ -102,6 +102,22 @@ Logger* SystemHandler::getLogger()
     return &this->logger;
 }
 
+void SystemHandler::useFunctionSystem(FunctionSystem* f_system, std::function<void()> call)
+{
+    FunctionSystem* old_fc_sys = getFunctionSystem();
+    this->setFunctionSystem(f_system);
+    try
+    {
+        call();
+    }
+    catch(...)
+    {
+        this->setFunctionSystem(old_fc_sys);
+        throw;
+    }
+    this->setFunctionSystem(old_fc_sys);
+
+}
 
 SYSTEM_HANDLER_TYPE SystemHandler::getType()
 {

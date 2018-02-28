@@ -29,6 +29,15 @@ public:
     Logger* getLogger();
 
     /**
+     * Calls the call provided with the current function system being set to the f_system provided. After the call is complete
+     * the functon system before this function call is restored.
+     * 
+     * \param f_system The FunctionSystem to use
+     * \param call The lambda function call that should be called
+     */
+    void useFunctionSystem(FunctionSystem* f_system, std::function<void()> call);
+
+    /**
     * Gets the current Object that is currently being accessed. This object will be the value of the object that currently a method is being called on or an attribute being accessed on.. E.g obj.function();
     */
     std::shared_ptr<Object> getCurrentObject();

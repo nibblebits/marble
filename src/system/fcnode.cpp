@@ -44,20 +44,19 @@ void FunctionCallNode::test(Validator* validator, struct extras extra)
        return;
    }
 
+   /*
+    * If the accessors scope is NULL then we will default to the current interpreters scope
+    */
+   if (extra.accessors_scope == NULL)
+        extra.accessors_scope = validator->getCurrentScope();
+
    // Lets ensure the function actually exists
    FunctionSystem* function_sys = validator->getFunctionSystem();
    std::vector<VarType> types;
-   if (validator->isAccessingObject())
-   {
-        validator->useScope([&] {
-            test_args(validator, &types);
-        }, validator->getAccessorsScope());
-   }
-   else
-   {
-       test_args(validator, &types);
-   }
-   std::cout << validator->getBaseFunctionSystem() << " : " << function_sys << std::endl;
+   validator->useScope([&] {
+        test_args(validator, &types);
+    }, extra.accessors_scope);
+
    if (!function_sys->hasFunction(this->name->value, types, validator->getGlobalFunctionSystem()))
    {
        if (!function_sys->hasFunction(this->name->value, validator->getGlobalFunctionSystem()))
@@ -89,10 +88,12 @@ Value FunctionCallNode::interpret(Interpreter* interpreter, struct extras extra)
    Value value;
    std::vector<Value> argument_results;
    /*
-    * If the accessors scope is NULL then we will default to the current interpreters scope
+    * If the accessors scope is NULL then we will default to the current interpreters scope.
     */
    if (extra.accessors_scope == NULL)
+   {
         extra.accessors_scope = interpreter->getCurrentScope();
+   }
 
    /* If accessing an object the current scope
     * may have become something else so we need to use the accessors scope which is where the function call took place */
@@ -106,10 +107,6 @@ Value FunctionCallNode::interpret(Interpreter* interpreter, struct extras extra)
    Function* function = functionSystem->getFunctionByName(name->value, interpreter->getGlobalFunctionSystem());
    if (function == NULL)
    {
-       for (Function* f : interpreter->getGlobalFunctionSystem()->getFunctions())
-       {
-           std::cout << "FUNCTION NAME IN GLOBAL FS: " << f->name << std::endl;
-       }
         Value except_value;
         except_value.set("The function with the name " + name->value + " has not been registered");
         throw SystemException(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("EntityNotRegisteredException"), {except_value}));
@@ -117,7 +114,23 @@ Value FunctionCallNode::interpret(Interpreter* interpreter, struct extras extra)
     
    try
    {
-       function->invoke(interpreter, argument_results, &value, interpreter->getCurrentObject());
+       /**
+        * If this is an object expression then the scope has already been set when the object was accessd
+        */
+       if (extra.is_object_exp)
+       {
+            function->invoke(interpreter, argument_results, &value, interpreter->getCurrentObject());
+       }
+       else
+       {
+           /* We are not in an object expression right now so it is important to use the global function system 
+            * so that functions from the class(if any) are not accidently invoked by mistake. An example of this is 
+            * having a print function in a class and then calling a global function that calls print. Without this
+            * your version of print would be called, nasty stuff...*/
+           interpreter->useFunctionSystem(interpreter->getGlobalFunctionSystem(), [&] {
+               function->invoke(interpreter, argument_results, &value, interpreter->getCurrentObject());              
+           });
+       }
    }
    catch(SystemException& ex)
    {
