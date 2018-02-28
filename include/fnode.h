@@ -11,8 +11,8 @@ class FunctionNode : public ExpressionInterpretableNode
 public:
     FunctionNode();
     virtual ~FunctionNode();
-    virtual void test(Validator* validator, struct extras extra);
-    virtual Value interpret(Interpreter* interpreter, struct extras extra);
+    virtual void test(Validator* validator, struct extras extra={});
+    virtual Value interpret(Interpreter* interpreter, struct extras extra={});
     virtual void evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation);
     
     std::string name;

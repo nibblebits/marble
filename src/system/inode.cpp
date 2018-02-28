@@ -10,16 +10,9 @@ InterpretableNode::~InterpretableNode()
 
 }
 
-void InterpretableNode::test(Validator* validator);
+void InterpretableNode::test(Validator* validator, struct extras extra)
 {
-    struct extras extra;
-    test(validator, &extra);
-}
-
-Value InterpretableNode::interpret(Interpreter* interpreter)
-{
-    struct extras extra;
-    return interpret(interpreter, &extra);
+   
 }
 
 void InterpretableNode::ignoreValidation()

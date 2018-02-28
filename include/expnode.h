@@ -11,8 +11,8 @@ class ExpNode : public ExpressionInterpretableNode
 public:
     ExpNode();
     virtual ~ExpNode();
-    virtual Value interpret(Interpreter* intrerpreter, struct extras extra);
-    virtual void test(Validator* validator, struct extras extra);
+    virtual Value interpret(Interpreter* intrerpreter, struct extras extra={});
+    virtual void test(Validator* validator, struct extras extra={});
     void test_obj_access(Validator* validator);
     void test_assign(Validator* validator);
     void test_regular_exp(Validator* validator);
