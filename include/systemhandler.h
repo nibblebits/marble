@@ -17,7 +17,6 @@ struct current_object
 {
     std::shared_ptr<Object> object;
     Class* c;
-    Scope* accessors_scope;
 };
 
 class SystemHandler : public ScopeHandler
@@ -51,32 +50,13 @@ public:
     * Used to set the current Object that is currently being accessed. This object must be the value of the object that currently a method is being called on or an attribute being accessed on.. E.g obj.function();
     * @param object The current object that is being accessed
     * @param c The class of this object that is being accessed
-    * @param accessors_scope The scope of the object accessor. E.g the scope at the time before a method call.
     */
-    void setCurrentObject(std::shared_ptr<Object> object, Class* c, Scope* accessors_scope);
+    void setCurrentObject(std::shared_ptr<Object> object, Class* c);
     /**
     * Should be called upon finishing access to an object
     */
     void finishCurrentObject();
 
-
-    /**
-     * Returns the scope of the object accessor.
-     */
-    Scope* getAccessorsScope();
-
-    /**
-    * Should be used just before calling a function and should point to the scope of the function caller.
-    * \attention You must call finishCallingScope() when you are finished with the calling scope.
-    */
-    void setCallingScope(Scope* scope);
-
-    void finishCallingScope();
-
-    /**
-    * Gets the scope of where the last function call happend.
-    */
-    Scope* getCallingScope();
 
     /**
      * Returns true if their is an object being accessed

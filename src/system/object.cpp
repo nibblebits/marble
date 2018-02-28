@@ -115,7 +115,7 @@ void Object::runThis(std::function<void()> function, SystemHandler* sys_handler,
     old_fc_system = sys_handler->getFunctionSystem();
     old_scope = sys_handler->getCurrentScope();
     if (access_type == OBJECT_ACCESS_TYPE_OBJECT_ACCESS)
-        sys_handler->setCurrentObject(shared_from_this(), c, accessors_scope);
+        sys_handler->setCurrentObject(shared_from_this(), c);
     sys_handler->setCurrentScope(this);
     sys_handler->setFunctionSystem(c);
     
