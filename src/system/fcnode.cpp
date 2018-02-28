@@ -45,7 +45,7 @@ void FunctionCallNode::test(Validator* validator, struct extras extra)
    }
 
    /*
-    * If the accessors scope is NULL then we will default to the current interpreters scope
+    * If the accessors scope is NULL then we will default to the current validators scope
     */
    if (extra.accessors_scope == NULL)
         extra.accessors_scope = validator->getCurrentScope();
