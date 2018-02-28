@@ -57,13 +57,15 @@ void FunctionCallNode::test(Validator* validator, struct extras extra)
         test_args(validator, &types);
     }, extra.accessors_scope);
 
-   FunctionSystem* final_fs = NULL;
+   /**
+    * If we are not accessing an object we must default to the global function system
+    */
    if (!extra.is_object_exp)
-      final_fs = validator->getGlobalFunctionSystem();
+      function_sys = validator->getGlobalFunctionSystem();
 
-   if (!function_sys->hasFunction(this->name->value, types, final_fs))
+   if (!function_sys->hasFunction(this->name->value, types))
    {
-       if (!function_sys->hasFunction(this->name->value, final_fs))
+       if (!function_sys->hasFunction(this->name->value))
        {
            throw TestError("The function \"" + this->name->value + "\" has not been declared");
        }
@@ -74,7 +76,7 @@ void FunctionCallNode::test(Validator* validator, struct extras extra)
    {
        // We must check the return type is valid 
        VARIABLE_TYPE expecting_type = validator->getExpectingVariableType();
-       SingleFunction* function = (SingleFunction*) function_sys->getFunctionByNameAndArguments(this->name->value, types, final_fs);
+       SingleFunction* function = (SingleFunction*) function_sys->getFunctionByNameAndArguments(this->name->value, types);
        if (function->return_type.type != expecting_type)
            throw TestError("The function " + this->name->value + " returns a " + function->return_type.value);
 
@@ -112,7 +114,7 @@ Value FunctionCallNode::interpret(Interpreter* interpreter, struct extras extra)
    if (extra.is_object_exp)
       function = functionSystem->getFunctionByName(name->value);
    else
-      function = functionSystem->getFunctionByName(name->value, interpreter->getGlobalFunctionSystem());
+      function = interpreter->getGlobalFunctionSystem()->getFunctionByName(name->value);
 
    if (function == NULL)
    {
@@ -123,23 +125,7 @@ Value FunctionCallNode::interpret(Interpreter* interpreter, struct extras extra)
     
    try
    {
-       /**
-        * If this is an object expression then the scope has already been set when the object was accessed
-        */
-       if (extra.is_object_exp)
-       {
-            function->invoke(interpreter, argument_results, &value, interpreter->getCurrentObject());
-       }
-       else
-       {
-           /* We are not in an object expression right now so it is important to use the global function system 
-            * so that functions from the class(if any) are not accidently invoked by mistake. An example of this is 
-            * having a print function in a class and then calling a global function that calls print. Without this
-            * your version of print would be called, nasty stuff...*/
-           interpreter->useFunctionSystem(interpreter->getGlobalFunctionSystem(), [&] {
-               function->invoke(interpreter, argument_results, &value, interpreter->getCurrentObject());              
-           });
-       }
+        function->invoke(interpreter, argument_results, &value, interpreter->getCurrentObject());
    }
    catch(SystemException& ex)
    {

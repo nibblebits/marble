@@ -38,6 +38,7 @@ void CommonModule::Init()
             v.type = VALUE_TYPE_NUMBER;
             v.set((double) value[i]);
             write_function->invoke(interpreter, {v}, NULL, object);
+            std::cout << "FAKE PRINT CALLED" << std::endl;
         }
     });
     log("File Module Initialised.", LOG_LEVEL_NOTICE);

@@ -50,7 +50,6 @@ void WrittenFunction::invoke_impl(Interpreter* interpreter, std::vector<Value> v
             var->value = values[count];
             // The new values holder must be to the variable we just created.
             var->value.holder = var;
-            std::cout << "Variable: " << var->value.svalue << " holder" << var->value.holder->name << std::endl;
         }
         count++;
     }
