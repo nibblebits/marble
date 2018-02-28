@@ -70,17 +70,10 @@ Class* ClassSystem::registerClass(std::string class_name, Class* parent, CLASS_R
     if (hasClassWithName(class_name))
         throw std::logic_error("The class: " + class_name + " has already been registered");
     
-    Class* c; 
-    if (parent == NULL && this->defaultBaseClass == NULL)
-    {
-        c = new Class(this->sys_handler, class_name, this->sys_handler->getGlobalFunctionSystem(), this->defaultObjectDescriptor);
-    }
-    else
-    {
-        if (parent == NULL)
-            parent = this->defaultBaseClass;      
-        c = new Class(this->sys_handler, class_name, parent, this->defaultObjectDescriptor);
-    }
+    if (parent == NULL)
+        parent = this->defaultBaseClass;  
+    Class* c = new Class(this->sys_handler, class_name, parent, this->defaultObjectDescriptor);
+    
     
     
     /* Do we have a parent? If so then the descriptor object should be changed to a new instance of the parents 

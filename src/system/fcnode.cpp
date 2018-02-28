@@ -57,9 +57,13 @@ void FunctionCallNode::test(Validator* validator, struct extras extra)
         test_args(validator, &types);
     }, extra.accessors_scope);
 
-   if (!function_sys->hasFunction(this->name->value, types, validator->getGlobalFunctionSystem()))
+   FunctionSystem* final_fs = NULL;
+   if (!extra.is_object_exp)
+      final_fs = validator->getGlobalFunctionSystem();
+
+   if (!function_sys->hasFunction(this->name->value, types, final_fs))
    {
-       if (!function_sys->hasFunction(this->name->value, validator->getGlobalFunctionSystem()))
+       if (!function_sys->hasFunction(this->name->value, final_fs))
        {
            throw TestError("The function \"" + this->name->value + "\" has not been declared");
        }
@@ -70,7 +74,7 @@ void FunctionCallNode::test(Validator* validator, struct extras extra)
    {
        // We must check the return type is valid 
        VARIABLE_TYPE expecting_type = validator->getExpectingVariableType();
-       SingleFunction* function = (SingleFunction*) function_sys->getFunctionByNameAndArguments(this->name->value, types, validator->getGlobalFunctionSystem());
+       SingleFunction* function = (SingleFunction*) function_sys->getFunctionByNameAndArguments(this->name->value, types, final_fs);
        if (function->return_type.type != expecting_type)
            throw TestError("The function " + this->name->value + " returns a " + function->return_type.value);
 
@@ -104,7 +108,12 @@ Value FunctionCallNode::interpret(Interpreter* interpreter, struct extras extra)
 
    interpreter->setLastFunctionCallNode(this);
    FunctionSystem* functionSystem = interpreter->getFunctionSystem();
-   Function* function = functionSystem->getFunctionByName(name->value, interpreter->getGlobalFunctionSystem());
+   Function* function = NULL;
+   if (extra.is_object_exp)
+      function = functionSystem->getFunctionByName(name->value);
+   else
+      function = functionSystem->getFunctionByName(name->value, interpreter->getGlobalFunctionSystem());
+
    if (function == NULL)
    {
         Value except_value;
@@ -115,7 +124,7 @@ Value FunctionCallNode::interpret(Interpreter* interpreter, struct extras extra)
    try
    {
        /**
-        * If this is an object expression then the scope has already been set when the object was accessd
+        * If this is an object expression then the scope has already been set when the object was accessed
         */
        if (extra.is_object_exp)
        {
