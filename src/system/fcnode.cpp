@@ -84,16 +84,21 @@ void FunctionCallNode::test(Validator* validator, struct extras extra)
    }
 }
 
-
 Value FunctionCallNode::interpret(Interpreter* interpreter, struct extras extra)
 {
    Value value;
    std::vector<Value> argument_results;
+   /*
+    * If the accessors scope is NULL then we will default to the current interpreters scope
+    */
+   if (extra.accessors_scope == NULL)
+        extra.accessors_scope = interpreter->getCurrentScope();
+
    /* If accessing an object the current scope
-    * may have become something else so we need to use the calling scope which is where the function call took place */
+    * may have become something else so we need to use the accessors scope which is where the function call took place */
    interpreter->useScope([&] {
         interpret_args(interpreter, &argument_results);
-   }, interpreter->getCallingScope());
+   }, extra.accessors_scope);
    
 
    interpreter->setLastFunctionCallNode(this);

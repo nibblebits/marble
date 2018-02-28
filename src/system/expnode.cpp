@@ -157,13 +157,11 @@ Value ExpNode::interpret(Interpreter* interpreter, struct extras extra)
                 c = obj->getClass()->parent;
         }
         
-        // We must set the calling scope to the current scope as a function may be about to be called
-        interpreter->setCallingScope(interpreter->getCurrentScope());
+        Scope* accessors_scope = (extra.accessors_scope != NULL ? extra.accessors_scope : interpreter->getCurrentScope());
         // Interpret the right node on the object scope and return the result.
         obj->runThis([&] {
-            result = this->right->interpret(interpreter);
+            result = this->right->interpret(interpreter, {.accessors_scope = accessors_scope});
         }, interpreter, c);
-        interpreter->finishCallingScope();
         return result;
     }
     
