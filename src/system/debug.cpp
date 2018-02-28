@@ -116,9 +116,5 @@ void Debug::PrintValueForNode(Node* value_node, int tabbing)
 	        std::cout << "UNKNOWN DEBUG NODE TYPE: " << value_node->type << std::endl;
 	    }
     }
-    else
-    {
-        std::cout << "NULL" << std::endl;
-    }
 }
 #endif 
