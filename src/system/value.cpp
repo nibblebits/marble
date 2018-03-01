@@ -45,6 +45,7 @@ VALUE_TYPE Value::getValueTypeFromVariableType(VARIABLE_TYPE type)
             value_type = VALUE_TYPE_OBJECT;
         break;
         
+        
         default:
             throw std::logic_error("Unable to convert variable type: " + std::to_string(type) + " into value type: " + std::to_string(value_type));
     }

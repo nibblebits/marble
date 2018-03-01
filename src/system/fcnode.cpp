@@ -56,7 +56,6 @@ void FunctionCallNode::test(Validator* validator, struct extras extra)
    validator->useScope([&] {
         test_args(validator, &types);
     }, extra.accessors_scope);
-
    /**
     * If we are not accessing an object we must default to the global function system
     */
