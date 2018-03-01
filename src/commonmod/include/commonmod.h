@@ -3,6 +3,7 @@
 #include "module.h"
 #include "object.h"
 #include "commonmod_outputstream.h"
+#include "commonmod_stringutils.h"
 #include <stdio.h>
 #include <string>
 

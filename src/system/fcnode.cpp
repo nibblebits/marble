@@ -20,21 +20,25 @@ FunctionCallNode::~FunctionCallNode()
 
 }
 
-void FunctionCallNode::test_args(Validator* validator, std::vector<VarType>* types)
+void FunctionCallNode::test_args(Validator* validator, std::vector<VarType>* types, struct extras extra)
 {
-    for (ExpressionInterpretableNode* argument_node : this->arguments)
-    {
-        argument_node->test(validator);
-        try
+    validator->useScope([&] {
+        for (ExpressionInterpretableNode* argument_node : this->arguments)
         {
-           struct Evaluation evaluation = argument_node->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE);
-           types->push_back(evaluation.datatype);
+                argument_node->test(validator, extra);
+                try
+                {
+                    struct Evaluation evaluation;
+                    evaluation.extra = extra;
+                    argument_node->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE, &evaluation);
+                    types->push_back(evaluation.datatype);
+                }
+                catch(EvaluationException& ex)
+                {
+                    throw TestError("The value provided for the function call is multityped. Ensure you cast where types differ. First type is: " + ex.type1 + " second is: " + ex.type2);
+                }
         }
-        catch(EvaluationException& ex)
-        {
-            throw TestError("The value provided for the function call is multityped. Ensure you cast where types differ. First type is: " + ex.type1 + " second is: " + ex.type2);
-        }
-    }
+    }, extra.accessors_scope);
 }
 
 void FunctionCallNode::test(Validator* validator, struct extras extra)
@@ -53,9 +57,8 @@ void FunctionCallNode::test(Validator* validator, struct extras extra)
    // Lets ensure the function actually exists
    FunctionSystem* function_sys = validator->getFunctionSystem();
    std::vector<VarType> types;
-   validator->useScope([&] {
-        test_args(validator, &types);
-    }, extra.accessors_scope);
+   test_args(validator, &types, extra);
+
    /**
     * If we are not accessing an object we must default to the global function system
     */
@@ -103,7 +106,7 @@ Value FunctionCallNode::interpret(Interpreter* interpreter, struct extras extra)
    /* If accessing an object the current scope
     * may have become something else so we need to use the accessors scope which is where the function call took place */
    interpreter->useScope([&] {
-        interpret_args(interpreter, &argument_results);
+        interpret_args(interpreter, &argument_results, extra);
    }, extra.accessors_scope);
    
 
@@ -135,11 +138,11 @@ Value FunctionCallNode::interpret(Interpreter* interpreter, struct extras extra)
    return value;
 }
 
-void FunctionCallNode::interpret_args(Interpreter* interpreter, std::vector<Value>* argument_results)
+void FunctionCallNode::interpret_args(Interpreter* interpreter, std::vector<Value>* argument_results, struct extras extra)
 {
     for (ExpressionInterpretableNode* argument_node : this->arguments)
     {
-        Value v = argument_node->interpret(interpreter);
+        Value v = argument_node->interpret(interpreter, extra);
         argument_results->push_back(v);
     }
 }
@@ -151,11 +154,13 @@ void FunctionCallNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE exp
     {
         FunctionSystem* function_sys = handler->getFunctionSystem();
         std::vector<VarType> types;
-        for (ExpressionInterpretableNode* argument_node : this->arguments)
-        {
-           struct Evaluation evaluation = argument_node->evaluate(handler, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE);
-           types.push_back(evaluation.datatype);
-        }
+        handler->useScope([&] {
+            for (ExpressionInterpretableNode* argument_node : this->arguments)
+            {
+                struct Evaluation evaluation = argument_node->evaluate(handler, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE);
+                types.push_back(evaluation.datatype);
+            }
+        }, evaluation->extra.accessors_scope);
         SingleFunction* function = (SingleFunction*) function_sys->getFunctionByNameAndArguments(this->name->value, types);
         if (function == NULL)
             throw std::logic_error("The function call to evaluate has a call to a function that does not exist");

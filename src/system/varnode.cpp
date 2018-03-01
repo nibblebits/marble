@@ -138,7 +138,6 @@ Value VarNode::interpret(Interpreter* interpreter, struct extras extra)
     ExpressionInterpretableNode* value_node = (ExpressionInterpretableNode*)value;
 
     Variable* variable = interpreter->getCurrentScope()->createVariable();
-    Debug::PrintValueForNode(value_node);
     if (value_node != NULL)
     {
         variable->value = value_node->interpret(interpreter);

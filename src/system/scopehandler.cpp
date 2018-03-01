@@ -66,8 +66,18 @@ Variable* ScopeHandler::getVariableByName(std::string name)
 
 void ScopeHandler::useScope(std::function<void()> function, Scope* scope)
 {
+    if (scope == NULL)
+        scope = getCurrentScope();
+        
     Scope* old_scope = getCurrentScope();
     setCurrentScope(scope);
-    function();
+    try
+    {
+        function();
+    } catch(...)
+    {
+        setCurrentScope(old_scope);
+        throw;
+    }
     setCurrentScope(old_scope);
 }

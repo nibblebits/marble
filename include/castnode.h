@@ -16,7 +16,6 @@ public:
     ExpressionInterpretableNode* to_cast;
 private:
     std::string get_string_value(Value* from);
-    std::string get_char_value(Value* from);
     double get_double_value(Value* from);
 };
 #endif

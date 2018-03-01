@@ -1,5 +1,6 @@
 #include "commonmod_outputstream.h"
 #include "function.h"
+#include <iostream>
 CommonModule_OutputStream::CommonModule_OutputStream(Class* c) : Object(c)
 {
   

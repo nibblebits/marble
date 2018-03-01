@@ -3,6 +3,7 @@
 #include "node.h"
 #include "statics.h"
 #include "vartype.h"
+#include "extras.h"
 class SystemHandler;
 class Variable;
 struct Evaluation
@@ -10,6 +11,7 @@ struct Evaluation
     EVALUATION_TYPE type = 0;
     VarType datatype;
     Variable* variable = NULL;
+    struct extras extra;
 };
 
 class EvaluatingNode : public Node

@@ -56,26 +56,6 @@ std::string CastNode::get_string_value(Value* from)
     };
 }
 
-std::string CastNode::get_char_value(Value* from)
-{
-    switch(from->type)
-    {
-        case VALUE_TYPE_STRING:
-        {
-            // Return first character of the string
-            return std::to_string(from->svalue[0]);
-        };
-        
-        case VALUE_TYPE_NUMBER:
-        {
-            return std::to_string((char)from->dvalue);
-        };
-        
-        
-        default:
-            throw std::logic_error("Unable to get string value from within CastNode");
-    };
-}
 
 Value CastNode::interpret(Interpreter* interpreter, struct extras extra)
 {

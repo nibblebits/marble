@@ -17,6 +17,12 @@ public:
     void finish_parented_scope();
     Variable* getVariableByName(std::string name);
 
+    /**
+     * Sets the current scope to the scope provided and then calls the function provided.
+     * After exection of the function is complete the previous scope is restored
+     * \param function The function to call
+     * \param scope The scope to set as our current scope for when we call the function provided
+     */
     void useScope(std::function<void()> function, Scope* scope);
 private:
     Scope root_scope;

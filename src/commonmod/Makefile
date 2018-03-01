@@ -1,4 +1,4 @@
-SYSTEM_OBJECT_FILES = ./build/main.o ./build/commonmod.o ./build/commonmod_outputstream.o
+SYSTEM_OBJECT_FILES = ./build/main.o ./build/commonmod.o ./build/commonmod_outputstream.o ./build/commonmod_stringutils.o
 INCLUDES = -I ../../include -I ./include
 OBJECT_FILE_FLAGS = -c -g -fPIC -std=c++14
 SYSTEM_LIB_LOCAL_FILENAME = libmarble.so
@@ -11,6 +11,8 @@ module: ${SYSTEM_OBJECT_FILES}
 	g++ ${INCLUDES} ./src/commonmod.cpp -o ./build/commonmod.o ${OBJECT_FILE_FLAGS}
 ./build/commonmod_outputstream.o: ./src/commonmod_outputstream.cpp
 	g++ ${INCLUDES} ./src/commonmod_outputstream.cpp -o ./build/commonmod_outputstream.o ${OBJECT_FILE_FLAGS}
+./build/commonmod_stringutils.o: ./src/commonmod_stringutils.cpp
+	g++ ${INCLUDES} ./src/commonmod_stringutils.cpp -o ./build/commonmod_stringutils.o ${OBJECT_FILE_FLAGS}
 standalone: module
 	ld -r ${SYSTEM_OBJECT_FILES} -o ./bin/marble_commonmod.o
 clean:
