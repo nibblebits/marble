@@ -76,7 +76,7 @@ void ClassNode::test(Validator* validator, struct extras extra)
     {
         if (parent_class->is_final)
         {
-            throw TestError("The class " + c->name + " is final and cannot be extended");
+            throw TestError("The class " + parent_class->name + " is final and cannot be extended");
         }
         
         if (!is_pure && parent_class->is_pure)
