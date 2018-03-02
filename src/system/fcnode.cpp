@@ -57,8 +57,9 @@ void FunctionCallNode::test(Validator* validator, struct extras extra)
    // Lets ensure the function actually exists
    FunctionSystem* function_sys = validator->getFunctionSystem();
    std::vector<VarType> types;
+   validator->save();
    test_args(validator, &types, extra);
-
+   validator->restore();
    /**
     * If we are not accessing an object we must default to the global function system
     */

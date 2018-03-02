@@ -35,7 +35,8 @@ void CommonModule::Init()
 
 void CommonModule::newInterpreter(Interpreter* interpreter)
 {
-  
+    Class* c = this->getModuleSystem()->getClassSystem()->getClassByName("StringUtils");
+    interpreter->getCurrentScope()->createVariable("StringUtils", "StringUtils", std::make_shared<CommonModule_StringUtils>(c));
 }
 
 // Native IO functions/methods
