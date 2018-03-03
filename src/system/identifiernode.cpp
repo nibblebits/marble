@@ -27,7 +27,9 @@ void IdentifierNode::test(Validator* validator, struct extras extra)
     {
         throw TestError("variable \"" + this->value + "\" is not declared");
     }
-    if (variable->access == MODIFIER_ACCESS_PRIVATE || variable->access == MODIFIER_ACCESS_PROTECTED)
+
+    // We don't really care about variable access unless the variable is in a class. Thats why we check if the object is not NULL
+    if (variable->object != NULL && variable->access == MODIFIER_ACCESS_PRIVATE || variable->access == MODIFIER_ACCESS_PROTECTED)
     {
         Class* holder_class;
         std::shared_ptr<Object> current_obj = validator->getCurrentObject();

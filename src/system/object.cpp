@@ -63,7 +63,7 @@ void Object::registerVariable(Variable* variable)
 {
     if (variable == NULL)
         throw std::logic_error("The variable must not be NULL");
-        
+    
     variable->object = this;
     Scope::registerVariable(variable);
 }

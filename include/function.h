@@ -25,5 +25,8 @@ class Function
         FUNCTION_TYPE type;
         std::string name;
         bool is_pure;
+
+        // Is this a private, protected or public variable?
+        MODIFIER_ACCESS access;
 };
 #endif

@@ -20,5 +20,9 @@ public:
     std::vector<VarNode*> args;
     bool is_pure;
     ExpressionInterpretableNode* return_type;
+
+
+    // Is this a private, protected or public variable?
+    MODIFIER_ACCESS access;
 };
 #endif

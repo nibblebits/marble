@@ -440,6 +440,7 @@ void Parser::parse_function_declaration()
     function_node->name = name_node->value;
     function_node->args = args;
     function_node->return_type = return_type;
+    function_node->access = access;
     push_node(function_node);   
 }
 

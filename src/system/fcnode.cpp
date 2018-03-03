@@ -75,11 +75,11 @@ void FunctionCallNode::test(Validator* validator, struct extras extra)
        throw TestError("The function \"" + this->name->value + "\" has not been declared that takes the given arguments");
    }
    
+   SingleFunction* function = (SingleFunction*) function_sys->getFunctionByNameAndArguments(this->name->value, types);
    if (validator->isExpecting())
    {
        // We must check the return type is valid 
        VARIABLE_TYPE expecting_type = validator->getExpectingVariableType();
-       SingleFunction* function = (SingleFunction*) function_sys->getFunctionByNameAndArguments(this->name->value, types);
        if (function->return_type.type != expecting_type)
            throw TestError("The function " + this->name->value + " returns a " + function->return_type.value);
 
@@ -88,8 +88,18 @@ void FunctionCallNode::test(Validator* validator, struct extras extra)
            if (!validator->getClassSystem()->isClassInstanceOf(function->return_type.value, validator->getExpectingType()))
                throw TestError("The function " + function->name + " returns a " + function->return_type.value);
        }
-
    }
+
+   /**
+    * We must now ensure that we can access this function, e.g it is public or if it is protected or private we must check we are allowed to access it
+    */
+    if (function->access != MODIFIER_ACCESS_PUBLIC)
+    {
+        if (!validator->isInClass())
+        {
+            throw TestError("The function " + function->name + " is private or protected in class: " + function->cls->name);
+        }
+    }
 }
 
 Value FunctionCallNode::interpret(Interpreter* interpreter, struct extras extra)

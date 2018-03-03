@@ -73,7 +73,6 @@ void VarNode::test(Validator* validator, struct extras extra)
    var->access = this->access;
    var->type_name = type_str;
    var->name = this->name;
-
 }
 
 void VarNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)

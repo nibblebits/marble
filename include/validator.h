@@ -18,11 +18,16 @@ public:
     
     Interpreter* getInterpreter();
     /**
-    * All classes that should be validated should create a new object instance for that class
-    * and call this method. It is a requirement as the validator needs to maintain scopes which can only be done with an Object instance.
+     * Add's the provided object to this validators class object stack.
+     * \param object The object to add to the class object stack
     */
     void giveClassObject(std::shared_ptr<Object> object);
     bool isInClass();
+    /**
+     * Gets an validation Object for the class with the name provided from the class object stack.
+     * \param name The name of the class to get the validation Object for
+     * \return Returns the validation Object for the class with the provided name
+     */ 
     Object* getClassObject(std::string name);
     void beginClass(Class* current_class);
     Class* getCurrentClass();

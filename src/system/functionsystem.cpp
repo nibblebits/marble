@@ -125,6 +125,7 @@ Function* FunctionSystem::registerFunction(FunctionNode* fnode)
     }
 
     std::unique_ptr<Function> function = std::unique_ptr<Function>(function_raw);
+    function->access = fnode->access;
     if (hasFunctionLocally(fnode->name))
     {
         // So we already have this function registered so we may need to create a grouped function if it is not that already

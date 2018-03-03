@@ -11,6 +11,7 @@ FunctionNode::FunctionNode() : ExpressionInterpretableNode(NODE_TYPE_FUNCTION)
     this->body = NULL;
     this->return_type = NULL;
     this->is_pure = false;
+    this->access = MODIFIER_ACCESS_PUBLIC;
 }
 
 FunctionNode::~FunctionNode()
