@@ -2,8 +2,10 @@
 #define OBJECT_H
 #include <memory>
 #include <functional>
+#include <vector>
 #include "class.h"
 #include "scope.h"
+#include "value.h"
 #include "statics.h"
 
 class SystemHandler;
@@ -28,6 +30,13 @@ public:
     virtual void registerVariable(Variable* variable);
     Class* getClass();
 
+    /**
+     * Invokes the parent constructor for this object.
+     * \param interpreter The interpreter instance for this object
+     * \param values The values to pass to the constructor
+     */
+    void invokeParentConstructor(Interpreter* interpreter, std::vector<Value> values);
+    
     /**
     * Returns true if this Object is currently having code run on it using the runThis method. 
     */
