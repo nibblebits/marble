@@ -104,7 +104,7 @@ void NewNode::test_for_array(Validator* validator)
             Class* expecting_class = class_sys->getClassByName(expecting_type);
             Class* value_class = class_sys->getClassByName(eval.datatype.value);
             
-            // Is it an intance? If so its completely legal so return
+            // Is it an instance? If so its completely legal so return
             if (value_class->instanceOf(expecting_class))
                 return;
         }

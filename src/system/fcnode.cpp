@@ -99,6 +99,24 @@ void FunctionCallNode::test(Validator* validator, struct extras extra)
         {
             throw TestError("The function " + function->name + " is private or protected in class: " + function->cls->name);
         }
+
+        Class* our_class = validator->getCurrentClass();
+        if (function->access == MODIFIER_ACCESS_PRIVATE)
+        {
+            /*
+            * If the function we are calling has private access then we have to ensure that the class that we are in equals the class of the function
+            */
+            if (our_class != function->cls)
+                throw TestError("The function: " + function->name + " is private in the class " + function->cls->name);
+        }
+        else
+        {
+            /**
+             * This function is protected access so we must make sure we are an instance of the function class
+             */
+            if (!our_class->instanceOf(function->cls))
+                throw TestError("The function: " + function->name + " is protected in the class " + function->cls->name);
+        }
     }
 }
 
