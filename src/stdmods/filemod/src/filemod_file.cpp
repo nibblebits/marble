@@ -1,4 +1,5 @@
 #include "filemod_file.h"
+#include "exceptions/systemexception.h"
 
 FileModule_File::FileModule_File(Class* c) : Object(c)
 {
@@ -31,8 +32,8 @@ Class* FileModule_File::registerClass(ModuleSystem* moduleSystem)
         return_value->type = VALUE_TYPE_OBJECT;
         return_value->ovalue = file->output;
     });
-    c->registerFunction("print", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
-        File_Print(interpreter, arguments, return_value, object);
+    c->registerFunction("close", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+        File_Close(interpreter, arguments, return_value, object);
     });
     return c;
 }
@@ -48,11 +49,10 @@ void FileModule_File::File_Open(Interpreter* interpreter, std::vector<Value> val
     return_value->dvalue = fp != NULL;
 }
 
-void FileModule_File::File_Print(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)
+void FileModule_File::File_Close(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)
 {
-    return_value->type = VALUE_TYPE_NUMBER;
-    std::string value = values[0].svalue;
     std::shared_ptr<FileModule_File> file_obj = std::dynamic_pointer_cast<FileModule_File>(object);
-    int r = fwrite(value.c_str(), 1, value.size(), file_obj->fp);
-    return_value->dvalue = r != 0;
+    int response = fclose(file_obj->fp);
+    if (response != 0)
+        throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("IOException")));
 }

@@ -39,8 +39,15 @@ void FileModule_FileOutputStream::FileOutputStream_Flush(Interpreter* interprete
     // Let's get the FileModule_File and get the native FILE* and write this buffer
     std::shared_ptr<FileModule_File> file_obj = stream->file;
     FILE* file = file_obj->fp;
+
+    // If the file is not open then lets throw an exception
+    if (!file)
+        throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("IOException")));
+
     const char* buf = &stream->buffer[0];
     size_t amount = fwrite(buf, 1, stream->buffer.size(), file);
+
+    // Did we write all bytes succesfully?
     if (amount != stream->buffer.size())
         throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("IOException")));
 }
