@@ -1,11 +1,12 @@
 #include "commonmod_outputstream.h"
 #include "function.h"
 #include "object.h"
+#include "config.h"
 #include "exceptions/systemexception.h"
 #include <iostream>
 CommonModule_OutputStream::CommonModule_OutputStream(Class* c) : Object(c)
 {
-  
+    this->amount_to_auto_flush = MAX_OUTPUTSTREAM_SIZE_UNTIL_AUTO_FLUSH;
 }
 
 CommonModule_OutputStream::~CommonModule_OutputStream()
@@ -36,6 +37,10 @@ Class* CommonModule_OutputStream::registerClass(ModuleSystem* moduleSystem)
         OutputStream_Get(interpreter, arguments, return_value, object);
     });
 
+    f = c->registerFunction("empty", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+        OutputStream_Empty(interpreter, arguments, return_value, object);
+    });
+
     f = c->registerFunction("size", {}, VarType::fromString("number"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
         OutputStream_Size(interpreter, arguments, return_value, object);
     });
@@ -51,6 +56,11 @@ void CommonModule_OutputStream::OutputStream_Write(Interpreter* interpreter, std
 {
     std::shared_ptr<CommonModule_OutputStream> output_stream = std::dynamic_pointer_cast<CommonModule_OutputStream>(object);
     output_stream->buffer.push_back((char)arguments[0].dvalue);
+    if (output_stream->buffer.size() >= output_stream->amount_to_auto_flush)
+    {
+        Function* flush_func = object->getClass()->getFunctionByName("flush");
+        flush_func->invoke(interpreter, {}, return_value, object);
+    }      
 }
 
 void CommonModule_OutputStream::OutputStream_Get(Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object)
@@ -65,6 +75,12 @@ void CommonModule_OutputStream::OutputStream_Get(Interpreter* interpreter, std::
     {
         throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("InvalidIndexException")));
     }
+}
+
+void CommonModule_OutputStream::OutputStream_Empty(Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object)
+{
+    std::shared_ptr<CommonModule_OutputStream> output_stream = std::dynamic_pointer_cast<CommonModule_OutputStream>(object);
+    output_stream->buffer.clear();   
 }
 
 void CommonModule_OutputStream::OutputStream_Size(Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object)

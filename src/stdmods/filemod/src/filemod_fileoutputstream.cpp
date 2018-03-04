@@ -31,6 +31,10 @@ Class* FileModule_FileOutputStream::registerClass(ModuleSystem* moduleSystem)
 void FileModule_FileOutputStream::FileOutputStream_Flush(Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object)
 {
     std::shared_ptr<FileModule_FileOutputStream> stream = std::dynamic_pointer_cast<FileModule_FileOutputStream>(object);
+    // If this buffer is empty then we have nothing to flush so just return.
+    if (stream->buffer.empty())
+        return;
+
     /* If this output stream does not belong to a file then there is nothing we can do so throw an exception. 
      * This will happen when a programmer creates a FileOutputStream manually within marble code*/
     if (stream->file == NULL)
@@ -50,4 +54,7 @@ void FileModule_FileOutputStream::FileOutputStream_Flush(Interpreter* interprete
     // Did we write all bytes succesfully?
     if (amount != stream->buffer.size())
         throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("IOException")));
+    
+    // Now we must clear the output stream buffer
+    stream->buffer.clear();
 }
