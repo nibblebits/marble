@@ -21,6 +21,7 @@ Class* FileModule_File::registerClass(ModuleSystem* moduleSystem)
         object->invokeParentConstructor(interpreter, arguments);
         std::shared_ptr<FileModule_File> file = std::dynamic_pointer_cast<FileModule_File>(object);
         file->output = std::dynamic_pointer_cast<FileModule_FileOutputStream>(Object::create(moduleSystem->getClassSystem()->getClassByName("FileOutputStream")));
+        file->output->file = file;
     });
     c->registerFunction("open", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("number"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
         File_Open(interpreter, arguments, return_value, object);
