@@ -1,5 +1,6 @@
 #include "filemod_file.h"
 #include "exceptions/systemexception.h"
+#include <iostream>
 
 FileModule_File::FileModule_File(Class* c) : Object(c)
 {
@@ -9,7 +10,9 @@ FileModule_File::FileModule_File(Class* c) : Object(c)
 
 FileModule_File::~FileModule_File()
 {
-
+    // Let's close the file if it wasen't closed automatically
+    if (this->fp != NULL)
+        fclose(this->fp);
 }
 
 

@@ -11,7 +11,7 @@ CommonModule_OutputStream::CommonModule_OutputStream(Class* c) : Object(c)
 
 CommonModule_OutputStream::~CommonModule_OutputStream()
 {
-
+ 
 }
 
 std::shared_ptr<Object> CommonModule_OutputStream::newInstance(Class* c)
