@@ -62,7 +62,6 @@ void interpret()
     {
         std::cout << entry.message << " on line: " << entry.posInfo.line << ", col: " << entry.posInfo.col << std::endl;
     }    
-    std::cout << "END OF SCOPE" << std::endl;
 }
 int main(int argc, char** argv)
 {

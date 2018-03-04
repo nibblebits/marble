@@ -5,6 +5,7 @@
 #include "nodes.h"
 #include "singlefunction.h"
 #include "vartype.h"
+#include "debug.h"
 #include "exceptions/testerror.h"
 #include "exceptions/systemexception.h"
 #include "exceptions/evaluationexception.h"
@@ -51,8 +52,11 @@ void FunctionCallNode::test(Validator* validator, struct extras extra)
    /*
     * If the accessors scope is NULL then we will default to the current validators scope
     */
+   
    if (extra.accessors_scope == NULL)
+   {
         extra.accessors_scope = validator->getCurrentScope();
+   }
 
    // Lets ensure the function actually exists
    FunctionSystem* function_sys = validator->getFunctionSystem();
@@ -186,8 +190,8 @@ void FunctionCallNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE exp
         handler->useScope([&] {
             for (ExpressionInterpretableNode* argument_node : this->arguments)
             {
-                struct Evaluation evaluation = argument_node->evaluate(handler, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE);
-                types.push_back(evaluation.datatype);
+                argument_node->evaluate(handler, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE, evaluation);
+                types.push_back(evaluation->datatype);
             }
         }, evaluation->extra.accessors_scope);
         SingleFunction* function = (SingleFunction*) function_sys->getFunctionByNameAndArguments(this->name->value, types);

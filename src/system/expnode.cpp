@@ -198,7 +198,7 @@ void ExpNode::test_obj_access(Validator* validator, struct extras extra)
 
     // Save the validators state and give us a blank state with no requirements. See comment above.
     validator->save();
-    left->test(validator);
+    left->test(validator, extra);
     validator->restore();
     
     struct Evaluation evaluation = left->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_TYPE_VARIABLE | EVALUATION_FROM_VARIABLE);
@@ -216,7 +216,6 @@ void ExpNode::test_obj_access(Validator* validator, struct extras extra)
             if (evaluation.variable->name == "super")
                 c = obj->getClass()->parent;
         }
-
 
         Scope* accessors_scope = (extra.accessors_scope != NULL ? extra.accessors_scope : validator->getCurrentScope());
         obj->runThis([&] {

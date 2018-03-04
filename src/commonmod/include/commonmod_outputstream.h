@@ -5,14 +5,26 @@
 #include <stdio.h>
 #include <string>
 #include <memory>
+#include <vector>
 class CommonModule_OutputStream : public Object
 {
 public:
     CommonModule_OutputStream(Class* c);
     virtual ~CommonModule_OutputStream();
     virtual std::shared_ptr<Object> newInstance(Class* c);
-
+    
     static Class* registerClass(ModuleSystem* moduleSystem);
+
+    // A char buffer for the output stream
+    std::vector<char> buffer;
+
+
+    // Native OutputStream functions
+    static void OutputStream_Write(Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object);
+    static void OutputStream_Get(Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object);
+    static void OutputStream_Size(Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object);
+    static void OutputStream_Flush(Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object);
+    static void OutputStream_Print(Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object);
 };
 
 

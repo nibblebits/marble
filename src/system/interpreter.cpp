@@ -69,7 +69,7 @@ Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionS
         return_value->type = VALUE_TYPE_NUMBER;
         return_value->dvalue = array->count;
     });
-
+    
     /* Let's register an Exception class that is to be inherited by all classes that can be thrown*/
     Class* exception_class = getClassSystem()->registerClass("Exception");
     Variable msg_var;

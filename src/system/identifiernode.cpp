@@ -105,7 +105,9 @@ void IdentifierNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expec
         {
             Variable* var = current_scope->getVariableAnyScope(this->value);
             if (var == NULL)
+            {
                 throw std::logic_error("Variable with the name " + this->value + " not found for evaluation.");
+            }
             evaluation->type |= EVALUATION_TYPE_DATATYPE;
             evaluation->datatype.type = var->type;
 	        evaluation->datatype.value = var->type_name;
