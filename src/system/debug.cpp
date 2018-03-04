@@ -1,6 +1,7 @@
 #include "debug.h"
 #include "nodes.h"
 #include <iostream>
+#include <exception>
 
 #ifdef DEBUG_ENABLED
 
@@ -12,6 +13,22 @@ Debug::Debug()
 Debug::~Debug()
 {
 
+}
+
+void Debug::PrintVariablesForScope(Scope* scope)
+{
+    if (scope == NULL)
+    {
+        std::cout << "NULL SCOPE" << std::endl;
+        return;
+    }
+
+    std::cout << "SCOPE: " << scope << std::endl;
+    for (Variable* var : scope->getVariables())
+    {
+        std::cout << "Variable: " << var->name << std::endl;
+    }
+    std::cout << "END SCOPE" << std::endl;
 }
 
 void Debug::OutputTabbing(int amount)

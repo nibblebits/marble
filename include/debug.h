@@ -5,6 +5,7 @@
 #ifdef DEBUG_ENABLED
 #include <memory>
 #include "node.h"
+class Scope;
 class Debug
 {
 public:
@@ -12,6 +13,7 @@ public:
     virtual ~Debug();
     static void OutputTabbing(int amount);
     static void PrintValueForNode(Node* value_node, int tabbing=0);
+    static void PrintVariablesForScope(Scope* scope);
 };
 #endif
 
