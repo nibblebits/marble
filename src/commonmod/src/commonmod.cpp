@@ -20,17 +20,17 @@ void CommonModule::Init()
     log("Common Module Initialising...", LOG_LEVEL_NOTICE);
     log("--- Registering functions and classes", LOG_LEVEL_NOTICE);
     
+    // REGISTER EXCEPTIONS
+    Class* c = this->getModuleSystem()->getClassSystem()->registerClass("EndOfStreamException");
+    c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+    });
+    // END OF EXCEPTIONS
+
     CommonModule_OutputStream::registerClass(this->getModuleSystem());
-
-    log("Common Module Initialised.", LOG_LEVEL_NOTICE);
-
-    log("String Utils Module Initialising...", LOG_LEVEL_NOTICE);
-    log("--- Registering functions and classes", LOG_LEVEL_NOTICE);
-    
+    CommonModule_InputStream::registerClass(this->getModuleSystem());
     CommonModule_StringUtils::registerClass(this->getModuleSystem());
 
-    log("String Utils Initialised.", LOG_LEVEL_NOTICE);
-
+    log("Common Module Initialised.", LOG_LEVEL_NOTICE);
 }
 
 void CommonModule::newInterpreter(Interpreter* interpreter)
