@@ -4,6 +4,8 @@
 #include "validator.h"
 #include "object.h"
 #include "exceptions/testerror.h"
+#include "exceptions/systemexception.h"
+#include "function.h"
 #include "debug.h"
 #include <iostream>
 
@@ -91,8 +93,9 @@ void IdentifierNode::test(Validator* validator, struct extras extra)
 
 Value IdentifierNode::interpret(Interpreter* interpreter, struct extras extra)
 {
+    Value v;
     Variable* var = interpreter->getVariableByName(this->value);
-    Value v = var->value;
+    v = var->value;
     return v;
 }
 

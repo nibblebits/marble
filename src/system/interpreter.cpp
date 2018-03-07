@@ -371,5 +371,10 @@ FunctionCallNode* Interpreter::getLastFunctionCallNode()
 Class* Interpreter::registerDefaultObjectClass(ClassSystem* class_system, std::string class_name)
 {
     Class* c = class_system->registerClass(class_name, NULL, CLASS_REGISTER_OBJECT_DESCRIPTOR_LATER);
+    c->registerFunction("toString", {}, VarType::fromString("string"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+        std::shared_ptr<Array> array = std::dynamic_pointer_cast<Array>(object);
+        return_value->type = VALUE_TYPE_STRING;
+        return_value->svalue = "toString() for object not implemented";
+    });
     return c;
 }
