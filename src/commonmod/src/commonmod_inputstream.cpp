@@ -1,6 +1,7 @@
 #include "commonmod_inputstream.h"
 #include "function.h"
 #include "exceptions/systemexception.h"
+#include <iostream>
 
 CommonModule_InputStream::CommonModule_InputStream(Class* c) : Object(c)
 {

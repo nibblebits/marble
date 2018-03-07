@@ -4,6 +4,7 @@
 #include "../../../commonmod/include/commonmod.h"
 #include "filemod_file.h"
 #include "filemod_fileoutputstream.h"
+#include "filemod_fileinputstream.h"
 #include "object.h"
 #include <stdio.h>
 #include <string>

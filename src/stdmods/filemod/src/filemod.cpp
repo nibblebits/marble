@@ -31,6 +31,9 @@ void FileModule::Init()
     // Register the FileOutputStream class
     FileModule_FileOutputStream::registerClass(this->getModuleSystem());
 
+    // Register the FileInputStream class
+    FileModule_FileInputStream::registerClass(this->getModuleSystem());
+
     // Register the File class
     FileModule_File::registerClass(this->getModuleSystem());
 
