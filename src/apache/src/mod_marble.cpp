@@ -65,29 +65,20 @@ static const command_rec directives[] =
     { NULL }
 };
 
+extern "C"
+{
+    /* Dispatch list for API hooks */
+    module AP_MODULE_DECLARE_DATA mod_marble_module = {
+        STANDARD20_MODULE_STUFF, 
+        create_dir_conf, /* create per-dir    config structures */
+        merge_dir_conf, /* merge  per-dir    config structures */
+        NULL, /* create per-server config structures */
+        NULL, /* merge  per-server config structures */
+        directives, /* table of config file commands       */
+        marble_register_hooks  /* register hooks */
+    };
+}
 
-/* Dispatch list for API hooks */
-module AP_MODULE_DECLARE_DATA mod_marble_module = {
-    STANDARD20_MODULE_STUFF, 
-    create_dir_conf, /* create per-dir    config structures */
-    merge_dir_conf, /* merge  per-dir    config structures */
-    NULL, /* create per-server config structures */
-    NULL, /* merge  per-server config structures */
-    directives, /* table of config file commands       */
-    marble_register_hooks  /* register hooks */
-};
-
-/* Sadly apxs does not compile with G++. I have had to compile with g++ instead of apxs and therefore I have had to duplicate the AP_MODULE_DECLARE_DATA structure as apache requires two symbols. "mod_modulename" and "modulename". Which is usually handled automatically by apxs upon compiling.
-*/
-module AP_MODULE_DECLARE_DATA webModulemarble_module = {
-    STANDARD20_MODULE_STUFF, 
-    create_dir_conf, /* create per-dir    config structures */
-    merge_dir_conf, /* merge  per-dir    config structures */
-    NULL, /* create per-server config structures */
-    NULL, /* merge  per-server config structures */
-    directives, /* table of config file commands       */
-    marble_register_hooks  /* register hooks */
-};
 
 std::vector<std::string> split(std::string str, std::string delim)
 {
