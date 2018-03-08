@@ -7,11 +7,11 @@ NativeFunction::~NativeFunction()
 {
 
 }
-void NativeFunction::invoke_impl(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)
+void NativeFunction::invoke_impl(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
 {
     if (this->entrypoint == NULL)
     {
         throw std::logic_error("Cannot invoke function " + this->name + " because it has no entrypoint");
     }
-    entrypoint(interpreter, values, return_value, object);
+    entrypoint(interpreter, values, return_value, object, caller_scope);
 }

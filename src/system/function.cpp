@@ -19,7 +19,7 @@ Function::~Function()
 {
 }
 
-void Function::invoke(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)
+void Function::invoke(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
 {
     Value fake_value;
     if (return_value == NULL)
@@ -59,7 +59,7 @@ void Function::invoke(Interpreter* interpreter, std::vector<Value> values, Value
 
     try
     {
-        this->invoke_impl(interpreter, values, return_value, object);
+        this->invoke_impl(interpreter, values, return_value, object, caller_scope);
     }
     catch(SystemException& ex)
     {

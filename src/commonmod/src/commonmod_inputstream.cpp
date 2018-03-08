@@ -25,23 +25,23 @@ Class* CommonModule_InputStream::registerClass(ModuleSystem* moduleSystem)
     c->is_pure = true;
 
     c->setDescriptorObject(std::make_shared<CommonModule_InputStream>(c));
-    Function* f = c->registerFunction("read", {}, VarType::fromString("number"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
-        InputStream_Read(interpreter, arguments, return_value, object);
+    Function* f = c->registerFunction("read", {}, VarType::fromString("number"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
+        InputStream_Read(interpreter, arguments, return_value, object, caller_scope);
     });
 
-    f = c->registerFunction("put", {VarType::fromString("number")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
-        InputStream_Put(interpreter, arguments, return_value, object);
+    f = c->registerFunction("put", {VarType::fromString("number")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
+        InputStream_Put(interpreter, arguments, return_value, object, caller_scope);
     });
 
-    f = c->registerFunction("fill", {VarType::fromString("number")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
-        InputStream_Fill(interpreter, arguments, return_value, object);
+    f = c->registerFunction("fill", {VarType::fromString("number")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
+        InputStream_Fill(interpreter, arguments, return_value, object, caller_scope);
     });
     f->is_pure = true;
     f->access = MODIFIER_ACCESS_PROTECTED;
 
 }
 
-void CommonModule_InputStream::InputStream_Read(Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object)
+void CommonModule_InputStream::InputStream_Read(Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
 {
     std::shared_ptr<CommonModule_InputStream> stream = std::dynamic_pointer_cast<CommonModule_InputStream>(object);
     if (stream->buffer.empty())
@@ -50,7 +50,7 @@ void CommonModule_InputStream::InputStream_Read(Interpreter* interpreter, std::v
         Function* function = stream->getClass()->getFunctionByNameAndArguments("fill", {VarType::fromString("number")});
         Value v;
         v.set((double)stream->amount_to_fill);
-        function->invoke(interpreter, {v}, return_value, object);
+        function->invoke(interpreter, {v}, return_value, object, caller_scope);
     }
 
     if (stream->buffer.empty())
@@ -67,13 +67,13 @@ void CommonModule_InputStream::InputStream_Read(Interpreter* interpreter, std::v
     return_value->dvalue = (double) c;
 }
 
-void CommonModule_InputStream::InputStream_Put(Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object)
+void CommonModule_InputStream::InputStream_Put(Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
 {
     // Let's put the byte into the buffer
     std::shared_ptr<CommonModule_InputStream> stream = std::dynamic_pointer_cast<CommonModule_InputStream>(object);
     stream->buffer.push_back((char)arguments[0].dvalue);
 }
-void CommonModule_InputStream::InputStream_Fill(Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object)
+void CommonModule_InputStream::InputStream_Fill(Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
 {
     // We do nothing here, this marble function must be overrided by the class implementor
 }

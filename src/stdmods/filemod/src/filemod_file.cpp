@@ -23,7 +23,7 @@ Class* FileModule_File::registerClass(ModuleSystem* moduleSystem)
 {
     Class* c = moduleSystem->getClassSystem()->registerClass("File");
     c->setDescriptorObject(std::make_shared<FileModule_File>(c));
-    c->registerFunction("__construct", {}, VarType::fromString("void"), [=](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+    c->registerFunction("__construct", {}, VarType::fromString("void"), [=](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         // Call the parent constructor
         object->invokeParentConstructor(interpreter, arguments);
         std::shared_ptr<FileModule_File> file = std::dynamic_pointer_cast<FileModule_File>(object);
@@ -32,23 +32,23 @@ Class* FileModule_File::registerClass(ModuleSystem* moduleSystem)
         file->output->file = file;
         file->input->file = file;
     });
-    c->registerFunction("open", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("number"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+    c->registerFunction("open", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("number"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         File_Open(interpreter, arguments, return_value, object);
     });
-    c->registerFunction("getOutputStream", {}, VarType::fromString("FileOutputStream"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+    c->registerFunction("getOutputStream", {}, VarType::fromString("FileOutputStream"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         std::shared_ptr<FileModule_File> file = std::dynamic_pointer_cast<FileModule_File>(object);
         return_value->type = VALUE_TYPE_OBJECT;
         return_value->ovalue = file->output;
     });
-    c->registerFunction("getInputStream", {}, VarType::fromString("FileInputStream"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+    c->registerFunction("getInputStream", {}, VarType::fromString("FileInputStream"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         std::shared_ptr<FileModule_File> file = std::dynamic_pointer_cast<FileModule_File>(object);
         return_value->type = VALUE_TYPE_OBJECT;
         return_value->ovalue = file->input;
     });
-    c->registerFunction("getSize", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+    c->registerFunction("getSize", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         File_GetSize(interpreter, arguments, return_value, object);
     });
-    c->registerFunction("close", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+    c->registerFunction("close", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         File_Close(interpreter, arguments, return_value, object);
     });
     return c;

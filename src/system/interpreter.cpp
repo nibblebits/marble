@@ -26,6 +26,7 @@
 #include "array.h"
 #include "misc.h"
 #include "exceptionobject.h"
+#include "permissionobject.h"
 #include "exceptions/IOException.h"
 #include "exceptions/systemexception.h"
     std::string getAllVariablesAsString(Scope* scope)
@@ -64,7 +65,7 @@ Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionS
     getClassSystem()->setDefaultBaseClass(obj_class);
    
     Class* c = getClassSystem()->registerClass("array");
-    c->registerFunction("size", {}, VarType::fromString("number"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+    c->registerFunction("size", {}, VarType::fromString("number"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         std::shared_ptr<Array> array = std::dynamic_pointer_cast<Array>(object);
         return_value->type = VALUE_TYPE_NUMBER;
         return_value->dvalue = array->count;
@@ -77,10 +78,11 @@ Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionS
     msg_var.name = "message";
     msg_var.setValue("");
     exception_class->addVariable(msg_var);
-    exception_class->registerFunction("__construct", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+    exception_class->registerFunction("__construct", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         object->getVariable("message")->setValue(arguments[0].svalue);
     });
-    exception_class->registerFunction("getStackTrace", {}, VarType::fromString("string"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+
+    exception_class->registerFunction("getStackTrace", {}, VarType::fromString("string"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         std::shared_ptr<ExceptionObject> exception_obj = std::dynamic_pointer_cast<ExceptionObject>(object);
         return_value->type = VALUE_TYPE_STRING;
         return_value->svalue = exception_obj->getStackTrace();
@@ -89,30 +91,39 @@ Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionS
     exception_class->setDescriptorObject(std::make_shared<ExceptionObject>(exception_class));
     
     c = getClassSystem()->registerClass("InvalidIndexException", exception_class);
-        c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+        c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
     });
 
     c = getClassSystem()->registerClass("NullPointerException", exception_class);
-        c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+        c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
     });
     
     c = getClassSystem()->registerClass("InvalidCastException", exception_class);
-        c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+        c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
     });
    
     c = getClassSystem()->registerClass("IOException", exception_class);
-        c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+        c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
     });
 
     c = getClassSystem()->registerClass("InfiniteLoopException", exception_class);
-        c->registerFunction("__construct", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+        c->registerFunction("__construct", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
     });
 
     c = getClassSystem()->registerClass("EntityNotRegisteredException", exception_class);
-        c->registerFunction("__construct", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+        c->registerFunction("__construct", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         Function* parent_constructor = object->getClass()->parent->getFunctionByNameAndArguments("__construct", {VarType::fromString("string")});
-        parent_constructor->invoke(interpreter, arguments, return_value, object);
+        parent_constructor->invoke(interpreter, arguments, return_value, object, caller_scope);
     });
+
+
+    // We need a permission class to help manage permissions
+    Class* permission_class = getClassSystem()->registerClass("Permission");
+    permission_class->setDescriptorObject(std::make_shared<PermissionObject>(permission_class));
+    permission_class->is_pure = true;
+    c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
+    });
+
 
    this->lastFunctionCallNode = NULL;
    this->moduleSystem = NULL;
@@ -371,7 +382,7 @@ FunctionCallNode* Interpreter::getLastFunctionCallNode()
 Class* Interpreter::registerDefaultObjectClass(ClassSystem* class_system, std::string class_name)
 {
     Class* c = class_system->registerClass(class_name, NULL, CLASS_REGISTER_OBJECT_DESCRIPTOR_LATER);
-    c->registerFunction("toString", {}, VarType::fromString("string"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+    c->registerFunction("toString", {}, VarType::fromString("string"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         std::shared_ptr<Array> array = std::dynamic_pointer_cast<Array>(object);
         return_value->type = VALUE_TYPE_STRING;
         return_value->svalue = "toString() for object not implemented";

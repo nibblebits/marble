@@ -9,7 +9,7 @@ class NativeFunction : public SingleFunction
     public:
         NativeFunction(std::string name, std::vector<VarType> argument_types, VarType return_type, NATIVE_FUNCTION_ENTRYPOINT entrypoint);
         virtual ~NativeFunction();
-        virtual void invoke_impl(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object);
+        virtual void invoke_impl(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
     private:
         NATIVE_FUNCTION_ENTRYPOINT entrypoint;
 };

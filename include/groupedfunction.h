@@ -38,9 +38,10 @@ public:
     * \param values The values to pass to the function to be called
     * \param return_value The return value for this function.
     * \param object The object this function was invoked on. Set to NULL if no object was provided.
+    * \param caller_scope The scope of the caller of this function
     * \throw std::logic_error Thrown if no function can be found that can deal with the values provided.
     */
-    virtual void invoke_impl(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object);
+    virtual void invoke_impl(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
     Function* getFunctionForValues(std::vector<Value> values);
     Function* getFunctionForArguments(std::vector<VarType> types);
     bool hasFunctionWithArguments(std::vector<VarType> types);

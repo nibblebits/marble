@@ -16,8 +16,8 @@ class Function
     public:
         Function(FUNCTION_TYPE type, std::string name);
         virtual ~Function();
-        virtual void invoke(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object);
-        virtual void invoke_impl(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object) = 0;
+        virtual void invoke(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
+        virtual void invoke_impl(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) = 0;
         std::string getName();
         
         /** The Class that this function is a method of. Set to NULL if this is not a method just a function with no class. */

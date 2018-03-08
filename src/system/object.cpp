@@ -47,12 +47,14 @@ std::shared_ptr<Object> Object::create(Interpreter* interpreter, Class* object_c
     std::shared_ptr<Object> object = object_class->getDescriptorObject()->newInstance();
     // The constructor must now be called
     Function* constructor = object_class->getFunctionByName("__construct");
+    // The caller scope will be the scope before invoking the constructor
+    Scope* caller_scope = interpreter->getCurrentScope();
     if (constructor != NULL)
     {
         object->runThis([&]
         {
             // Invoke that constructor!
-            constructor->invoke(interpreter, constructor_values, NULL, object);
+            constructor->invoke(interpreter, constructor_values, NULL, object, caller_scope);
         }, interpreter, constructor->cls);
     }
     
@@ -95,9 +97,12 @@ void Object::invokeParentConstructor(Interpreter* interpreter, std::vector<Value
     // Ignored return value as its a constructor
     Value return_value;
     Function* parent_constructor = this->getClass()->parent->getFunctionByName("__construct");
+    #warning The caller_scope may not be correct here so ensure it is tested before removing this warning
+    // The caller scope will be the scope before invoking the constructor
+    Scope* caller_scope = interpreter->getCurrentScope();
     if (parent_constructor != NULL)
     {
-        parent_constructor->invoke(interpreter, values, &return_value, shared_from_this());
+        parent_constructor->invoke(interpreter, values, &return_value, shared_from_this(), caller_scope);
     }
 }
 

@@ -19,7 +19,7 @@ Class* CommonModule_StringUtils::registerClass(ModuleSystem* moduleSystem)
 {
     Class* c = moduleSystem->getClassSystem()->registerClass("StringUtils");
     c->setDescriptorObject(std::make_shared<CommonModule_StringUtils>(c));
-    Function* f = c->registerFunction("getASCIIString", {VarType::fromString("number")}, VarType::fromString("string"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+    Function* f = c->registerFunction("getASCIIString", {VarType::fromString("number")}, VarType::fromString("string"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         return_value->type = VALUE_TYPE_STRING;
         return_value->svalue += (char) arguments[0].dvalue;
     });

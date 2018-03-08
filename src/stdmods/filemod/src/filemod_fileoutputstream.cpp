@@ -22,7 +22,7 @@ Class* FileModule_FileOutputStream::registerClass(ModuleSystem* moduleSystem)
     ClassSystem* c_system = moduleSystem->getClassSystem();
     Class* c = c_system->registerClass("FileOutputStream", c_system->getClassByName("OutputStream"));
     c->setDescriptorObject(std::make_shared<FileModule_FileOutputStream>(c));
-    Function* f = c->registerFunction("flush", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+    Function* f = c->registerFunction("flush", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         FileOutputStream_Flush(interpreter, arguments, return_value, object);
     });
     return c;

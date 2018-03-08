@@ -21,7 +21,7 @@ Class* FileModule_FileInputStream::registerClass(ModuleSystem* moduleSystem)
     ClassSystem* c_system = moduleSystem->getClassSystem();
     Class* c = c_system->registerClass("FileInputStream", c_system->getClassByName("InputStream"));
     c->setDescriptorObject(std::make_shared<FileModule_FileInputStream>(c));
-    Function* f = c->registerFunction("fill", {VarType::fromString("number")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+    Function* f = c->registerFunction("fill", {VarType::fromString("number")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         FileInputStream_Fill(interpreter, arguments, return_value, object);
     });
     return c;

@@ -24,9 +24,9 @@ FunctionNode* WrittenFunction::getFunctionNode()
 }
 
 
-void WrittenFunction::invoke(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)
+void WrittenFunction::invoke(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
 {
-    Function::invoke(interpreter, values, return_value, object);
+    Function::invoke(interpreter, values, return_value, object, caller_scope);
     if (this->return_node != NULL)
     {
         return_value->set(&this->return_value);
@@ -34,7 +34,7 @@ void WrittenFunction::invoke(Interpreter* interpreter, std::vector<Value> values
     this->return_node = NULL;
 }
 
-void WrittenFunction::invoke_impl(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)
+void WrittenFunction::invoke_impl(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
 {
     // Function arguments require there own scope
     interpreter->new_parented_scope();

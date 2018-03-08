@@ -18,7 +18,7 @@ void TimeModule::Init()
     log("--- Registering functions and classes", LOG_LEVEL_NOTICE);
     
     Class* c = this->getModuleSystem()->getClassSystem()->registerClass("Time");
-    c->registerFunction("getTimeStamp", {}, VarType::fromString("number"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object) {
+    c->registerFunction("getTimeStamp", {}, VarType::fromString("number"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         Time_getTimeStamp(interpreter, arguments, return_value, object);
     });
 

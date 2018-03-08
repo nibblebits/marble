@@ -9,7 +9,7 @@ PureFunction::~PureFunction()
 
 }
 
-void PureFunction::invoke_impl(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)
+void PureFunction::invoke_impl(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
 {
     throw std::logic_error("Pure functions cannot be invoked directly. The validator should have stopped this so this is a bug please report it.");
 }

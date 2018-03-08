@@ -160,7 +160,7 @@ Value FunctionCallNode::interpret(Interpreter* interpreter, struct extras extra)
     
    try
    {
-        function->invoke(interpreter, argument_results, &value, interpreter->getCurrentObject());
+        function->invoke(interpreter, argument_results, &value, interpreter->getCurrentObject(), extra.accessors_scope);
    }
    catch(SystemException& ex)
    {
