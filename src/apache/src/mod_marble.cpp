@@ -49,6 +49,7 @@ typedef struct
 
 static configuration config;
 ModuleSystem moduleSystem;
+WebModule* webModule = NULL;
 
 static int marble_handler(request_rec *req);
 static void marble_register_hooks(apr_pool_t* p);
@@ -180,17 +181,6 @@ std::string format_log_entry(LogEntry entry)
 
 static int marble_handler(request_rec *req)
 {
-    WebModule* webModule;
-    // I am not aware of an init method for apache yet so this will have to do for now its far from ideal.
-    if (first_run)
-    {
-        moduleSystem.loadModule("/usr/lib/marble/marble_iomod.so");
-        moduleSystem.loadModule("/usr/lib/marble/marble_timemod.so");
-        webModule = new WebModule();
-        moduleSystem.addModule(webModule);
-        first_run = false;
-    }
-
     int rc, exists;
     apr_finfo_t finfo;
     
@@ -252,10 +242,22 @@ static int marble_handler(request_rec *req)
     return OK;
 }
 
+/**
+ * Initialises this module
+ */
+static void x_child_init(apr_pool_t *p, server_rec *s)
+{
+    moduleSystem.loadModule("/usr/lib/marble/marble_iomod.so");
+    moduleSystem.loadModule("/usr/lib/marble/marble_timemod.so");
+    webModule = new WebModule();
+    moduleSystem.addModule(webModule);   
+}
+
 static void marble_register_hooks(apr_pool_t* p)
 {
     printf("\n ** marble_register_hooks  **\n\n");
     ap_hook_handler(marble_handler, NULL, NULL, APR_HOOK_MIDDLE);
+    ap_hook_child_init(x_child_init, NULL, NULL, APR_HOOK_MIDDLE);
 }
 
 
