@@ -118,11 +118,7 @@ Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionS
 
 
     // We need a permission class to help manage permissions
-    Class* permission_class = getClassSystem()->registerClass("Permission");
-    permission_class->setDescriptorObject(std::make_shared<PermissionObject>(permission_class));
-    permission_class->is_pure = true;
-    c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
-    });
+    PermissionObject::registerClass(this);
 
 
    this->lastFunctionCallNode = NULL;
