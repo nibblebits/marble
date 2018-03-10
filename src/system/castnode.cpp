@@ -119,7 +119,7 @@ void CastNode::test(Validator* validator, struct extras extra)
             throw TestError("the class with the name " + casting_to_evaluation.datatype.value + " has not been declared");
         Class* to_cast_class = class_sys->getClassByName(to_cast_evaluation.datatype.value);
         Class* casting_class = class_sys->getClassByName(casting_to_evaluation.datatype.value);
-        if ((casting_class->name != to_cast_evaluation.datatype.value) && (!casting_class->instanceOf(to_cast_class)))
+        if ((casting_class->name != to_cast_evaluation.datatype.value) && (!to_cast_class->instanceOf(casting_class)))
             throw TestError("the class with the name " + casting_to_evaluation.datatype.value + " is not an instance of " + to_cast_evaluation.datatype.value);   
         
     }
