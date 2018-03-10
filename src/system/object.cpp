@@ -5,7 +5,13 @@
 #include "interpreter.h"
 #include <iostream>
 #include <memory>
-Object::Object(Class* c)
+
+Object::Object(Class* c) : Object(c, NULL)
+{
+
+}
+
+Object::Object(Class* c, std::shared_ptr<PermissionsObject> permissions) : Scope(permissions)
 {
     if (c == NULL)
         throw std::logic_error("Expecting a non NULL class");

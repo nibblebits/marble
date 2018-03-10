@@ -7,6 +7,7 @@
 #include "functionsystem.h"
 #include "object.h"
 #include "scope.h"
+#include "permissionobject.h"
 #include "exceptions/testerror.h"
 #include "function.h"
 
@@ -105,8 +106,9 @@ Value ClassNode::interpret(Interpreter* interpreter, struct extras extra)
     if (is_final)
         c->is_final = true;
 
+    #warning Best to refactor below
     // We need to create a local scope so that we can extract variables once we are done interpreting the class body.
-    std::unique_ptr<Scope> tmp_scope = std::make_unique<Scope>();
+    std::unique_ptr<Scope> tmp_scope = std::unique_ptr<Scope>(new Scope(NULL));
     Scope* old_scope = interpreter->getCurrentScope();
     interpreter->setCurrentScope(tmp_scope.get());
     // We will change the function system to the class so that all registered functions within the class body will become a method in the class.

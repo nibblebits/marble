@@ -13,6 +13,7 @@ class Object : public Scope,  public std::enable_shared_from_this<Object>
 {
 public:
     Object(Class* c);
+    Object(Class* c, std::shared_ptr<PermissionsObject> permissions);
     virtual ~Object();
     
     /**

@@ -3,8 +3,10 @@
 #include <iostream>
 ScopeHandler::ScopeHandler()
 {
-    this->action_scope = &root_scope;
-    this->current_scope = &root_scope;
+    // Create a root scope with NULL permissions.
+    this->root_scope = std::unique_ptr<Scope>(new Scope(NULL));
+    this->action_scope = root_scope.get();
+    this->current_scope = root_scope.get();
 }
 
 ScopeHandler::~ScopeHandler()
@@ -19,7 +21,7 @@ Scope* ScopeHandler::getCurrentScope()
 
 Scope* ScopeHandler::getRootScope()
 {
-    return &this->root_scope;
+    return this->root_scope.get();
 }
 
 void ScopeHandler::setCurrentScope(Scope* scope)
@@ -36,7 +38,8 @@ void ScopeHandler::setCurrentScope(Scope* scope)
 void ScopeHandler::new_parented_scope()
 {
     Scope* new_prev = current_scope;
-    current_scope = new Scope();
+    // New scopes must inherit parent scopes permissions.
+    current_scope = new Scope(this->current_scope->permissions);
     current_scope->onEnterScope();
     current_scope->prev = new_prev;
 }

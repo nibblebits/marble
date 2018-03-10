@@ -1,15 +1,17 @@
 #include "scope.h"
 #include "object.h"
 #include "array.h"
+#include "permissionsobject.h"
 #include <stdexcept>
 #include <memory>
 #include <algorithm>
 #include <iostream>
 
-Scope::Scope()
+Scope::Scope(std::shared_ptr<PermissionsObject> permissions)
 {
     this->prev = NULL;
     this->last_registered_variable = NULL;
+    this->permissions = permissions;
 }
 Scope::~Scope()
 {

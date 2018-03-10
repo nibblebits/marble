@@ -1,6 +1,7 @@
 #ifndef SCOPEHANDLER_H
 #define SCOPEHANDLER_H
 #include "scope.h"
+#include <memory>
 #include <functional>
 
 class Variable;
@@ -25,7 +26,7 @@ public:
      */
     void useScope(std::function<void()> function, Scope* scope);
 private:
-    Scope root_scope;
+    std::unique_ptr<Scope> root_scope;
     Scope* current_scope;
     /*
     * The action_scope holds the scope that any action is preformed on. For example

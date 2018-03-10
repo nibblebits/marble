@@ -125,7 +125,6 @@ private:
     std::vector<std::string> scripts_run;
     std::vector<struct stack_log_part> stack_log;
     std::vector<Breakable*> breakables;
-
     std::unique_ptr<Lexer> lexer;
     std::unique_ptr<Parser> parser;
     std::unique_ptr<Validator> validator;

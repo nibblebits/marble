@@ -55,6 +55,7 @@ void interpret()
     moduleSystem->loadModule("./mods/marble_iomod.so");
     moduleSystem->loadModule("./mods/marble_timemod.so");
 
+
     interpreter.setModuleSystem(moduleSystem);
     interpreter.runScript("./test.marble");
 

@@ -4,13 +4,18 @@
 #include <memory>
 #include <vector>
 #include <string>
+#include <memory>
 #include "variable.h"
 #include "statics.h"
 class Object;
+class PermissionsObject;
 class Scope
 {
 public:
-    Scope();
+    /**
+     * \param The permissions that this scope should be bound to
+     */
+    Scope(std::shared_ptr<PermissionsObject> permissions);
     virtual ~Scope();
     virtual void registerVariable(Variable* variable);
     Variable* createVariable();
@@ -19,7 +24,7 @@ public:
     Variable* cloneCreate(Variable* variable);
     Variable* getVariable(std::string variable_name);
     Variable* getVariableAnyScope(std::string variable_name);
-    
+
     /**
     * Returns the last registered variable in this singular scope.
     * \return Returns the last registered variable.
@@ -36,6 +41,9 @@ public:
     std::vector<Variable*> getVariables();
     std::vector<Variable*> getObjectVariablesFor(std::shared_ptr<Object> object);
     Scope* prev;
+
+    // The permissions for this scope, defaulted to NULL.
+    std::shared_ptr<PermissionsObject> permissions;
 private:
     std::vector<Variable*> variables;
     Variable* last_registered_variable;

@@ -27,6 +27,7 @@
 #include "misc.h"
 #include "exceptionobject.h"
 #include "permissionobject.h"
+#include "permissionsobject.h"
 #include "exceptions/IOException.h"
 #include "exceptions/systemexception.h"
     std::string getAllVariablesAsString(Scope* scope)
@@ -116,10 +117,27 @@ Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionS
         parent_constructor->invoke(interpreter, arguments, return_value, object, caller_scope);
     });
 
+    c = getClassSystem()->registerClass("PermissionException", exception_class);
+        c->registerFunction("__construct", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
+    });
+
+
 
     // We need a permission class to help manage permissions
     PermissionObject::registerClass(this);
 
+    // We also need a permissions class that will hold the permissions for a current scope
+    PermissionsObject::registerClass(this);
+
+
+    // We must now create a permission object for our root scope
+    getRootScope()->permissions = std::dynamic_pointer_cast<PermissionsObject>(Object::create(getClassSystem()->getClassByName("Permissions")));
+
+    // It is also wise to create a method for getting the current permissions
+    getFunctionSystem()->registerFunction("getScopePermissions", {}, VarType::fromString("Permissions"),[&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
+        return_value->type = VALUE_TYPE_OBJECT;
+        return_value->ovalue = getCurrentScope()->permissions;
+    });
 
    this->lastFunctionCallNode = NULL;
    this->moduleSystem = NULL;

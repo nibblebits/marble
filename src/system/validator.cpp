@@ -7,7 +7,7 @@
 #include "csystem.h"
 #include <iostream>
 #include "exceptions/testerror.h"
-Validator::Validator(Logger* logger, Interpreter* interpreter) : SystemHandler(SYSTEM_HANDLER_VALIDATOR, interpreter->getClassSystem(), interpreter->getBaseFunctionSystem())
+Validator::Validator(Logger* logger, Interpreter* interpreter) : SystemHandler(SYSTEM_HANDLER_VALIDATOR, interpreter->getClassSystem(), interpreter->getFunctionSystem())
 {
     this->interpreter = interpreter;
     this->logger = logger;
