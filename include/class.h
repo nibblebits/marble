@@ -24,6 +24,7 @@ public:
     void setDescriptorObject(std::shared_ptr<Object> object);
     std::shared_ptr<Object> getDescriptorObject();
     
+    bool instanceOf(std::string class_name);
     bool instanceOf(Class* c);
     std::string name;
     Class* parent;

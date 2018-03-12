@@ -2,6 +2,7 @@
 #include "object.h"
 #include "exceptions/systemexception.h"
 #include "permissionsobject.h"
+#include "iopermission.h"
 #include <sstream>
 #include <iostream>
 IOModule::IOModule() : Module("iomod", "IO Module", MODULE_TYPE_MARBLE_LIBRARY)
@@ -40,7 +41,7 @@ void IOModule::Init()
         IO_input(interpreter, arguments, return_value, object, caller_scope);
     });
 
-    
+
     
     log("IO Module Initialised.", LOG_LEVEL_NOTICE);
 }
@@ -51,6 +52,15 @@ void IOModule::newInterpreter(Interpreter* interpreter)
     Scope* root_scope = interpreter->getRootScope();
     root_scope->createVariable("IO", "IO", std::make_shared<Object>(this->getModuleSystem()->getClassSystem()->getClassByName("IO")));
     log("VARIABLE IO CREATED IN ROOT SCOPE", LOG_LEVEL_NOTICE);
+
+
+    // Let's setup the IOPermission class
+    Class* c = this->getModuleSystem()->getClassSystem()->registerClass("IOPermission", interpreter->getClassSystem()->getClassByName("Permission"));
+    c->setDescriptorObject(std::make_shared<IOPermission>(c));
+    c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
+        
+    });
+    log("IOPermission class created succesfully", LOG_LEVEL_NOTICE);
 }
 
 // Native IO functions/methods
@@ -63,10 +73,17 @@ void IOModule::setDefaultIO(Interpreter* interpreter, std::vector<Value> values,
 
 void IOModule::IO_print(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
 {
-    if (caller_scope->permissions == NULL || (!caller_scope->permissions->getPermission("IOPermission")))
+    if (caller_scope->permissions == NULL)
     {
         throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException")));
     }
+
+    std::shared_ptr<IOPermission> permission = std::dynamic_pointer_cast<IOPermission>(caller_scope->permissions->getPermission("IOPermission"));
+    if (permission == NULL)
+    {
+        throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException")));
+    }
+
     std::stringstream ss;
     for (Value v : values)
     {

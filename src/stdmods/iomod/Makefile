@@ -1,4 +1,4 @@
-SYSTEM_OBJECT_FILES = ./build/main.o ./build/iomod.o
+SYSTEM_OBJECT_FILES = ./build/main.o ./build/iomod.o ./build/iopermission.o
 INCLUDES = -I ../../../include -I ./include
 OBJECT_FILE_FLAGS = -c -g -fPIC -std=c++14
 SYSTEM_LIB_LOCAL_FILENAME = libmarble.so
@@ -9,6 +9,8 @@ module: ${SYSTEM_OBJECT_FILES}
 	g++ ${INCLUDES} ./src/main.cpp -o ./build/main.o ${OBJECT_FILE_FLAGS}
 ./build/iomod.o: ./src/iomod.cpp
 	g++ ${INCLUDES} ./src/iomod.cpp -o ./build/iomod.o ${OBJECT_FILE_FLAGS}
+./build/iopermission.o: ./src/iopermission.cpp
+	g++ ${INCLUDES} ./src/iopermission.cpp -o ./build/iopermission.o ${OBJECT_FILE_FLAGS}
 standalone: module
 	g++ -fPIC -shared -std=c++14 -unresolved-symbols=ignore-in-shared-libs ${INCLUDES} ${SYSTEM_OBJECT_FILES} -o ../bin/marble_iomod.so
 clean:

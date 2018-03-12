@@ -7,6 +7,7 @@
 #include "functionsystem.h"
 #include "object.h"
 #include "scope.h"
+#include "permissionsobject.h"
 #include "permissionobject.h"
 #include "exceptions/testerror.h"
 #include "function.h"
@@ -127,6 +128,14 @@ Value ClassNode::interpret(Interpreter* interpreter, struct extras extra)
     interpreter->setFunctionSystem(old_function_sys);
     // Let's also reset the current scope back to the old one
     interpreter->setCurrentScope(old_scope);
+
+    /**
+     * If the class extends Permission then we should add the permission to the current interpreters scope permissions
+     * as this means we have just created a permission so we should get rights to it*/
+    if (c->instanceOf("Permission"))
+    {
+        interpreter->getCurrentScope()->permissions->addPermission(std::dynamic_pointer_cast<PermissionObject>(Object::create(c)));
+    }
     Value v;
     return v;
 }

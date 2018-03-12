@@ -90,6 +90,18 @@ std::vector<Variable> Class::getVariables()
     return this->local_variables;
 }
 
+bool Class::instanceOf(std::string class_name)
+{
+    Class* current = this;
+    while(current != NULL && current->name != class_name)
+    {
+        current = current->parent;
+    }
+    
+    if (current != NULL && class_name == current->name)
+        return true;
+    return false;
+}
 
 bool Class::instanceOf(Class* c)
 {

@@ -3,7 +3,12 @@
 #include <stdio.h>
 #include <string.h>
 #include <memory.h>
+#include <memory>
 #include "interpreter.h"
+#include "object.h"
+#include "permissionsobject.h"
+#include "permissionobject.h"
+#include "../stdmods/iomod/include/iopermission.h"
 
 /*std::vector<void*> allocations;
 bool wait = false;
@@ -57,6 +62,9 @@ void interpret()
 
 
     interpreter.setModuleSystem(moduleSystem);
+    // Let's just add the IOPermission just for now rather than rely on a configuration file
+    std::shared_ptr<PermissionObject> permission = std::dynamic_pointer_cast<PermissionObject>(Object::create(moduleSystem->getClassSystem()->getClassByName("IOPermission")));
+    interpreter.getCurrentScope()->permissions->addPermission(permission);
     interpreter.runScript("./test.marble");
 
     for (LogEntry entry : logger->entries)
