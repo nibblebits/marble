@@ -172,6 +172,12 @@ Node* NodeFactory::createNode(NODE_TYPE node_type)
         node = new IncludeOnceNode();
     }
     break;
+
+    case NODE_TYPE_PERMISSION_NODE:
+    {
+        node = new PermissionNode();
+    }
+    break;
     
     default:
         throw std::logic_error("Invalid node type provided to NodeFactory::createNode");

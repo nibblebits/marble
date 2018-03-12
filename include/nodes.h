@@ -30,4 +30,5 @@
 #include "listnode.h"
 #include "includenode.h"
 #include "includeoncenode.h"
+#include "permissionnode.h"
 #endif

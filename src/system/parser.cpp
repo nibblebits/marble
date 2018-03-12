@@ -812,6 +812,23 @@ void Parser::parse_include_once()
     push_node(include_once_node);
 }
 
+void Parser::parse_permission_node()
+{
+    if (!next()->isKeyword("permission"))
+    {
+        parse_error("Expecting a permission keyword for setting scope permissions");
+    }
+
+    parse_expression();
+    ExpNode* exp = (ExpNode*) pop_node();
+    parse_body();
+    BodyNode* body = (BodyNode*) pop_node();
+    PermissionNode* permission_node = (PermissionNode*) factory.createNode(NODE_TYPE_PERMISSION_NODE);
+    permission_node->exp_node = exp;
+    permission_node->body_node = body;
+    push_node(permission_node);
+
+}
 void Parser::parse_multi_expression()
 {
     ListNode* list_node = (ListNode*) factory.createNode(NODE_TYPE_LIST);
@@ -1275,6 +1292,10 @@ void Parser::parse_body_next()
     {
         parse_include_once();
         parse_semicolon();
+    }
+    else if(this->current_token->isKeyword("permission"))
+    {
+        parse_permission_node();
     }
     else if(this->current_token->isIdentifier())
     {
