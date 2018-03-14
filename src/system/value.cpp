@@ -173,65 +173,59 @@ Value Value::operator<=(const Value& other)
     return value;
 }
 
-Value Value::operator==(const Value& other)
+bool Value::operator==(const Value& other)
 {
 	ensure_same_type(type, other.type);
-	Value value;
-	value.type = VALUE_TYPE_NUMBER;
 
     switch(type)
     {
         case VALUE_TYPE_NUMBER:
         {
-            value.dvalue = dvalue == other.dvalue;
+            return dvalue == other.dvalue;
         }
         break;
         case VALUE_TYPE_STRING:
         {
-            value.dvalue = svalue == other.svalue;    
+            return svalue == other.svalue;    
         }
         break;
         case VALUE_TYPE_OBJECT:
         case VALUE_TYPE_ARRAY:
         {
-            value.dvalue = ovalue == other.ovalue;
+            return ovalue == other.ovalue;
         }
         break;
         default:
             throw std::logic_error("Unexpected issue when compareing strings, this is a bug please report this");
     }
-    
-    return value;
+
 }
-Value Value::operator!=(const Value& other)
+bool Value::operator!=(const Value& other)
 {
 	ensure_same_type(type, other.type);
-	Value value;
-	value.type = VALUE_TYPE_NUMBER;
 
     switch(type)
     {
         case VALUE_TYPE_NUMBER:
         {
-            value.dvalue = dvalue != other.dvalue;
+            return dvalue != other.dvalue;
         }
         break;
         case VALUE_TYPE_STRING:
         {
-            value.dvalue = svalue != other.svalue;    
+            return svalue != other.svalue;    
         }
         break;
         case VALUE_TYPE_OBJECT:
         case VALUE_TYPE_ARRAY:
         {
-            value.dvalue = ovalue != other.ovalue;
+            return ovalue != other.ovalue;
         }
         break;
         default:
             throw std::logic_error("Unexpected issue when compareing strings, this is a bug please report this");
     }
     
-    return value;
 }
 Value Value::operator&&(const Value& other)
 {
