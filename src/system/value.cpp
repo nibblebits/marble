@@ -74,6 +74,46 @@ void Value::set(double v)
     this->dvalue = v;
 }
 
+std::string Value::getStringValue(Value* from)
+{
+    switch(from->type)
+    {
+        case VALUE_TYPE_STRING:
+        {
+            // Already string
+            return from->svalue;
+        };
+        
+        case VALUE_TYPE_NUMBER:
+        {
+            return std::to_string(from->dvalue);
+        };
+        
+        default:
+            throw std::logic_error("Unable to get string value");
+    };
+}
+
+double Value::getDoubleValue(Value* from)
+{
+    switch(from->type)
+    {
+        case VALUE_TYPE_STRING:
+        {
+            return std::stod(from->svalue);
+        }
+        
+        case VALUE_TYPE_NUMBER:
+        {
+            // Already number
+            return from->dvalue;
+        }
+        
+        default:
+            throw std::logic_error("Unable to get double value");
+    };
+}
+
 bool Value::isObjectOrArray()
 {
     return this->type == VALUE_TYPE_OBJECT || this->type == VALUE_TYPE_ARRAY;

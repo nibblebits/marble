@@ -14,8 +14,5 @@ public:
     virtual void evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation);
     EvaluatingNode* casting_to;
     ExpressionInterpretableNode* to_cast;
-private:
-    std::string get_string_value(Value* from);
-    double get_double_value(Value* from);
 };
 #endif
