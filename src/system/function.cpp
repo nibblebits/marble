@@ -5,6 +5,8 @@
 #include "token.h"
 #include "posinfo.h"
 #include "systemhandler.h"
+#include "permissionsobject.h"
+#include "permissionobject.h"
 #include "exceptions/systemexception.h"
 
 Function::Function(FUNCTION_TYPE type, std::string name)

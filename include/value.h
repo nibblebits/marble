@@ -20,6 +20,7 @@ public:
     void set(Value* v);
     void set(std::string s);
     void set(double v);
+    void set(std::shared_ptr<Object> o);
 
     /**
      * Gets a string for the Value provided regardless of type
@@ -32,7 +33,7 @@ public:
      * \param from The value to get the double from
      */
     static double getDoubleValue(Value* from);
-    
+
     VALUE_TYPE type;
     // The variable who holds this value (NULL if the value stands without a variable)
     Variable* holder;

@@ -74,6 +74,12 @@ void Value::set(double v)
     this->dvalue = v;
 }
 
+void Value::set(std::shared_ptr<Object> o)
+{
+    this->type = VALUE_TYPE_OBJECT;
+    this->ovalue = o;
+}
+
 std::string Value::getStringValue(Value* from)
 {
     switch(from->type)

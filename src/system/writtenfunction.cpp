@@ -3,6 +3,8 @@
 #include "fnode.h"
 #include "varnode.h"
 #include "bodynode.h"
+#include "permissionsobject.h"
+#include "permissionobject.h"
 WrittenFunction::WrittenFunction(FunctionNode* function_node, std::vector<VarType> argument_types, VarType return_type) : SingleFunction(FUNCTION_TYPE_WRITTEN, function_node->name, argument_types, return_type)
 {
     this->fnode = function_node;

@@ -157,7 +157,7 @@ Value FunctionCallNode::interpret(Interpreter* interpreter, struct extras extra)
         except_value.set("The function with the name " + name->value + " has not been registered");
         throw SystemException(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("EntityNotRegisteredException"), {except_value}));
    }
-    
+
    try
    {
         function->invoke(interpreter, argument_results, &value, interpreter->getCurrentObject(), extra.accessors_scope);

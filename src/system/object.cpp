@@ -3,6 +3,8 @@
 #include "function.h"
 #include "systemhandler.h"
 #include "interpreter.h"
+#include "permissionsobject.h"
+#include "permissionobject.h"
 #include <iostream>
 #include <memory>
 
@@ -55,6 +57,9 @@ std::shared_ptr<Object> Object::create(Interpreter* interpreter, Class* object_c
     Function* constructor = object_class->getFunctionByName("__construct");
     // The caller scope will be the scope before invoking the constructor
     Scope* caller_scope = interpreter->getCurrentScope();
+
+    // Before calling the function we must also setup the permissions for this object. The permissions will be inherited from the scope thats creating this object
+    object->permissions = caller_scope->permissions;
     if (constructor != NULL)
     {
         object->runThis([&]

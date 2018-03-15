@@ -43,6 +43,19 @@ void ClassNode::test(Validator* validator, struct extras extra)
     if (is_final)
         c->is_final = true;
  
+    // Set to true if constructors with arguments should be rejected
+    bool zero_arg_constructors_only = false;
+
+     /* Permissions may only have non argument constructors 
+     * The reason for this is because when creating a class that extends Permission
+     * an object of that type is created and added to the current scope permissions so that the creator of the permission class
+     * automatically inherits the permissions. It is not possible to know what to pass to the constructor as this is not a function call
+     * therefore only constructors with zero arguments are valid.*/
+    if (c->instanceOf("Permission"))
+    {
+        zero_arg_constructors_only = true;
+    }
+
     // We must create a temporary object to be used with the testing process. No methods or functions will be called.
     std::shared_ptr<Object> object = Object::create(c); 
     object->runThis([&]() { 
@@ -54,6 +67,19 @@ void ClassNode::test(Validator* validator, struct extras extra)
             if (node->type == NODE_TYPE_VARIABLE_DECLARATION)
             {
                 c->addVariable(Variable::getFromPointer(object->getLastRegisteredVariable()));
+            }
+
+            // If this is true we must ensure that if a function is in the body and it is a constructor it has zero arguments
+            if (zero_arg_constructors_only)
+            {
+                if (node->type == NODE_TYPE_FUNCTION)
+                {
+                    FunctionNode* f_node = (FunctionNode*) node;
+                    if (f_node->name == "__construct" && !f_node->args.empty())
+                    {
+                        throw TestError("Constructors that have arguments are not allowed for the class with the name: " + name);
+                    }
+                }
             }
         });
         
@@ -94,7 +120,6 @@ void ClassNode::test(Validator* validator, struct extras extra)
             }
         }
     }
-    
 }
 
 Value ClassNode::interpret(Interpreter* interpreter, struct extras extra)
@@ -107,10 +132,11 @@ Value ClassNode::interpret(Interpreter* interpreter, struct extras extra)
     if (is_final)
         c->is_final = true;
 
+
     #warning Best to refactor below
     // We need to create a local scope so that we can extract variables once we are done interpreting the class body.
-    std::unique_ptr<Scope> tmp_scope = std::unique_ptr<Scope>(new Scope(NULL));
     Scope* old_scope = interpreter->getCurrentScope();
+    std::unique_ptr<Scope> tmp_scope = std::unique_ptr<Scope>(new Scope(NULL));
     interpreter->setCurrentScope(tmp_scope.get());
     // We will change the function system to the class so that all registered functions within the class body will become a method in the class.
     FunctionSystem* old_function_sys = interpreter->getFunctionSystem();
@@ -124,6 +150,7 @@ Value ClassNode::interpret(Interpreter* interpreter, struct extras extra)
         return true;
     });
     body->interpret(interpreter);
+
     // We are done with the body now so we can set the function system back to normal.
     interpreter->setFunctionSystem(old_function_sys);
     // Let's also reset the current scope back to the old one
@@ -134,8 +161,12 @@ Value ClassNode::interpret(Interpreter* interpreter, struct extras extra)
      * as this means we have just created a permission so we should get rights to it*/
     if (c->instanceOf("Permission"))
     {
-        interpreter->getCurrentScope()->permissions->addPermission(std::dynamic_pointer_cast<PermissionObject>(Object::create(c)));
+        // We need to set the permissions of this new PermissionObject to that of the current interpreter scope
+        std::shared_ptr<PermissionObject> perm_obj = std::dynamic_pointer_cast<PermissionObject>(Object::create(c));
+        perm_obj->permissions = interpreter->getCurrentScope()->permissions;
+        interpreter->getCurrentScope()->permissions->addPermission(perm_obj);
     }
+
     Value v;
     return v;
 }

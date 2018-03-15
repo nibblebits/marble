@@ -28,6 +28,7 @@
 #include "exceptionobject.h"
 #include "permissionobject.h"
 #include "permissionsobject.h"
+#include "permissionpropertyobject.h"
 #include "exceptions/IOException.h"
 #include "exceptions/systemexception.h"
     std::string getAllVariablesAsString(Scope* scope)
@@ -128,6 +129,9 @@ Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionS
 
     // We also need a permissions class that will hold the permissions for a current scope
     PermissionsObject::registerClass(this);
+
+    // We need to register the PermissionProperty class which will hold a variable name and value for a permission variable.
+    PermissionPropertyObject::registerClass(this);
 
 
     // We must now create a permission object for our root scope
