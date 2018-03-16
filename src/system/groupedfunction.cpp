@@ -1,11 +1,12 @@
+#include <vector>
 #include "groupedfunction.h"
 #include "singlefunction.h"
 #include "csystem.h"
 #include "systemhandler.h"
 #include "statics.h"
-GroupedFunction::GroupedFunction( std::string name) : Function(FUNCTION_TYPE_GROUPED, name)
+GroupedFunction::GroupedFunction(std::string name) : Function(FUNCTION_TYPE_GROUPED, name)
 {
-   
+   this->sys_handler = NULL;
 }
 
 GroupedFunction::~GroupedFunction()
@@ -25,13 +26,14 @@ void GroupedFunction::invoke_impl(Interpreter* interpreter, std::vector<Value> v
 
 Function* GroupedFunction::getFunctionForValues(std::vector<Value> values)
 {
+  std::vector<Function*> possible_functions;
   for (int i = 0; i < this->functions.size(); i++)
   {
     Function* function = this->functions.at(i).get();
     if (isValidFunctionForValues((SingleFunction*) function, values))
-        return function;
+        possible_functions.push_back(function);
   }
-  
+
   return NULL;
 }
 

@@ -47,6 +47,8 @@ public:
     bool hasFunctionWithArguments(std::vector<VarType> types);
     void addFunction(std::unique_ptr<Function> function);
     std::vector<Function*> getFunctions();
+
+    /** The SystemHandler related to this function */
     SystemHandler* sys_handler;
 private:
     bool isValidFunctionForValues(SingleFunction* function, std::vector<Value> values);

@@ -73,7 +73,11 @@ FunctionSystem* FunctionSystem::getPreviousFunctionSystem()
 
 GroupedFunction* FunctionSystem::replaceFunctionWithGroup(std::string function_name)
 {
+    if (this->sys_handler == NULL)
+        throw std::logic_error("Grouped functions are not supported for FunctionSystem's with no SystemHandler");
+        
     GroupedFunction* grouped_function = new GroupedFunction(function_name);
+    grouped_function->sys_handler = this->sys_handler;
     std::unique_ptr<Function> old_function = std::move(this->functions[function_name]);
     grouped_function->addFunction(std::move(old_function));
     this->functions[function_name] = std::unique_ptr<Function>(grouped_function);
