@@ -23,9 +23,12 @@ void ReturnNode::test(Validator* validator, struct extras extra)
     if (function_system->isInFunction())
     {
         SingleFunction* function = (SingleFunction*) function_system->getCurrentFunction();
-        struct Evaluation evaluation = this->exp->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE);
-        if (evaluation.datatype != function->return_type)
-            throw TestError("Invalid return expression for the given return type for function \"" + function->name + "\"");
+        if (this->exp != NULL)
+        {
+            struct Evaluation evaluation = this->exp->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE);
+            if (evaluation.datatype != function->return_type)
+                throw TestError("Invalid return expression for the given return type for function \"" + function->name + "\"");
+        }
     }
 }
 
