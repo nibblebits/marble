@@ -1,4 +1,6 @@
 #include <vector>
+#include <algorithm>
+#include <functional>
 #include "groupedfunction.h"
 #include "singlefunction.h"
 #include "csystem.h"
@@ -24,16 +26,43 @@ void GroupedFunction::invoke_impl(Interpreter* interpreter, std::vector<Value> v
     function->invoke(interpreter, values, return_value, object, caller_scope);
 }
 
+bool GroupedFunction::sort_comparator(SingleFunction* f1, SingleFunction* f2)
+{
+    std::vector<VarType> f1_argument_types = f1->argument_types;
+    std::vector<VarType> f2_argument_types = f2->argument_types;
+    ClassSystem* class_system = sys_handler->getClassSystem();
+    for (VarType f1_type : f1_argument_types)
+    {
+        for (VarType f2_type : f2_argument_types)
+        {
+            if (f1_type.type == VARIABLE_TYPE_OBJECT && f2_type.type == VARIABLE_TYPE_OBJECT)
+            {
+                Class* f1_type_cls = class_system->getClassByName(f1_type.value);
+                Class* f2_type_cls = class_system->getClassByName(f2_type.value);
+                if (!f1_type_cls->instanceOf(f2_type_cls))
+                    return false;
+            }
+        }
+    }
+
+    return true;
+}
+
 Function* GroupedFunction::getFunctionForValues(std::vector<Value> values)
 {
-  std::vector<Function*> possible_functions;
+  std::vector<SingleFunction*> possible_functions;
   for (int i = 0; i < this->functions.size(); i++)
   {
     Function* function = this->functions.at(i).get();
     if (isValidFunctionForValues((SingleFunction*) function, values))
-        possible_functions.push_back(function);
+        possible_functions.push_back((SingleFunction*) function);
   }
 
+  // We must sort the functions so that the most valid function is the first one
+  std::sort(possible_functions.begin(), possible_functions.end(), [&](SingleFunction* f1, SingleFunction* f2)->bool { return sort_comparator(f1, f2); });
+
+  if (!possible_functions.empty())
+     return possible_functions[0];
   return NULL;
 }
 
@@ -99,7 +128,6 @@ void GroupedFunction::addFunction(std::unique_ptr<Function> function)
         
     this->functions.push_back(std::move(function));
 }
-
 
 std::vector<Function*> GroupedFunction::getFunctions()
 {
