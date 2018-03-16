@@ -219,6 +219,9 @@ Function* FunctionSystem::getFunctionLocallyByNameAndArguments(std::string name,
             {
                 SingleFunction* single_function = (SingleFunction*) function;
                 std::vector<VarType> single_function_arguments = single_function->argument_types;
+                /**
+                 * We must ensure every type is compatible with the types provided to us
+                 */
                 for (int i = 0; i < single_function_arguments.size(); i++)
                 {
                     if (i < args.size())
