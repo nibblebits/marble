@@ -35,13 +35,8 @@ bool GroupedFunction::sort_comparator(SingleFunction* f1, SingleFunction* f2)
     {
         for (VarType f2_type : f2_argument_types)
         {
-            if (f1_type.type == VARIABLE_TYPE_OBJECT && f2_type.type == VARIABLE_TYPE_OBJECT)
-            {
-                Class* f1_type_cls = class_system->getClassByName(f1_type.value);
-                Class* f2_type_cls = class_system->getClassByName(f2_type.value);
-                if (!f1_type_cls->instanceOf(f2_type_cls))
-                    return false;
-            }
+            if (!f1_type.ensureCompatibility(f2_type, class_system))
+                return false;
         }
     }
 

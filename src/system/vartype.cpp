@@ -1,5 +1,7 @@
 #include "vartype.h"
 #include "variable.h"
+#include "csystem.h"
+#include "class.h"
 VarType::VarType()
 {
     this->type = -1;
@@ -28,6 +30,21 @@ bool VarType::operator!=(const VarType &other) const
     return true;
 }
 
+
+bool VarType::ensureCompatibility(const VarType& other, ClassSystem* c_system)
+{
+    if (*this == other)
+        return true;
+    
+    if (this->type == VARIABLE_TYPE_OBJECT && other.type == VARIABLE_TYPE_OBJECT)
+    {
+        Class* f1_type_cls = c_system->getClassByName(this->value);
+        Class* f2_type_cls = c_system->getClassByName(other.value);
+        if (!f1_type_cls->instanceOf(f2_type_cls))
+            return false;
+    }
+    return true;
+}
 VarType VarType::fromString(std::string value)
 {
     VarType type;

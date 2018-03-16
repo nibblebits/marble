@@ -75,7 +75,6 @@ GroupedFunction* FunctionSystem::replaceFunctionWithGroup(std::string function_n
 {
     if (this->sys_handler == NULL)
         throw std::logic_error("Grouped functions are not supported for FunctionSystem's with no SystemHandler");
-        
     GroupedFunction* grouped_function = new GroupedFunction(function_name);
     grouped_function->sys_handler = this->sys_handler;
     std::unique_ptr<Function> old_function = std::move(this->functions[function_name]);
@@ -219,10 +218,21 @@ Function* FunctionSystem::getFunctionLocallyByNameAndArguments(std::string name,
             case FUNCTION_TYPE_PURE:
             {
                 SingleFunction* single_function = (SingleFunction*) function;
-                if (args == single_function->argument_types)
+                std::vector<VarType> single_function_arguments = single_function->argument_types;
+                for (int i = 0; i < single_function_arguments.size(); i++)
                 {
-                    return single_function;
+                    if (i < args.size())
+                    {
+                        VarType function_arg = single_function_arguments[i];
+                        VarType provided_arg = args[i];
+                        if (!provided_arg.ensureCompatibility(function_arg, this->sys_handler->getClassSystem()))
+                        {
+                            return NULL;
+                        }
+                    }
                 }
+
+                return function;
             }
             break;
             
