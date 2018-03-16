@@ -131,8 +131,6 @@ Value FunctionCallNode::interpret(Interpreter* interpreter, struct extras extra)
    Value value;
    std::vector<Value> argument_results;
 
-   std::cout << "calling function: " << this->name->value << " current scope: " << interpreter->getCurrentScope() << std::endl;
-
    /*
     * If the accessors scope is NULL then we will default to the current interpreters scope.
     */
@@ -141,11 +139,6 @@ Value FunctionCallNode::interpret(Interpreter* interpreter, struct extras extra)
         extra.accessors_scope = interpreter->getCurrentScope();
    }
 
-
-   for (std::shared_ptr<PermissionObject> o : extra.accessors_scope->permissions->objects)
-   {
-       std::cout << "Permission name: " << o->getClass()->name << std::endl;
-   }
 
    /* If accessing an object the current scope
     * may have become something else so we need to use the accessors scope which is where the function call took place */

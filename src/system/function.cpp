@@ -55,7 +55,10 @@ void Function::invoke(Interpreter* interpreter, std::vector<Value> values, Value
         // The _caller_permissions variable will not be accessible directly as it would not exist at validation time. You can get the permissions
         // by calling getCallerPermissions() from within marble.
         // This function is registered inside the Interpreter class.
-        interpreter->getCurrentScope()->createVariable("_caller_permissions", "Permissions", caller_scope->permissions);
+        if (this->name != "getCallerPermissions")
+        {
+            interpreter->getCurrentScope()->createVariable("_caller_permissions", "Permissions", caller_scope->permissions);
+        }
         this->invoke_impl(interpreter, values, return_value, object, caller_scope);
         interpreter->finish_parented_scope();
     }

@@ -67,7 +67,6 @@ void PermissionObject::ensurePermissionValid(Interpreter* interpreter, std::shar
             // Now that we have these property variables setup we can now get and invoke the __permission_check function
             Function* f = permission_obj->getClass()->getFunctionByNameAndArguments("__permission_check", {VarType::fromString("PermissionProperty"), VarType::fromString("PermissionProperty")});
             f->invoke(interpreter, {f_property_value, s_property_value}, &return_value, shared_from_this(), caller_scope);
-            std::cout << "INVOKE SUCCESS" << std::endl;
         }
     }
 }
