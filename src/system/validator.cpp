@@ -46,12 +46,12 @@ bool Validator::isInClass()
     return this->current_class != NULL;
 }
 
-Object* Validator::getClassObject(std::string name)
+std::shared_ptr<Object> Validator::getClassObject(std::string name)
 {
     for (std::shared_ptr<Object> obj : this->class_objects)
     {
         if (obj->getClass()->name == name)
-            return obj.get();
+            return obj;
     }
 
     return NULL;

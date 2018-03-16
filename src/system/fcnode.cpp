@@ -9,6 +9,8 @@
 #include "exceptions/testerror.h"
 #include "exceptions/systemexception.h"
 #include "exceptions/evaluationexception.h"
+#include "permissionsobject.h"
+#include "permissionobject.h"
 #include <iostream>
 #include <stdexcept>
 FunctionCallNode::FunctionCallNode() : ExpressionInterpretableNode(NODE_TYPE_FUNCTION_CALL)
@@ -128,12 +130,21 @@ Value FunctionCallNode::interpret(Interpreter* interpreter, struct extras extra)
 {
    Value value;
    std::vector<Value> argument_results;
+
+   std::cout << "calling function: " << this->name->value << " current scope: " << interpreter->getCurrentScope() << std::endl;
+
    /*
     * If the accessors scope is NULL then we will default to the current interpreters scope.
     */
    if (extra.accessors_scope == NULL)
    {
         extra.accessors_scope = interpreter->getCurrentScope();
+   }
+
+
+   for (std::shared_ptr<PermissionObject> o : extra.accessors_scope->permissions->objects)
+   {
+       std::cout << "Permission name: " << o->getClass()->name << std::endl;
    }
 
    /* If accessing an object the current scope
@@ -160,7 +171,7 @@ Value FunctionCallNode::interpret(Interpreter* interpreter, struct extras extra)
 
    try
    {
-        function->invoke(interpreter, argument_results, &value, interpreter->getCurrentObject(), extra.accessors_scope);
+        function->invoke(interpreter, argument_results, &value, extra.current_object, extra.accessors_scope);
    }
    catch(SystemException& ex)
    {

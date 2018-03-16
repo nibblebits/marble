@@ -47,29 +47,20 @@ void Function::invoke(Interpreter* interpreter, std::vector<Value> values, Value
     
     interpreter->addToStackTrace(address, posInfo);
 
-    Scope* old_scope;
-    
-    /*
-    * If this function is invoked inside an object then it is very important to set the current scope to the object scope
-    * to avoid invalid scopes when calling a function.
-    */
-    if (object != NULL)
-    {
-        old_scope = interpreter->getCurrentScope();
-        interpreter->setCurrentScope(object.get());
-    }
-
     try
     {
+        // Lets create a new parented scope for any extras before the invoke
+        interpreter->new_parented_scope();
+        // Before invoking lets create a variable called caller_permissions that will hold the permissions of the caller of this function
+        // The _caller_permissions variable will not be accessible directly as it would not exist at validation time. You can get the permissions
+        // by calling getCallerPermissions() from within marble.
+        // This function is registered inside the Interpreter class.
+        interpreter->getCurrentScope()->createVariable("_caller_permissions", "Permissions", caller_scope->permissions);
         this->invoke_impl(interpreter, values, return_value, object, caller_scope);
+        interpreter->finish_parented_scope();
     }
     catch(SystemException& ex)
     {
-        if (object != NULL)
-        {
-            // Let's restore the scope
-            interpreter->setCurrentScope(old_scope);
-        }
         // An exception was thrown! Lets pop us off the stack trace and rethrow it
         interpreter->popFromStackTrace();
 
@@ -79,12 +70,6 @@ void Function::invoke(Interpreter* interpreter, std::vector<Value> values, Value
         throw ex;
     }
     
-
-    if (object != NULL)
-    {
-        // Let's restore the scope
-        interpreter->setCurrentScope(old_scope);
-    }
 
     // Now lets pop it off
     interpreter->popFromStackTrace();

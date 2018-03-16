@@ -2,6 +2,7 @@
 #define VALIDATOR_H
 #include <string>
 #include <vector>
+#include <memory>
 #include "scope.h"
 #include "statics.h"
 #include "systemhandler.h"
@@ -28,7 +29,7 @@ public:
      * \param name The name of the class to get the validation Object for
      * \return Returns the validation Object for the class with the provided name
      */ 
-    Object* getClassObject(std::string name);
+    std::shared_ptr<Object> getClassObject(std::string name);
     void beginClass(Class* current_class);
     Class* getCurrentClass();
     void endClass();

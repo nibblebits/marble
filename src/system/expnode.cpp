@@ -10,6 +10,7 @@
 #include "exceptions/systemexception.h"
 #include "exceptions/evaluationexception.h"
 #include "debug.h"
+#include "object.h"
 #include <iostream>
 #include <memory>
 ExpNode::ExpNode() : ExpressionInterpretableNode(NODE_TYPE_EXPRESSION)
@@ -170,7 +171,7 @@ Value ExpNode::interpret(Interpreter* interpreter, struct extras extra)
         Scope* accessors_scope = (extra.accessors_scope != NULL ? extra.accessors_scope : interpreter->getCurrentScope());
         // Interpret the right node on the object scope and return the result.
         obj->runThis([&] {
-            result = this->right->interpret(interpreter, {.accessors_scope = accessors_scope, .is_object_exp=true});
+            result = this->right->interpret(interpreter, {.accessors_scope = accessors_scope, .is_object_exp=true, .current_object=obj});
         }, interpreter, c);
         return result;
     }
@@ -215,7 +216,7 @@ void ExpNode::test_obj_access(Validator* validator, struct extras extra)
     Class* c = NULL;
     if (!validator->isClassIgnored(evaluation.datatype.value))
     {
-        Object* obj = validator->getClassObject(evaluation.datatype.value);
+        std::shared_ptr<Object> obj = validator->getClassObject(evaluation.datatype.value);
         if (obj == NULL)
             throw std::logic_error("NULL object from validator: " + evaluation.datatype.value);
 
@@ -229,7 +230,7 @@ void ExpNode::test_obj_access(Validator* validator, struct extras extra)
 
         Scope* accessors_scope = (extra.accessors_scope != NULL ? extra.accessors_scope : validator->getCurrentScope());
         obj->runThis([&] {
-            this->right->test(validator, {.accessors_scope = accessors_scope, .is_object_exp=true});
+            this->right->test(validator, {.accessors_scope = accessors_scope, .is_object_exp=true, .current_object=obj});
         }, validator, c);   
     }
 }
@@ -274,8 +275,8 @@ void ExpNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_eva
             old_scope = handler->getCurrentScope();   
                  
             Validator* validator = (Validator*) handler;
-            Object* obj = validator->getClassObject(evaluation->datatype.value);
-            handler->setCurrentScope(obj);
+            std::shared_ptr<Object> obj = validator->getClassObject(evaluation->datatype.value);
+            handler->setCurrentScope(obj.get());
             handler->setFunctionSystem(obj->getClass());
         }
         right->evaluate(handler, expected_evaluation, evaluation);

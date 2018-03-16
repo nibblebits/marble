@@ -140,9 +140,15 @@ Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionS
     // It is also wise to create a method for getting the current permissions
     getFunctionSystem()->registerFunction("getScopePermissions", {}, VarType::fromString("Permissions"),[&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         return_value->type = VALUE_TYPE_OBJECT;
-        return_value->ovalue = getCurrentScope()->permissions;
+        return_value->ovalue = interpreter->getCurrentScope()->permissions;
     });
 
+    getFunctionSystem()->registerFunction("getCallerPermissions", {}, VarType::fromString("Permissions"),[&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
+        return_value->type = VALUE_TYPE_OBJECT;
+        // The _caller_permissions variable is a special variable registered when calling a function. It only exists for the scope of the function
+        // You can find this at function.cpp
+        return_value->ovalue = interpreter->getCurrentScope()->getVariableAnyScope("_caller_permissions")->value.ovalue;
+    });
    this->lastFunctionCallNode = NULL;
    this->moduleSystem = NULL;
    this->first_run = true;

@@ -5,6 +5,7 @@
 #include "permissionsobject.h"
 #include "interpreter.h"
 #include "exceptions/testerror.h"
+#include <iostream>
 PermissionNode::PermissionNode() : ExpressionInterpretableNode(NODE_TYPE_PERMISSION_NODE)
 {
 
@@ -22,13 +23,17 @@ Value PermissionNode::interpret(Interpreter* interpreter, struct extras extra)
     Value exp_result = this->exp_node->interpret(interpreter, extra);
     std::shared_ptr<PermissionsObject> permissions = std::dynamic_pointer_cast<PermissionsObject>(exp_result.ovalue);
     // Now lets create a new scope and set the permissions
+
     interpreter->new_parented_scope();
     Scope* scope = interpreter->getCurrentScope();
     scope->permissions = permissions;
 
+    std::cout << "Permission scope: " << scope << std::endl;
+    std::cout << "interpreting permission body" << std::endl;
     // Let's interpret the body now that the scope permissions are set correctly
     body_node->interpret(interpreter, extra);
     interpreter->finish_parented_scope();
+    std::cout << "finished" << std::endl;
     return v;
 }
 void PermissionNode::test(Validator* validator, struct extras extra)

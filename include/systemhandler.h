@@ -37,7 +37,7 @@ public:
     void useFunctionSystem(FunctionSystem* f_system, std::function<void()> call);
 
     /**
-    * Gets the current Object that is currently being accessed. This object will be the value of the object that currently a method is being called on or an attribute being accessed on.. E.g obj.function();
+    * Gets the last known Object that was accessed. This object will be the value of the object that currently a method is being called on or an attribute being accessed on.. E.g obj.function();
     */
     std::shared_ptr<Object> getCurrentObject();
 
