@@ -120,11 +120,9 @@ void BodyNode::interpret_body(BodyNode* node)
     // Awesome now lets interpret!
     while(current_node != NULL)
     {
-        if(!interpret_body_node(current_node)) goto end;
+        if(!interpret_body_node(current_node)) break;
         current_node = current_node->next;
     }
-
-end:
 
     // Run the before leave function if one is specified
     if (before_leave_function != NULL)
