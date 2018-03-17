@@ -42,20 +42,30 @@ public:
     * \throw std::logic_error Thrown if no function can be found that can deal with the values provided.
     */
     virtual void invoke_impl(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
-    Function* getFunctionForValues(std::vector<Value> values);
+    /**
+     * Gets a function based on the values provided
+     * \param calling_handler This is the SystemHandler that is used currently, this could be the interpreter instance for example
+     */
+    Function* getFunctionForValues(std::vector<Value> values, SystemHandler* calling_handler);
+    /**
+     * Gets a function based on the values provided
+     */
     Function* getFunctionForArguments(std::vector<VarType> types);
+    /**
+     * Returns weather or not a function exists with the given arguments
+     */
     bool hasFunctionWithArguments(std::vector<VarType> types);
     void addFunction(std::unique_ptr<Function> function);
     std::vector<Function*> getFunctions();
 
     // Assists in sorting functions based on type. This had to be done as otherwise std::sort requires a static function we need access to this instance
-    bool sort_comparator(SingleFunction* f1, SingleFunction* f2);
+    bool sort_comparator(SystemHandler* calling_handler, SingleFunction* f1, SingleFunction* f2);
 
     /** The SystemHandler related to this function */
     SystemHandler* sys_handler;
     
 private:
-    bool isValidFunctionForValues(SingleFunction* function, std::vector<Value> values);
+    bool isValidFunctionForValues(SingleFunction* function, std::vector<Value> values, SystemHandler* calling_handler);
     std::vector<std::unique_ptr<Function>> functions; 
 };
 

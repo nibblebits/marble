@@ -126,6 +126,16 @@ std::vector<Class*> ClassSystem::getAllClasses()
     return all_classes;
 }
 
+std::string ClassSystem::getAllClassesAsString()
+{
+    std::string str = "";
+    for (Class* c : getAllClasses())
+    {
+        str += c->name + ", ";
+    }
+    return str;
+}
+
 
 bool ClassSystem::isClassInstanceOf(std::string class1, std::string class2)
 {

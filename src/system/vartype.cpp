@@ -2,6 +2,7 @@
 #include "variable.h"
 #include "csystem.h"
 #include "class.h"
+#include <iostream>
 VarType::VarType()
 {
     this->type = -1;
@@ -40,8 +41,13 @@ bool VarType::ensureCompatibility(const VarType& other, ClassSystem* c_system)
     {
         Class* f1_type_cls = c_system->getClassByName(this->value);
         Class* f2_type_cls = c_system->getClassByName(other.value);
-        if (!f1_type_cls->instanceOf(f2_type_cls))
+        if (f1_type_cls == NULL || f2_type_cls == NULL)
             return false;
+
+        if (!f1_type_cls->instanceOf(f2_type_cls))
+        {
+            return false;
+        }
     }
     return true;
 }

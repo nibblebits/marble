@@ -2,6 +2,7 @@
 #define CLASSSYSTEM_H
 #include <vector>
 #include <memory>
+#include <string>
 #include "class.h"
 
 class SystemHandler;
@@ -34,6 +35,7 @@ public:
     Class* getClassByName(std::string name);
     bool hasClassWithName(std::string name);
     std::vector<Class*> getAllClasses();
+    std::string getAllClassesAsString();
 
     // Helper functions
 

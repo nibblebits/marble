@@ -28,12 +28,9 @@ Value PermissionNode::interpret(Interpreter* interpreter, struct extras extra)
     Scope* scope = interpreter->getCurrentScope();
     scope->permissions = permissions;
 
-    std::cout << "Permission scope: " << scope << std::endl;
-    std::cout << "interpreting permission body" << std::endl;
     // Let's interpret the body now that the scope permissions are set correctly
     body_node->interpret(interpreter, extra);
     interpreter->finish_parented_scope();
-    std::cout << "finished" << std::endl;
     return v;
 }
 void PermissionNode::test(Validator* validator, struct extras extra)

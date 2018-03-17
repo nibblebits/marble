@@ -3,6 +3,7 @@
 #include <functional>
 #include "groupedfunction.h"
 #include "singlefunction.h"
+#include "interpreter.h"
 #include "csystem.h"
 #include "systemhandler.h"
 #include "statics.h"
@@ -19,18 +20,18 @@ GroupedFunction::~GroupedFunction()
 
 void GroupedFunction::invoke_impl(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
 {
-    Function* function = getFunctionForValues(values);
+    Function* function = getFunctionForValues(values, interpreter);
     if (function == NULL)
         throw std::logic_error("No function found to invoke for the given values");
     
     function->invoke(interpreter, values, return_value, object, caller_scope);
 }
 
-bool GroupedFunction::sort_comparator(SingleFunction* f1, SingleFunction* f2)
+bool GroupedFunction::sort_comparator(SystemHandler* calling_handler, SingleFunction* f1, SingleFunction* f2)
 {
     std::vector<VarType> f1_argument_types = f1->argument_types;
     std::vector<VarType> f2_argument_types = f2->argument_types;
-    ClassSystem* class_system = sys_handler->getClassSystem();
+    ClassSystem* class_system = calling_handler->getClassSystem();
     for (VarType f1_type : f1_argument_types)
     {
         for (VarType f2_type : f2_argument_types)
@@ -43,25 +44,25 @@ bool GroupedFunction::sort_comparator(SingleFunction* f1, SingleFunction* f2)
     return true;
 }
 
-Function* GroupedFunction::getFunctionForValues(std::vector<Value> values)
+Function* GroupedFunction::getFunctionForValues(std::vector<Value> values, SystemHandler* calling_handler)
 {
   std::vector<SingleFunction*> possible_functions;
   for (int i = 0; i < this->functions.size(); i++)
   {
     Function* function = this->functions.at(i).get();
-    if (isValidFunctionForValues((SingleFunction*) function, values))
+    if (isValidFunctionForValues((SingleFunction*) function, values, calling_handler))
         possible_functions.push_back((SingleFunction*) function);
   }
 
   // We must sort the functions so that the most valid function is the first one
-  std::sort(possible_functions.begin(), possible_functions.end(), [&](SingleFunction* f1, SingleFunction* f2)->bool { return sort_comparator(f1, f2); });
+  std::sort(possible_functions.begin(), possible_functions.end(), [&](SingleFunction* f1, SingleFunction* f2)->bool { return sort_comparator(calling_handler, f1, f2); });
 
   if (!possible_functions.empty())
      return possible_functions[0];
   return NULL;
 }
 
-bool GroupedFunction::isValidFunctionForValues(SingleFunction* function, std::vector<Value> values)
+bool GroupedFunction::isValidFunctionForValues(SingleFunction* function, std::vector<Value> values, SystemHandler* calling_handler)
 {
     std::vector<VarType> argument_types = function->argument_types; 
     if (argument_types.size() != values.size())
@@ -82,7 +83,7 @@ bool GroupedFunction::isValidFunctionForValues(SingleFunction* function, std::ve
         if (arg_type->type == VARIABLE_TYPE_OBJECT)
         {
             // The variable type provided is an object, we must now check they are of compatible types.
-            ClassSystem* class_sys = sys_handler->getClassSystem();
+            ClassSystem* class_sys = calling_handler->getClassSystem();
             std::string arg_obj_class_name = arg_type->value;
             Class* arg_obj_class = class_sys->getClassByName(arg_obj_class_name);
             Class* value_obj_class = value->ovalue->getClass();

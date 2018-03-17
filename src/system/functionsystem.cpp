@@ -156,9 +156,9 @@ bool FunctionSystem::hasFunction(std::string name, FunctionSystem* final_fs)
     return getFunctionByName(name, final_fs) != NULL;
 }
 
-bool FunctionSystem::hasFunction(std::string name, std::vector<VarType> args, FunctionSystem* final_fs)
+bool FunctionSystem::hasFunction(std::string name, std::vector<VarType> args, FunctionSystem* final_fs, bool allow_compatible, SystemHandler* caller_sys_handler)
 {
-    return this->getFunctionByNameAndArguments(name, args, final_fs) != NULL;
+    return this->getFunctionByNameAndArguments(name, args, final_fs, allow_compatible, caller_sys_handler) != NULL;
 }
 
 bool FunctionSystem::hasFunctionLocally(std::string name)
@@ -166,9 +166,9 @@ bool FunctionSystem::hasFunctionLocally(std::string name)
     return this->functions.find(name) != this->functions.end();
 }
 
-bool FunctionSystem::hasFunctionLocally(std::string name, std::vector<VarType> args)
+bool FunctionSystem::hasFunctionLocally(std::string name, std::vector<VarType> args, bool allow_compatible)
 {
-    Function* function = this->getFunctionLocallyByNameAndArguments(name, args);
+    Function* function = this->getFunctionLocallyByNameAndArguments(name, args, allow_compatible);
     return function != NULL;
 }
 
@@ -202,8 +202,12 @@ Function* FunctionSystem::getFunctionByName(std::string name, FunctionSystem* fi
    return NULL;
 }
 
-Function* FunctionSystem::getFunctionLocallyByNameAndArguments(std::string name, std::vector<VarType> args)
+Function* FunctionSystem::getFunctionLocallyByNameAndArguments(std::string name, std::vector<VarType> args, bool allow_compatible, SystemHandler* caller_sys_handler)
 {
+    // If no caller system handler was provided then we must throw an exception
+    if (allow_compatible && caller_sys_handler == NULL)
+       throw std::logic_error("allow_compatible is true so we also expect a callers system handler which has not been provided");
+
     std::map<std::string, std::unique_ptr<Function>>::iterator it = this->functions.find(name); 
     if (it == this->functions.end())
         return NULL;
@@ -219,23 +223,33 @@ Function* FunctionSystem::getFunctionLocallyByNameAndArguments(std::string name,
             {
                 SingleFunction* single_function = (SingleFunction*) function;
                 std::vector<VarType> single_function_arguments = single_function->argument_types;
-                /**
-                 * We must ensure every type is compatible with the types provided to us
-                 */
-                for (int i = 0; i < single_function_arguments.size(); i++)
+                // If we are allowing compatibility we must check each argument is compatible with the provided arguments
+                if (allow_compatible)
                 {
-                    if (i < args.size())
+                    /**
+                     * We must ensure every type is compatible with the types provided to us
+                     */
+                    for (int i = 0; i < single_function_arguments.size(); i++)
                     {
-                        VarType function_arg = single_function_arguments[i];
-                        VarType provided_arg = args[i];
-                        if (!provided_arg.ensureCompatibility(function_arg, this->sys_handler->getClassSystem()))
+                        if (i < args.size())
                         {
-                            return NULL;
+                            VarType function_arg = single_function_arguments[i];
+                            VarType provided_arg = args[i];
+                            if (!provided_arg.ensureCompatibility(function_arg, caller_sys_handler->getClassSystem()))
+                            {
+                                return NULL;
+                            }
                         }
                     }
-                }
 
-                return function;
+                    return function;
+                }
+                else
+                {
+                    // We don't want to use this function if its compatible. It must be equal
+                    if(single_function_arguments == args)
+                        return single_function;
+                }
             }
             break;
             
@@ -253,24 +267,28 @@ Function* FunctionSystem::getFunctionLocallyByNameAndArguments(std::string name,
    return NULL;   
 }
 
-Function* FunctionSystem::getFunctionByNameAndArguments(std::string name, std::vector<VarType> args, FunctionSystem* final_fs)
+Function* FunctionSystem::getFunctionByNameAndArguments(std::string name, std::vector<VarType> args, FunctionSystem* final_fs, bool allow_compatible, SystemHandler* caller_sys_handler)
 {
    // If final_fs points to self then we cannot use it.
    if (final_fs == this)
       final_fs = NULL;
 
-    Function* function = getFunctionLocallyByNameAndArguments(name, args);
+    // If no caller system handler was provided then we must throw an exception
+    if (allow_compatible && caller_sys_handler == NULL)
+       throw std::logic_error("allow_compatible is true so we also expect a callers system handler which has not been provided");
+
+    Function* function = getFunctionLocallyByNameAndArguments(name, args, allow_compatible, caller_sys_handler);
     if (function == NULL)
     { 
         if (this->prev_fc_sys != NULL)
         {
-            function = this->prev_fc_sys->getFunctionByNameAndArguments(name, args);
+            function = this->prev_fc_sys->getFunctionByNameAndArguments(name, args, NULL, allow_compatible, caller_sys_handler);
             if (function != NULL)
                 return function;
         }
         if (final_fs != NULL)
         {
-            return final_fs->getFunctionByNameAndArguments(name, args);
+            return final_fs->getFunctionByNameAndArguments(name, args, NULL, allow_compatible, caller_sys_handler);
         }
     }
     return function;

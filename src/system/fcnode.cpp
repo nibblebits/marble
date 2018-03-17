@@ -72,7 +72,7 @@ void FunctionCallNode::test(Validator* validator, struct extras extra)
    if (!extra.is_object_exp)
       function_sys = validator->getGlobalFunctionSystem();
 
-   if (!function_sys->hasFunction(this->name->value, types))
+   if (!function_sys->hasFunction(this->name->value, types, NULL, true, validator))
    {
        if (!function_sys->hasFunction(this->name->value))
        {
@@ -81,7 +81,7 @@ void FunctionCallNode::test(Validator* validator, struct extras extra)
        throw TestError("The function \"" + this->name->value + "\" has not been declared that takes the given arguments");
    }
    
-   SingleFunction* function = (SingleFunction*) function_sys->getFunctionByNameAndArguments(this->name->value, types);
+   SingleFunction* function = (SingleFunction*) function_sys->getFunctionByNameAndArguments(this->name->value, types, NULL, true, validator);
    if (validator->isExpecting())
    {
        // We must check the return type is valid 

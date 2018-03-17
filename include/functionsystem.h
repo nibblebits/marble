@@ -67,13 +67,14 @@ class FunctionSystem
          * \param args The arguments this function takes.
          * \param return_type The return type this function will return.
          * \param entrypoint The entrypoint of the function.
+         * 
          */
         virtual Function* registerFunction(std::string name, std::vector<VarType> args, VarType return_type, NATIVE_FUNCTION_ENTRYPOINT entrypoint);
         virtual Function* registerFunction(FunctionNode* fnode);
         bool hasFunction(std::string name, FunctionSystem* final_fs=NULL);
-        bool hasFunction(std::string name, std::vector<VarType> args, FunctionSystem* final_fs=NULL);
+        bool hasFunction(std::string name, std::vector<VarType> args, FunctionSystem* final_fs=NULL, bool allow_compatible=false, SystemHandler* caller_sys_handler=NULL);
         bool hasFunctionLocally(std::string name);
-        bool hasFunctionLocally(std::string name, std::vector<VarType> args);
+        bool hasFunctionLocally(std::string name, std::vector<VarType> args, bool allow_compatible=false);
         /**
          * Returns a function by the given name
          * \name The name of the function
@@ -85,9 +86,10 @@ class FunctionSystem
          * \name The name of the function
          * \args The Function that has the given argument types that you wish to get
          * \final_fs The final FunctionSystem to check for this Function if all other attempts fail. 
+         * \caller_sys_handler The SystemHandler of the caller to this function. NULL is legal and if provided the caller system handler will default to this FunctionSystem's own SystemHandler
          */
-        Function* getFunctionByNameAndArguments(std::string name, std::vector<VarType> args, FunctionSystem* final_fs=NULL);
-        Function* getFunctionLocallyByNameAndArguments(std::string name, std::vector<VarType> args);
+        Function* getFunctionByNameAndArguments(std::string name, std::vector<VarType> args, FunctionSystem* final_fs=NULL, bool allow_compatible=false, SystemHandler* caller_sys_handler=NULL);
+        Function* getFunctionLocallyByNameAndArguments(std::string name, std::vector<VarType> args, bool allow_compatible=false, SystemHandler* caller_sys_handler=NULL);
         std::vector<Function*> getFunctions();
         std::vector<Function*> getPureFunctions();
         
