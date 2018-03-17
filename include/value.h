@@ -35,6 +35,9 @@ public:
     static double getDoubleValue(Value* from);
 
     VALUE_TYPE type;
+    // Holds the string type of the value. So for example string, number, int, Object, Dog, Cat
+    std::string type_str;
+    
     // The variable who holds this value (NULL if the value stands without a variable)
     Variable* holder;
 

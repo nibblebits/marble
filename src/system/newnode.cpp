@@ -141,8 +141,7 @@ void NewNode::new_object_variable(Interpreter* interpreter, Value& v, FunctionCa
         argument_results.push_back(v);
     }
     std::shared_ptr<Object> object = Object::create(interpreter, object_class, argument_results);
-    v.type = VALUE_TYPE_OBJECT;
-    v.ovalue = object;
+    v.set(object);
 }
 
 void NewNode::handle_new_variable(Interpreter* interpreter, Value& v)
@@ -161,6 +160,7 @@ std::shared_ptr<Array> NewNode::new_array_array(Interpreter* interpreter, int to
         Variable* var = &variables[i];
         var->type = VARIABLE_TYPE_ARRAY;
         var->value.type = VALUE_TYPE_ARRAY;
+        var->value.type_str = "array";
         // Each element of this array will contain a reference to the next array
         handle_array(interpreter, var->value, it+1);
         var->value.holder = var;

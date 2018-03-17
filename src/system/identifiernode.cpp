@@ -107,23 +107,23 @@ void IdentifierNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expec
         if (expected_evaluation & EVALUATION_FROM_VARIABLE)
         {
             Variable* var = current_scope->getVariableAnyScope(this->value);
-            if (var == NULL)
+            if (var != NULL)
             {
-                throw std::logic_error("Variable with the name " + this->value + " not found for evaluation.");
+                evaluation->type |= EVALUATION_TYPE_DATATYPE;
+                evaluation->datatype.type = var->type;
+                evaluation->datatype.value = var->type_name;
+                goto _next;
             }
-            evaluation->type |= EVALUATION_TYPE_DATATYPE;
-            evaluation->datatype.type = var->type;
-	        evaluation->datatype.value = var->type_name;
         }
-        else
-        {
-            evaluation->type |= EVALUATION_TYPE_DATATYPE;
-            evaluation->datatype.type = Variable::getVariableTypeForString(this->value);
-	        evaluation->datatype.value = this->value;
-	    }
+
+
+        evaluation->type |= EVALUATION_TYPE_DATATYPE;
+        evaluation->datatype.type = Variable::getVariableTypeForString(this->value);
+	    evaluation->datatype.value = this->value;
 	    
     }
     
+    _next:
     if (expected_evaluation & EVALUATION_TYPE_VARIABLE)
     {
         Variable* var = current_scope->getVariableAnyScope(this->value);

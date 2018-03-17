@@ -1,5 +1,6 @@
 #include <vector>
 #include <algorithm>
+#include <iostream>
 #include <functional>
 #include "groupedfunction.h"
 #include "singlefunction.h"
@@ -86,7 +87,7 @@ bool GroupedFunction::isValidFunctionForValues(SingleFunction* function, std::ve
             ClassSystem* class_sys = calling_handler->getClassSystem();
             std::string arg_obj_class_name = arg_type->value;
             Class* arg_obj_class = class_sys->getClassByName(arg_obj_class_name);
-            Class* value_obj_class = value->ovalue->getClass();
+            Class* value_obj_class = class_sys->getClassByName(value->type_str);
             if (!value_obj_class->instanceOf(arg_obj_class))
                 return false;
         }

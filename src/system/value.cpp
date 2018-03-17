@@ -6,6 +6,7 @@
 Value::Value()
 {
     this->type = -1;
+    this->type_str = "";
     this->holder = NULL;
     this->ovalue = NULL;
     this->avalue = NULL;
@@ -55,6 +56,7 @@ VALUE_TYPE Value::getValueTypeFromVariableType(VARIABLE_TYPE type)
 void Value::set(Value* v)
 {
     this->type = v->type;
+    this->type_str = v->type_str;
     this->holder = v->holder;
     this->ovalue = v->ovalue;
     this->avalue = v->avalue;
@@ -65,18 +67,21 @@ void Value::set(Value* v)
 void Value::set(std::string s)
 {
     this->type = VALUE_TYPE_STRING;
+    this->type_str = "string";
     this->svalue = s;
 }
 
 void Value::set(double v)
 {
     this->type = VALUE_TYPE_NUMBER;
+    this->type_str = "number";
     this->dvalue = v;
 }
 
 void Value::set(std::shared_ptr<Object> o)
 {
     this->type = VALUE_TYPE_OBJECT;
+    this->type_str = o->getClass()->name;
     this->ovalue = o;
 }
 

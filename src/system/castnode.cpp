@@ -27,16 +27,27 @@ Value CastNode::interpret(Interpreter* interpreter, struct extras extra)
         {
             v.dvalue = (double) Value::getDoubleValue(&v);
             v.type = VALUE_TYPE_NUMBER;
+            v.type_str = "number";
         }
         else if(evaluation.datatype.value == "int")
         {
             v.dvalue = (int) Value::getDoubleValue(&v);
             v.type = VALUE_TYPE_NUMBER;
+            v.type_str = "number";
         }
         else if(evaluation.datatype.value == "string")
         {
             v.svalue = Value::getStringValue(&v);
             v.type = VALUE_TYPE_STRING;
+            v.type_str = "string";
+        }
+        else
+        {
+            if (evaluation.datatype.type == VARIABLE_TYPE_OBJECT)
+            {
+                // For casting of objects just change the type string for the value.
+                v.type_str = evaluation.datatype.value;
+            }
         }
     }
     catch(...)
@@ -44,9 +55,9 @@ Value CastNode::interpret(Interpreter* interpreter, struct extras extra)
         throw SystemException(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("InvalidCastException"), {}));
     }
 
-    // Objects don't need to be casted this will work fine without any conversion.
-    
-    
+
+    // Nothing to do for all other situations
+
     return v;
 }
 
@@ -62,10 +73,7 @@ void CastNode::test(Validator* validator, struct extras extra)
     {
         // We must ensure this is legal casting of an object
         VALUE_TYPE expecting_type = validator->getExpectingValueType();
-        if (expecting_type != VALUE_TYPE_OBJECT)
-            throw TestError("expecting a primitive type");
-        
-        
+  
         // Ok lets check to see if this object cast is valid
         ClassSystem* class_sys = validator->getClassSystem();
         if (!class_sys->hasClassWithName(casting_to_evaluation.datatype.value))
