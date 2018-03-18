@@ -35,6 +35,10 @@ int Variable::getVariableTypeForString(std::string str)
     {
         type = VARIABLE_TYPE_VOID;
     }
+    else if (str == "boolean")
+    {
+        type = VARIABLE_TYPE_BOOLEAN;
+    }
     return type;
 }
 
