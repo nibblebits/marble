@@ -14,7 +14,7 @@ TimeObject::~TimeObject()
 
 std::shared_ptr<Object> TimeObject::newInstance(Class* c)
 {
-
+    return std::make_shared<TimeObject>(c);
 }
 
 Class* TimeObject::registerClass(ModuleSystem* moduleSystem)
