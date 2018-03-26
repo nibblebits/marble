@@ -1,0 +1,5 @@
+/*!
+\page About
+
+    This is the documentation for the Marble interpreter SDK. If you wish to use the Marble programming language you have come to the wrong place. This is for those who wish to develop for the Marble interpreter that interprets the Marble programming language. If you wish to create a Marble module or modify the Marble engine you have come to the right place.
+*/
