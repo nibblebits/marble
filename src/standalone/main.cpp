@@ -5,6 +5,7 @@
 #include <memory.h>
 #include <memory>
 #include "interpreter.h"
+#include "basesystemhandler.h"
 #include "object.h"
 #include "permissionsobject.h"
 #include "permissionobject.h"
@@ -43,7 +44,8 @@ void operator delete[](void* ptr)
 */
 void interpret()
 {
-    ModuleSystem* moduleSystem = new ModuleSystem();
+    BaseSystemHandler* baseHandler = new BaseSystemHandler();
+    ModuleSystem* moduleSystem = new ModuleSystem(baseHandler->getClassSystem(), baseHandler->getFunctionSystem());
     Interpreter interpreter(moduleSystem->getClassSystem(), moduleSystem->getFunctionSystem());
     interpreter.setOutputFunction([](const char* data) {
         std::cout << data;
@@ -59,7 +61,6 @@ void interpret()
     moduleSystem->loadModule("./mods/marble_filemod.so");
     moduleSystem->loadModule("./mods/marble_iomod.so");
     moduleSystem->loadModule("./mods/marble_timemod.so");
-
 
     interpreter.setModuleSystem(moduleSystem);
     // Let's just add the IOPermission just for now rather than rely on a configuration file

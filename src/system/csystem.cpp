@@ -30,6 +30,13 @@ void ClassSystem::setDefaultObjectDescriptor(std::shared_ptr<Object> defaultObje
 
 std::shared_ptr<Object> ClassSystem::getDefaultObjectDescriptor()
 {
+    if (this->defaultObjectDescriptor == NULL)
+    {
+        // We don't have a default object descriptor so lets see if our parent class systems have one
+        ClassSystem* prev_cs = getPreviousClassSystem();
+        if (prev_cs != NULL)
+            this->defaultObjectDescriptor = prev_cs->getDefaultObjectDescriptor();
+    }
     return this->defaultObjectDescriptor;
 }
 
@@ -57,12 +64,21 @@ void ClassSystem::setDefaultBaseClass(Class* c)
 
 Class* ClassSystem::getDefaultBaseClass()
 {
+    if (this->defaultBaseClass == NULL)
+    {
+        // The default base class is NULL so we should get our parents instead
+        ClassSystem* prev_cs = getPreviousClassSystem();
+        if (prev_cs != NULL)
+        {
+            this->defaultBaseClass = prev_cs->getDefaultBaseClass();
+        }
+    }
     return this->defaultBaseClass;
 }
 
 Class* ClassSystem::registerClass(std::string class_name, Class* parent, CLASS_REGISTER_RULES rules)
 {
-    if (!this->defaultObjectDescriptor && !(rules & CLASS_REGISTER_OBJECT_DESCRIPTOR_LATER))
+    if (!this->getDefaultBaseClass() && !(rules & CLASS_REGISTER_OBJECT_DESCRIPTOR_LATER))
     {
         throw std::logic_error("You must set a default object descriptor before registering a class. Either override with the rule CLASS_REGISTER_OBJECT_DESCRIPTOR_LATER or set a default object descriptor with the \"setDefaultObjectDescriptor\" method");
     }
@@ -71,7 +87,7 @@ Class* ClassSystem::registerClass(std::string class_name, Class* parent, CLASS_R
         throw std::logic_error("The class: " + class_name + " has already been registered");
     
     if (parent == NULL)
-        parent = this->defaultBaseClass;  
+        parent = this->getDefaultBaseClass();  
     Class* c = new Class(this->sys_handler, class_name, parent, this->defaultObjectDescriptor);
     
     

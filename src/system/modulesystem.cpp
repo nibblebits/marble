@@ -36,14 +36,9 @@ void CoutLogHandler(Module* module, std::string message, LOG_TYPE log_type)
     std::cout << output_msg << std::endl;
 }
 
-ModuleSystem::ModuleSystem() : SystemHandler(SYSTEM_HANDLER_MODULE_SYSTEM, NULL, NULL)
+ModuleSystem::ModuleSystem(ClassSystem* classSystem, FunctionSystem* baseFunctionSystem) : SystemHandler(SYSTEM_HANDLER_MODULE_SYSTEM, classSystem, baseFunctionSystem)
 {
     this->setLogHandler(CoutLogHandler);
-    ClassSystem* classSystem = getClassSystem();
-    Class* c = Interpreter::registerDefaultObjectClass(getClassSystem(), "ModuleObject");
-    classSystem->setDefaultObjectDescriptor(std::make_shared<Object>(c));
-    classSystem->setDefaultBaseClass(c);
-
     addModule(new CommonModule());
 }
 

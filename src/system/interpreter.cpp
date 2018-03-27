@@ -58,13 +58,6 @@ Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionS
         std::cin >> s;
         return s;
     };
-    
-    if (getClassSystem()->hasClassWithName("Object")) {
-        throw std::logic_error("The Interpreter will create a class of Object. However the class system provided to it already has a class named Object. Please rename this class and rebuild.");
-    }
-
-    Class* obj_class = Interpreter::registerDefaultObjectClass(getClassSystem(), "Object");
-    getClassSystem()->setDefaultBaseClass(obj_class);
    
     Class* c = getClassSystem()->registerClass("array");
     c->registerFunction("size", {}, VarType::fromString("number"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
@@ -73,25 +66,10 @@ Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionS
         return_value->dvalue = array->count;
     });
     
-    /* Let's register an Exception class that is to be inherited by all classes that can be thrown*/
-    Class* exception_class = getClassSystem()->registerClass("Exception");
-    Variable msg_var;
-    msg_var.type = VARIABLE_TYPE_STRING;
-    msg_var.name = "message";
-    msg_var.setValue("");
-    exception_class->addVariable(msg_var);
-    exception_class->registerFunction("__construct", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
-        object->getVariable("message")->setValue(arguments[0].svalue);
-    });
-
-    exception_class->registerFunction("getStackTrace", {}, VarType::fromString("string"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
-        std::shared_ptr<ExceptionObject> exception_obj = std::dynamic_pointer_cast<ExceptionObject>(object);
-        return_value->type = VALUE_TYPE_STRING;
-        return_value->svalue = exception_obj->getStackTrace();
-    });
-    // The Exception class has the Exception object instance.
-    exception_class->setDescriptorObject(std::make_shared<ExceptionObject>(exception_class));
-    
+    Class* exception_class = getClassSystem()->getClassByName("Exception");
+    if (exception_class == NULL)
+        throw std::logic_error("The Interpreter expects a class with the name Exception to exist please create this in parent class system");
+        
     c = getClassSystem()->registerClass("InvalidIndexException", exception_class);
         c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
     });

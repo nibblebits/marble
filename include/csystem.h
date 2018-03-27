@@ -30,6 +30,11 @@ public:
     std::shared_ptr<Object> getDefaultObjectDescriptor();
     ClassSystem* getPreviousClassSystem();
     void setDefaultBaseClass(Class* c);
+
+    /**
+     * Gets the default base class for this ClassSystem. If none was found
+     * then the parents default base class is used.
+     */
     Class* getDefaultBaseClass();
     Class* registerClass(std::string class_name, Class* parent=NULL, CLASS_REGISTER_RULES rules=0);
     Class* getClassByName(std::string name);

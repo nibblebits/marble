@@ -9,6 +9,8 @@
 
 class Interpreter;
 class Module;
+class ClassSystem;
+class FunctionSystem;
 
 typedef std::function<void(Module*,std::string,LOG_TYPE)> LOG_HANDLER_FUNCTION;
 
@@ -21,7 +23,7 @@ typedef std::function<void(Module*,std::string,LOG_TYPE)> LOG_HANDLER_FUNCTION;
 class ModuleSystem : public SystemHandler
 {
 public:
-    ModuleSystem();
+    ModuleSystem(ClassSystem* classSystem, FunctionSystem* baseFunctionSystem);
     virtual ~ModuleSystem();
     /**
      * Adds the module to this ModuleSystem. A module should only be added to one ModuleSystem to work correctly.
