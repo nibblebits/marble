@@ -1,5 +1,7 @@
 #include "dateobject.h"
 #include "modulesystem.h"
+#include "interpreter.h"
+#include "exceptions/systemexception.h"
 #include <iostream>
 
 DateObject::DateObject(Class* c) : Object(c)
@@ -20,7 +22,8 @@ std::shared_ptr<Object> DateObject::newInstance(Class* c)
 
 Class* DateObject::registerClass(ModuleSystem* moduleSystem)
 {
-    Class* c = moduleSystem->getClassSystem()->registerClass("Date");
+    Class* c = moduleSystem->getClassSystem()->registerClass("DateFormatException", moduleSystem->getClassSystem()->getClassByName("Exception"));
+    c = moduleSystem->getClassSystem()->registerClass("Date");
     c->setDescriptorObject(std::make_shared<DateObject>(c));
     /**
      * The constructor accepts a number which represents a unix timestamp. This will be used by the date object
@@ -63,7 +66,7 @@ void DateObject::Date_getFormattedString(Interpreter* interpreter, std::vector<V
     if(strftime(buffer, sizeof(buffer), date_obj->format.c_str(), timeinfo) == 0)
     {
         // Error
-        throw std::logic_error("problem");
+        throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("DateFormatException")));
     }
 
     std::string formatted_str = buffer;
