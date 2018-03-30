@@ -5,6 +5,7 @@
 #include "interpreter.h"
 #include "permissionsobject.h"
 #include "permissionobject.h"
+#include "exceptions/systemexception.h"
 #include <iostream>
 #include <memory>
 
@@ -47,11 +48,21 @@ Object::~Object()
 
 std::shared_ptr<Object> Object::create(Class* object_class)
 {
+    if (object_class == NULL)
+    {
+        throw std::logic_error("The class provided is NULL");
+    }
     return object_class->getDescriptorObject()->newInstance();
 }
 
 std::shared_ptr<Object> Object::create(Interpreter* interpreter, Class* object_class, std::vector<Value> constructor_values)
 {
+    if (object_class == NULL)
+    {
+        Value except_value;
+        except_value.set("The class provided has not been registered");
+        throw SystemException(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("EntityNotRegisteredException"), {except_value}));
+    }
     std::shared_ptr<Object> object = object_class->getDescriptorObject()->newInstance();
     // The constructor must now be called
     Function* constructor = object_class->getFunctionByName("__construct");

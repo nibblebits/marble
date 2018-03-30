@@ -54,7 +54,7 @@ void ModuleSystem::addModule(Module* module)
     this->modules.push_back(module);
 }
 
-void ModuleSystem::loadModule(const char* filename)
+Module* ModuleSystem::loadModule(const char* filename)
 {
     void* module_ptr = dlopen(filename, RTLD_NOW);
     if (!module_ptr)
@@ -67,6 +67,7 @@ void ModuleSystem::loadModule(const char* filename)
     if (!module)
         throw std::logic_error("The module: " + std::string(filename) + " returned a NULL module upon calling its init method \"marble_mod_init\"");
     addModule(module);
+    return module;
 }
 
 void ModuleSystem::tellModules(Interpreter* interpreter)

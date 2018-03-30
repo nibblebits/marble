@@ -45,6 +45,14 @@ public:
     static Class* getDefaultBaseClass();
     void setOutputFunction(OUTPUT_FUNCTION output);
     void setInputFunction(INPUT_FUNCTION input);
+
+    /**
+     * Sets the ModuleSystem for this interpreter. You should load your modules before calling this method to ensure modules are told about this interpreter.
+     * Upon calling this method special module functions are also created allowing for loading of modules from within the interpreter its self.
+     * The interpreter will tell the modules it loads about it's self.
+     * 
+     * \attention The module functions created must not be used when the ModuleSystem is no longer being used in a single threaded environment. As soon as the ModuleSystem is being used between threads these functions should not be allowed so do not provide the permission to the interpreter for the functions to be called.
+     */
     void setModuleSystem(ModuleSystem* moduleSystem);
     void ready();
     void run(const char* code, PosInfo posInfo);
@@ -115,6 +123,7 @@ public:
     */
     INPUT_FUNCTION input;
 private:
+    void setupModuleMarbleFunctions(ModuleSystem* moduleSystem);
     void handleLineAndColumn(PosInfo* posInfo, const char* data, int length);
     void fail();
     const char* filename;

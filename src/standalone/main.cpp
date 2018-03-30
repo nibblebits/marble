@@ -60,8 +60,6 @@ void interpret()
     Logger* logger = interpreter.getLogger();
     moduleSystem->loadModule("./mods/marble_filemod.so");
     moduleSystem->loadModule("./mods/marble_iomod.so");
-    moduleSystem->loadModule("./mods/marble_timemod.so");
-
     interpreter.setModuleSystem(moduleSystem);
     // Let's just add the IOPermission just for now rather than rely on a configuration file
     std::shared_ptr<PermissionObject> permission = std::dynamic_pointer_cast<PermissionObject>(Object::create(moduleSystem->getClassSystem()->getClassByName("IOPermission")));

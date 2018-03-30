@@ -25,10 +25,12 @@
 #include "class.h"
 #include "array.h"
 #include "misc.h"
+#include "module.h"
 #include "exceptionobject.h"
 #include "permissionobject.h"
 #include "permissionsobject.h"
 #include "permissionpropertyobject.h"
+#include "modulehandlingpermissionobject.h"
 #include "exceptions/IOException.h"
 #include "exceptions/systemexception.h"
     std::string getAllVariablesAsString(Scope* scope)
@@ -111,6 +113,8 @@ Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionS
     // We need to register the PermissionProperty class which will hold a variable name and value for a permission variable.
     PermissionPropertyObject::registerClass(this);
 
+    // We need a module handling permissions object that will allow a marble programmer to load modules
+    ModuleHandlingPermissionObject::registerClass(this);
 
     // We must now create a permission object for our root scope
     getRootScope()->permissions = std::dynamic_pointer_cast<PermissionsObject>(Object::create(getClassSystem()->getClassByName("Permissions")));
@@ -154,7 +158,42 @@ void Interpreter::setModuleSystem(ModuleSystem* moduleSystem)
         throw std::logic_error("This Interpreter is already bound to a ModuleSystem");
     this->moduleSystem = moduleSystem;
 
+    // Let's create some module functions for modules to be loaded from within marble language
+    setupModuleMarbleFunctions(moduleSystem);
+
+    // Let's tell the modules about ourself.
     this->moduleSystem->tellModules(this);
+}
+
+void Interpreter::setupModuleMarbleFunctions(ModuleSystem* moduleSystem)
+{
+    /* 
+    * This function allows people to load marble modules from within the marble language
+    * The function accepts one argument of type string and this should equal the filename you wish to load
+    * 
+    * Prototype:
+    * function LoadModule(string filename) : void
+    * throws PermissionException if interpreter does not have the correct permissions
+    * throws IOException if the module fails to load
+    */
+    getFunctionSystem()->registerFunction("LoadModule", {VarType::fromString("string")}, VarType::fromString("void"),[=](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
+        std::shared_ptr<ModuleHandlingPermissionObject> permission = std::dynamic_pointer_cast<ModuleHandlingPermissionObject>(caller_scope->permissions->getPermission("ModuleHandlingPermission"));
+        if (permission == NULL)
+        {
+            throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException")));
+        }
+        std::string filename = arguments[0].svalue;
+        try
+        {
+            Module* module = moduleSystem->loadModule(filename.c_str());
+            // Tell the module about us.
+            module->newInterpreter(this);
+        }
+        catch(...)
+        {
+            throw SystemException(Object::create(getClassSystem()->getClassByName("IOException")));
+        }
+    });
 }
 
 void Interpreter::ready()

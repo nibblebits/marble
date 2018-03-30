@@ -29,7 +29,7 @@ public:
      * Adds the module to this ModuleSystem. A module should only be added to one ModuleSystem to work correctly.
      */
     void addModule(Module* module);
-    void loadModule(const char* filename);
+    Module* loadModule(const char* filename);
     void setLogHandler(LOG_HANDLER_FUNCTION handler_func);
     void log(Module* module, std::string message, LOG_TYPE log_type);
     /**
