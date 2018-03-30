@@ -40,11 +40,17 @@ Class* FileModule_File::registerClass(ModuleSystem* moduleSystem)
         return_value->type = VALUE_TYPE_OBJECT;
         return_value->ovalue = file->output;
     });
+
     c->registerFunction("getInputStream", {}, VarType::fromString("FileInputStream"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         std::shared_ptr<FileModule_File> file = std::dynamic_pointer_cast<FileModule_File>(object);
         return_value->type = VALUE_TYPE_OBJECT;
         return_value->ovalue = file->input;
     });
+    
+    c->registerFunction("setPosition", {VarType::fromString("number")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
+        File_setPosition(interpreter, arguments, return_value, object);
+    });
+
     c->registerFunction("getSize", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         File_GetSize(interpreter, arguments, return_value, object);
     });
@@ -70,6 +76,14 @@ void FileModule_File::File_Close(Interpreter* interpreter, std::vector<Value> va
 {
     std::shared_ptr<FileModule_File> file_obj = std::dynamic_pointer_cast<FileModule_File>(object);
     int response = fclose(file_obj->fp);
+    if (response != 0)
+        throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("IOException")));
+}
+
+void FileModule_File::File_setPosition(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)
+{
+    std::shared_ptr<FileModule_File> file_obj = std::dynamic_pointer_cast<FileModule_File>(object);
+    int response = fseek(file_obj->fp, values[0].dvalue, SEEK_SET);
     if (response != 0)
         throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("IOException")));
 }
