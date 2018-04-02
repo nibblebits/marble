@@ -1,5 +1,9 @@
 #include "basesystemhandler.h"
 #include "exceptionobject.h"
+#include "permissionobject.h"
+#include "permissionsobject.h"
+#include "permissionpropertyobject.h"
+#include "modulehandlingpermissionobject.h"
 #include "array.h"
 BaseSystemHandler::BaseSystemHandler() : SystemHandler(SYSTEM_HANDLER_BASE_SYSTEM_HANDLER, NULL, NULL)
 {
@@ -31,6 +35,26 @@ BaseSystemHandler::BaseSystemHandler() : SystemHandler(SYSTEM_HANDLER_BASE_SYSTE
     });
     // The Exception class has the Exception object instance.
     exception_class->setDescriptorObject(std::make_shared<ExceptionObject>(exception_class));
+
+
+    // Create a permissions exception
+    c = getClassSystem()->registerClass("PermissionException", exception_class);
+        c->registerFunction("__construct", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
+    });
+
+
+
+    // We need a permission class to help manage permissions
+    PermissionObject::registerClass(this);
+
+    // We also need a permissions class that will hold the permissions for a current scope
+    PermissionsObject::registerClass(this);
+
+    // We need to register the PermissionProperty class which will hold a variable name and value for a permission variable.
+    PermissionPropertyObject::registerClass(this);
+
+    // We need a module handling permissions object that will allow a marble programmer to load modules
+    ModuleHandlingPermissionObject::registerClass(this);
 }
 
 BaseSystemHandler::~BaseSystemHandler()

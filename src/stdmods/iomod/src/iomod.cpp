@@ -20,6 +20,7 @@ void IOModule::Init()
     log("IO Module Initialising...", LOG_LEVEL_NOTICE);
     log("--- Registering functions and classes", LOG_LEVEL_NOTICE);
     
+
     this->getModuleSystem()->getFunctionSystem()->registerFunction("setDefaultIO", {VarType::fromString("IO")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         setDefaultIO(interpreter, arguments, return_value, object, caller_scope);
     });
@@ -42,6 +43,14 @@ void IOModule::Init()
     });
 
 
+    c = this->getModuleSystem()->getClassSystem()->registerClass("IOPermission", this->getModuleSystem()->getClassSystem()->getClassByName("Permission"));
+    c->setDescriptorObject(std::make_shared<IOPermission>(c));
+    c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
+            
+    });
+    log("IOPermission class created succesfully", LOG_LEVEL_NOTICE);
+
+
     
     log("IO Module Initialised.", LOG_LEVEL_NOTICE);
 }
@@ -54,13 +63,6 @@ void IOModule::newInterpreter(Interpreter* interpreter)
     log("VARIABLE IO CREATED IN ROOT SCOPE", LOG_LEVEL_NOTICE);
 
 
-    // Let's setup the IOPermission class
-    Class* c = this->getModuleSystem()->getClassSystem()->registerClass("IOPermission", interpreter->getClassSystem()->getClassByName("Permission"));
-    c->setDescriptorObject(std::make_shared<IOPermission>(c));
-    c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
-        
-    });
-    log("IOPermission class created succesfully", LOG_LEVEL_NOTICE);
 }
 
 // Native IO functions/methods
@@ -73,17 +75,19 @@ void IOModule::setDefaultIO(Interpreter* interpreter, std::vector<Value> values,
 
 void IOModule::IO_print(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
 {
-    if (caller_scope->permissions == NULL)
+    if (!interpreter->hasNoPermissionRestrictions())
     {
-        throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException")));
-    }
+        if (caller_scope->permissions == NULL)
+        {
+            throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException")));
+        }
 
-    std::shared_ptr<IOPermission> permission = std::dynamic_pointer_cast<IOPermission>(caller_scope->permissions->getPermission("IOPermission"));
-    if (permission == NULL)
-    {
-        throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException")));
+        std::shared_ptr<IOPermission> permission = std::dynamic_pointer_cast<IOPermission>(caller_scope->permissions->getPermission("IOPermission"));
+        if (permission == NULL)
+        {
+            throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException")));
+        }
     }
-
     std::stringstream ss;
     for (Value v : values)
     {

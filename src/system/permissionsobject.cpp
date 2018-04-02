@@ -79,18 +79,23 @@ void PermissionsObject::PermissionsObject_Add(Interpreter* interpreter, std::vec
 {
     std::shared_ptr<PermissionsObject> this_p_obj = std::dynamic_pointer_cast<PermissionsObject>(object);
     std::shared_ptr<PermissionObject> permission_to_add = std::dynamic_pointer_cast<PermissionObject>(arguments[0].ovalue);
-    /* Does the caller scope already have the permission it is trying to add? If not then it is not legal for this caller to add this permission 
-     * as allowing this will defeat the purpose of the permission system in the first place*/
-    std::shared_ptr<PermissionObject> caller_permission = caller_scope->permissions->getPermission(permission_to_add->getClass()->name);
-    if (caller_permission == NULL)
-    {
-        throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException")));
-    }
 
-    /**
-     * Since the caller scope does have this permission we need to now ensure the variables match and if not then we have to call the permission check function
-     * on the PermissionObject caller permission */
-    caller_permission->ensurePermissionValid(interpreter, permission_to_add, caller_scope);
+    // If the interpreter has no permission restrictions we don't need to validate these permissions before adding them
+    if (!interpreter->hasNoPermissionRestrictions())
+    {
+        /* Does the caller scope already have the permission it is trying to add? If not then it is not legal for this caller to add this permission 
+        * as allowing this will defeat the purpose of the permission system in the first place*/
+        std::shared_ptr<PermissionObject> caller_permission = caller_scope->permissions->getPermission(permission_to_add->getClass()->name);
+        if (caller_permission == NULL)
+        {
+            throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException")));
+        }
+
+        /**
+         * Since the caller scope does have this permission we need to now ensure the variables match and if not then we have to call the permission check function
+         * on the PermissionObject caller permission */
+        caller_permission->ensurePermissionValid(interpreter, permission_to_add, caller_scope);
+    }
     this_p_obj->addPermission(permission_to_add);
 }
 

@@ -109,6 +109,20 @@ public:
     bool isNestedScript(std::string script_address);
 
     /**
+     * If set to true then this interpreter will not be restricted by the permission system in anyway
+     * and will be able to do anything with or without the permission to do so.
+     */
+    void setNoPermissionRestrictions(bool allow);
+
+    /**
+     * Returns true if this interpreter is not restricted to permissions.
+     * If this is true this interpreter will not be bound to the permission system and can do anything.
+     * 
+     * \attention If you create a native library it is important that you check this if you are restricting programmers based on permissions. If this is true do not restrict them.
+     */
+    bool hasNoPermissionRestrictions();
+
+    /**
      * Calls the output function assigned to this Interpreter
      * 
      * This is used when you need to provide output to the user through the console or to send data to the users web browser or something else regarding sending output.
@@ -128,6 +142,8 @@ private:
     void fail();
     const char* filename;
     bool first_run;
+    // Set to true if permission checks should not take place.
+    bool no_permission_restritions;
     ModuleSystem* moduleSystem;
     FunctionCallNode* lastFunctionCallNode;
     std::vector<std::string> nested_scripts_run;

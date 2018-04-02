@@ -98,23 +98,6 @@ Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionS
         parent_constructor->invoke(interpreter, arguments, return_value, object, caller_scope);
     });
 
-    c = getClassSystem()->registerClass("PermissionException", exception_class);
-        c->registerFunction("__construct", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
-    });
-
-
-
-    // We need a permission class to help manage permissions
-    PermissionObject::registerClass(this);
-
-    // We also need a permissions class that will hold the permissions for a current scope
-    PermissionsObject::registerClass(this);
-
-    // We need to register the PermissionProperty class which will hold a variable name and value for a permission variable.
-    PermissionPropertyObject::registerClass(this);
-
-    // We need a module handling permissions object that will allow a marble programmer to load modules
-    ModuleHandlingPermissionObject::registerClass(this);
 
     // We must now create a permission object for our root scope
     getRootScope()->permissions = std::dynamic_pointer_cast<PermissionsObject>(Object::create(getClassSystem()->getClassByName("Permissions")));
@@ -134,6 +117,7 @@ Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionS
    this->lastFunctionCallNode = NULL;
    this->moduleSystem = NULL;
    this->first_run = true;
+   this->no_permission_restritions = false;
 
 }
 
@@ -178,9 +162,12 @@ void Interpreter::setupModuleMarbleFunctions(ModuleSystem* moduleSystem)
     */
     getFunctionSystem()->registerFunction("LoadModule", {VarType::fromString("string")}, VarType::fromString("void"),[=](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         std::shared_ptr<ModuleHandlingPermissionObject> permission = std::dynamic_pointer_cast<ModuleHandlingPermissionObject>(caller_scope->permissions->getPermission("ModuleHandlingPermission"));
-        if (permission == NULL)
+        if (!interpreter->hasNoPermissionRestrictions())
         {
-            throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException")));
+            if (permission == NULL)
+            {
+                throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException")));
+            }
         }
         std::string filename = arguments[0].svalue;
         try
@@ -419,6 +406,15 @@ FunctionCallNode* Interpreter::getLastFunctionCallNode()
 }
 
 
+void Interpreter::setNoPermissionRestrictions(bool allow)
+{
+    this->no_permission_restritions = allow;
+}
+
+bool Interpreter::hasNoPermissionRestrictions()
+{
+    return this->no_permission_restritions;
+}
 
 Class* Interpreter::registerDefaultObjectClass(ClassSystem* class_system, std::string class_name)
 {

@@ -11,41 +11,39 @@
 #include "permissionobject.h"
 #include "../stdmods/iomod/include/iopermission.h"
 
-/*std::vector<void*> allocations;
-bool wait = false;
-int size = 0;
-
-void* operator new(size_t size)
+BaseSystemHandler* baseHandler = NULL;
+ModuleSystem* moduleSystem = NULL;
+std::shared_ptr<PermissionsObject> set_permissions;
+std::string configFileName = "./config.marble";
+bool loadConfiguration()
 {
-    void* allocation = malloc(size);
-    if (!wait) {
-        wait = true;
-        allocations.push_back(allocation);
-        wait = false;
+    std::cout << "LOADING MARBLE CONFIGURATION: " << configFileName << std::endl;
+    Interpreter interpreter(moduleSystem->getClassSystem(), moduleSystem->getFunctionSystem());
+    interpreter.setOutputFunction([](const char* data) {
+        std::cout << data;
+    });
+    // Configurations should not be bound to permissions.
+    interpreter.setNoPermissionRestrictions(true);
+    interpreter.setModuleSystem(moduleSystem);
+    try
+    {
+        interpreter.runScript(configFileName.c_str());
     }
-    return allocation;
-}
-
-void operator delete(void* ptr)
-{
-    if (!wait) {
-        wait = true;
-        allocations.erase(std::remove(allocations.begin(), allocations.end(), ptr), allocations.end());
-        wait = false;
+    catch(...)
+    {
+        std::cout << "Failed to load or run the configuration script: " << configFileName << std::endl;
+        throw;
     }
-    free(ptr);
-}
 
-void operator delete[](void* ptr)
-{
-    allocations.erase(std::remove(allocations.begin(), allocations.end(), ptr), allocations.end());
-    free(ptr);
+    /* The set permissions become equal to the permissions of the configuration interpreter
+       Do be aware this type of setup only works in a single threaded environment in a multithreaded environment the permission object must be cloned
+       when inserting it into interpreters that must be run later. */ 
+    set_permissions = interpreter.getRootScope()->permissions;
+
+    return true;
 }
-*/
 void interpret()
 {
-    BaseSystemHandler* baseHandler = new BaseSystemHandler();
-    ModuleSystem* moduleSystem = new ModuleSystem(baseHandler->getClassSystem(), baseHandler->getFunctionSystem());
     Interpreter interpreter(moduleSystem->getClassSystem(), moduleSystem->getFunctionSystem());
     interpreter.setOutputFunction([](const char* data) {
         std::cout << data;
@@ -58,12 +56,8 @@ void interpret()
     });
 
     Logger* logger = interpreter.getLogger();
-    moduleSystem->loadModule("./mods/marble_filemod.so");
-    moduleSystem->loadModule("./mods/marble_iomod.so");
     interpreter.setModuleSystem(moduleSystem);
-    // Let's just add the IOPermission just for now rather than rely on a configuration file
-    std::shared_ptr<PermissionObject> permission = std::dynamic_pointer_cast<PermissionObject>(Object::create(moduleSystem->getClassSystem()->getClassByName("IOPermission")));
-    interpreter.getCurrentScope()->permissions->addPermission(permission);
+    interpreter.getRootScope()->permissions = set_permissions;
     interpreter.runScript("./test.marble");
 
     for (LogEntry entry : logger->entries)
@@ -73,19 +67,16 @@ void interpret()
 }
 int main(int argc, char** argv)
 {
-  
-        interpret();
-  
+    baseHandler = new BaseSystemHandler();
+    moduleSystem = new ModuleSystem(baseHandler->getClassSystem(), baseHandler->getFunctionSystem());
+    // Load the configuration and return on failure
+    if(!loadConfiguration())
+        return 1;
+
+    interpret();
+
+    delete baseHandler;
+    delete moduleSystem;
     std::cout << "Program terminated" << std::endl;
-    /*
-        std::cout << "ALLOCATIONS: " << allocations.size() << std::endl;
-    if (allocations.size() > 0)
-    {
-        std::cout << "MEMORY LEAK DETECTED" << std::endl;
-        // We won't let the leak continue.
-        for(void* ptr : allocations)
-            free(ptr);
-    }
-    */
     return 0;
 }
