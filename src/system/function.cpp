@@ -88,3 +88,8 @@ std::string Function::getName()
     return this->name;
 }
 
+
+ void Function::Blank(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+ {
+    // An empty static function used for when a native programmer wants to create a function that points to nothing.
+ }

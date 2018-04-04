@@ -63,6 +63,9 @@ SystemHandler* FunctionSystem::getSystemHandler()
 
 void FunctionSystem::setPreviousFunctionSystem(FunctionSystem* prev_fc_sys)
 {
+    if (prev_fc_sys == this) 
+        throw std::logic_error("Setting previous function system to self is prohibitted");
+    
     this->prev_fc_sys = prev_fc_sys;
 }
 
@@ -179,7 +182,6 @@ Function* FunctionSystem::getFunctionByName(std::string name, FunctionSystem* fi
       final_fs = NULL;
 
    Function* function = NULL;
-   
    std::map<std::string, std::unique_ptr<Function>>::iterator it = this->functions.find(name); 
    if (it != this->functions.end())
    {

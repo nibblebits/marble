@@ -28,5 +28,9 @@ class Function
 
         // Is this a private, protected or public variable?
         MODIFIER_ACCESS access;
+
+
+        // An empty static function used for when a native programmer wants to create a function that points to nothing.
+        static void Blank(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
 };
 #endif

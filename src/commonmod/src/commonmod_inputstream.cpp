@@ -22,6 +22,7 @@ std::shared_ptr<Object> CommonModule_InputStream::newInstance(Class* c)
 Class* CommonModule_InputStream::registerClass(ModuleSystem* moduleSystem)
 {
     Class* c = moduleSystem->getClassSystem()->registerClass("InputStream");
+    c->setDescriptorObject(std::make_shared<CommonModule_InputStream>(c));
     c->is_pure = true;
 
     c->setDescriptorObject(std::make_shared<CommonModule_InputStream>(c));

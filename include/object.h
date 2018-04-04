@@ -29,14 +29,24 @@ public:
     */
     static std::shared_ptr<Object> create(Interpreter* interpreter, Class* object_class, std::vector<Value> constructor_values);
     virtual void registerVariable(Variable* variable);
+
+    /**
+     * Gets the class of this object
+     */
     Class* getClass();
 
     /**
-     * Invokes the parent constructor for this object.
-     * \param interpreter The interpreter instance for this object
-     * \param values The values to pass to the constructor
+     * Gets the parent class of this object with the given name.
+     * 
+     * For example you might want the Animal class for the dog Object.
+     *  Object
+     *      Animal
+     *          Dog
+     * 
+     * Dog dog = new Dog();
+     * dog.getClass("Animal"); 
      */
-    void invokeParentConstructor(Interpreter* interpreter, std::vector<Value> values);
+    Class* getClass(std::string name);
     
     /**
     * Returns true if this Object is currently having code run on it using the runThis method. 

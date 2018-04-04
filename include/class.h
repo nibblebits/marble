@@ -5,8 +5,12 @@
 #include "variable.h"
 #include "functionsystem.h"
 #include "typedef_func.h"
+#include "value.h"
+
 
 class Function;
+class Object;
+class Interpreter;
 class Class : public FunctionSystem
 {
 public:
@@ -23,6 +27,14 @@ public:
     Class* getClassWhoHasVariable(std::string name);
     void setDescriptorObject(std::shared_ptr<Object> object);
     std::shared_ptr<Object> getDescriptorObject();
+
+    /**
+     * Invokes the parent constructor of this class for the given object and provides the values provided.
+     * \param values The values to pass to the parent constructor
+     * \param object The Object to invoke the constructor on
+     * \param interpreter The Interpreter at the time of calling this function
+     */
+    void invokeObjectParentConstructor(std::vector<Value> values, std::shared_ptr<Object> object, Interpreter* interpreter);
     
     bool instanceOf(std::string class_name);
     bool instanceOf(Class* c);

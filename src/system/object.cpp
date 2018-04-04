@@ -97,6 +97,21 @@ Class* Object::getClass()
     return this->c;
 }
 
+Class* Object::getClass(std::string name)
+{
+    Class* current = getClass();
+    if (!current->instanceOf(name))
+        throw std::logic_error("This object is not an instance of the class: " + name);
+    
+    while(current != NULL)
+    {
+        if (current->name == name)
+            return current;
+        
+        current = current->parent;
+    }
+}
+
 
 std::shared_ptr<Object> Object::newInstance()
 {
@@ -111,21 +126,6 @@ std::shared_ptr<Object> Object::newInstance(Class* c)
 bool Object::isRunning()
 {
     return this->is_running;
-}
-
-
-void Object::invokeParentConstructor(Interpreter* interpreter, std::vector<Value> values)
-{
-    // Ignored return value as its a constructor
-    Value return_value;
-    Function* parent_constructor = this->getClass()->parent->getFunctionByName("__construct");
-    #warning The caller_scope may not be correct here so ensure it is tested before removing this warning
-    // The caller scope will be the scope before invoking the constructor
-    Scope* caller_scope = interpreter->getCurrentScope();
-    if (parent_constructor != NULL)
-    {
-        parent_constructor->invoke(interpreter, values, &return_value, shared_from_this(), caller_scope);
-    }
 }
 
 void Object::runThis(std::function<void()> function, SystemHandler* sys_handler, Class* c, OBJECT_ACCESS_TYPE access_type, Scope* accessors_scope)

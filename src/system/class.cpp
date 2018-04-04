@@ -1,5 +1,6 @@
 #include "class.h"
 #include "function.h"
+#include "interpreter.h"
 Class::Class(SystemHandler* sys_handler, std::string name, FunctionSystem* prev_fc_sys, std::shared_ptr<Object> descriptor_obj) : FunctionSystem(sys_handler, prev_fc_sys)
 {
     this->name = name;
@@ -42,6 +43,20 @@ void Class::setDescriptorObject(std::shared_ptr<Object> object)
 std::shared_ptr<Object> Class::getDescriptorObject()
 {
     return this->descriptor_obj;
+}
+
+void Class::invokeObjectParentConstructor(std::vector<Value> values, std::shared_ptr<Object> object, Interpreter* interpreter)
+{
+    // We don't care about the return value as this is a constructor
+    Value return_value;
+
+    Function* parent_constructor = this->parent->getFunctionByName("__construct");
+    // The caller scope will be the scope before invoking the constructor
+    Scope* caller_scope = interpreter->getCurrentScope();
+    if (parent_constructor != NULL)
+    {
+        parent_constructor->invoke(interpreter, values, &return_value, object, caller_scope);
+    }    
 }
 
 Function* Class::registerFunction(std::string name, std::vector<VarType> args, VarType return_type, NATIVE_FUNCTION_ENTRYPOINT entrypoint)

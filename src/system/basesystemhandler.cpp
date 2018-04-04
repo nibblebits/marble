@@ -5,11 +5,13 @@
 #include "permissionpropertyobject.h"
 #include "modulehandlingpermissionobject.h"
 #include "array.h"
+#include "function.h"
 BaseSystemHandler::BaseSystemHandler() : SystemHandler(SYSTEM_HANDLER_BASE_SYSTEM_HANDLER, NULL, NULL)
 {
 
     // Register the Object class
     Class* c = getClassSystem()->registerClass("Object", NULL, CLASS_REGISTER_OBJECT_DESCRIPTOR_LATER);
+    c->registerFunction("__construct", {}, VarType::fromString("string"), Function::Blank);
     c->registerFunction("toString", {}, VarType::fromString("string"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         std::shared_ptr<Array> array = std::dynamic_pointer_cast<Array>(object);
         return_value->type = VALUE_TYPE_STRING;

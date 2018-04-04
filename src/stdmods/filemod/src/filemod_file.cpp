@@ -25,7 +25,8 @@ Class* FileModule_File::registerClass(ModuleSystem* moduleSystem)
     c->setDescriptorObject(std::make_shared<FileModule_File>(c));
     c->registerFunction("__construct", {}, VarType::fromString("void"), [=](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         // Call the parent constructor
-        object->invokeParentConstructor(interpreter, arguments);
+        object->getClass("File")->invokeObjectParentConstructor(arguments, object, interpreter);
+        
         std::shared_ptr<FileModule_File> file = std::dynamic_pointer_cast<FileModule_File>(object);
         file->output = std::dynamic_pointer_cast<FileModule_FileOutputStream>(Object::create(moduleSystem->getClassSystem()->getClassByName("FileOutputStream")));
         file->input = std::dynamic_pointer_cast<FileModule_FileInputStream>(Object::create(moduleSystem->getClassSystem()->getClassByName("FileInputStream")));
