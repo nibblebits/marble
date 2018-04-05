@@ -57,7 +57,7 @@ void interpret()
 
     Logger* logger = interpreter.getLogger();
     interpreter.setModuleSystem(moduleSystem);
-   // interpreter.getRootScope()->permissions = set_permissions;
+    interpreter.getRootScope()->permissions = set_permissions;
     interpreter.runScript("./test.marble");
 
     for (LogEntry entry : logger->entries)
@@ -69,9 +69,9 @@ int main(int argc, char** argv)
 {
     baseHandler = new BaseSystemHandler();
     moduleSystem = new ModuleSystem(baseHandler->getClassSystem(), baseHandler->getFunctionSystem());
-    // Load the configuration and return on failure
-    //if(!loadConfiguration())
-      //  return 1;
+   // Load the configuration and return on failure
+    if(!loadConfiguration())
+       return 1;
 
     interpret();
 

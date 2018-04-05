@@ -21,12 +21,13 @@ Class* CommonModule_PreparedStatement::registerClass(ModuleSystem* moduleSystem)
     Class* c = class_system->registerClass("PreparedStatement", class_system->getClassByName("SQLStatement"));
     c->setDescriptorObject(Object::create(c));
 
-    c->registerFunction("__construct", {}, VarType::fromString("void"), PreparedStatement_Construct);
+    c->registerFunction("__construct", {VarType::fromString("SQLDriver")}, VarType::fromString("void"), PreparedStatement_Construct);
 }
 
 
 // Native PreparedStatement functions
 void CommonModule_PreparedStatement::PreparedStatement_Construct(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
 {
-   
+   // Invoke the parent constructor
+   object->getClass("PreparedStatement")->invokeObjectParentConstructor(values, object, interpreter);
 }

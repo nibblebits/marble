@@ -83,6 +83,12 @@ std::shared_ptr<Object> Object::create(Interpreter* interpreter, Class* object_c
     return object;
 }
 
+std::shared_ptr<Object> Object::create(Interpreter* interpreter, std::string object_class, std::vector<Value> constructor_values)
+{
+    Class* cls = interpreter->getClassSystem()->getClassByName(object_class);
+    return Object::create(interpreter, cls, constructor_values);
+}
+
 void Object::registerVariable(Variable* variable)
 {
     if (variable == NULL)

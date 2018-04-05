@@ -13,6 +13,21 @@ Value::Value()
     this->dvalue = 0;
 }
 
+Value::Value(std::shared_ptr<Object> object) : Value()
+{
+    set(object);
+}
+
+Value::Value(std::string str) : Value()
+{
+    set(str);
+}
+
+Value::Value(double number) : Value()
+{
+    set(number);
+}
+
 Value::~Value()
 {
 

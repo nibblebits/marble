@@ -12,6 +12,9 @@ class Value
 {
 public:
     Value();
+    Value(std::shared_ptr<Object> object);
+    Value(std::string str);
+    Value(double number);
     virtual ~Value();
     static VALUE_TYPE getValueTypeForString(std::string str);
     static VALUE_TYPE getValueTypeFromVariableType(VARIABLE_TYPE type);
