@@ -3,7 +3,7 @@
 
 #include "object.h"
 class ModuleSystem;
-class CommonModule_SqlDriver;
+class CommonModule_SqlConnection;
 
 /**
  * Class for SQL statements
@@ -20,11 +20,11 @@ public:
 
     // Native SQLStatement functions
     static void SQLStatement_Construct(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
-
+    static void SQLStatement_Execute(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
 
 private:
-    // The driver for this SQLStatement
-    std::shared_ptr<CommonModule_SqlDriver> driver;
+    // The sql connection for this SQLStatement
+    std::shared_ptr<CommonModule_SqlConnection> connection;
 };
 
 #endif

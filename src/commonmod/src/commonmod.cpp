@@ -2,7 +2,9 @@
 #include "object.h"
 #include "commonmod_sqldriver.h"
 #include "commonmod_sqlstatement.h"
+#include "commonmod_sqlconnection.h"
 #include "commonmod_preparedstatement.h"
+
 #include <sstream>
 #include <iostream>
 #include <time.h>
@@ -35,6 +37,7 @@ void CommonModule::Init()
     CommonModule_SqlDriver::registerClass(this->getModuleSystem());
     CommonModule_SqlStatement::registerClass(this->getModuleSystem());
     CommonModule_PreparedStatement::registerClass(this->getModuleSystem());
+    CommonModule_SqlConnection::registerClass(this->getModuleSystem());
 
     log("Common Module Initialised.", LOG_LEVEL_NOTICE);
 }

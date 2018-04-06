@@ -33,10 +33,7 @@ bool VarType::operator!=(const VarType &other) const
 
 
 bool VarType::ensureCompatibility(const VarType& other, ClassSystem* c_system)
-{
-    if (*this == other)
-        return true;
-    
+{   
     if (this->type == VARIABLE_TYPE_OBJECT && other.type == VARIABLE_TYPE_OBJECT)
     {
         Class* f1_type_cls = c_system->getClassByName(this->value);
@@ -48,8 +45,12 @@ bool VarType::ensureCompatibility(const VarType& other, ClassSystem* c_system)
         {
             return false;
         }
+        return true;
     }
-    return true;
+    else
+    {
+        return this->type == other.type;
+    }
 }
 VarType VarType::fromString(std::string value)
 {

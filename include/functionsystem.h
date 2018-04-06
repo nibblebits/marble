@@ -74,7 +74,7 @@ class FunctionSystem
         bool hasFunction(std::string name, FunctionSystem* final_fs=NULL);
         bool hasFunction(std::string name, std::vector<VarType> args, FunctionSystem* final_fs=NULL, bool allow_compatible=false, SystemHandler* caller_sys_handler=NULL);
         bool hasFunctionLocally(std::string name);
-        bool hasFunctionLocally(std::string name, std::vector<VarType> args, bool allow_compatible=false);
+        bool hasFunctionLocally(std::string name, std::vector<VarType> args, bool allow_compatible=false, SystemHandler* caller_sys_handler=NULL);
         /**
          * Returns a function by the given name
          * \name The name of the function

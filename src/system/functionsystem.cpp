@@ -169,9 +169,9 @@ bool FunctionSystem::hasFunctionLocally(std::string name)
     return this->functions.find(name) != this->functions.end();
 }
 
-bool FunctionSystem::hasFunctionLocally(std::string name, std::vector<VarType> args, bool allow_compatible)
+bool FunctionSystem::hasFunctionLocally(std::string name, std::vector<VarType> args, bool allow_compatible, SystemHandler* caller_sys_handler)
 {
-    Function* function = this->getFunctionLocallyByNameAndArguments(name, args, allow_compatible);
+    Function* function = this->getFunctionLocallyByNameAndArguments(name, args, allow_compatible, caller_sys_handler);
     return function != NULL;
 }
 
@@ -206,9 +206,9 @@ Function* FunctionSystem::getFunctionByName(std::string name, FunctionSystem* fi
 
 Function* FunctionSystem::getFunctionLocallyByNameAndArguments(std::string name, std::vector<VarType> args, bool allow_compatible, SystemHandler* caller_sys_handler)
 {
-    // If no caller system handler was provided then we must throw an exception
+    // If no caller system handler was provided then we must use our current SystemHandler
     if (allow_compatible && caller_sys_handler == NULL)
-       throw std::logic_error("allow_compatible is true so we also expect a callers system handler which has not been provided");
+       caller_sys_handler = this->sys_handler;
 
     std::map<std::string, std::unique_ptr<Function>>::iterator it = this->functions.find(name); 
     if (it == this->functions.end())

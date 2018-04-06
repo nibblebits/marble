@@ -74,7 +74,7 @@ void NewNode::test_for_object(Validator* validator)
             // If we don't have any constructor then we can ignore this validation as no constructors is legal
             if (fc_node_class->hasFunction("__construct"))
             {
-                if (!fc_node_class->hasFunctionLocally("__construct", types, true))
+                if (!fc_node_class->hasFunctionLocally("__construct", types, true, validator))
                 {
                     throw TestError("A constructor with the given arguments does not exist within the " + fc_node_class->name + " class");
                 }

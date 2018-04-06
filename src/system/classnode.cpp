@@ -11,6 +11,7 @@
 #include "permissionobject.h"
 #include "exceptions/testerror.h"
 #include "function.h"
+#include "singlefunction.h"
 
 ClassNode::ClassNode() : InterpretableNode(NODE_TYPE_CLASS)
 {
@@ -112,8 +113,9 @@ void ClassNode::test(Validator* validator, struct extras extra)
             // Our parent is pure so we need to check this class has overrided the pure methods in the parent class
             for (Function* f : parent_class->getPureFunctions())
             {
+                SingleFunction* sf = (SingleFunction*) f;
                 // This is fine for now but it needs to be changed to also check for arguments. As now multiple pure functions with the same name wont be validated correctly.
-                if (!c->hasFunctionLocally(f->name))
+                if (!c->hasFunctionLocally(f->name, sf->argument_types))
                 {
                     throw TestError("The class " + c->name + " extends " + parent_class->name + " but has not implemented the pure function " + f->name);
                 }
