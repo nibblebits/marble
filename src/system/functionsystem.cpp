@@ -225,6 +225,11 @@ Function* FunctionSystem::getFunctionLocallyByNameAndArguments(std::string name,
             {
                 SingleFunction* single_function = (SingleFunction*) function;
                 std::vector<VarType> single_function_arguments = single_function->argument_types;
+
+                // If the argument sizes differ then this is not compatible
+                if (single_function_arguments.size() != args.size())
+                    return NULL;
+
                 // If we are allowing compatibility we must check each argument is compatible with the provided arguments
                 if (allow_compatible)
                 {
@@ -233,18 +238,16 @@ Function* FunctionSystem::getFunctionLocallyByNameAndArguments(std::string name,
                      */
                     for (int i = 0; i < single_function_arguments.size(); i++)
                     {
-                        if (i < args.size())
+                        VarType function_arg = single_function_arguments[i];
+                        VarType provided_arg = args[i];
+                        if (!provided_arg.ensureCompatibility(function_arg, caller_sys_handler->getClassSystem()))
                         {
-                            VarType function_arg = single_function_arguments[i];
-                            VarType provided_arg = args[i];
-                            if (!provided_arg.ensureCompatibility(function_arg, caller_sys_handler->getClassSystem()))
-                            {
                                 return NULL;
-                            }
                         }
                     }
 
                     return function;
+
                 }
                 else
                 {
