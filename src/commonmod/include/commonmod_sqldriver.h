@@ -2,11 +2,15 @@
 #define COMMONMOD_SQLDRIVER
 
 #include "object.h"
+#include <vector>
+
+
 /**
  * An abstract pure SQLDriver class. Extend this if you wish to create your own SQL driver
  */
 
 class ModuleSystem;
+class Interpreter;
 class CommonModule_SqlDriver : public Object
 {
 public:
@@ -16,9 +20,14 @@ public:
     
     static Class* registerClass(ModuleSystem* moduleSystem);
 
+    static void newInterpreter(Interpreter* interpreter);
 
     // Native SQLDriver functions
     static void SQLDriver_Construct(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
+    static void SQLDriver_registerDriver(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
+    static void SQLDriver_getDriver(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
+private:
+    std::vector<std::shared_ptr<CommonModule_SqlDriver>> drivers;
 };
 
 #endif

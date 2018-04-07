@@ -44,8 +44,12 @@ void CommonModule::Init()
 
 void CommonModule::newInterpreter(Interpreter* interpreter)
 {
+    // Let's create a variable named StringUtils that points to an object of class type StringUtils
     Class* c = this->getModuleSystem()->getClassSystem()->getClassByName("StringUtils");
-    interpreter->getCurrentScope()->createVariable("StringUtils", "StringUtils", std::make_shared<CommonModule_StringUtils>(c));
+    interpreter->getCurrentScope()->createVariable("StringUtils", "StringUtils", Object::create(c));
+
+    // Let's let the SqlDriver know we have a new interpreter.
+    CommonModule_SqlDriver::newInterpreter(interpreter);
 }
 
 // Native IO functions/methods

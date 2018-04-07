@@ -2,6 +2,7 @@
 #define COMMONMOD_SQLSTATEMENT
 
 #include "object.h"
+#include <string>
 class ModuleSystem;
 class CommonModule_SqlConnection;
 
@@ -21,10 +22,14 @@ public:
     // Native SQLStatement functions
     static void SQLStatement_Construct(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
     static void SQLStatement_Execute(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
-
+    static void SQLStatement_setQuery(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
+    static void SQLStatement_finalizeQuery(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
 private:
     // The sql connection for this SQLStatement
     std::shared_ptr<CommonModule_SqlConnection> connection;
+
+    // The query for this SqlStatement
+    std::string query;
 };
 
 #endif

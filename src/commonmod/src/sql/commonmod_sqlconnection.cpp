@@ -23,6 +23,7 @@ std::shared_ptr<Object> CommonModule_SqlConnection::newInstance(Class* c)
     
 Class* CommonModule_SqlConnection::registerClass(ModuleSystem* moduleSystem)
 {
+    moduleSystem->getClassSystem()->registerClass("SQLConnectionException", moduleSystem->getClassSystem()->getClassByName("Exception"));
     Class* c = moduleSystem->getClassSystem()->registerClass("SQLConnection");
     c->setDescriptorObject(std::make_shared<CommonModule_SqlConnection>(c));
     c->is_pure = true;
