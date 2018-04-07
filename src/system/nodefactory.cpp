@@ -178,6 +178,12 @@ Node* NodeFactory::createNode(NODE_TYPE node_type)
         node = new PermissionNode();
     }
     break;
+
+    case NODE_TYPE_NULL:
+    {
+        node = new NullNode();
+    }
+    break;
     
     default:
         throw std::logic_error("Invalid node type provided to NodeFactory::createNode");

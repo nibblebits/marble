@@ -31,4 +31,5 @@
 #include "includenode.h"
 #include "includeoncenode.h"
 #include "permissionnode.h"
+#include "nullnode.h"
 #endif

@@ -523,6 +523,11 @@ void Parser::parse_value(int rules)
         parse_new();
         node = pop_node();
     }
+    else if(token->isKeyword("null"))
+    {
+        parse_null();
+        node = pop_node();
+    }
     else
     {
         parse_single_token();
@@ -829,6 +834,18 @@ void Parser::parse_permission_node()
     push_node(permission_node);
 
 }
+
+void Parser::parse_null()
+{
+    if (!next()->isKeyword("null"))
+    {
+        parse_error("Expecting a null keyword for nulls");
+    }
+
+    NullNode* null_node = (NullNode*) factory.createNode(NODE_TYPE_NULL);
+    push_node(null_node);
+}
+
 void Parser::parse_multi_expression()
 {
     ListNode* list_node = (ListNode*) factory.createNode(NODE_TYPE_LIST);
