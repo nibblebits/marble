@@ -33,5 +33,7 @@ Value NullNode::interpret(Interpreter* interpreter, struct extras extra)
 
 void NullNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)
 {
-    throw std::logic_error("Null nodes do not support evaluation");
+    // For evaluations we will just provide a datatype pointing to Object.
+    evaluation->datatype.type = VARIABLE_TYPE_OBJECT;
+    evaluation->datatype.value = "Object";
 }
