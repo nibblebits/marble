@@ -67,21 +67,15 @@ Value ExpNode::mathify(Value& value1, Value& value2, std::string op)
     }
     else if(op == "==")
     {
-        if (value1 == value2)
-        {
-            Value v;
-            v.set((double) 1);
-            result = v;
-        }
+        Value v;
+        v.set((double) (value1 == value2));
+        result = v;
     }
     else if(op == "!=")
     {
-        if (value1 != value2)
-        {
-            Value v;
-            v.set((double) 0);
-            result = v;
-        }
+        Value v;
+        v.set((double) (value1 != value2));
+        result = v;
     }
     else if(op == "&&")
     {
