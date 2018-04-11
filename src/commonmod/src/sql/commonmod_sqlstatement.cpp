@@ -36,7 +36,7 @@ Class* CommonModule_SqlStatement::registerClass(ModuleSystem* moduleSystem)
      */
     c->registerFunction("finalizeQuery", {}, VarType::fromString("string"), CommonModule_SqlStatement::SQLStatement_finalizeQuery);
     // function execute() : void
-    c->registerFunction("execute", {}, VarType::fromString("void"), CommonModule_SqlStatement::SQLStatement_Execute);
+    c->registerFunction("execute", {}, VarType::fromString("SQLResult"), CommonModule_SqlStatement::SQLStatement_Execute);
 }
 
 
@@ -58,7 +58,7 @@ void CommonModule_SqlStatement::SQLStatement_Construct(Interpreter* interpreter,
     finalizeQueryFunction->invoke(interpreter, {}, &finalizeQueryFunctionResult, statement, caller_scope);
     std::string finalized_query = finalizeQueryFunctionResult.svalue;
     Function* driver_execute_func = statement->connection->driver->getClass()->getFunctionByNameAndArguments("execute", {VarType::fromString("SQLConnection"), VarType::fromString("SQLStatement"), VarType::fromString("string")}, NULL);
-    // Invoke the driver execute function
+    // Invoke the driver execute function, it will return SQLResult which will then set our own return value.
     driver_execute_func->invoke(interpreter, {Value(statement->connection), Value(statement), Value(finalized_query)}, return_value, statement->connection->driver, caller_scope);
  }
 

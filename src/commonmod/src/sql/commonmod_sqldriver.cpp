@@ -49,7 +49,7 @@ Class* CommonModule_SqlDriver::registerClass(ModuleSystem* moduleSystem)
     c->registerFunction("getDriver", {VarType::fromString("string")}, VarType::fromString("SQLDriver"), CommonModule_SqlDriver::SQLDriver_getDriver);
 
     // function execute(SQLConnection connection, SQLStatement statement, string finalized_query) : void
-    Function* execute = c->registerFunction("execute", {VarType::fromString("SQLConnection"), VarType::fromString("SQLStatement"), VarType::fromString("string")}, VarType::fromString("void"), Function::Blank);
+    Function* execute = c->registerFunction("execute", {VarType::fromString("SQLConnection"), VarType::fromString("SQLStatement"), VarType::fromString("string")}, VarType::fromString("SQLResult"), Function::Blank);
     execute->is_pure = true;
 }
 

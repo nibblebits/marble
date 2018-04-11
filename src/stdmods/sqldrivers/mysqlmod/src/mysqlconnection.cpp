@@ -7,7 +7,9 @@ MysqlConnection::MysqlConnection(Class* c) : CommonModule_SqlConnection(c)
 
 MysqlConnection::~MysqlConnection()
 {
-
+    // Did the programmer close the connection? If not then we need to do it for them
+    if (this->mysql_connection != NULL)
+        mysql_close(this->mysql_connection);
 }
 
 std::shared_ptr<Object> MysqlConnection::newInstance(Class* c)

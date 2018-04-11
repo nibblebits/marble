@@ -3,6 +3,8 @@
 #include "function.h"
 #include "interpreter.h"
 #include "mysqlconnection.h"
+#include "../../../../commonmod/include/commonmod_sqlrecord.h"
+#include "../../../../commonmod/include/commonmod_sqlresult.h"
 #include "exceptions/systemexception.h"
 #include <my_global.h>
 #include <mysql.h>
@@ -32,7 +34,7 @@ void MysqlDriver::Init(ModuleSystem* moduleSystem)
                                     VarType::fromString("string")},
                                     VarType::fromString("SQLConnection"), MysqlDriver::MysqlDriver_Connect);
 
-    Function* execute = c->registerFunction("execute", {VarType::fromString("SQLConnection"), VarType::fromString("SQLStatement"), VarType::fromString("string")}, VarType::fromString("void"), MysqlDriver::MysqlDriver_Execute);
+    Function* execute = c->registerFunction("execute", {VarType::fromString("SQLConnection"), VarType::fromString("SQLStatement"), VarType::fromString("string")}, VarType::fromString("SQLResult"), MysqlDriver::MysqlDriver_Execute);
 
 }
 
@@ -43,6 +45,11 @@ std::shared_ptr<Object> MysqlDriver::newInstance(Class* c)
 
 void MysqlDriver::MysqlDriver_Execute(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
 {
+    // Default return value is NULL
+    return_value->type = VALUE_TYPE_OBJECT;
+    return_value->ovalue = NULL;
+
+
     std::shared_ptr<MysqlConnection> connection = std::dynamic_pointer_cast<MysqlConnection>(values[0].ovalue);
     // If we fail to cast the connection to a MysqlConnection then we must throw a SQLConnectionException as they have passed an invalid connection to us
     if (connection == NULL)
@@ -59,7 +66,59 @@ void MysqlDriver::MysqlDriver_Execute(Interpreter* interpreter, std::vector<Valu
         throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("SQLQueryException")));
     } 
 
+    // Let's get the result
+    MYSQL_RES* response = mysql_store_result(connection->mysql_connection);
+    // If there was no result then we are done here.
+    if (response == NULL)
+        return;
 
+    // A temporary return value for when we do not care about what is returned
+    Value tmpReturnValue;
+
+    // Let's create a SQLResult object which is where we will store our SQLRecord's
+    std::shared_ptr<CommonModule_SqlResult> result = 
+         std::dynamic_pointer_cast<CommonModule_SqlResult>(Object::create(interpreter->getClassSystem()->getClassByName("SQLResult")));
+    Function* result_add_record_func = result->getClass()->getFunctionByNameAndArguments("addRecord", {VarType::fromString("SQLRecord")});
+    std::vector<MYSQL_FIELD *> fields;
+    MYSQL_FIELD *field;
+    MYSQL_ROW row;
+    while((field = mysql_fetch_field(response)))
+    {
+        fields.push_back(field);
+    }
+
+    while((row = mysql_fetch_row(response)))
+    {
+         // Create the record in memory so we have a record to put in the result
+        std::shared_ptr<CommonModule_SqlRecord> record = 
+            std::dynamic_pointer_cast<CommonModule_SqlRecord>(Object::create(interpreter->getClassSystem()->getClassByName("SQLRecord")));
+        Function* record_set_column_func = record->getClass()->getFunctionByNameAndArguments("setColumn", {VarType::fromString("string"), VarType::fromString("string")});
+
+        unsigned long* lengths = mysql_fetch_lengths(response);
+        for (int i = 0; i < fields.size(); i++)
+        {
+            std::string row_field_value = "";
+            for (int s = 0; s < lengths[i]; s++)
+            {
+                row_field_value += row[i][s];
+            }
+            // Add the NULL terminator as technically this is a string
+            row_field_value += '\0';
+
+      
+            // Invoke the setColumn function in the SQLRecord object
+            record_set_column_func->invoke(interpreter, {std::string(fields[i]->name), row_field_value}, &tmpReturnValue, record, caller_scope);
+        }
+
+        // We are done with this row so now add it to the result
+        result_add_record_func->invoke(interpreter, {Value(record)}, &tmpReturnValue, result, caller_scope);
+    }
+
+    // We don't need this mysql_result anymore lets free it
+    mysql_free_result(response);
+
+    // We are returning this SQLResult object
+    return_value->ovalue = result;
 }
 
 void MysqlDriver::MysqlDriver_Connect(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
