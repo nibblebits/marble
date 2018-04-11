@@ -102,10 +102,7 @@ void MysqlDriver::MysqlDriver_Execute(Interpreter* interpreter, std::vector<Valu
             {
                 row_field_value += row[i][s];
             }
-            // Add the NULL terminator as technically this is a string
-            row_field_value += '\0';
-
-      
+    
             // Invoke the setColumn function in the SQLRecord object
             record_set_column_func->invoke(interpreter, {std::string(fields[i]->name), row_field_value}, &tmpReturnValue, record, caller_scope);
         }
