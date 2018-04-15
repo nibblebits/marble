@@ -86,6 +86,9 @@ std::shared_ptr<Object> Object::create(Interpreter* interpreter, Class* object_c
 std::shared_ptr<Object> Object::create(Interpreter* interpreter, std::string object_class, std::vector<Value> constructor_values)
 {
     Class* cls = interpreter->getClassSystem()->getClassByName(object_class);
+    if (cls == NULL)
+        throw std::logic_error("Object::create the class name provided " + object_class + " no class has been registered with that name yet");
+
     return Object::create(interpreter, cls, constructor_values);
 }
 

@@ -36,6 +36,12 @@ void MysqlDriver::Init(ModuleSystem* moduleSystem)
 
     Function* execute = c->registerFunction("execute", {VarType::fromString("SQLConnection"), VarType::fromString("SQLStatement"), VarType::fromString("string")}, VarType::fromString("SQLResult"), MysqlDriver::MysqlDriver_Execute);
 
+   /**
+     * Escapes the provided value and return the escaped string, securing against SQL Injection
+     * function escape(SQLConnction connection, string value) : string
+     */
+    Function* escape = c->registerFunction("escape", {VarType::fromString("SQLConnection"), VarType::fromString("string")}, VarType::fromString("string"), MysqlDriver::MysqlDriver_Escape);
+    
 }
 
 std::shared_ptr<Object> MysqlDriver::newInstance(Class* c)
@@ -138,4 +144,26 @@ void MysqlDriver::MysqlDriver_Connect(Interpreter* interpreter, std::vector<Valu
 
     // Return the connection object to the user
     return_value->set(mysql_connection_obj);
+}
+
+void MysqlDriver::MysqlDriver_Escape(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+{
+    // Here we should escape the string provided to us
+    std::shared_ptr<MysqlDriver> driver = std::dynamic_pointer_cast<MysqlDriver>(object);
+    std::shared_ptr<MysqlConnection> connection = std::dynamic_pointer_cast<MysqlConnection>(values[0].ovalue);
+    // If we could not cast this connection to a MysqlConnection it means an invalid connection has been passed to this function.
+    if (connection == NULL)
+        throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("InvalidEntityException")));
+    
+    std::string value_to_escape = values[1].svalue;
+    char escaped[value_to_escape.size()];
+    MYSQL* mysql = connection->mysql_connection;
+    // Now lets escape that string!
+    if(mysql_real_escape_string(mysql, escaped, value_to_escape.c_str(), value_to_escape.size()) == -1)
+    {
+        // Tmp exception should be changed
+        throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("Exception")));
+    }
+
+    return_value->set(std::string(escaped));
 }

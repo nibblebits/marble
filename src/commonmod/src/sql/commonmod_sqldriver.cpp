@@ -51,6 +51,13 @@ Class* CommonModule_SqlDriver::registerClass(ModuleSystem* moduleSystem)
     // function execute(SQLConnection connection, SQLStatement statement, string finalized_query) : void
     Function* execute = c->registerFunction("execute", {VarType::fromString("SQLConnection"), VarType::fromString("SQLStatement"), VarType::fromString("string")}, VarType::fromString("SQLResult"), Function::Blank);
     execute->is_pure = true;
+
+    /**
+     * Should be overrided by drivers and sql escape the provided value and return the escaped string
+     * function escape(SQLConnction connection, string value) : string
+     */
+    Function* escape = c->registerFunction("escape", {VarType::fromString("SQLConnection"), VarType::fromString("string")}, VarType::fromString("string"), Function::Blank);
+    escape->is_pure = true;
 }
 
 void CommonModule_SqlDriver::newInterpreter(Interpreter* interpreter)

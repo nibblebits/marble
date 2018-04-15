@@ -16,7 +16,6 @@ public:
     
     static Class* registerClass(ModuleSystem* moduleSystem);
 
-    
     // Native SQLRecord functions
     static void SQLRecord_Construct(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
     static void SQLRecord_setColumn(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);

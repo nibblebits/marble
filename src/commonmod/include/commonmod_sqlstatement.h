@@ -24,7 +24,7 @@ public:
     static void SQLStatement_Execute(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
     static void SQLStatement_setQuery(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
     static void SQLStatement_finalizeQuery(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
-private:
+protected:
     // The sql connection for this SQLStatement
     std::shared_ptr<CommonModule_SqlConnection> connection;
 

@@ -92,6 +92,11 @@ Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionS
         c->registerFunction("__construct", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
     });
 
+    c = getClassSystem()->registerClass("InvalidEntityException", exception_class);
+        c->registerFunction("__construct", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
+    });
+
+
     c = getClassSystem()->registerClass("EntityNotRegisteredException", exception_class);
         c->registerFunction("__construct", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         Function* parent_constructor = object->getClass()->parent->getFunctionByNameAndArguments("__construct", {VarType::fromString("string")});
@@ -296,7 +301,7 @@ void Interpreter::run(const char* code, PosInfo posInfo)
     } 
     catch(SystemException& ex)
     {
-        logger.error("System threw a " + ex.getObject()->getClass()->name + " exception" , current_node->posInfo);
+        logger.error("System threw a " + ex.getObject()->getClass()->name, current_node->posInfo);
     }
 }
 

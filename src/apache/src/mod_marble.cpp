@@ -34,6 +34,7 @@
 
 #include "apache_mod.h"
 #include "interpreter.h"
+#include "basesystemhandler.h"
 #include "webmod.h"
 // request handler example
 
@@ -48,7 +49,8 @@ typedef struct
 } configuration;
 
 static configuration config;
-ModuleSystem moduleSystem;
+BaseSystemHandler* baseHandler = NULL;
+ModuleSystem* moduleSystem = NULL;
 WebModule* webModule = NULL;
 
 static int marble_handler(request_rec *req);
@@ -199,8 +201,10 @@ static int marble_handler(request_rec *req)
         return HTTP_NOT_FOUND;
     
     if (!req->header_only) {
-        Interpreter interpreter(moduleSystem.getClassSystem(), moduleSystem.getFunctionSystem());
-        interpreter.setModuleSystem(&moduleSystem);
+        Interpreter interpreter(moduleSystem->getClassSystem(), moduleSystem->getFunctionSystem());
+        interpreter.setModuleSystem(moduleSystem);
+        // TEMPORARY SO I DONT HAVE TO SET PERMISSIONS
+        interpreter.setNoPermissionRestrictions(true);
         interpreter.setOutputFunction([&](const char* data) {
             ap_rputs(data, req);
         });
@@ -238,10 +242,13 @@ static int marble_handler(request_rec *req)
  */
 static void x_child_init(apr_pool_t *p, server_rec *s)
 {
-    moduleSystem.loadModule("/usr/lib/marble/marble_iomod.so");
-    moduleSystem.loadModule("/usr/lib/marble/marble_timemod.so");
+    baseHandler = new BaseSystemHandler();
+    moduleSystem = new ModuleSystem(baseHandler->getClassSystem(), baseHandler->getFunctionSystem());
+    moduleSystem->loadModule("/usr/lib/marble/marble_iomod.so");
+    moduleSystem->loadModule("/usr/lib/marble/marble_timemod.so");
+    moduleSystem->loadModule("/usr/lib/marble/marble_mysqlmod.so");
     webModule = new WebModule();
-    moduleSystem.addModule(webModule);   
+    moduleSystem->addModule(webModule);   
 }
 
 static void marble_register_hooks(apr_pool_t* p)
