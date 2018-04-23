@@ -184,6 +184,12 @@ Node* NodeFactory::createNode(NODE_TYPE node_type)
         node = new NullNode();
     }
     break;
+
+    case NODE_TYPE_REQUIRE:
+    {
+        node = new RequireNode();
+    }
+    break;
     
     default:
         throw std::logic_error("Invalid node type provided to NodeFactory::createNode");

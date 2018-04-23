@@ -6,7 +6,7 @@
 #include <memory>
 #include "statics.h"
 #include "config.h"
-const char keywords[][MAX_KEYWORD_SIZE] = {"public", "private", "protected", "function", "number", "string", "int", "boolean", "class", "return", "continue", "break", "void", "new", "if", "else", "extends", "throw", "try", "catch", "do", "while", "break", "continue", "for", "include", "include_once", "pure", "final", "permission", "null"};
+const char keywords[][MAX_KEYWORD_SIZE] = {"public", "private", "protected", "function", "number", "string", "int", "boolean", "class", "return", "continue", "break", "void", "new", "if", "else", "extends", "throw", "try", "catch", "do", "while", "break", "continue", "for", "include", "include_once", "pure", "final", "permission", "null", "require"};
 const char valid_operators[][MAX_OPERATORS_SIZE] = {"+", "-", "*", "/", "++", "--", "+=", "-=", "/=", "*=", "-=", "=", ".", "&", "|", "!", "==", "!=", ">=", ">", "<=", "<", "&&", "||"};
 const char symbols[] = {';',',','(', ')', '{', '}','[',']', ':', '@'};
 Lexer::Lexer(Logger* logger, PosInfo posInfo)

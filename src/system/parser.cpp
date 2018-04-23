@@ -817,6 +817,27 @@ void Parser::parse_include_once()
     push_node(include_once_node);
 }
 
+void Parser::parse_require()
+{
+    if (!next()->isKeyword("require"))
+    {
+        parse_error("Expecting a require keyword while parsing require statements");
+    }
+
+
+    if (!peek()->isString())
+    {
+        parse_error("Require statements can only take a single string, expressions are not allowed");
+    }
+
+    Token* stoken = next();
+    std::string filename = stoken->value;
+
+    RequireNode* require_node = (RequireNode*) factory.createNode(NODE_TYPE_REQUIRE);
+    require_node->filename = filename;
+    push_node(require_node);
+}
+
 void Parser::parse_permission_node()
 {
     if (!next()->isKeyword("permission"))
@@ -1308,6 +1329,11 @@ void Parser::parse_body_next()
     else if(this->current_token->isKeyword("include_once"))
     {
         parse_include_once();
+        parse_semicolon();
+    }
+    else if(this->current_token->isKeyword("require"))
+    {
+        parse_require();
         parse_semicolon();
     }
     else if(this->current_token->isKeyword("permission"))

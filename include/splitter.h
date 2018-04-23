@@ -40,15 +40,18 @@ class Logger;
 class Splitter
 {
 public:
+    Splitter();
     Splitter(Logger* logger, const char* filename);
     virtual ~Splitter();
     void setData(const char* data, int length);
     bool split(struct split* marble_code);
+    void free();
 private:
     bool isSafeRange(int position);
     int findPositionOfMemoryInData(int position, const char* memory, int memory_size);
     int getPositionOfNextMarbleTag(int position);
     int getPositionOfNextMarbleClosingTag(int current_pos);
+
     const char* data;
     int length;
     Logger* logger;

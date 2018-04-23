@@ -14,6 +14,7 @@
 #include "logger.h"
 #include "posinfo.h"
 #include "breakable.h"
+#include "splitter.h"
 
 typedef std::function<void(const char* output)> OUTPUT_FUNCTION;
 typedef std::function<std::string()> INPUT_FUNCTION;
@@ -55,8 +56,11 @@ public:
      */
     void setModuleSystem(ModuleSystem* moduleSystem);
     void ready();
-    void run(const char* code, PosInfo posInfo);
+
+    Node* getAST(const char* code, PosInfo posInfo);
+    void run(const char* code, PosInfo posInfo, bool ignore_validation=false);
     void runScript(const char* filename);
+    Splitter loadScript(const char* filename);
 
     /**
      * Registers the default object class in the class_system provided and returns the Class.
@@ -137,6 +141,7 @@ public:
     */
     INPUT_FUNCTION input;
 private:
+    void setupValidator();
     void setupModuleMarbleFunctions(ModuleSystem* moduleSystem);
     void handleLineAndColumn(PosInfo* posInfo, const char* data, int length);
     void fail();

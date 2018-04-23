@@ -36,6 +36,8 @@
 #include "interpreter.h"
 #include "basesystemhandler.h"
 #include "webmod.h"
+#include "permissionobject.h"
+#include "permissionsobject.h"
 // request handler example
 
 // request_rec Struct Reference
@@ -203,11 +205,13 @@ static int marble_handler(request_rec *req)
     if (!req->header_only) {
         Interpreter interpreter(moduleSystem->getClassSystem(), moduleSystem->getFunctionSystem());
         interpreter.setModuleSystem(moduleSystem);
-        // TEMPORARY SO I DONT HAVE TO SET PERMISSIONS
-        interpreter.setNoPermissionRestrictions(true);
         interpreter.setOutputFunction([&](const char* data) {
             ap_rputs(data, req);
         });
+
+        // Temporary create an IOPermission
+        std::shared_ptr<PermissionObject> permission = std::dynamic_pointer_cast<PermissionObject>(Object::create(interpreter.getClassSystem()->getClassByName("IOPermission")));
+        interpreter.getRootScope()->permissions->objects.push_back(permission);
 
     
         // Let's let the WebModule know about our request
@@ -244,6 +248,7 @@ static void x_child_init(apr_pool_t *p, server_rec *s)
 {
     baseHandler = new BaseSystemHandler();
     moduleSystem = new ModuleSystem(baseHandler->getClassSystem(), baseHandler->getFunctionSystem());
+
     moduleSystem->loadModule("/usr/lib/marble/marble_iomod.so");
     moduleSystem->loadModule("/usr/lib/marble/marble_timemod.so");
     moduleSystem->loadModule("/usr/lib/marble/marble_mysqlmod.so");

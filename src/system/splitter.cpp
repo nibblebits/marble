@@ -37,6 +37,11 @@ void marble_code::update()
     this->split->has_code = this->size != 0;
 }
 
+Splitter::Splitter()
+{
+
+}
+
 Splitter::Splitter(Logger* logger, const char* filename)
 {
     this->logger = logger;
@@ -147,4 +152,10 @@ bool Splitter::split(struct split* split)
     }
     this->previous = marble_code;
     return true;
+}
+
+void Splitter::free()
+{
+    if (this->data != NULL)
+        delete this->data;
 }

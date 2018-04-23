@@ -261,7 +261,8 @@ bool Interpreter::isNestedScript(std::string script_address)
 
     return false;
 }
-void Interpreter::run(const char* code, PosInfo posInfo)
+
+Node* Interpreter::getAST(const char* code, PosInfo posInfo)
 {
     ready();
     if (lexer == NULL)
@@ -271,7 +272,7 @@ void Interpreter::run(const char* code, PosInfo posInfo)
     Token* token = root_token;
     while (token != NULL)
     {
-        std::cout << "TOken value: " << token->value << std::endl;
+        std::cout << "TOken value: " << token->value << ", type: " << token->type << std::endl;
         token = token->next;
     }
 
@@ -280,6 +281,11 @@ void Interpreter::run(const char* code, PosInfo posInfo)
     Node* root_node;
 
     root_node = parser->parse(root_token);
+    return root_node;
+}
+
+void Interpreter::setupValidator()
+{
     if (validator == NULL)
     {
         validator = std::unique_ptr<Validator>(new Validator(&logger, this));
@@ -287,11 +293,18 @@ void Interpreter::run(const char* code, PosInfo posInfo)
 
     // We must set the validators previous scope to our own so that native variables are recognised.
     validator->getCurrentScope()->prev = this->getCurrentScope();
+}
 
+void Interpreter::run(const char* code, PosInfo posInfo, bool ignore_validation)
+{
+    ready();
+    setupValidator();
+    Node* root_node = getAST(code, posInfo);
     InterpretableNode* current_node = (InterpretableNode*) root_node;
     try
     {
-        validator->validate(root_node);
+        if (!ignore_validation)
+            validator->validate(root_node);
         // Awesome now lets interpret!
         while(current_node != NULL)
         {
@@ -331,39 +344,13 @@ void Interpreter::handleLineAndColumn(PosInfo* posInfo, const char* data, int le
 
 void Interpreter::runScript(const char* filename)
 {
-    if (this->isNestedScript(std::string(filename)))
-    {
-        throw IOException("The script: " + std::string(filename) + " has already run once before in this run session. This script cannot run again as its possible this can result in an infinite loop");
-    }
-    this->nested_scripts_run.push_back(getAbsolutePath(filename));
-    this->filename = filename;
-    if (!hasRunScript(filename))
-        this->scripts_run.push_back(getAbsolutePath(std::string(filename)));
-    // Lets load this script
-    FILE* file = fopen(filename, "r");
-    if (!file)
-    {
-        throw IOException("Failed to open file: " + std::string(filename));
-    }
-
-    if(fseek(file, 0, SEEK_END) != 0)
-    {
-        throw IOException("Failed to seek to the end of the file: " + std::string(filename));
-    }
-
-    long data_len = ftell(file);
-    rewind(file);
-    char* data = new char[data_len];
-    fread(data, data_len, 1, file);
-
-    Splitter splitter(&logger, filename);
-    splitter.setData(data, data_len);
-    
+    // Setup positioning information
     PosInfo posInfo;
     posInfo.filename = filename;
     posInfo.line = 1;
     posInfo.col = 1;
-    
+
+    Splitter splitter = loadScript(filename);
     split split;
     while(splitter.split(&split))
     {
@@ -392,13 +379,47 @@ void Interpreter::runScript(const char* filename)
         }
     }
 
-    // Close and clean up
-    fclose(file);
-    delete data;
+    // Free the splitter data
+    splitter.free();
     this->filename = this->nested_scripts_run.back().c_str();
     this->nested_scripts_run.pop_back();
 }
 
+Splitter Interpreter::loadScript(const char* filename)
+{
+    if (this->isNestedScript(std::string(filename)))
+    {
+        throw IOException("The script: " + std::string(filename) + " has already run once before in this run session. This script cannot run again as its possible this can result in an infinite loop");
+    }
+    this->nested_scripts_run.push_back(getAbsolutePath(filename));
+    this->filename = filename;
+    if (!hasRunScript(filename))
+        this->scripts_run.push_back(getAbsolutePath(std::string(filename)));
+    // Lets load this script
+    FILE* file = fopen(filename, "r");
+    if (!file)
+    {
+        throw IOException("Failed to open file: " + std::string(filename));
+    }
+
+    if(fseek(file, 0, SEEK_END) != 0)
+    {
+        throw IOException("Failed to seek to the end of the file: " + std::string(filename));
+    }
+
+    long data_len = ftell(file);
+    rewind(file);
+    char* data = new char[data_len];
+    fread(data, data_len, 1, file);
+
+    Splitter splitter(&logger, filename);
+    splitter.setData(data, data_len);
+    
+
+    // Close and clean up
+    fclose(file);
+    return splitter;
+}
 
 void Interpreter::setLastFunctionCallNode(FunctionCallNode* fc_node)
 {

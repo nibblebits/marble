@@ -74,6 +74,7 @@ private:
     void parse_do_while();
     void parse_include();
     void parse_include_once();
+    void parse_require();
     void parse_permission_node();
     void parse_null();
     /**
