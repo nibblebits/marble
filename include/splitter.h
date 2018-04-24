@@ -9,9 +9,12 @@ struct data_descriptor
     int start;
     int end;
     int size;
-    const char* data;
-    struct split* split;
+    bool finished;
     
+    const char* data;
+
+    struct split* split;
+ 
     data_descriptor();
     virtual void update();
 };
@@ -52,6 +55,7 @@ private:
     int getPositionOfNextMarbleTag(int position);
     int getPositionOfNextMarbleClosingTag(int current_pos);
 
+    bool was_freed;
     const char* data;
     int length;
     Logger* logger;

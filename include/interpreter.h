@@ -61,6 +61,11 @@ public:
     void run(const char* code, PosInfo posInfo, bool ignore_validation=false);
     void runScript(const char* filename);
     Splitter loadScript(const char* filename);
+    
+    PosInfo handleCodeDataForSplit(PosInfo posInfo, split* split, bool ignore_validation=false);
+    PosInfo handleRawDataForSplit(PosInfo posInfo, split* split);
+    void handleSplitterSplits(Splitter& splitter, PosInfo& posInfo);
+    void handleLineAndColumn(PosInfo* posInfo, const char* data, int length);
 
     /**
      * Registers the default object class in the class_system provided and returns the Class.
@@ -143,7 +148,6 @@ public:
 private:
     void setupValidator();
     void setupModuleMarbleFunctions(ModuleSystem* moduleSystem);
-    void handleLineAndColumn(PosInfo* posInfo, const char* data, int length);
     void fail();
     const char* filename;
     bool first_run;

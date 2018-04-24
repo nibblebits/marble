@@ -1,6 +1,8 @@
 #include "misc.h"
 #include <stdlib.h> 
 #include <stdio.h> 
+#include <cstring>
+#include <stdexcept>
 #include <linux/limits.h>
 std::string getAbsolutePath(std::string uri)
 {
@@ -24,4 +26,21 @@ std::string urlDecode(std::string &eString) {
 		}
 	}
 	return (ret);
+}
+
+void CloneForCall(const void* ptr, int size, int new_size, std::function<void(const void*, int)> func)
+{
+	if (size > new_size)
+		throw std::logic_error("Your new size must be equal or greater than size. Truncation is not supported");
+	char* cloned_data = new char[new_size];
+    memcpy(cloned_data, ptr, size);
+    try
+    {
+		func((const void*) cloned_data, new_size);
+        delete cloned_data;
+    }
+    catch(...)
+    {
+        delete cloned_data;
+    }
 }

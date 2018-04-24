@@ -342,6 +342,51 @@ void Interpreter::handleLineAndColumn(PosInfo* posInfo, const char* data, int le
     }
 }
 
+PosInfo Interpreter::handleCodeDataForSplit(PosInfo posInfo, split* split, bool ignore_validation)
+{
+    CloneForCall(split->code.data, split->code.size, split->code.size+1, [&](const void* ptr, int size) {
+        char* code_data = (char*) ptr;
+        code_data[split->code.size] = 0;
+        // Marble tag "<marble>" should be added to the current position
+        posInfo.col += strlen(MARBLE_OPEN_TAG);
+        run(code_data, posInfo, ignore_validation);
+        handleLineAndColumn(&posInfo, code_data, size);
+    });
+
+    return posInfo;
+}
+
+PosInfo Interpreter::handleRawDataForSplit(PosInfo posInfo, split* split)
+{
+    CloneForCall(split->output.data, split->output.size, split->output.size+1, [&](const void* ptr, int size) {
+        char* output_data = (char*) ptr;
+        output_data[split->output.size] = 0;
+        output(output_data);
+        handleLineAndColumn(&posInfo, output_data, size);
+    });
+
+    return posInfo;
+}
+
+void Interpreter::handleSplitterSplits(Splitter& splitter, PosInfo& posInfo)
+{
+    split split;
+    while(splitter.split(&split))
+    {
+        // Output the data
+        if (split.has_data)
+        {
+            posInfo = handleRawDataForSplit(posInfo, &split);
+        }
+
+        // Run the code
+        if (split.has_code)
+        {
+            posInfo = handleCodeDataForSplit(posInfo, &split);
+        }
+    }
+}
+
 void Interpreter::runScript(const char* filename)
 {
     // Setup positioning information
@@ -351,33 +396,7 @@ void Interpreter::runScript(const char* filename)
     posInfo.col = 1;
 
     Splitter splitter = loadScript(filename);
-    split split;
-    while(splitter.split(&split))
-    {
-        // Output the data
-        if (split.has_data)
-        {
-            char* output_data = new char[split.output.size+1];
-            memcpy(output_data, split.output.data, split.output.size);
-            output_data[split.output.size] = 0;
-            output(output_data);
-            handleLineAndColumn(&posInfo, output_data, split.output.size);
-            delete output_data;
-        }
-
-        // Run the code
-        if (split.has_code)
-        {
-            char* code_data = new char[split.code.size+1];
-            memcpy(code_data, split.code.data, split.code.size);
-            code_data[split.code.size] = 0;
-            // Marble tag "<marble>" should be added to the current position
-            posInfo.col += strlen(MARBLE_OPEN_TAG);
-            run(code_data, posInfo);
-            handleLineAndColumn(&posInfo, code_data, split.code.size);
-            delete code_data;
-        }
-    }
+    handleSplitterSplits(splitter, posInfo);
 
     // Free the splitter data
     splitter.free();

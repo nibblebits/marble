@@ -1,6 +1,8 @@
 #include "requirenode.h"
 #include "interpreter.h"
 #include "validator.h"
+#include "misc.h"
+
 RequireNode::RequireNode() : InterpretableNode(NODE_TYPE_REQUIRE)
 {
 
@@ -25,15 +27,15 @@ void RequireNode::test(Validator* validator, struct extras extra)
     {
         if (split.has_code)
         {
-            #warning Improve this
-            char* code_data = new char[split.code.size+1];
-            memcpy(code_data, split.code.data, split.code.size);
-            code_data[split.code.size] = 0;
-            // Marble tag "<marble>" should be added to the current position
-            posInfo.col += strlen(MARBLE_OPEN_TAG);
-            Node* root_node = interpreter->getAST(code_data, posInfo);
-            validator->validate(root_node);
-            delete code_data;
+            CloneForCall(split.code.data, split.code.size, split.code.size+1, [&](const void* ptr, int size) {
+                char* code_data = (char*) ptr;
+                code_data[split.code.size] = 0;
+                // Marble tag "<marble>" should be added to the current position
+                posInfo.col += strlen(MARBLE_OPEN_TAG);
+                Node* root_node = interpreter->getAST(code_data, posInfo);
+                validator->validate(root_node);
+                interpreter->handleLineAndColumn(&posInfo, code_data, size);
+            });
         }
         this->splits.push_back(split);
     }
@@ -50,26 +52,18 @@ Value RequireNode::interpret(Interpreter* interpreter, struct extras extra)
     while(!this->splits.empty())
     {
         split split = this->splits.front();
+        // Output the data
         if (split.has_data)
         {
-            char* output_data = new char[split.output.size+1];
-            memcpy(output_data, split.output.data, split.output.size);
-            output_data[split.output.size] = 0;
-            interpreter->output(output_data);
-            delete output_data;
+            posInfo = interpreter->handleRawDataForSplit(posInfo, &split);
         }
 
         // Run the code
         if (split.has_code)
         {
-            char* code_data = new char[split.code.size+1];
-            memcpy(code_data, split.code.data, split.code.size);
-            code_data[split.code.size] = 0;
-            // Marble tag "<marble>" should be added to the current position
-            posInfo.col += strlen(MARBLE_OPEN_TAG);
-            interpreter->run(code_data, posInfo, true);
-            delete code_data;
+            posInfo = interpreter->handleCodeDataForSplit(posInfo, &split, true);
         }
+
         this->splits.pop_front();
     }
 

@@ -48,11 +48,12 @@ Splitter::Splitter(Logger* logger, const char* filename)
     this->data = 0;
     this->previous = 0;
     this->filename = filename;
+    this->was_freed = false;
 }
 
 Splitter::~Splitter()
 {
-
+ 
 }
 
 
@@ -156,6 +157,14 @@ bool Splitter::split(struct split* split)
 
 void Splitter::free()
 {
+    if (this->was_freed)
+        return;
+
     if (this->data != NULL)
+    {
         delete this->data;
+        this->data = NULL;
+    }
+
+    this->was_freed = true;
 }
