@@ -48,6 +48,9 @@ Class* CommonModule_SqlDriver::registerClass(ModuleSystem* moduleSystem)
     // function getDriver(string driver_name) : SQLDriver
     c->registerFunction("getDriver", {VarType::fromString("string")}, VarType::fromString("SQLDriver"), CommonModule_SqlDriver::SQLDriver_getDriver);
 
+    // function hasDriver(string driver_name) : boolean
+    c->registerFunction("hasDriver", {VarType::fromString("string")}, VarType::fromString("boolean"), CommonModule_SqlDriver::SQLDriver_hasDriver);
+
     // function execute(SQLConnection connection, SQLStatement statement, string finalized_query) : void
     Function* execute = c->registerFunction("execute", {VarType::fromString("SQLConnection"), VarType::fromString("SQLStatement"), VarType::fromString("string")}, VarType::fromString("SQLResult"), Function::Blank);
     execute->is_pure = true;
@@ -87,4 +90,10 @@ void CommonModule_SqlDriver::SQLDriver_getDriver(Interpreter* interpreter, std::
     // We have a driver, lets now return it to the user
     return_value->set(selected_driver);
 
+}
+
+void CommonModule_SqlDriver::SQLDriver_hasDriver(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+{
+    std::shared_ptr<CommonModule_SqlDriver> selected_driver = interpreter->getSQLDriver(values[0].svalue);
+    return_value->set(selected_driver != NULL);
 }
