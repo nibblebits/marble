@@ -528,6 +528,11 @@ void Parser::parse_value(int rules)
         parse_null();
         node = pop_node();
     }
+    else if(token->isBooleanLiteral())
+    {
+        parse_boolean();
+        node = pop_node();
+    }
     else
     {
         parse_single_token();
@@ -865,6 +870,19 @@ void Parser::parse_null()
 
     NullNode* null_node = (NullNode*) factory.createNode(NODE_TYPE_NULL);
     push_node(null_node);
+}
+
+void Parser::parse_boolean()
+{
+    Token* next_token = next();
+    if (!next_token->isBooleanLiteral())
+    {
+        parse_error("Expecting a boolean literal. true or false");
+    }
+
+    BooleanLiteralNode* boolean_literal_node = (BooleanLiteralNode*) factory.createNode(NODE_TYPE_BOOLEAN_LITERAL);
+    boolean_literal_node->literal = (next_token->value == "true" ? true : false);
+    push_node(boolean_literal_node);
 }
 
 void Parser::parse_multi_expression()

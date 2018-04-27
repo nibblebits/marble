@@ -77,6 +77,8 @@ private:
     void parse_require();
     void parse_permission_node();
     void parse_null();
+    void parse_boolean();
+
     /**
      * Parses multiple expressions seperated by commas ",". If the first token seen is a symbol of ";" then an empty ListNode is pushed to the stack.
      * Multi-expressions also allow for variable declarations when calling this method.

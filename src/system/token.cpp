@@ -114,6 +114,12 @@ bool Token::isLiteral()
     return this->type == TOKEN_TYPE_NUMBER;
 }
 
+
+bool Token::isBooleanLiteral()
+{
+    return isKeyword("true") || isKeyword("false");
+}
+
 bool Token::isDataAccessKeyword()
 {
     return isKeyword() && (value == "private" || value == "public" || value == "protected");

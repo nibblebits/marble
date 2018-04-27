@@ -31,6 +31,7 @@ public:
     bool isNumber();
     bool isNumber(std::string value);
     bool isLiteral();
+    bool isBooleanLiteral();
     bool isDataAccessKeyword();
 
     // The next token after this one

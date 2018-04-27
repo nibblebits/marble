@@ -33,4 +33,5 @@
 #include "permissionnode.h"
 #include "nullnode.h"
 #include "requirenode.h"
+#include "booleanliteralnode.h"
 #endif
