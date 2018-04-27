@@ -31,6 +31,7 @@
 #include "permissionsobject.h"
 #include "permissionpropertyobject.h"
 #include "modulehandlingpermissionobject.h"
+#include "commonmod_sqldriver.h"
 #include "exceptions/IOException.h"
 #include "exceptions/systemexception.h"
     std::string getAllVariablesAsString(Scope* scope)
@@ -459,6 +460,28 @@ void Interpreter::setNoPermissionRestrictions(bool allow)
 bool Interpreter::hasNoPermissionRestrictions()
 {
     return this->no_permission_restritions;
+}
+
+
+
+void Interpreter::registerSQLDriver(std::shared_ptr<CommonModule_SqlDriver> sql_driver)
+{
+    // If we already have the driver just dont register it again
+    if (getSQLDriver(sql_driver->getClass()->name))
+        return;
+
+    sql_drivers.push_back(sql_driver);
+}
+
+std::shared_ptr<CommonModule_SqlDriver> Interpreter::getSQLDriver(std::string driver_name)
+{
+    for (std::shared_ptr<CommonModule_SqlDriver> sql_driver : this->sql_drivers)
+    {
+        if (sql_driver->getClass()->name == driver_name)
+            return sql_driver;
+    }
+
+    return NULL;
 }
 
 Class* Interpreter::registerDefaultObjectClass(ClassSystem* class_system, std::string class_name)

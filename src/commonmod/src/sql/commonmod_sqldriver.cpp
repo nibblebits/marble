@@ -75,25 +75,12 @@ void CommonModule_SqlDriver::SQLDriver_Construct(Interpreter* interpreter, std::
 
 void CommonModule_SqlDriver::SQLDriver_registerDriver(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
 {
-    std::shared_ptr<CommonModule_SqlDriver> driver_obj = std::dynamic_pointer_cast<CommonModule_SqlDriver>(object);
-    std::shared_ptr<CommonModule_SqlDriver> passed_driver_obj = std::dynamic_pointer_cast<CommonModule_SqlDriver>(values[0].ovalue);
-    driver_obj->drivers.push_back(passed_driver_obj); 
+    interpreter->registerSQLDriver(std::dynamic_pointer_cast<CommonModule_SqlDriver>(values[0].ovalue));
 }
 
 void CommonModule_SqlDriver::SQLDriver_getDriver(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
 {
-    std::shared_ptr<CommonModule_SqlDriver> driver_obj = std::dynamic_pointer_cast<CommonModule_SqlDriver>(object);
-    std::shared_ptr<CommonModule_SqlDriver> selected_driver = NULL;
-    for (std::shared_ptr<CommonModule_SqlDriver> _driver : driver_obj->drivers)
-    {
-        // Is this _driver's class name equal to the class name of the driver we are trying to get
-        if (_driver->getClass()->name == values[0].svalue)
-        {
-            selected_driver = _driver;
-            break;
-        }
-    }
-
+    std::shared_ptr<CommonModule_SqlDriver> selected_driver = interpreter->getSQLDriver(values[0].svalue);
     if (selected_driver == NULL)
         throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("DriverNotFoundException")));
 

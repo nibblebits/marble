@@ -27,7 +27,7 @@ public:
     static void SQLDriver_registerDriver(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
     static void SQLDriver_getDriver(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
 private:
-    std::vector<std::shared_ptr<CommonModule_SqlDriver>> drivers;
+
 };
 
 #endif

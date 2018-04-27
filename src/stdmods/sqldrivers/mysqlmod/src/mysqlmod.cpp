@@ -21,5 +21,8 @@ void MysqlModule::Init()
 
 void MysqlModule::newInterpreter(Interpreter* interpreter)
 {
-
+    // Register the MYSQLDriver in the interpreter instance
+    std::shared_ptr<MysqlDriver> mysql_driver 
+                        = std::dynamic_pointer_cast<MysqlDriver>(Object::create(interpreter->getClassSystem()->getClassByName("MysqlDriver")));
+    interpreter->registerSQLDriver(mysql_driver);
 }

@@ -38,6 +38,7 @@ class Object;
 class FunctionCallNode;
 class Class;
 class ClassSystem;
+class CommonModule_SqlDriver;
 class Interpreter : public SystemHandler
 {
 public:
@@ -132,6 +133,18 @@ public:
     bool hasNoPermissionRestrictions();
 
     /**
+     * Registers a SQL driver into the system.
+     * \attention The driver provided must be a unique object for each interpreter instance
+     */
+
+    void registerSQLDriver(std::shared_ptr<CommonModule_SqlDriver> sql_driver);
+
+    /**
+     * Returns a registered SQL driver from the system
+     */
+    std::shared_ptr<CommonModule_SqlDriver> getSQLDriver(std::string driver_name);
+
+    /**
      * Calls the output function assigned to this Interpreter
      * 
      * This is used when you need to provide output to the user through the console or to send data to the users web browser or something else regarding sending output.
@@ -145,6 +158,8 @@ public:
     * Such a string from std::cin to receive a string from the terminal.
     */
     INPUT_FUNCTION input;
+
+    
 private:
     void setupValidator();
     void setupModuleMarbleFunctions(ModuleSystem* moduleSystem);
@@ -159,6 +174,8 @@ private:
     std::vector<std::string> scripts_run;
     std::vector<struct stack_log_part> stack_log;
     std::vector<Breakable*> breakables;
+    // The registered sql drivers for this interpreter instance
+    std::vector<std::shared_ptr<CommonModule_SqlDriver>> sql_drivers;
     std::unique_ptr<Lexer> lexer;
     std::unique_ptr<Parser> parser;
     std::unique_ptr<Validator> validator;
