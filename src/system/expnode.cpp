@@ -11,6 +11,7 @@
 #include "exceptions/evaluationexception.h"
 #include "debug.h"
 #include "object.h"
+#include "operator.h"
 #include <iostream>
 #include <memory>
 ExpNode::ExpNode() : ExpressionInterpretableNode(NODE_TYPE_EXPRESSION)
@@ -247,8 +248,29 @@ void ExpNode::test_assign(Validator* validator)
 
 void ExpNode::test_regular_exp(Validator* validator)
 {
+    if (Operator::isCompareOperator(this->op))
+    {
+        /*
+         * We are a compare operator so let's ensure that the validator is expecting a boolean
+         */
+        if(validator->isExpecting() && validator->getExpectingType() != "boolean")
+        {
+            throw TestError("a boolean was provided");
+        } 
+
+        // Good so far so good now we need to save the validators state as we don't want to apply these rules to the left and right operands
+        validator->save();
+    }
+
+    // Test the left and right nodes
     left->test(validator);
     right->test(validator);
+
+    if (Operator::isCompareOperator(this->op))
+    {
+        // Let's restore the validator
+        validator->restore();
+    }
 }
 
 void ExpNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)
