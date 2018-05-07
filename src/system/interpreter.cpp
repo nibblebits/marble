@@ -176,16 +176,16 @@ void Interpreter::setupModuleMarbleFunctions(ModuleSystem* moduleSystem)
             }
         }
         std::string filename = arguments[0].svalue;
-        //try
-        //{
+        try
+        {
             Module* module = moduleSystem->loadModule(filename.c_str());
             // Tell the module about us.
             module->newInterpreter(this);
-        //}
-      //  catch(...)
-       // {
-         //   throw SystemException(Object::create(getClassSystem()->getClassByName("IOException")));
-        //}
+        }
+        catch(...)
+        {
+            throw SystemException(Object::create(getClassSystem()->getClassByName("IOException")));
+        }
     });
 }
 
@@ -273,7 +273,7 @@ Node* Interpreter::getAST(const char* code, PosInfo posInfo)
     Token* token = root_token;
     while (token != NULL)
     {
-        std::cout << "TOken value: " << token->value << ", type: " << token->type << std::endl;
+       // std::cout << "TOken value: " << token->value << ", type: " << token->type << std::endl;
         token = token->next;
     }
 

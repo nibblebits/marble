@@ -25,23 +25,28 @@ FunctionCallNode::~FunctionCallNode()
 
 void FunctionCallNode::test_args(Validator* validator, std::vector<VarType>* types, struct extras extra)
 {
-    validator->useScope([&] {
-        for (ExpressionInterpretableNode* argument_node : this->arguments)
-        {
-                argument_node->test(validator, extra);
-                try
-                {
-                    struct Evaluation evaluation;
-                    evaluation.extra = extra;
-                    argument_node->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE, &evaluation);
-                    types->push_back(evaluation.datatype);
-                }
-                catch(EvaluationException& ex)
-                {
-                    throw TestError("The value provided for the function call is multityped. Ensure you cast where types differ. First type is: " + ex.type1 + " second is: " + ex.type2);
-                }
-        }
-    }, extra.accessors_scope);
+    struct extras arg_extra = extra;
+    arg_extra.accessors_scope = extra.accessors_scope;
+    // We must use the global function system for function arguments
+    validator->useFunctionSystem(validator->getGlobalFunctionSystem(), [&] {
+        validator->useScope([&] {
+            for (ExpressionInterpretableNode* argument_node : this->arguments)
+            {
+                    argument_node->test(validator, arg_extra);
+                    try
+                    {
+                        struct Evaluation evaluation;
+                        evaluation.extra = arg_extra;
+                        argument_node->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE, &evaluation);
+                        types->push_back(evaluation.datatype);
+                    }
+                    catch(EvaluationException& ex)
+                    {
+                        throw TestError("The value provided for the function call is multityped. Ensure you cast where types differ. First type is: " + ex.type1 + " second is: " + ex.type2);
+                    }
+            }
+        }, extra.accessors_scope);
+    });
 }
 
 void FunctionCallNode::test(Validator* validator, struct extras extra)
@@ -177,11 +182,16 @@ Value FunctionCallNode::interpret(Interpreter* interpreter, struct extras extra)
 
 void FunctionCallNode::interpret_args(Interpreter* interpreter, std::vector<Value>* argument_results, struct extras extra)
 {
-    for (ExpressionInterpretableNode* argument_node : this->arguments)
-    {
-        Value v = argument_node->interpret(interpreter, extra);
-        argument_results->push_back(v);
-    }
+    struct extras arg_extra = extra;
+    arg_extra.accessors_scope = extra.accessors_scope;
+    // Function arguments must use the global function system
+    interpreter->useFunctionSystem(interpreter->getGlobalFunctionSystem(), [&] {
+        for (ExpressionInterpretableNode* argument_node : this->arguments)
+        {
+            Value v = argument_node->interpret(interpreter, arg_extra);
+            argument_results->push_back(v);
+        }
+    });
 }
 
 void FunctionCallNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)
