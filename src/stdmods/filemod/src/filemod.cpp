@@ -28,6 +28,9 @@ void FileModule::Init()
     log("--- Registering functions and classes", LOG_LEVEL_NOTICE);
     
     ClassSystem* c_system = this->getModuleSystem()->getClassSystem();
+    // Register the FilePermission class
+    FileModule_FilePermission::registerClass(this->getModuleSystem());
+
     // Register the FileOutputStream class
     FileModule_FileOutputStream::registerClass(this->getModuleSystem());
 

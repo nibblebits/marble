@@ -2,6 +2,8 @@
 #include "object.h"
 #include "array.h"
 #include "permissionsobject.h"
+#include "permissionobject.h"
+#include "exceptions/testerror.h"
 #include <stdexcept>
 #include <memory>
 #include <algorithm>
@@ -181,4 +183,16 @@ std::vector<Variable*> Scope::getObjectVariablesFor(std::shared_ptr<Object> obje
         }
     }
     return variables;
+}
+
+
+std::shared_ptr<PermissionObject> Scope::getPermission(std::string name)
+{
+    if (this->permissions == NULL)
+    {
+        return NULL;
+    }
+
+    std::shared_ptr<PermissionObject> permission = std::dynamic_pointer_cast<PermissionObject>(permissions->getPermission(name));
+    return permission;
 }

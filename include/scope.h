@@ -9,6 +9,7 @@
 #include "statics.h"
 class Object;
 class PermissionsObject;
+class PermissionObject;
 class Scope
 {
 public:
@@ -40,6 +41,9 @@ public:
     bool isNestedInScope(Scope* scope);
     std::vector<Variable*> getVariables();
     std::vector<Variable*> getObjectVariablesFor(std::shared_ptr<Object> object);
+
+    std::shared_ptr<PermissionObject> getPermission(std::string name);
+    
     Scope* prev;
 
     // The permissions for this scope, defaulted to NULL.

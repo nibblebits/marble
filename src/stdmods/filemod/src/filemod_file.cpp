@@ -1,4 +1,5 @@
 #include "filemod_file.h"
+#include "filemod_filepermission.h"
 #include "exceptions/systemexception.h"
 #include <iostream>
 #include <sys/types.h>
@@ -34,7 +35,7 @@ Class* FileModule_File::registerClass(ModuleSystem* moduleSystem)
         file->input->file = file;
     });
     c->registerFunction("open", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("number"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
-        File_Open(interpreter, arguments, return_value, object);
+        File_Open(interpreter, arguments, return_value, object, caller_scope);
     });
     c->registerFunction("getOutputStream", {}, VarType::fromString("FileOutputStream"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         std::shared_ptr<FileModule_File> file = std::dynamic_pointer_cast<FileModule_File>(object);
@@ -61,11 +62,23 @@ Class* FileModule_File::registerClass(ModuleSystem* moduleSystem)
     return c;
 }
 // Native IO functions/methods
-void FileModule_File::File_Open(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)
+void FileModule_File::File_Open(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
 {
+
     return_value->type = VALUE_TYPE_NUMBER;
     std::string filename = values[0].svalue;
     std::string mode = values[1].svalue;
+
+    // Let's ensure this scope has permission to open this file
+    if (!interpreter->hasNoPermissionRestrictions())
+    {
+        std::shared_ptr<FileModule_FilePermission> permission = std::dynamic_pointer_cast<FileModule_FilePermission>(caller_scope->getPermission("FilePermission"));
+        if (permission == NULL)
+        {
+            throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException")));
+        }
+    }
+
     FILE* fp = fopen(filename.c_str(), mode.c_str());
     std::shared_ptr<FileModule_File> file_obj = std::dynamic_pointer_cast<FileModule_File>(object);
     file_obj->fp = fp;
