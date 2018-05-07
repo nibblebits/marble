@@ -3,6 +3,7 @@
 #include "exceptions/systemexception.h"
 #include "permissionsobject.h"
 #include "iopermission.h"
+#include "function.h"
 #include <sstream>
 #include <iostream>
 IOModule::IOModule() : Module("iomod", "IO Module", MODULE_TYPE_MARBLE_LIBRARY)
@@ -48,6 +49,10 @@ void IOModule::Init()
     c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
             
     });
+
+    // We need to override this pure function but we don't plan to do anything with it..
+    c->registerFunction("__permission_check", {VarType::fromString("PermissionProperty"), VarType::fromString("PermissionProperty")}, VarType::fromString("void"), Function::Blank);
+
     log("IOPermission class created succesfully", LOG_LEVEL_NOTICE);
 
 
