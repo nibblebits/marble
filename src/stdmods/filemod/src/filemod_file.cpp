@@ -47,7 +47,7 @@ Class* FileModule_File::registerClass(ModuleSystem* moduleSystem)
         file->output->file = file;
         file->input->file = file;
     });
-    c->registerFunction("open", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("number"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
+    c->registerFunction("open", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("boolean"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         File_Open(interpreter, arguments, return_value, object, caller_scope);
     });
     c->registerFunction("getOutputStream", {}, VarType::fromString("FileOutputStream"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
@@ -138,7 +138,7 @@ void FileModule_File::File_Open(Interpreter* interpreter, std::vector<Value> val
 void FileModule_File::File_Close(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)
 {
     std::shared_ptr<FileModule_File> file_obj = std::dynamic_pointer_cast<FileModule_File>(object);
-    int response = fclose(file_obj->fp);
+    int response = (file_obj->fp == NULL ? 1 : fclose(file_obj->fp));
     if (response != 0)
         throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("IOException")));
 }
@@ -146,7 +146,7 @@ void FileModule_File::File_Close(Interpreter* interpreter, std::vector<Value> va
 void FileModule_File::File_setPosition(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)
 {
     std::shared_ptr<FileModule_File> file_obj = std::dynamic_pointer_cast<FileModule_File>(object);
-    int response = fseek(file_obj->fp, values[0].dvalue, SEEK_SET);
+    int response = (file_obj->fp == NULL ? 1 : fseek(file_obj->fp, values[0].dvalue, SEEK_SET));
     if (response != 0)
         throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("IOException")));
 }
