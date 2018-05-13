@@ -28,6 +28,16 @@ std::string urlDecode(std::string &eString) {
 	return (ret);
 }
 
+
+bool startsWith(std::string mainStr, std::string toMatch)
+{
+	// std::string::find returns 0 if toMatch is found at starting
+	if(mainStr.find(toMatch) == 0)
+		return true;
+	else
+		return false;
+}
+
 void CloneForCall(const void* ptr, int size, int new_size, std::function<void(const void*, int)> func)
 {
 	if (size > new_size)

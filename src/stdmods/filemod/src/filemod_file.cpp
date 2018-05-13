@@ -1,6 +1,7 @@
 #include "filemod_file.h"
 #include "filemod_filepermission.h"
 #include "exceptions/systemexception.h"
+#include "misc.h"
 #include <iostream>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -19,6 +20,18 @@ FileModule_File::~FileModule_File()
         fclose(this->fp);
 }
 
+
+
+
+bool FileModule_File::isWriteMode(std::string mode)
+{
+    return mode == "w" || mode == "a";
+}
+
+bool FileModule_File::isReadMode(std::string mode)
+{
+    return mode == "r";
+}
 
 Class* FileModule_File::registerClass(ModuleSystem* moduleSystem)
 {
@@ -69,11 +82,47 @@ void FileModule_File::File_Open(Interpreter* interpreter, std::vector<Value> val
     std::string filename = values[0].svalue;
     std::string mode = values[1].svalue;
 
+    std::string absolute_filename_path = getAbsolutePath(filename);
     // Let's ensure this scope has permission to open this file
     if (!interpreter->hasNoPermissionRestrictions())
     {
-        std::shared_ptr<FileModule_FilePermission> permission = std::dynamic_pointer_cast<FileModule_FilePermission>(caller_scope->getPermission("FilePermission"));
-        if (permission == NULL)
+        // We don't have access yet let's see how this turns out
+        bool has_access = false;
+
+        std::vector<std::shared_ptr<PermissionObject>> permission_list = caller_scope->getPermissionList("FilePermission");
+        // If the permission list is empty then we don't have permission to open this file
+        if (permission_list.empty())
+        {
+            throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException")));
+        }
+        for (std::shared_ptr<PermissionObject> perm : permission_list)
+        {
+            std::shared_ptr<FileModule_FilePermission> permission = std::dynamic_pointer_cast<FileModule_FilePermission>(perm);
+            // Do we have access to the directory we are trying to access?
+            if (startsWith(absolute_filename_path, permission->location))
+            {
+                if (FileModule_File::isReadMode(mode))
+                {
+                    // If we can't read then just continue and hopefully we will find a permission that allows this
+                    if (!permission->can_read)
+                    {
+                        continue;
+                    }
+                }
+                else if(FileModule_File::isWriteMode(mode))
+                {
+                    // If we can't write then just continue and hopefully we will find a permission that allows this 
+                    if (!permission->can_write)
+                    {
+                        continue;
+                    }
+                }
+                has_access = true;
+                break;
+            }
+        }
+
+        if (!has_access)
         {
             throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException")));
         }

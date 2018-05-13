@@ -6,6 +6,8 @@
 std::string getAbsolutePath(std::string uri);
 std::string urlDecode(std::string &eString);
 
+bool startsWith(std::string mainStr, std::string toMatch);
+
 /**
  * Clones the provided pointer, calls the given function then frees the cloned pointer
  * 

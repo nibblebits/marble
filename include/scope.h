@@ -43,6 +43,7 @@ public:
     std::vector<Variable*> getObjectVariablesFor(std::shared_ptr<Object> object);
 
     std::shared_ptr<PermissionObject> getPermission(std::string name);
+    std::vector<std::shared_ptr<PermissionObject>> getPermissionList(std::string name);
     
     Scope* prev;
 

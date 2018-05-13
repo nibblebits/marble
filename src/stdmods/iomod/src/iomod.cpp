@@ -82,12 +82,7 @@ void IOModule::IO_print(Interpreter* interpreter, std::vector<Value> values, Val
 {
     if (!interpreter->hasNoPermissionRestrictions())
     {
-        if (caller_scope->permissions == NULL)
-        {
-            throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException")));
-        }
-
-        std::shared_ptr<IOPermission> permission = std::dynamic_pointer_cast<IOPermission>(caller_scope->permissions->getPermission("IOPermission"));
+        std::shared_ptr<IOPermission> permission = std::dynamic_pointer_cast<IOPermission>(caller_scope->getPermission("IOPermission"));
         if (permission == NULL)
         {
             throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException")));

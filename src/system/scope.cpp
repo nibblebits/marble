@@ -196,3 +196,13 @@ std::shared_ptr<PermissionObject> Scope::getPermission(std::string name)
     std::shared_ptr<PermissionObject> permission = std::dynamic_pointer_cast<PermissionObject>(permissions->getPermission(name));
     return permission;
 }
+
+std::vector<std::shared_ptr<PermissionObject>> Scope::getPermissionList(std::string name)
+{
+    std::vector<std::shared_ptr<PermissionObject>> obj_list;
+    if (this->permissions == NULL)
+        return obj_list;
+
+    
+    return permissions->getPermissionList(name);
+}

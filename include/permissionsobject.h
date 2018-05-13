@@ -15,6 +15,8 @@ public:
 
     void addPermission(std::shared_ptr<PermissionObject> permission);
     std::shared_ptr<PermissionObject> getPermission(std::string name);
+    std::vector<std::shared_ptr<PermissionObject>> getPermissionList(std::string name);
+    
     void removePermission(std::string name);
     static Class* registerClass(SystemHandler* systemHandler);
     virtual std::shared_ptr<Object> newInstance(Class* c);

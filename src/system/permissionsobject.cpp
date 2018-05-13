@@ -41,6 +41,19 @@ std::shared_ptr<PermissionObject> PermissionsObject::getPermission(std::string n
     return NULL;
 }
 
+
+std::vector<std::shared_ptr<PermissionObject>> PermissionsObject::getPermissionList(std::string name)
+{
+    std::vector<std::shared_ptr<PermissionObject>> obj_list;
+    for (std::shared_ptr<PermissionObject> o : this->objects)
+    {
+        if (o->getClass()->name == name)
+            obj_list.push_back(o);
+    }
+
+    return obj_list;
+}
+
 void PermissionsObject::removePermission(std::string name)
 {
     for (std::shared_ptr<PermissionObject> o : this->objects)

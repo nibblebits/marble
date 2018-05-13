@@ -2,6 +2,7 @@
 #define FILEMOD_FILE
 
 #include <memory>
+#include <string>
 #include <stdio.h>
 #include "filemod_filepermission.h"
 #include "filemod_fileoutputstream.h"
@@ -16,6 +17,16 @@ public:
     virtual ~FileModule_File();
     virtual std::shared_ptr<Object> newInstance(Class* c);
     static Class* registerClass(ModuleSystem* moduleSystem);
+
+    /**
+    * Returns if the given mode is a writeable mode
+    */
+    static bool isWriteMode(std::string mode);
+    /**
+     * Returns if the given mode is a readable mode
+     */
+    static bool isReadMode(std::string mode);
+
 
     FILE* fp;
     std::string filename;
