@@ -48,6 +48,9 @@ typedef struct
 {
     char context[256];
     char* max_memory;
+    char* config_location;
+    // The permissions that all interpreters are bound to. The configuration file loads these.
+    std::shared_ptr<PermissionsObject> set_permissions;
 } configuration;
 
 static configuration config;
@@ -58,14 +61,17 @@ WebModule* webModule = NULL;
 static int marble_handler(request_rec *req);
 static void marble_register_hooks(apr_pool_t* p);
 const char* set_max_memory(cmd_parms *cmd, void *cfg_void, const char *arg);
+const char* set_config_location(cmd_parms* cmd, void* cfg_void, const char* arg);
 void *create_dir_conf(apr_pool_t *pool, char *context);
 void *merge_dir_conf(apr_pool_t *pool, void *BASE, void *ADD);
+bool loadConfiguration(std::string configFileName, configuration* conf);
 
 bool first_run = true;
 
 static const command_rec directives[] =
 {
     AP_INIT_TAKE1("maxMemory", (const char* (*)())set_max_memory, NULL, ACCESS_CONF, "Sets the max memory that marble can use"),
+    AP_INIT_TAKE1("configLocation", (const char* (*)())set_config_location, NULL, ACCESS_CONF, "Sets the location of the configuration file that should be used"),
     { NULL }
 };
 
@@ -184,9 +190,10 @@ static int marble_handler(request_rec *req)
        
     if(!valid_filename(std::string(req->filename)))
         return DECLINED;
-          
-    req->content_type = "text/html;charset=UTF-8";
 
+
+    req->content_type = "text/html;charset=UTF-8";
+    
     // ap_table_set is too old API
     apr_table_set(req->headers_out, "X-Content-Type-Options", "nosniff");
     
@@ -203,17 +210,18 @@ static int marble_handler(request_rec *req)
         return HTTP_NOT_FOUND;
     
     if (!req->header_only) {
+        // Load marble configuration
+        configuration* conf = (configuration*) ap_get_module_config(req->per_dir_config, &mod_marble_module);
+        loadConfiguration(conf->config_location, conf);
         Interpreter interpreter(moduleSystem->getClassSystem(), moduleSystem->getFunctionSystem());
         interpreter.setModuleSystem(moduleSystem);
         interpreter.setOutputFunction([&](const char* data) {
             ap_rputs(data, req);
         });
 
-        // Temporary create an IOPermission
-        std::shared_ptr<PermissionObject> permission = std::dynamic_pointer_cast<PermissionObject>(Object::create(interpreter.getClassSystem()->getClassByName("IOPermission")));
-        interpreter.getRootScope()->permissions->objects.push_back(permission);
+        // Inject the permissions loaded from the configuration into our root scope granting access
+        interpreter.getRootScope()->permissions = conf->set_permissions;
 
-    
         // Let's let the WebModule know about our request
         webModule->parseRequest(&interpreter, req);
 
@@ -237,30 +245,60 @@ static int marble_handler(request_rec *req)
             }
         }
     }
-
+    
+    
     return OK;
+}
+
+bool loadConfiguration(std::string configFileName, configuration* conf=NULL)
+{
+   std::cout << "LOADING MARBLE CONFIGURATION: " << configFileName << std::endl;
+    Interpreter interpreter(moduleSystem->getClassSystem(), moduleSystem->getFunctionSystem());
+    interpreter.setOutputFunction([](const char* data) {
+        std::cout << data;
+    });
+    // Configurations should not be bound to permissions.
+    interpreter.setNoPermissionRestrictions(true);
+    interpreter.setModuleSystem(moduleSystem);
+    try
+    {
+        interpreter.runScript(configFileName.c_str());
+    }
+    catch(...)
+    {
+        std::cout << "Failed to load or run the configuration script: " << configFileName << std::endl;
+        throw;
+    }
+
+    /* The set permissions become equal to the permissions of the configuration interpreter
+       Do be aware this type of setup only works in a single threaded environment in a multithreaded environment the permission object must be cloned
+       when inserting it into interpreters that must be run later. */ 
+    if (conf != NULL)
+        conf->set_permissions = interpreter.getRootScope()->permissions;
+
+    return true;
 }
 
 /**
  * Initialises this module
  */
-static void x_child_init(apr_pool_t *p, server_rec *s)
+static void child_init(apr_pool_t*, server_rec* s)
 {
     baseHandler = new BaseSystemHandler();
     moduleSystem = new ModuleSystem(baseHandler->getClassSystem(), baseHandler->getFunctionSystem());
 
-    moduleSystem->loadModule("/usr/lib/marble/marble_iomod.so");
-    moduleSystem->loadModule("/usr/lib/marble/marble_timemod.so");
-    moduleSystem->loadModule("/usr/lib/marble/marble_mysqlmod.so");
+    // We must load the base configuration file in charge of loading modules
+    loadConfiguration("/etc/marble/primaryconfig.marble");
+
     webModule = new WebModule();
-    moduleSystem->addModule(webModule);   
+    moduleSystem->addModule(webModule);
 }
 
 static void marble_register_hooks(apr_pool_t* p)
 {
     printf("\n ** marble_register_hooks  **\n\n");
     ap_hook_handler(marble_handler, NULL, NULL, APR_HOOK_MIDDLE);
-    ap_hook_child_init(x_child_init, NULL, NULL, APR_HOOK_MIDDLE);
+    ap_hook_child_init(child_init, NULL, NULL, APR_HOOK_MIDDLE);
 }
 
 
@@ -269,6 +307,14 @@ const char* set_max_memory(cmd_parms *cmd, void *cfg_void, const char *arg)
     printf("\n ** set_max_memory **\n\n");
     configuration* cfg = (configuration*) cfg_void;
     cfg->max_memory = (char*) arg;
+    return NULL;
+}
+
+const char* set_config_location(cmd_parms *cmd, void *cfg_void, const char *arg)
+{
+    printf("\n ** set_config_location **\n\n");
+    configuration* cfg = (configuration*) cfg_void;
+    cfg->config_location = (char*) arg;
     return NULL;
 }
 
@@ -285,6 +331,7 @@ void *create_dir_conf(apr_pool_t *pool, char *context)
          /* Set some default values */
          strcpy(cfg->context, context);
          cfg->max_memory = (char*) "10MB";
+         cfg->config_location = (char*) "/noconfig";
     }
 
     return cfg;
@@ -299,6 +346,8 @@ void *merge_dir_conf(apr_pool_t *pool, void *BASE, void *ADD)
     /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
     conf->max_memory = add->max_memory;
+    conf->config_location = add->config_location;
+    conf->set_permissions = add->set_permissions;
     return conf;
 }
 
