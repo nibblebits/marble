@@ -35,6 +35,11 @@ Class* CommonModule_SqlResult::registerClass(ModuleSystem* moduleSystem)
      * function getNextRecord() : SQLRecord
      */
     c->registerFunction("getNextRecord", {}, VarType::fromString("SQLRecord"), CommonModule_SqlResult::SQLResult_getNextRecord);
+
+    /**
+     * Returns the total number of records available
+     */
+    c->registerFunction("count", {}, VarType::fromString("number"), CommonModule_SqlResult::SQLResult_Count);
 }
 
 
@@ -67,4 +72,10 @@ void CommonModule_SqlResult::SQLResult_getNextRecord(Interpreter* interpreter, s
    // Remove the front from the vector
    sql_result_obj->records.pop_front();
 
+}
+
+void CommonModule_SqlResult::SQLResult_Count(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
+{
+    std::shared_ptr<CommonModule_SqlResult> sql_result_obj = std::dynamic_pointer_cast<CommonModule_SqlResult>(object);
+    return_value->set(sql_result_obj->records.count());
 }

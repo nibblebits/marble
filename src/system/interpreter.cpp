@@ -8,6 +8,7 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <errno.h>
 
 #include <stdio.h>
 
@@ -419,7 +420,8 @@ Splitter Interpreter::loadScript(const char* filename)
     FILE* file = fopen(filename, "r");
     if (!file)
     {
-        throw IOException("Failed to open file: " + std::string(filename));
+        std::string open_error = strerror(errno);
+        throw IOException("Failed to open file: " + std::string(filename) + ", " + open_error);
     }
 
     if(fseek(file, 0, SEEK_END) != 0)

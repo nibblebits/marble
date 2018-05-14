@@ -2,6 +2,8 @@
 #include "interpreter.h"
 #include "validator.h"
 #include "misc.h"
+#include "exceptions/testerror.h"
+#include "exceptions/IOException.h"
 
 RequireNode::RequireNode() : InterpretableNode(NODE_TYPE_REQUIRE)
 {
@@ -15,29 +17,39 @@ RequireNode::~RequireNode()
 
 void RequireNode::test(Validator* validator, struct extras extra)
 {
-    
-    Interpreter* interpreter = validator->getInterpreter();
-    this->splitter = interpreter->loadScript(this->filename.c_str());
-    split split;
-    PosInfo posInfo;
-    posInfo.filename = this->filename.c_str();
-    posInfo.line = 1;
-    posInfo.col = 1;
-    while(this->splitter.split(&split))
+    try
     {
-        if (split.has_code)
+        Interpreter* interpreter = validator->getInterpreter();
+        this->splitter = interpreter->loadScript(this->filename.c_str());
+        split split;
+        PosInfo posInfo;
+        posInfo.filename = this->filename.c_str();
+        posInfo.line = 1;
+        posInfo.col = 1;
+        while(this->splitter.split(&split))
         {
-            CloneForCall(split.code.data, split.code.size, split.code.size+1, [&](const void* ptr, int size) {
-                char* code_data = (char*) ptr;
-                code_data[split.code.size] = 0;
-                // Marble tag "<marble>" should be added to the current position
-                posInfo.col += strlen(MARBLE_OPEN_TAG);
-                Node* root_node = interpreter->getAST(code_data, posInfo);
-                validator->validate(root_node);
-                interpreter->handleLineAndColumn(&posInfo, code_data, size);
-            });
+            if (split.has_code)
+            {
+                CloneForCall(split.code.data, split.code.size, split.code.size+1, [&](const void* ptr, int size) {
+                    char* code_data = (char*) ptr;
+                    code_data[split.code.size] = 0;
+                    // Marble tag "<marble>" should be added to the current position
+                    posInfo.col += strlen(MARBLE_OPEN_TAG);
+                    Node* root_node = interpreter->getAST(code_data, posInfo);
+                    validator->validate(root_node);
+                    interpreter->handleLineAndColumn(&posInfo, code_data, size);
+                });
+            }
+            this->splits.push_back(split);
         }
-        this->splits.push_back(split);
+    }
+    catch(IOException& ex)
+    {
+        throw TestError("There was a problem requiring the file: " + this->filename + ", message: " + ex.what());
+    }
+    catch(...)
+    {
+        throw TestError("There was a problem requiring the file: " + this->filename + " we do not know why");
     }
 
 }
