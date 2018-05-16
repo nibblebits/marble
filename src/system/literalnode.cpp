@@ -23,6 +23,11 @@ void LiteralNode::test(Validator* validator, struct extras extra)
     {
         throw TestError("a number was provided");
     }
+
+    if (validator->isExpectingArray())
+    {
+        throw TestError("a non array literal number was provided");
+    }
 }
 Value LiteralNode::interpret(Interpreter* interpreter, struct extras extra)
 {

@@ -241,7 +241,7 @@ void ExpNode::test_assign(Validator* validator)
         right->test(validator);
     } catch(TestError& ex)
     {
-       throw TestError(std::string(ex.what()) + " but this assignment requires a " + evaluation.datatype.value);
+       throw TestError(std::string(ex.what()) + " but this assignment requires a " + evaluation.datatype.value + (evaluation.datatype.isArray() ? " with " + std::to_string(evaluation.datatype.dimensions) + " array dimensions" : ""));
     }
     validator->endExpecting();
 }

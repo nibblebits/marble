@@ -247,10 +247,8 @@ Token* Parser::get_identifier_token(std::string error_msg)
      return token;
 }
 
-void Parser::parse_variable_declaration()
+int Parser::parse_array_dimensions()
 {
-    parse_value();
-    EvaluatingNode* data_type_node = (EvaluatingNode*) pop_node();
     int array_dimensions = 0;
     while (peek()->isSymbol("["))
     {
@@ -262,6 +260,14 @@ void Parser::parse_variable_declaration()
         }
         array_dimensions+=1;
     }
+
+    return array_dimensions;
+}
+void Parser::parse_variable_declaration()
+{
+    parse_value();
+    EvaluatingNode* data_type_node = (EvaluatingNode*) pop_node();
+    int array_dimensions = parse_array_dimensions();
     Token* var_name_token = get_identifier_token("Expecting a variable name for variable declaration");
     VarNode* var_node = (VarNode*) factory.createNode(NODE_TYPE_VARIABLE_DECLARATION);
     var_node->type = data_type_node;
@@ -290,6 +296,7 @@ void Parser::parse_function_call()
     // Now that we have the node lets parse the arguments
     parse_arguments(&func_call_node->arguments);
     push_node(func_call_node);
+    std::cout << "function call: " << func_call_node->name->value << std::endl;
 }
 
 void Parser::parse_arguments(std::vector<ExpressionInterpretableNode*>* argument_nodes)
@@ -435,7 +442,9 @@ void Parser::parse_function_declaration()
     {
         parse_error("Expecting a valid return type");
     }
+
     return_type = (ExpressionInterpretableNode*) convertToSingleNode(next());
+    parse_array_dimensions();
     function_node = (FunctionNode*) factory.createNode(NODE_TYPE_FUNCTION);
     function_node->name = name_node->value;
     function_node->args = args;

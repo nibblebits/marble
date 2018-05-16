@@ -17,10 +17,18 @@ public:
      * \return Returns true if both of these types are compatible otherwise false
      */
     bool ensureCompatibility(const VarType& other, ClassSystem* c_system);
+
+    /**
+     * Returns true if this VarType represents an array
+     */
+    bool isArray();
+    
     static VarType fromString(std::string value);
     
     VARIABLE_TYPE type;
     std::string value;
+    // The array dimensions 0 if this is not an array
+    int dimensions;
 };
 
 #endif

@@ -7,6 +7,7 @@ VarType::VarType()
 {
     this->type = -1;
     this->value = "";
+    this->dimensions = 0;
 }
 
 VarType::~VarType()
@@ -52,6 +53,12 @@ bool VarType::ensureCompatibility(const VarType& other, ClassSystem* c_system)
         return this->type == other.type;
     }
 }
+
+bool VarType::isArray()
+{
+    return this->dimensions > 0;
+}
+
 VarType VarType::fromString(std::string value)
 {
     VarType type;

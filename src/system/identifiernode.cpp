@@ -112,11 +112,13 @@ void IdentifierNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expec
                 evaluation->type |= EVALUATION_TYPE_DATATYPE;
                 evaluation->datatype.type = var->type;
                 evaluation->datatype.value = var->type_name;
+                evaluation->datatype.dimensions = var->dimensions;
                 goto _next;
             }
         }
 
 
+        
         evaluation->type |= EVALUATION_TYPE_DATATYPE;
         evaluation->datatype.type = Variable::getVariableTypeForString(this->value);
 	    evaluation->datatype.value = this->value;

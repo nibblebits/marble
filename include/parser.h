@@ -34,6 +34,14 @@ private:
     MODIFIER_ACCESS get_modifier_access_for_string(std::string str);
     Token* get_identifier_token(std::string error_msg);
     
+    /**
+     * Parses the amount of array dimensions and returns the amount. For example
+     * abc[][] would return 2 abc[] would return 1 abc[][][] would return 3.
+     * This method is only applicable for array dimensions this means array blocks without values.
+     * 
+     * If your looking for abc[10][3] then please look at parse_array
+     */
+    int parse_array_dimensions();
     void parse_variable_declaration();
     void parse_expression_for_value(int extra_rules=0);
     void parse_expression(int rules=0);

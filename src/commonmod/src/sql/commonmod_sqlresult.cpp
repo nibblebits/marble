@@ -74,8 +74,8 @@ void CommonModule_SqlResult::SQLResult_getNextRecord(Interpreter* interpreter, s
 
 }
 
-void CommonModule_SqlResult::SQLResult_Count(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
+void CommonModule_SqlResult::SQLResult_Count(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
 {
     std::shared_ptr<CommonModule_SqlResult> sql_result_obj = std::dynamic_pointer_cast<CommonModule_SqlResult>(object);
-    return_value->set(sql_result_obj->records.count());
+    return_value->set(sql_result_obj->records.size());
 }
