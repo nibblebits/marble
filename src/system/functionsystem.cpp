@@ -114,12 +114,13 @@ Function* FunctionSystem::registerFunction(FunctionNode* fnode)
     VarType return_type;
     struct Evaluation evaluation = fnode->return_type->evaluate(this->sys_handler, EVALUATION_TYPE_DATATYPE);
     return_type = evaluation.datatype;
+    return_type.dimensions = fnode->dimensions;
     
     // Has a function with the same variable argument types already been registered
     if (hasFunctionLocally(fnode->name, var_types))
         throw std::logic_error("The function: " + fnode->name + " has already been registered with the given arguments");
     
-    Function* function_raw;
+    SingleFunction* function_raw;
     if (fnode->is_pure)
     {
         // Pure functions can never be interpreted. They are like abstract methods.
@@ -130,7 +131,7 @@ Function* FunctionSystem::registerFunction(FunctionNode* fnode)
         function_raw = new WrittenFunction(fnode, var_types, return_type);
     }
 
-    std::unique_ptr<Function> function = std::unique_ptr<Function>(function_raw);
+    std::unique_ptr<SingleFunction> function = std::unique_ptr<SingleFunction>(function_raw);
     function->access = fnode->access;
     if (hasFunctionLocally(fnode->name))
     {

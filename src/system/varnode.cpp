@@ -56,6 +56,8 @@ void VarNode::test(Validator* validator, struct extras extra)
    if (this->value != NULL)
    {   
        validator->expecting(type_str);
+       if (isArray())
+           validator->expectingArray(this->dimensions);
        try
        {
          this->value->test(validator);

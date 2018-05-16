@@ -140,7 +140,7 @@ bool Validator::isExpecting()
 
 bool Validator::isExpectingArray()
 {
-    return this->rules.expected_array_dimensions != 0;
+    return this->rules.expected_array_dimensions > 0;
 }
 
 int Validator::getExpectedArrayDimensions()

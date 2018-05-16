@@ -444,11 +444,12 @@ void Parser::parse_function_declaration()
     }
 
     return_type = (ExpressionInterpretableNode*) convertToSingleNode(next());
-    parse_array_dimensions();
+    int array_dimensions = parse_array_dimensions();
     function_node = (FunctionNode*) factory.createNode(NODE_TYPE_FUNCTION);
     function_node->name = name_node->value;
     function_node->args = args;
     function_node->return_type = return_type;
+    function_node->dimensions = array_dimensions;
     function_node->access = access;
     push_node(function_node);   
 }

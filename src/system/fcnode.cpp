@@ -101,6 +101,29 @@ void FunctionCallNode::test(Validator* validator, struct extras extra)
        }
    }
 
+
+    if (function->return_type.isArray())
+    {
+        if (!validator->isExpectingArray())
+            throw TestError("The function " + function->name + " returns an array of " + std::to_string(function->return_type.dimensions) + " dimensions of type " + function->return_type.value);
+    }
+
+
+    int expected_dimensions = validator->getExpectedArrayDimensions();
+    if (validator->isExpectingArray())
+    {
+        if (!function->return_type.isArray())
+        {
+            throw TestError("The function " + function->name + " returns a " + function->return_type.value + " but the caller is expecting an array of this type with " + std::to_string(expected_dimensions) + " dimensions");     
+        }
+        else
+        {
+            if (function->return_type.dimensions != expected_dimensions)
+            {
+                throw TestError("The caller of function " + function->name + " is expecting " + std::to_string(expected_dimensions) + " dimensions but the function returns an array of " + function->return_type.value + " with " + std::to_string(function->return_type.dimensions) + " dimensions");
+            }
+        }
+    }
    /**
     * We must now ensure that we can access this function, e.g it is public or if it is protected or private we must check we are allowed to access it
     */

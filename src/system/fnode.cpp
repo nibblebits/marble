@@ -12,11 +12,17 @@ FunctionNode::FunctionNode() : ExpressionInterpretableNode(NODE_TYPE_FUNCTION)
     this->return_type = NULL;
     this->is_pure = false;
     this->access = MODIFIER_ACCESS_PUBLIC;
+    this->dimensions = 0;
 }
 
 FunctionNode::~FunctionNode()
 {
 
+}
+
+bool FunctionNode::isArray()
+{
+    return this->dimensions > 0;
 }
 
 void FunctionNode::test(Validator* validator, struct extras extra)
