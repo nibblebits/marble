@@ -196,6 +196,7 @@ Value FunctionCallNode::interpret(Interpreter* interpreter, struct extras extra)
    }
    catch(SystemException& ex)
    {
+       std::cout << "THROWING SYSTEM EXCEPTION" << std::endl;
        throw ex;
    }
    

@@ -31,6 +31,7 @@
 #include <string>
 #include <vector>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include "apache_mod.h"
 #include "interpreter.h"
@@ -38,6 +39,7 @@
 #include "webmod.h"
 #include "permissionobject.h"
 #include "permissionsobject.h"
+
 // request handler example
 
 // request_rec Struct Reference
@@ -180,8 +182,22 @@ std::string format_log_entry(LogEntry entry)
     return message;
 }
 
+std::string getDirectoryForFilename(std::string filename)
+{
+    std::vector<std::string> filename_split_vec = split(filename, "/");
+    std::string path = "";
+    for (int i = 0; i < filename_split_vec.size()-1; i++)
+    {
+        std::string s = filename_split_vec.at(i);
+        path += s + "/";
+    }
+
+    return path;
+}
+
 static int marble_handler(request_rec *req)
 {
+    
     int rc, exists;
     apr_finfo_t finfo;
     
@@ -208,7 +224,13 @@ static int marble_handler(request_rec *req)
     }
     else 
         return HTTP_NOT_FOUND;
+
+    // We must change our working directory so let's get the directory we are accessing
+    std::string filename_str = std::string(req->filename);
+    std::string working_directory = getDirectoryForFilename(filename_str);
+    chdir(working_directory.c_str());
     
+
     if (!req->header_only) {
         // Load marble configuration
         configuration* conf = (configuration*) ap_get_module_config(req->per_dir_config, &mod_marble_module);
