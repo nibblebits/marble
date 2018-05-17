@@ -1,5 +1,5 @@
 #include "posinfo.h"
-PosInfo::PosInfo() : PosInfo(-1, -1, "UNDEFINED")
+PosInfo::PosInfo() : PosInfo(-1, -1, "")
 {
    
 }

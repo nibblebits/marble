@@ -18,6 +18,18 @@ Logger::~Logger()
 
 }
 
+void Logger::warn(std::string message)
+{
+    PosInfo posInfo;
+    warn(message, posInfo);
+}
+
+void Logger::error(std::string message)
+{
+    PosInfo posInfo;
+    error(message, posInfo);
+}
+
 void Logger::warn(std::string message, PosInfo posInfo)
 {
     LogEntry entry(LOG_LEVEL_WARNING, message, posInfo);

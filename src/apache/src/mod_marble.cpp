@@ -178,7 +178,8 @@ std::string format_log_entry(LogEntry entry)
     std::string message = "<b>" + type + "</b>" + ": <i>" + entry.message + "</i> ";
     if (entry.posInfo.line != -1) 
        message += "on line " + std::to_string(entry.posInfo.line) + ", column "  + std::to_string(entry.posInfo.col);
-    message += " in file " + std::string(entry.posInfo.filename) + "<br />";
+    if (entry.posInfo.filename != "")
+        message += " in file " + std::string(entry.posInfo.filename) + "<br />";
     return message;
 }
 
@@ -225,11 +226,6 @@ static int marble_handler(request_rec *req)
     else 
         return HTTP_NOT_FOUND;
 
-    // We must change our working directory so let's get the directory we are accessing
-    std::string filename_str = std::string(req->filename);
-    std::string working_directory = getDirectoryForFilename(filename_str);
-    chdir(working_directory.c_str());
-    
 
     if (!req->header_only) {
         // Load marble configuration
@@ -244,10 +240,18 @@ static int marble_handler(request_rec *req)
         // Inject the permissions loaded from the configuration into our root scope granting access
         interpreter.getRootScope()->permissions = conf->set_permissions;
 
+        Logger* logger = interpreter.getLogger();
+
+        // We must change our working directory so let's get the directory we are accessing
+        std::string filename_str = std::string(req->filename);
+        std::string working_directory = getDirectoryForFilename(filename_str);
+        chdir(working_directory.c_str());
+        logger->warn("Failed to change the working directory. You may need to provide absolute paths");
+
         // Let's let the WebModule know about our request
         webModule->parseRequest(&interpreter, req);
+    
 
-        Logger* logger = interpreter.getLogger();
         try
         {
             interpreter.runScript(req->filename);

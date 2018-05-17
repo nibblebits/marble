@@ -18,6 +18,8 @@ class Logger
 public:
     Logger();
     virtual ~Logger();
+    void warn(std::string message);
+    void error(std::string message);
     void warn(std::string message, PosInfo posInfo);
     void error(std::string message, PosInfo posInfo);
     bool hasLog();

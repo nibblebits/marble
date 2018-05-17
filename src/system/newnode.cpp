@@ -158,7 +158,7 @@ std::shared_ptr<Array> NewNode::new_array_array(Interpreter* interpreter, int to
     for (int i = 0; i < total_elements; i++)
     {
         Variable* var = &variables[i];
-        var->type = VARIABLE_TYPE_ARRAY;
+        var->type = VARIABLE_TYPE_OBJECT;
         var->value.type = VALUE_TYPE_ARRAY;
         var->value.type_str = "array";
         // Each element of this array will contain a reference to the next array
