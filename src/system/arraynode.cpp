@@ -2,6 +2,8 @@
 #include "variable.h"
 #include "array.h"
 #include "validator.h"
+#include "interpreter.h"
+#include "exceptions/systemexception.h"
 #include <iostream>
 ArrayNode::ArrayNode() : ExpressionInterpretableNode(NODE_TYPE_ARRAY)
 {
@@ -30,11 +32,16 @@ Value ArrayNode::interpret(Interpreter* interpreter, struct extras extra)
     Value next_elem_value = this->next_element->interpret(interpreter);
     if (index_exp.dvalue > 0xffffffff || index_exp.dvalue < 0)
     {
-        throw std::logic_error("Array indexes must be below 0xffffffff and above zero");
+        throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("InvalidIndexException")));
+    }
+    else if(next_elem_value.avalue == NULL)
+    {
+        throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("NullPointerException")));
     }
     else if(index_exp.dvalue >= next_elem_value.avalue->count)
     {
-        throw std::logic_error("Index out of bounds. Index is: " + std::to_string(index_exp.dvalue) + " count is: " + std::to_string(next_elem_value.avalue->count));
+        throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("InvalidIndexException")));
+        //throw std::logic_error("Index out of bounds. Index is: " + std::to_string(index_exp.dvalue) + " count is: " + std::to_string(next_elem_value.avalue->count));
     }
     return next_elem_value.avalue->variables[(int)index_exp.dvalue].value;
 }

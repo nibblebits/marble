@@ -121,7 +121,11 @@ Class* Validator::getCurrentClass()
 
 void Validator::expectingArray(int dimensions)
 {
+    if (!isExpecting())
+        throw std::logic_error("You must start expecting a type before specifying the array dimensions");
+
     this->rules.expected_array_dimensions = dimensions;
+    this->rules.expecting_variable_type = VARIABLE_TYPE_ARRAY;
 }
 
 void Validator::expecting(std::string type)

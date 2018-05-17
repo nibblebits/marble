@@ -19,7 +19,7 @@ void NullNode::test(Validator* validator, struct extras extra)
     
     // We now need to check if the type is valid
     VARIABLE_TYPE expecting_type = validator->getExpectingVariableType();
-    if (expecting_type != VARIABLE_TYPE_OBJECT)
+    if (expecting_type != VARIABLE_TYPE_OBJECT && expecting_type != VARIABLE_TYPE_ARRAY)
         throw TestError("Attempting to use null on non object type");
 }
 

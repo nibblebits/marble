@@ -68,7 +68,6 @@ Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionS
         std::shared_ptr<Array> array = std::dynamic_pointer_cast<Array>(object);
         return_value->type = VALUE_TYPE_NUMBER;
         return_value->dvalue = array->count;
-        std::cout << "ARRAY COUNT: " << std::to_string(return_value->dvalue) << std::endl;
     });
     
     Class* exception_class = getClassSystem()->getClassByName("Exception");

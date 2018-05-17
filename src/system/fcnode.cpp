@@ -51,7 +51,6 @@ void FunctionCallNode::test_args(Validator* validator, std::vector<VarType>* typ
 
 void FunctionCallNode::test(Validator* validator, struct extras extra)
 {
-    std::cout << "TESTING FUNCTION CALL: " << this->name->value << std::endl;
    if (shouldIgnoreValidation())
    {
        return;
@@ -160,7 +159,6 @@ Value FunctionCallNode::interpret(Interpreter* interpreter, struct extras extra)
    Value value;
    std::vector<Value> argument_results;
 
-    std::cout << "ATTEMPTING TO CALL: " << name->value << std::endl;
    /*
     * If the accessors scope is NULL then we will default to the current interpreters scope.
     */
@@ -194,12 +192,10 @@ Value FunctionCallNode::interpret(Interpreter* interpreter, struct extras extra)
 
    try
    {
-        std::cout << "CALLING FUNCTION: " << function->name << std::endl;
         function->invoke(interpreter, argument_results, &value, extra.current_object, extra.accessors_scope);
    }
    catch(SystemException& ex)
    {
-       std::cout << "THROWING SYSTEM EXCEPTION" << std::endl;
        throw ex;
    }
    

@@ -35,10 +35,6 @@ void VarNode::test(Validator* validator, struct extras extra)
        throw TestError("a variable with the name: \"" + this->name + "\" has already been declared in this scope");
    }
 
-   if (isArray())
-   {
-       validator->expectingArray(this->dimensions);
-   }
        
    if (!isPrimitive())
    {

@@ -52,5 +52,6 @@ void CloneForCall(const void* ptr, int size, int new_size, std::function<void(co
     catch(...)
     {
         delete cloned_data;
+		throw;
     }
 }
