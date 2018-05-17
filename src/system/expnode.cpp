@@ -200,7 +200,6 @@ void ExpNode::test_obj_access(Validator* validator, struct extras extra)
      * as we only care about this for the right operand. For example if an assignment is expecting a string it does not make sense
      * to check for the string on the left operand. "obj.var" The left operand is "obj" it would basically be saying I expect the object to be a string for the expression: 
      * "string str = obj.var;" This clearly does not make sense what we really want is to expect that the variable "var" of the object "obj" is a string.*/
-    
 
     // Save the validators state and give us a blank state with no requirements. See comment above.
     validator->save();
@@ -209,11 +208,12 @@ void ExpNode::test_obj_access(Validator* validator, struct extras extra)
     
     struct Evaluation evaluation = left->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_TYPE_VARIABLE | EVALUATION_FROM_VARIABLE);
     Class* c = NULL;
-    if (!validator->isClassIgnored(evaluation.datatype.value))
+    std::string class_name = evaluation.datatype.isArray() ? "array" : evaluation.datatype.value;
+    if (!validator->isClassIgnored(class_name))
     {
-        std::shared_ptr<Object> obj = validator->getClassObject(evaluation.datatype.value);
+        std::shared_ptr<Object> obj = validator->getClassObject(class_name);
         if (obj == NULL)
-            throw std::logic_error("NULL object from validator: " + evaluation.datatype.value);
+            throw std::logic_error("NULL object from validator: " + class_name);
 
         c = obj->getClass();
         if (evaluation.variable != NULL)

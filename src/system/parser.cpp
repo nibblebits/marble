@@ -296,7 +296,6 @@ void Parser::parse_function_call()
     // Now that we have the node lets parse the arguments
     parse_arguments(&func_call_node->arguments);
     push_node(func_call_node);
-    std::cout << "function call: " << func_call_node->name->value << std::endl;
 }
 
 void Parser::parse_arguments(std::vector<ExpressionInterpretableNode*>* argument_nodes)
