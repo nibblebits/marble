@@ -161,6 +161,11 @@ public:
 
     
 private:
+    /**
+     * Creates the default classes and functions that the marble interpreter requires to function properly
+     * all other resources that do not affect weather the marble interpreter runs correctly or not should not be loaded in this function
+     */
+    void createDefaultClassesAndFunctions();
     void setupValidator();
     void setupModuleMarbleFunctions(ModuleSystem* moduleSystem);
     void fail();

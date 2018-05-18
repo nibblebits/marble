@@ -63,64 +63,14 @@ Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionS
         return s;
     };
    
-    Class* c = getClassSystem()->registerClass("array");
-    c->registerFunction("size", {}, VarType::fromString("number"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
-        std::shared_ptr<Array> array = std::dynamic_pointer_cast<Array>(object);
-        return_value->type = VALUE_TYPE_NUMBER;
-        return_value->dvalue = array->count;
-    });
-    
-    Class* exception_class = getClassSystem()->getClassByName("Exception");
-    if (exception_class == NULL)
-        throw std::logic_error("The Interpreter expects a class with the name Exception to exist please create this in parent class system");
-        
-    c = getClassSystem()->registerClass("InvalidIndexException", exception_class);
-        c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
-    });
-
-    c = getClassSystem()->registerClass("NullPointerException", exception_class);
-        c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
-    });
-    
-    c = getClassSystem()->registerClass("InvalidCastException", exception_class);
-        c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
-    });
-   
-    c = getClassSystem()->registerClass("IOException", exception_class);
-        c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
-    });
-
-    c = getClassSystem()->registerClass("InfiniteLoopException", exception_class);
-        c->registerFunction("__construct", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
-    });
-
-    c = getClassSystem()->registerClass("InvalidEntityException", exception_class);
-        c->registerFunction("__construct", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
-    });
 
 
-    c = getClassSystem()->registerClass("EntityNotRegisteredException", exception_class);
-        c->registerFunction("__construct", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
-        Function* parent_constructor = object->getClass()->parent->getFunctionByNameAndArguments("__construct", {VarType::fromString("string")});
-        parent_constructor->invoke(interpreter, arguments, return_value, object, caller_scope);
-    });
-
+    // Creat ethe default classes and functions for this interpreter
+    createDefaultClassesAndFunctions();
 
     // We must now create a permission object for our root scope
     getRootScope()->permissions = std::dynamic_pointer_cast<PermissionsObject>(Object::create(getClassSystem()->getClassByName("Permissions")));
 
-    // It is also wise to create a method for getting the current permissions
-    getFunctionSystem()->registerFunction("getScopePermissions", {}, VarType::fromString("Permissions"),[&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
-        return_value->type = VALUE_TYPE_OBJECT;
-        return_value->ovalue = interpreter->getCurrentScope()->permissions;
-    });
-
-    getFunctionSystem()->registerFunction("getCallerPermissions", {}, VarType::fromString("Permissions"),[&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
-        return_value->type = VALUE_TYPE_OBJECT;
-        // The _caller_permissions variable is a special variable registered when calling a function. It only exists for the scope of the function
-        // You can find this at function.cpp
-        return_value->ovalue = interpreter->getCurrentScope()->getVariableAnyScope("_caller_permissions")->value.ovalue;
-    });
    this->lastFunctionCallNode = NULL;
    this->moduleSystem = NULL;
    this->first_run = true;
@@ -284,6 +234,68 @@ Node* Interpreter::getAST(const char* code, PosInfo posInfo)
 
     root_node = parser->parse(root_token);
     return root_node;
+}
+
+void Interpreter::createDefaultClassesAndFunctions()
+{
+    Class* c = getClassSystem()->registerClass("array");
+    c->registerFunction("size", {}, VarType::fromString("number"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
+        std::shared_ptr<Array> array = std::dynamic_pointer_cast<Array>(object);
+        return_value->type = VALUE_TYPE_NUMBER;
+        return_value->dvalue = array->count;
+    });
+    
+    Class* exception_class = getClassSystem()->getClassByName("Exception");
+    if (exception_class == NULL)
+        throw std::logic_error("The Interpreter expects a class with the name Exception to exist please create this in parent class system");
+        
+    c = getClassSystem()->registerClass("InvalidIndexException", exception_class);
+        c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
+    });
+
+    c = getClassSystem()->registerClass("NullPointerException", exception_class);
+        c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
+    });
+    
+    c = getClassSystem()->registerClass("InvalidCastException", exception_class);
+        c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
+    });
+   
+    c = getClassSystem()->registerClass("IOException", exception_class);
+        c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
+    });
+
+    c = getClassSystem()->registerClass("InfiniteLoopException", exception_class);
+        c->registerFunction("__construct", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
+    });
+
+    c = getClassSystem()->registerClass("InvalidEntityException", exception_class);
+        c->registerFunction("__construct", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
+    });
+
+
+    c = getClassSystem()->registerClass("EntityNotRegisteredException", exception_class);
+        c->registerFunction("__construct", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
+        Function* parent_constructor = object->getClass()->parent->getFunctionByNameAndArguments("__construct", {VarType::fromString("string")});
+        parent_constructor->invoke(interpreter, arguments, return_value, object, caller_scope);
+    });
+
+
+    // We must now create a permission object for our root scope
+    getRootScope()->permissions = std::dynamic_pointer_cast<PermissionsObject>(Object::create(getClassSystem()->getClassByName("Permissions")));
+
+    // It is also wise to create a method for getting the current permissions
+    getFunctionSystem()->registerFunction("getScopePermissions", {}, VarType::fromString("Permissions"),[&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
+        return_value->type = VALUE_TYPE_OBJECT;
+        return_value->ovalue = interpreter->getCurrentScope()->permissions;
+    });
+
+    getFunctionSystem()->registerFunction("getCallerPermissions", {}, VarType::fromString("Permissions"),[&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
+        return_value->type = VALUE_TYPE_OBJECT;
+        // The _caller_permissions variable is a special variable registered when calling a function. It only exists for the scope of the function
+        // You can find this at function.cpp
+        return_value->ovalue = interpreter->getCurrentScope()->getVariableAnyScope("_caller_permissions")->value.ovalue;
+    });
 }
 
 void Interpreter::setupValidator()
