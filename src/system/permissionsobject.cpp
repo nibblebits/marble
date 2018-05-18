@@ -92,6 +92,8 @@ void PermissionsObject::PermissionsObject_Add(Interpreter* interpreter, std::vec
 {
     std::shared_ptr<PermissionsObject> this_p_obj = std::dynamic_pointer_cast<PermissionsObject>(object);
     std::shared_ptr<PermissionObject> permission_to_add = std::dynamic_pointer_cast<PermissionObject>(arguments[0].ovalue);
+    if (permission_to_add == NULL)
+        throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("NullPointerException")));
 
     // If the interpreter has no permission restrictions we don't need to validate these permissions before adding them
     if (!interpreter->hasNoPermissionRestrictions())

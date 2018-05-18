@@ -245,8 +245,8 @@ static int marble_handler(request_rec *req)
         // We must change our working directory so let's get the directory we are accessing
         std::string filename_str = std::string(req->filename);
         std::string working_directory = getDirectoryForFilename(filename_str);
-        chdir(working_directory.c_str());
-        logger->warn("Failed to change the working directory. You may need to provide absolute paths");
+        if(chdir(working_directory.c_str()) != 0)
+            logger->warn("Failed to change the working directory. You may need to provide absolute paths");
 
         // Let's let the WebModule know about our request
         webModule->parseRequest(&interpreter, req);
