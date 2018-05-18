@@ -38,7 +38,6 @@ BaseSystemHandler::BaseSystemHandler() : SystemHandler(SYSTEM_HANDLER_BASE_SYSTE
     // The Exception class has the Exception object instance.
     exception_class->setDescriptorObject(std::make_shared<ExceptionObject>(exception_class));
 
-
     // Create a permissions exception
     c = getClassSystem()->registerClass("PermissionException", exception_class);
         c->registerFunction("__construct", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {

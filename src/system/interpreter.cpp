@@ -248,7 +248,10 @@ void Interpreter::createDefaultClassesAndFunctions()
     Class* exception_class = getClassSystem()->getClassByName("Exception");
     if (exception_class == NULL)
         throw std::logic_error("The Interpreter expects a class with the name Exception to exist please create this in parent class system");
-        
+    
+    if (std::dynamic_pointer_cast<ExceptionObject>(exception_class->getDescriptorObject()) == NULL)
+        throw std::logic_error("The Exception class registered in a parent class system has a descriptor object that does not extend the ExceptionObject native class");
+
     c = getClassSystem()->registerClass("InvalidIndexException", exception_class);
         c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
     });
