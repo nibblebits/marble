@@ -67,6 +67,7 @@ std::shared_ptr<Object> Object::create(Interpreter* interpreter, Class* object_c
     std::shared_ptr<Object> object = object_class->getDescriptorObject()->newInstance();
     // The constructor must now be called
     Function* constructor = object_class->getFunctionByName("__construct");
+
     // The caller scope will be the scope before invoking the constructor
     Scope* caller_scope = interpreter->getCurrentScope();
 

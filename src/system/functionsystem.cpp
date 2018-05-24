@@ -103,6 +103,7 @@ Function* FunctionSystem::registerFunction(FunctionNode* fnode)
     if (this->sys_handler == NULL)
         throw std::logic_error("The function system does not have a system handler attached");
     
+
     // We must get the variable arguments and give them to the function we are about to create.
     std::vector<VarType> var_types;
     for (VarNode* node : fnode->args)

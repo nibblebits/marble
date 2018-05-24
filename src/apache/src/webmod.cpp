@@ -1,6 +1,7 @@
 #include "webmod.h"
 #include "apache_mod.h"
 #include "exceptions/systemexception.h"
+#include "exceptionobject.h"
 #include "misc.h"
 
 WebModuleRequestArgumentsObject::WebModuleRequestArgumentsObject(Class* c) : Object(c)
@@ -58,7 +59,7 @@ void WebModule::Init()
 
         if (args_obj->arguments.find(arguments[0].svalue) == args_obj->arguments.end())
         {
-            throw SystemException(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("InvalidIndexException"), {}));
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("InvalidIndexException"), {})));
         }
 
         return_value->svalue = args_obj->arguments[arguments[0].svalue];
@@ -80,7 +81,7 @@ void WebModule::Init()
 
         if (post_obj->content.find(arguments[0].svalue) == post_obj->content.end())
         {
-            throw SystemException(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("InvalidIndexException"), {}));
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("InvalidIndexException"), {})));
         }
 
         return_value->svalue = post_obj->content[arguments[0].svalue];

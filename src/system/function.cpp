@@ -15,6 +15,7 @@ Function::Function(FUNCTION_TYPE type, std::string name)
     this->name = name;
     this->is_pure = false;
     this->access = MODIFIER_ACCESS_PUBLIC;
+    this->cls = NULL;
 }
 
 Function::~Function()

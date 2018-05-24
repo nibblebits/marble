@@ -1,6 +1,7 @@
 #include "class.h"
 #include "function.h"
 #include "interpreter.h"
+#include "fnode.h"
 Class::Class(SystemHandler* sys_handler, std::string name, FunctionSystem* prev_fc_sys, std::shared_ptr<Object> descriptor_obj) : FunctionSystem(sys_handler, prev_fc_sys)
 {
     this->name = name;
