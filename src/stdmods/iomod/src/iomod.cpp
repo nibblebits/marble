@@ -86,7 +86,7 @@ void IOModule::IO_print(Interpreter* interpreter, std::vector<Value> values, Val
         std::shared_ptr<IOPermission> permission = std::dynamic_pointer_cast<IOPermission>(caller_scope->getPermission("IOPermission"));
         if (permission == NULL)
         {
-            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))));
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You do not have the IOPermission which is required for printing");
         }
     }
     std::stringstream ss;
