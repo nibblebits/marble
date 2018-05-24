@@ -3,6 +3,7 @@
 #include "function.h"
 #include "systemhandler.h"
 #include "interpreter.h"
+#include "exceptionobject.h"
 #include "permissionsobject.h"
 #include "permissionobject.h"
 #include "exceptions/systemexception.h"
@@ -61,7 +62,7 @@ std::shared_ptr<Object> Object::create(Interpreter* interpreter, Class* object_c
     {
         Value except_value;
         except_value.set("The class provided has not been registered");
-        throw SystemException(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("EntityNotRegisteredException"), {except_value}));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("EntityNotRegisteredException"), {except_value})));
     }
     std::shared_ptr<Object> object = object_class->getDescriptorObject()->newInstance();
     // The constructor must now be called

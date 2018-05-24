@@ -3,6 +3,7 @@
 #include "exceptions/systemexception.h"
 #include "permissionsobject.h"
 #include "iopermission.h"
+#include "exceptionobject.h"
 #include "function.h"
 #include <sstream>
 #include <iostream>
@@ -85,7 +86,7 @@ void IOModule::IO_print(Interpreter* interpreter, std::vector<Value> values, Val
         std::shared_ptr<IOPermission> permission = std::dynamic_pointer_cast<IOPermission>(caller_scope->getPermission("IOPermission"));
         if (permission == NULL)
         {
-            throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException")));
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))));
         }
     }
     std::stringstream ss;

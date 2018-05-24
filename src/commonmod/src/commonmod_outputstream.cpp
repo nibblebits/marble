@@ -2,6 +2,7 @@
 #include "function.h"
 #include "object.h"
 #include "config.h"
+#include "exceptionobject.h"
 #include "exceptions/systemexception.h"
 #include <iostream>
 CommonModule_OutputStream::CommonModule_OutputStream(Class* c) : Object(c)
@@ -73,7 +74,7 @@ void CommonModule_OutputStream::OutputStream_Get(Interpreter* interpreter, std::
     }
     catch(...)
     {
-        throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("InvalidIndexException")));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("InvalidIndexException"))));
     }
 }
 

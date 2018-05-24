@@ -5,6 +5,7 @@
 #include "exceptionobject.h"
 #include "exceptions/systemexception.h"
 #include "exceptions/testerror.h"
+#include <iostream>
 ThrowNode::ThrowNode() : InterpretableNode(NODE_TYPE_THROW)
 {
     this->exp = NULL;
@@ -33,10 +34,13 @@ Value ThrowNode::interpret(Interpreter* interpreter, struct extras extra)
 {
     Value v = this->exp->interpret(interpreter);
     std::shared_ptr<ExceptionObject> exception_obj = std::dynamic_pointer_cast<ExceptionObject>(v.ovalue);
+    if (exception_obj == NULL)
+        throw std::logic_error("Throwing illegal exception that is not a native ExceptionObject");
+    
     exception_obj->setStackLog(interpreter->getStackTraceLog());
     exception_obj->setThrowNode(this);
     // Lets throw this system exception
-    throw SystemException(v.ovalue);
+    throw SystemException(exception_obj);
     return v;
 }
 

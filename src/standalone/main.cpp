@@ -9,6 +9,8 @@
 #include "object.h"
 #include "permissionsobject.h"
 #include "permissionobject.h"
+#include "exceptionobject.h"
+#include "exceptions/systemexception.h"
 #include "../stdmods/iomod/include/iopermission.h"
 
 BaseSystemHandler* baseHandler = NULL;
@@ -59,7 +61,6 @@ void interpret()
     interpreter.setModuleSystem(moduleSystem);
     interpreter.getRootScope()->permissions = set_permissions;
     interpreter.runScript("./test.marble");
-
     for (LogEntry entry : logger->entries)
     {
         std::cout << entry.message << " on line: " << entry.posInfo.line << ", col: " << entry.posInfo.col << std::endl;

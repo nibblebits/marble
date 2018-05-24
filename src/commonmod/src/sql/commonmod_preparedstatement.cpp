@@ -2,6 +2,7 @@
 #include "commonmod_sqlconnection.h"
 #include "exceptions/systemexception.h"
 #include "function.h"
+#include "exceptionobject.h"
 #include "module.h"
 #include "object.h"
 #include <iostream>
@@ -57,7 +58,7 @@ void CommonModule_PreparedStatement::PreparedStatement_finalizeQuery(Interpreter
         if (valueIndex >= statement->values.size())
         {
             // We are trying to use a value that has not been set
-            throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("InvalidIndexException")));
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("InvalidIndexException"))));
         }
         Value escape_ret_val;
         escape_function->invoke(interpreter, {statement->values[valueIndex]}, &escape_ret_val, statement->connection, caller_scope);

@@ -21,13 +21,13 @@ BaseSystemHandler::BaseSystemHandler() : SystemHandler(SYSTEM_HANDLER_BASE_SYSTE
 
      /* Let's register an Exception class that is to be inherited by all classes that can be thrown*/
     Class* exception_class = getClassSystem()->registerClass("Exception");
-    Variable msg_var;
-    msg_var.type = VARIABLE_TYPE_STRING;
-    msg_var.name = "message";
-    msg_var.setValue("");
-    exception_class->addVariable(msg_var);
+    exception_class->registerFunction("__construct", { VarType::fromString("void") }, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
+        // Blank constructor so just call the parent
+        object->getClass()->invokeObjectParentConstructor({}, object, interpreter);
+    });
     exception_class->registerFunction("__construct", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
-        object->getVariable("message")->setValue(arguments[0].svalue);
+        std::shared_ptr<ExceptionObject> except_obj = std::dynamic_pointer_cast<ExceptionObject>(object);
+        except_obj->setMessage(arguments[0].svalue);
     });
 
     exception_class->registerFunction("getStackTrace", {}, VarType::fromString("string"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {

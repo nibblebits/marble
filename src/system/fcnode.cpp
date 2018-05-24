@@ -6,6 +6,7 @@
 #include "singlefunction.h"
 #include "vartype.h"
 #include "debug.h"
+#include "exceptionobject.h"
 #include "exceptions/testerror.h"
 #include "exceptions/systemexception.h"
 #include "exceptions/evaluationexception.h"
@@ -187,7 +188,7 @@ Value FunctionCallNode::interpret(Interpreter* interpreter, struct extras extra)
    {
         Value except_value;
         except_value.set("The function with the name " + name->value + " has not been registered");
-        throw SystemException(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("EntityNotRegisteredException"), {except_value}));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("EntityNotRegisteredException"), {except_value})));
    }
 
    try

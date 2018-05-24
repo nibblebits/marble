@@ -4,6 +4,7 @@
 #include "modulesystem.h"
 #include "function.h"
 #include "interpreter.h"
+#include "exceptionobject.h"
 #include "exceptions/systemexception.h"
 #include <iostream>
 CommonModule_SqlDriver::CommonModule_SqlDriver(Class* c) : Object(c)
@@ -85,7 +86,7 @@ void CommonModule_SqlDriver::SQLDriver_getDriver(Interpreter* interpreter, std::
 {
     std::shared_ptr<CommonModule_SqlDriver> selected_driver = interpreter->getSQLDriver(values[0].svalue);
     if (selected_driver == NULL)
-        throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("DriverNotFoundException")));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("DriverNotFoundException"))));
 
     // We have a driver, lets now return it to the user
     return_value->set(selected_driver);

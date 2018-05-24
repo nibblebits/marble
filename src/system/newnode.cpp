@@ -140,6 +140,7 @@ void NewNode::new_object_variable(Interpreter* interpreter, Value& v, FunctionCa
         Value v = argument_node->interpret(interpreter);
         argument_results.push_back(v);
     }
+
     std::shared_ptr<Object> object = Object::create(interpreter, object_class, argument_results);
     v.set(object);
 }

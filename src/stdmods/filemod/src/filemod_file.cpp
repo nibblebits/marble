@@ -1,5 +1,6 @@
 #include "filemod_file.h"
 #include "filemod_filepermission.h"
+#include "exceptionobject.h"
 #include "exceptions/systemexception.h"
 #include "misc.h"
 #include <iostream>
@@ -93,7 +94,7 @@ void FileModule_File::File_Open(Interpreter* interpreter, std::vector<Value> val
         // If the permission list is empty then we don't have permission to open this file
         if (permission_list.empty())
         {
-            throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException")));
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))));
         }
         for (std::shared_ptr<PermissionObject> perm : permission_list)
         {
@@ -124,7 +125,7 @@ void FileModule_File::File_Open(Interpreter* interpreter, std::vector<Value> val
 
         if (!has_access)
         {
-            throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException")));
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))));
         }
     }
 
@@ -140,7 +141,7 @@ void FileModule_File::File_Close(Interpreter* interpreter, std::vector<Value> va
     std::shared_ptr<FileModule_File> file_obj = std::dynamic_pointer_cast<FileModule_File>(object);
     int response = (file_obj->fp == NULL ? 1 : fclose(file_obj->fp));
     if (response != 0)
-        throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("IOException")));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))));
 }
 
 void FileModule_File::File_setPosition(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)
@@ -148,7 +149,7 @@ void FileModule_File::File_setPosition(Interpreter* interpreter, std::vector<Val
     std::shared_ptr<FileModule_File> file_obj = std::dynamic_pointer_cast<FileModule_File>(object);
     int response = (file_obj->fp == NULL ? 1 : fseek(file_obj->fp, values[0].dvalue, SEEK_SET));
     if (response != 0)
-        throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("IOException")));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))));
 }
 
 void FileModule_File::File_GetSize(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)

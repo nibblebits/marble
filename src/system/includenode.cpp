@@ -3,6 +3,7 @@
 #include "interpreter.h"
 #include "validator.h"
 #include "statics.h"
+#include "exceptionobject.h"
 #include "exceptions/systemexception.h"
 #include "exceptions/IOException.h"
 #include "object.h"
@@ -35,14 +36,14 @@ Value IncludeNode::interpret(Interpreter* interpreter, struct extras extra)
     {
         if (interpreter->isNestedScript(v.svalue))
         {
-            throw SystemException(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("InfiniteLoopException"), {}));
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("InfiniteLoopException"), {})));
         }
         interpreter->runScript(v.svalue.c_str());
     }
     catch(IOException& e)
     {
         std::cout << e.getMessage() << std::endl;
-        throw SystemException(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {}));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {})));
     }
     interpreter->finish_parented_scope();
     return v;

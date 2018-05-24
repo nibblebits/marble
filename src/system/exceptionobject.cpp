@@ -2,6 +2,7 @@
 #include "interpreter.h"
 #include "posinfo.h"
 #include "thrownode.h"
+#include <iostream>
 
 ExceptionObject::ExceptionObject(Class* c) : Object(c)
 {
@@ -27,6 +28,16 @@ void ExceptionObject::setThrowNode(ThrowNode* throwNode)
 std::shared_ptr<Object> ExceptionObject::newInstance(Class* c)
 {
     return std::make_shared<ExceptionObject>(c);
+}
+
+void ExceptionObject::setMessage(std::string message)
+{
+    this->message = message;
+}
+
+std::string ExceptionObject::getMessage()
+{
+    return this->message;
 }
 
 std::string ExceptionObject::getStackTrace()

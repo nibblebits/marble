@@ -86,6 +86,7 @@ Class* ClassSystem::registerClass(std::string class_name, Class* parent, CLASS_R
     if (hasClassWithName(class_name))
         throw std::logic_error("The class: " + class_name + " has already been registered");
     
+    bool has_parent = parent != NULL;
     if (parent == NULL)
         parent = this->getDefaultBaseClass();  
     Class* c = new Class(this->sys_handler, class_name, parent, this->defaultObjectDescriptor);
@@ -95,7 +96,7 @@ Class* ClassSystem::registerClass(std::string class_name, Class* parent, CLASS_R
     /* Do we have a parent? If so then the descriptor object should be changed to a new instance of the parents 
      * This must be a new instance as otherwise when the object descriptor is returned its class will point to the parent class
      * and not the one we just created. Probably not ideal and hopefully a better way of doing it will be made soon */
-    if (parent != NULL)
+    if (has_parent)
     {
         c->setDescriptorObject(parent->getDescriptorObject()->newInstance(c));
     }

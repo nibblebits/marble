@@ -6,6 +6,7 @@
 #include "../../../../commonmod/include/commonmod_sqlrecord.h"
 #include "../../../../commonmod/include/commonmod_sqlresult.h"
 #include "exceptions/systemexception.h"
+#include "exceptionobject.h"
 #include <my_global.h>
 #include <mysql.h>
 #include <iostream>
@@ -59,17 +60,17 @@ void MysqlDriver::MysqlDriver_Execute(Interpreter* interpreter, std::vector<Valu
     std::shared_ptr<MysqlConnection> connection = std::dynamic_pointer_cast<MysqlConnection>(values[0].ovalue);
     // If we fail to cast the connection to a MysqlConnection then we must throw a SQLConnectionException as they have passed an invalid connection to us
     if (connection == NULL)
-        throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("SQLConnectionException")));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("SQLConnectionException"))));
 
     // If this MysqlConnection does not have a real Mysql connection then we cannot proceed.
     if (connection->mysql_connection == NULL)
-        throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("SQLConnectionException")));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("SQLConnectionException"))));
 
     std::string finalized_query = values[2].svalue;
     // Let's execute the finalized query. mysql_query returns 0 for success
     if (mysql_query(connection->mysql_connection, finalized_query.c_str()))
     {
-        throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("SQLQueryException")));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("SQLQueryException"))));
     } 
 
     // Let's get the result
@@ -134,7 +135,7 @@ void MysqlDriver::MysqlDriver_Connect(Interpreter* interpreter, std::vector<Valu
 
     if(!mysql_real_connect(mysql_conn, host.c_str(), username.c_str(), password.c_str(), database.c_str(), 0, NULL, 0))
     {
-        throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("SQLConnectionException")));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("SQLConnectionException"))));
     }
 
     // Now that we have connected to MYSQL lets now create a MysqlConnection and store this MYSQL connection object in there
@@ -153,7 +154,7 @@ void MysqlDriver::MysqlDriver_Escape(Interpreter* interpreter, std::vector<Value
     std::shared_ptr<MysqlConnection> connection = std::dynamic_pointer_cast<MysqlConnection>(values[0].ovalue);
     // If we could not cast this connection to a MysqlConnection it means an invalid connection has been passed to this function.
     if (connection == NULL)
-        throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("InvalidEntityException")));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("InvalidEntityException"))));
     
     std::string value_to_escape = values[1].svalue;
     char escaped[value_to_escape.size()];
@@ -162,7 +163,7 @@ void MysqlDriver::MysqlDriver_Escape(Interpreter* interpreter, std::vector<Value
     if(mysql_real_escape_string(mysql, escaped, value_to_escape.c_str(), value_to_escape.size()) == -1)
     {
         // Tmp exception should be changed
-        throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("Exception")));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("Exception"))));
     }
 
     return_value->set(std::string(escaped));

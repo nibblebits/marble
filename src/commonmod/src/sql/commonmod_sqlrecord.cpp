@@ -1,6 +1,7 @@
 #include "commonmod_sqlrecord.h"
 #include "modulesystem.h"
 #include "interpreter.h"
+#include "exceptionobject.h"
 #include "exceptions/systemexception.h"
 
 CommonModule_SqlRecord::CommonModule_SqlRecord(Class* c) : Object(c)
@@ -60,7 +61,7 @@ void CommonModule_SqlRecord::SQLRecord_getValue(Interpreter* interpreter, std::v
     }
     catch(...)
     {
-        throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("Exception")));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("Exception"))));
     }
  
 }

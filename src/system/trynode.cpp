@@ -2,6 +2,7 @@
 #include "interpreter.h"
 #include "object.h"
 #include "class.h"
+#include "exceptionobject.h"
 #include "nodes.h"
 #include "exceptions/systemexception.h"
 #include "exceptions/testerror.h"
@@ -48,7 +49,7 @@ Value TryNode::interpret(Interpreter* interpreter, struct extras extra)
         this->try_body->interpret(interpreter);
     } catch(SystemException& ex)
     {
-        std::shared_ptr<Object> thrown_object = ex.getObject();
+        std::shared_ptr<ExceptionObject> thrown_object = ex.getObject();
         // Let's see if we can actually catch this, if not we will rethrow the exception
         Class* thrown_exception_class = thrown_object->getClass();
         struct Evaluation evaluation = this->catch_varnode->evaluate(interpreter, EVALUATION_TYPE_DATATYPE);

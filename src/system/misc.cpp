@@ -44,14 +44,14 @@ void CloneForCall(const void* ptr, int size, int new_size, std::function<void(co
 		throw std::logic_error("Your new size must be equal or greater than size. Truncation is not supported");
 	char* cloned_data = new char[new_size];
     memcpy(cloned_data, ptr, size);
-    try
-    {
+    //try
+    //{
 		func((const void*) cloned_data, new_size);
         delete cloned_data;
-    }
-    catch(...)
-    {
-        delete cloned_data;
-		throw;
-    }
+    //}
+    //catch(...)
+    //{
+      //  delete cloned_data;
+		//throw;
+    //}
 }

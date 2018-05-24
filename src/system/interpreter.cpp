@@ -123,7 +123,7 @@ void Interpreter::setupModuleMarbleFunctions(ModuleSystem* moduleSystem)
         {
             if (permission == NULL)
             {
-                throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException")));
+                throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))));
             }
         }
         std::string filename = arguments[0].svalue;
@@ -135,7 +135,7 @@ void Interpreter::setupModuleMarbleFunctions(ModuleSystem* moduleSystem)
         }
         catch(...)
         {
-            throw SystemException(Object::create(getClassSystem()->getClassByName("IOException")));
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(getClassSystem()->getClassByName("IOException"))));
         }
     });
 }
@@ -331,7 +331,8 @@ void Interpreter::run(const char* code, PosInfo posInfo, bool ignore_validation)
     } 
     catch(SystemException& ex)
     {
-        logger.error("System threw a " + ex.getObject()->getClass()->name, current_node->posInfo);
+        std::shared_ptr<ExceptionObject> rex = std::dynamic_pointer_cast<ExceptionObject>(ex.getObject());
+        logger.error("System threw a " + rex->getClass()->name +  ", message: " + rex->getMessage(), current_node->posInfo);
     }
 }
 

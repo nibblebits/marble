@@ -6,6 +6,7 @@
 #include "object.h"
 #include "interpreter.h"
 #include "validator.h"
+#include "exceptionobject.h"
 #include "exceptions/testerror.h"
 #include "exceptions/systemexception.h"
 #include "exceptions/evaluationexception.h"
@@ -152,7 +153,7 @@ Value ExpNode::interpret(Interpreter* interpreter, struct extras extra)
         if (obj == NULL)
         {
             // Throw a NULL pointer exception here. This will be a SystemException so it may be caught from within marble.
-            throw SystemException(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("NullPointerException"), {}));
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("NullPointerException"), {})));
         }
         
         Class* c = NULL;

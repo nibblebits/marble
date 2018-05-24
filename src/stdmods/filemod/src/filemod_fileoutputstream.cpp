@@ -1,5 +1,6 @@
 #include <iostream>
 #include "filemod.h"
+#include "exceptionobject.h"
 #include "exceptions/systemexception.h"
 #include "filemod_fileoutputstream.h"
 FileModule_FileOutputStream::FileModule_FileOutputStream(Class* c) : CommonModule_OutputStream(c)
@@ -38,7 +39,7 @@ void FileModule_FileOutputStream::FileOutputStream_Flush(Interpreter* interprete
     /* If this output stream does not belong to a file then there is nothing we can do so throw an exception. 
      * This will happen when a programmer creates a FileOutputStream manually within marble code*/
     if (stream->file == NULL)
-        throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("IOException")));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))));
     
     // Let's get the FileModule_File and get the native FILE* and write this buffer
     std::shared_ptr<FileModule_File> file_obj = stream->file;
@@ -46,14 +47,14 @@ void FileModule_FileOutputStream::FileOutputStream_Flush(Interpreter* interprete
 
     // If the file is not open then lets throw an exception
     if (!file)
-        throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("IOException")));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))));
 
     const char* buf = &stream->buffer[0];
     size_t amount = fwrite(buf, 1, stream->buffer.size(), file);
 
     // Did we write all bytes succesfully?
     if (amount != stream->buffer.size())
-        throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("IOException")));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))));
     
     // Now we must clear the output stream buffer
     stream->buffer.clear();

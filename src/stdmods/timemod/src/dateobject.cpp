@@ -1,6 +1,7 @@
 #include "dateobject.h"
 #include "modulesystem.h"
 #include "interpreter.h"
+#include "exceptionobject.h"
 #include "exceptions/systemexception.h"
 #include <iostream>
 
@@ -66,7 +67,7 @@ void DateObject::Date_getFormattedString(Interpreter* interpreter, std::vector<V
     if(strftime(buffer, sizeof(buffer), date_obj->format.c_str(), timeinfo) == 0)
     {
         // Error
-        throw SystemException(Object::create(interpreter->getClassSystem()->getClassByName("DateFormatException")));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("DateFormatException"))));
     }
 
     std::string formatted_str = buffer;
