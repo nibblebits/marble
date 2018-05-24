@@ -44,6 +44,9 @@ void PermissionNode::test(Validator* validator, struct extras extra)
     {
         throw TestError("Permission scopes must take a valid PermissionsObject for their expression but the object provided is of type " + evaluation.datatype.value + " and it is not an instance of PermissionsObject");
     }
+
+    // Test the body node
+    body_node->test(validator, extra);
 }
 
 void PermissionNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)
