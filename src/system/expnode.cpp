@@ -124,6 +124,12 @@ Value ExpNode::interpret(Interpreter* interpreter, struct extras extra)
         {
             result = mathify(left_v, right_v, this->op);
         }
+
+        if (var_to_assign->is_locked)
+        {
+            // The variable we want to assign is locked so we just have to throw an exception and refuse this
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("VariableLockedException"))), "The variable " + var_to_assign->name + " is locked and cannot be modified");
+        }
         var_to_assign->setValue(result);
         return result;        
     }

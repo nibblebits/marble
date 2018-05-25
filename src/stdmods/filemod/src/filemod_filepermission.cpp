@@ -195,26 +195,5 @@ void FileModule_FilePermission::FilePermission_PermissionCheck(Interpreter* inte
 void FileModule_FilePermission::FilePermission_PriorAdd(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
 {
     std::shared_ptr<FileModule_FilePermission> file_perm_obj = std::dynamic_pointer_cast<FileModule_FilePermission>(object);
-
-    std::string error_message = "";
-    // Let's ensure that all variables are locked to keep the system secure
-    if (!file_perm_obj->location->is_locked)
-    {
-        error_message = "The location variable is not locked. This means you have forgot to set a location please use setLocation";
-    }
-    else if(!file_perm_obj->can_read->is_locked)
-    {
-        error_message = "The can_read variable is not locked. This means you have forgot to set the can_read variable please use setCanRead";
-    }
-    else if(!file_perm_obj->can_write->is_locked)
-    {
-        error_message = "The can_write variable is not locked. This means you have forgot to set the can_write variable please use setCanWrite";
-    }
-
-    if (error_message != "")
-    {
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), error_message);
-    }
     
-
 }

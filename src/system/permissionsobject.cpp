@@ -29,6 +29,12 @@ void PermissionsObject::addPermission(std::shared_ptr<PermissionObject> permissi
     if (permission == NULL)
         throw std::logic_error("NULL permissions are not allowed");
     
+    // We must lock all variables of this permission object for safety purposes
+    for(Variable* var : permission->getVariables())
+    {
+        var->is_locked = true;
+    }
+    
     this->objects.push_back(permission);
 
 }
@@ -117,6 +123,9 @@ void PermissionsObject::PermissionsObject_Add(Interpreter* interpreter, std::vec
     // Invoke the __prior_add function so that the permission can deal with anything important before we add this permission to our PermissionsObject
     Function* __prior_add_func = permission_to_add->getClass()->getFunctionByNameAndArguments("__prior_add", {});
     __prior_add_func->invoke(interpreter, {}, return_value, permission_to_add, caller_scope);
+
+    // We must now ensure that are variables of the PermissionObject are in a locked state
+
     this_p_obj->addPermission(permission_to_add);
 }
 
