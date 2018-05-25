@@ -5,6 +5,7 @@
 #include "scope.h"
 #include "exceptionobject.h"
 #include "exceptions/systemexception.h"
+#include "function.h"
 #include <memory>
 #include <algorithm>
 #include <vector>
@@ -112,6 +113,10 @@ void PermissionsObject::PermissionsObject_Add(Interpreter* interpreter, std::vec
          * on the PermissionObject caller permission */
         caller_permission->ensurePermissionValid(interpreter, permission_to_add, caller_scope);
     }
+
+    // Invoke the __prior_add function so that the permission can deal with anything important before we add this permission to our PermissionsObject
+    Function* __prior_add_func = permission_to_add->getClass()->getFunctionByNameAndArguments("__prior_add", {});
+    __prior_add_func->invoke(interpreter, {}, return_value, permission_to_add, caller_scope);
     this_p_obj->addPermission(permission_to_add);
 }
 

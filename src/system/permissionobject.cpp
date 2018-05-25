@@ -32,6 +32,18 @@ Class* PermissionObject::registerClass(SystemHandler* systemHandler)
      * The first PermissionProperty argument is the PermissionProperty you are trying to set and the second is the PermissionProperty of the permission you do not yet hold.*/ 
     Function* p_check_func = permission_class->registerFunction("__permission_check", {VarType::fromString("PermissionProperty"), VarType::fromString("PermissionProperty")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
     });
+
+    /**
+     * This function __prior_add is a function that is called just before this PermissionObject is about to be added to a PermissionsObject.
+     * In this method you should ensure that the user has set all the required attributes and that they are locked so that
+     * they cannot be changed. This is not a pure method so you must override it to use its functionality.
+     * 
+     * This function is also only called when calling the add method on the PermissionObject. Not the native functions provided.
+     * 
+     * function __prior_add() : void
+     */
+
+    Function* prior_add_func = permission_class->registerFunction("__prior_add", {}, VarType::fromString("void"), Function::Blank);
     p_check_func->is_pure = true;
     return permission_class;
 }
@@ -41,6 +53,7 @@ void PermissionObject::ensurePermissionValid(Interpreter* interpreter, std::shar
     if (permission_obj->getClass()->name != this->getClass()->name)
         throw std::logic_error("Passing a PermissionObject whose class differs from this objects class");
 
+    std::cout << "Permission check for class: " << permission_obj->getClass()->name << std::endl;
     std::vector<Variable*> variables = this->getVariables();
     for (Variable* var : variables)
     {

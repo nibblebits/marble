@@ -94,18 +94,18 @@ void FileModule_File::File_Open(Interpreter* interpreter, std::vector<Value> val
         // If the permission list is empty then we don't have permission to open this file
         if (permission_list.empty())
         {
-            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))));
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You don't have permission to open the file: " + absolute_filename_path);
         }
         for (std::shared_ptr<PermissionObject> perm : permission_list)
         {
             std::shared_ptr<FileModule_FilePermission> permission = std::dynamic_pointer_cast<FileModule_FilePermission>(perm);
             // Do we have access to the directory we are trying to access?
-            if (startsWith(absolute_filename_path, permission->location))
+            if (startsWith(absolute_filename_path, permission->location->value.svalue))
             {
                 if (FileModule_File::isReadMode(mode))
                 {
                     // If we can't read then just continue and hopefully we will find a permission that allows this
-                    if (!permission->can_read)
+                    if (!permission->can_read->value.dvalue)
                     {
                         continue;
                     }
@@ -113,7 +113,7 @@ void FileModule_File::File_Open(Interpreter* interpreter, std::vector<Value> val
                 else if(FileModule_File::isWriteMode(mode))
                 {
                     // If we can't write then just continue and hopefully we will find a permission that allows this 
-                    if (!permission->can_write)
+                    if (!permission->can_write->value.dvalue)
                     {
                         continue;
                     }
@@ -125,7 +125,7 @@ void FileModule_File::File_Open(Interpreter* interpreter, std::vector<Value> val
 
         if (!has_access)
         {
-            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))));
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You don't have the permission to open the file: " + absolute_filename_path + " for mode: " + mode);
         }
     }
 

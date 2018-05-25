@@ -39,7 +39,7 @@ public:
     
     // Returns weather this scope is nested in the scope provided.
     bool isNestedInScope(Scope* scope);
-    std::vector<Variable*> getVariables();
+    virtual std::vector<Variable*> getVariables();
     std::vector<Variable*> getObjectVariablesFor(std::shared_ptr<Object> object);
 
     std::shared_ptr<PermissionObject> getPermission(std::string name);

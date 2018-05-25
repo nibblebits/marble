@@ -10,6 +10,7 @@ Variable::Variable()
     this->access = MODIFIER_ACCESS_PUBLIC;
     this->scope = NULL;
     this->object = NULL;
+    this->is_locked = false;
 }
 
 Variable::~Variable()
@@ -62,6 +63,9 @@ bool Variable::isArray()
 
 void Variable::setValue(Value value)
 {
+    if (this->is_locked)
+        throw std::logic_error("This variable is locked and cannot be set");
+
     this->value = value;
     this->value.holder = this;
 }

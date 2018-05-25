@@ -28,6 +28,11 @@ public:
     // Is this a private, protected or public variable?
     MODIFIER_ACCESS access;
     struct Value value;
+
+    /** 
+     * When set to true setValue will throw an exception and refuse to set the variable value
+     */
+    bool is_locked;
     
     void setValue(Value value);
     void setValue(double value);
