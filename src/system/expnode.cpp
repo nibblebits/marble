@@ -213,7 +213,10 @@ void ExpNode::test_obj_access(Validator* validator, struct extras extra)
     left->test(validator, extra);
     validator->restore();
     
-    struct Evaluation evaluation = left->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_TYPE_VARIABLE | EVALUATION_FROM_VARIABLE);
+    struct Evaluation evaluation;
+    evaluation.extra = extra;
+    left->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_TYPE_VARIABLE | EVALUATION_FROM_VARIABLE, &evaluation);
+
     Class* c = NULL;
     std::string class_name = evaluation.datatype.isArray() ? "array" : evaluation.datatype.value;
     if (!validator->isClassIgnored(class_name))
@@ -302,6 +305,8 @@ void ExpNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_eva
             handler->setCurrentScope(obj.get());
             handler->setFunctionSystem(obj->getClass());
         }
+
+        evaluation->extra.is_object_exp = true;
         right->evaluate(handler, expected_evaluation, evaluation);
         if (this->op != ".")
         {

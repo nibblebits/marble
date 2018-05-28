@@ -232,9 +232,19 @@ void FunctionCallNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE exp
                 types.push_back(evaluation->datatype);
             }
         }, evaluation->extra.accessors_scope);
-        SingleFunction* function = (SingleFunction*) function_sys->getFunctionByNameAndArguments(this->name->value, types);
+
+        SingleFunction* function;
+        if (evaluation->extra.is_object_exp)
+        {
+            function = (SingleFunction*) function_sys->getFunctionByNameAndArguments(this->name->value, types);
+        }
+        else
+        {
+            function = (SingleFunction*) handler->getGlobalFunctionSystem()->getFunctionByNameAndArguments(this->name->value, types);
+        }
+        
         if (function == NULL)
-            throw std::logic_error("The function call to evaluate has a call to a function that does not exist");
+            throw std::logic_error("The function call to evaluate has a call to a function that does not exist: " + this->name->value + ", is object exp: " + std::to_string(evaluation->extra.is_object_exp));
             
         evaluation->datatype = function->return_type;
         
