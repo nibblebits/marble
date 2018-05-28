@@ -139,7 +139,6 @@ void ClassNode::test(Validator* validator, struct extras extra)
         {
             throw TestError(std::string(e.what()) + " at class " + name);
         }
-        
     }, validator, c, OBJECT_ACCESS_TYPE_CLASS_SCAN);
 
     validator->endClass();

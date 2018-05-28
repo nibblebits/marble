@@ -26,7 +26,7 @@ void BodyNode::onBeforeLeave(std::function<void()> before_leave_function)
 
 void BodyNode::onAfterTestNode(std::function<void(Node* node)> on_after_node_function)
 {
-    this->on_after_test_node_function = on_after_test_node_function;
+    this->on_after_test_node_function = on_after_node_function;
 }
 
 void BodyNode::onAfterInterpretNode(std::function<void(Node* node, Value v)> on_after_interpret_node_function)
@@ -48,10 +48,10 @@ void BodyNode::test(Validator* validator, SCOPE_PROPERTIES scope_properties)
     // Awesome now lets interpret!
     while(current_node != NULL)
     {
-        if (node_listener_function != NULL)
+        if (this->node_listener_function != NULL)
         {
 
-            NODE_LISTENER_ACTION action = node_listener_function(current_node);
+            NODE_LISTENER_ACTION action = this->node_listener_function(current_node);
             if (action == NODE_LISTENER_ACTION_LEAVE)
                 break;
             else if(action == NODE_LISTENER_ACTION_IGNORE_NODE)
@@ -61,7 +61,9 @@ void BodyNode::test(Validator* validator, SCOPE_PROPERTIES scope_properties)
                 continue;
             }    
         }
-
+   
+        if (current_node == this)
+            throw std::logic_error("fuck that");
         current_node->test(validator);
         if (this->on_after_test_node_function != NULL)
         {
