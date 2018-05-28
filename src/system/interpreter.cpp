@@ -331,7 +331,8 @@ void Interpreter::run(const char* code, PosInfo posInfo, bool ignore_validation)
             current_node->interpret(this);
             current_node = (InterpretableNode*) current_node->next;
         }
-    } 
+    }
+    
     catch(SystemException& ex)
     {
         std::shared_ptr<ExceptionObject> rex = std::dynamic_pointer_cast<ExceptionObject>(ex.getObject());

@@ -92,6 +92,7 @@ void Validator::validate(Node* root_node)
     {
         throw;
     }
+    
 }
 
 Interpreter* Validator::getInterpreter()

@@ -25,6 +25,45 @@ ClassNode::~ClassNode()
 
 }
 
+
+void ClassNode::test_variables(Validator* validator, std::shared_ptr<Object> object, Class* c, struct extras* extra)
+{
+
+    object->runThis([&]() { 
+        body->apply_node_listener([&](Node* node) -> NODE_LISTENER_ACTION {
+            if (node->type == NODE_TYPE_VARIABLE_DECLARATION)
+            {
+                /* The way I am creating class variables is a terrible way of doing it. This will work but a better way should be made. 
+                * I would of liked to have create a variable creation listener for scopes. This would be a much prefeered and future proof
+                * way of doing it. The only issue is upon creating variables you do not know there name and type. This may have to be changed in the future to allow for this*/
+                if (node->type == NODE_TYPE_VARIABLE_DECLARATION)
+                {
+                    c->addVariable(Variable::getFromPointer(object->getLastRegisteredVariable()));
+                }
+               return NODE_LISTENER_ACTION_CARRY_ON;
+            }
+            else
+            {
+                // This is not a variable declaration so ignore it, we only care about variables here
+                return NODE_LISTENER_ACTION_IGNORE_NODE;
+            }
+        });
+
+        try
+        {
+            /* By testing the body of the class a new scope will be created. 
+             * we do not want this as we want the class object scope to be the scope of the object.
+             * if we do not instruct the body node to keep our scope then a new parented scope will be created
+             * and the "this" variable will then not work from within the object.*/
+            body->test(validator, KEEP_SCOPE);
+        } catch(TestError& e)
+        {
+            throw TestError(std::string(e.what()) + " at class " + name);
+        }
+        
+    }, validator, c, OBJECT_ACCESS_TYPE_CLASS_SCAN);
+
+}
 void ClassNode::test(Validator* validator, struct extras extra)
 {
     // Check to see if class already exists
@@ -59,17 +98,22 @@ void ClassNode::test(Validator* validator, struct extras extra)
 
     // We must create a temporary object to be used with the testing process. No methods or functions will be called.
     std::shared_ptr<Object> object = Object::create(c); 
+    validator->giveClassObject(object);
+    validator->beginClass(c);
+    this->test_variables(validator, object, c, &extra);
     object->runThis([&]() { 
+        // We only care about functions here so skip everything else
+        body->apply_node_listener([&](Node* node) -> NODE_LISTENER_ACTION {
+            if (node->type != NODE_TYPE_FUNCTION)
+            {
+                return NODE_LISTENER_ACTION_IGNORE_NODE;
+            }
+            
+            return NODE_LISTENER_ACTION_CARRY_ON;
+        });
+
         // Let's test the body of the class node
         body->onAfterTestNode([&](Node* node) -> void {
-            /* The way I am creating class variables is a terrible way of doing it. This will work but a better way should be made. 
-             * I would of liked to have create a variable creation listener for scopes. This would be a much prefeered and future proof
-             * way of doing it. The only issue is upon creating variables you do not know there name and type. This may have to be changed in the future to allow for this*/
-            if (node->type == NODE_TYPE_VARIABLE_DECLARATION)
-            {
-                c->addVariable(Variable::getFromPointer(object->getLastRegisteredVariable()));
-            }
-
             // If this is true we must ensure that if a function is in the body and it is a constructor it has zero arguments
             if (zero_arg_constructors_only)
             {
@@ -84,8 +128,6 @@ void ClassNode::test(Validator* validator, struct extras extra)
             }
         });
         
-        validator->giveClassObject(object);
-        validator->beginClass(c);
         try
         {
             /* By testing the body of the class a new scope will be created. 
@@ -97,9 +139,10 @@ void ClassNode::test(Validator* validator, struct extras extra)
         {
             throw TestError(std::string(e.what()) + " at class " + name);
         }
-        validator->endClass();
+        
     }, validator, c, OBJECT_ACCESS_TYPE_CLASS_SCAN);
 
+    validator->endClass();
 
     if (parent_class != NULL)
     {
@@ -143,13 +186,12 @@ Value ClassNode::interpret(Interpreter* interpreter, struct extras extra)
     // We will change the function system to the class so that all registered functions within the class body will become a method in the class.
     FunctionSystem* old_function_sys = interpreter->getFunctionSystem();
     interpreter->setFunctionSystem(c);
-    body->apply_node_listener([&](Node* node, Value v) -> bool {
+    body->onAfterInterpretNode([&](Node* node, Value v) -> bool {
         if (node->type == NODE_TYPE_VARIABLE_DECLARATION)
         {
            Variable var = Variable::getFromPointer(v.holder);
            c->addVariable(var);
         }
-        return true;
     });
     body->interpret(interpreter);
 

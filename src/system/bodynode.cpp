@@ -10,6 +10,7 @@ BodyNode::BodyNode() : ListNode(NODE_TYPE_BODY)
     this->before_leave_function = NULL;
     this->node_listener_function = NULL;
     this->on_after_test_node_function = NULL;
+    this->on_after_interpret_node_function = NULL;
 }
 
 BodyNode::~BodyNode()
@@ -23,9 +24,14 @@ void BodyNode::onBeforeLeave(std::function<void()> before_leave_function)
     this->before_leave_function = before_leave_function;
 }
 
-void BodyNode::onAfterTestNode(std::function<void(Node* node)> on_after_test_node_function)
+void BodyNode::onAfterTestNode(std::function<void(Node* node)> on_after_node_function)
 {
     this->on_after_test_node_function = on_after_test_node_function;
+}
+
+void BodyNode::onAfterInterpretNode(std::function<void(Node* node, Value v)> on_after_interpret_node_function)
+{
+    this->on_after_interpret_node_function = on_after_interpret_node_function;
 }
 
 void BodyNode::test(Validator* validator, struct extras extra)
@@ -42,6 +48,20 @@ void BodyNode::test(Validator* validator, SCOPE_PROPERTIES scope_properties)
     // Awesome now lets interpret!
     while(current_node != NULL)
     {
+        if (node_listener_function != NULL)
+        {
+
+            NODE_LISTENER_ACTION action = node_listener_function(current_node);
+            if (action == NODE_LISTENER_ACTION_LEAVE)
+                break;
+            else if(action == NODE_LISTENER_ACTION_IGNORE_NODE)
+            {
+                // We want to ignore this node so skip to the next one
+                current_node = (InterpretableNode*) current_node->next;
+                continue;
+            }    
+        }
+
         current_node->test(validator);
         if (this->on_after_test_node_function != NULL)
         {
@@ -60,6 +80,10 @@ void BodyNode::test(Validator* validator, SCOPE_PROPERTIES scope_properties)
     // We are done with this scope
     if (!(scope_properties & KEEP_SCOPE))
         validator->finish_parented_scope(); 
+
+    // Finally reset monitor functions
+    this->node_listener_function = NULL;
+    this->on_after_test_node_function = NULL;
 }
 
 
@@ -81,7 +105,7 @@ void BodyNode::didBreak(BREAK_TYPE type)
 
 }
 
-void BodyNode::apply_node_listener(std::function<bool(Node* node, Value v)> node_listener_function)
+void BodyNode::apply_node_listener(std::function<NODE_LISTENER_ACTION(Node* node)> node_listener_function)
 {
     this->node_listener_function = node_listener_function;
 }
@@ -90,9 +114,21 @@ bool BodyNode::interpret_body_node(Node* node)
 {
     int type = node->getType();
     InterpretableNode* inode = (InterpretableNode*) node;
+    if (node_listener_function != NULL)
+    {
+
+        NODE_LISTENER_ACTION action = node_listener_function(inode);
+        if (action == NODE_LISTENER_ACTION_LEAVE)
+            return false;
+        else if(action == NODE_LISTENER_ACTION_IGNORE_NODE)
+            return true;    
+    }
     Value v = inode->interpret(interpreter);
-    if (node_listener_function != NULL && (!node_listener_function(inode, v))) 
-        return false;
+    if (this->on_after_interpret_node_function != NULL)
+    {
+        this->on_after_interpret_node_function(inode, v);
+    }
+
     
     FunctionSystem* function_system = this->interpreter->getFunctionSystem();
     if (function_system->isInFunction())
@@ -134,6 +170,7 @@ void BodyNode::interpret_body(BodyNode* node)
     // We are done with this cope
     interpreter->finish_parented_scope(); 
     this->node_listener_function = NULL;
+    this->on_after_interpret_node_function = NULL;
     return;
 }
 
