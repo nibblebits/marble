@@ -62,8 +62,7 @@ void BodyNode::test(Validator* validator, SCOPE_PROPERTIES scope_properties)
             }    
         }
    
-        if (current_node == this)
-            throw std::logic_error("fuck that");
+
         current_node->test(validator);
         if (this->on_after_test_node_function != NULL)
         {

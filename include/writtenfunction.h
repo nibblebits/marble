@@ -17,7 +17,8 @@ class WrittenFunction : public SingleFunction
         ReturnNode* return_node;
         /** The value that was returned */
         Value return_value;
- private:
+        
+        /* The function node related to this marble written function*/
         FunctionNode* fnode;
 };
 #endif

@@ -7,11 +7,13 @@
 #include "functionsystem.h"
 #include "object.h"
 #include "scope.h"
+#include "extras.h"
 #include "permissionsobject.h"
 #include "permissionobject.h"
 #include "exceptions/testerror.h"
 #include "function.h"
 #include "singlefunction.h"
+#include "writtenfunction.h"
 
 ClassNode::ClassNode() : InterpretableNode(NODE_TYPE_CLASS)
 {
@@ -64,6 +66,42 @@ void ClassNode::test_variables(Validator* validator, std::shared_ptr<Object> obj
     }, validator, c, OBJECT_ACCESS_TYPE_CLASS_SCAN);
 
 }
+
+void ClassNode::register_functions_for_test(Validator* validator, std::shared_ptr<Object> object, Class* c, struct extras* extra)
+{
+     object->runThis([&]() { 
+        // We only care about functions here so skip everything else
+        body->apply_node_listener([&](Node* node) -> NODE_LISTENER_ACTION {
+            // We want to ignore all nodes that are not functions as we are only interested in testing functions
+            if (node->type != NODE_TYPE_FUNCTION)
+            {
+                return NODE_LISTENER_ACTION_IGNORE_NODE;
+            }
+            
+            FunctionNode* f_node = (FunctionNode*) node;
+            // Test the function node but only the declaration this will then cause it to be added to the class
+            struct extras extra;
+            extra.state = EXTRA_STATE_FUNCTION_DECLARATION_ONLY;
+            f_node->test(validator, extra);
+
+            // We should now also ignore this function node as we have dealt with it ourselves and do not want the BodyNode testing it again
+            return NODE_LISTENER_ACTION_IGNORE_NODE;
+        });
+
+        try
+        {
+            /* By testing the body of the class a new scope will be created. 
+             * we do not want this as we want the class object scope to be the scope of the object.
+             * if we do not instruct the body node to keep our scope then a new parented scope will be created
+             * and the "this" variable will then not work from within the object.*/
+            body->test(validator, KEEP_SCOPE);
+        } catch(TestError& e)
+        {
+            throw TestError(std::string(e.what()) + " at class " + name);
+        }
+    }, validator, c, OBJECT_ACCESS_TYPE_CLASS_SCAN);
+}
+
 void ClassNode::test(Validator* validator, struct extras extra)
 {
     // Check to see if class already exists
@@ -100,47 +138,40 @@ void ClassNode::test(Validator* validator, struct extras extra)
     std::shared_ptr<Object> object = Object::create(c); 
     validator->giveClassObject(object);
     validator->beginClass(c);
+    // Test all variables and register them to our object. This is required so that variables can be accessed from any position in the class
     this->test_variables(validator, object, c, &extra);
+    // Register all the functions in our class ready for testing later. This is required so that functions in classes can resolve other functions regardless of position
+    this->register_functions_for_test(validator, object, c, &extra);
+    
+    // Finally we need to now test the function's properly including function body's
     object->runThis([&]() { 
-        // We only care about functions here so skip everything else
-        body->apply_node_listener([&](Node* node) -> NODE_LISTENER_ACTION {
-            if (node->type != NODE_TYPE_FUNCTION)
+        for (Function* func: c->getFunctions())
+        {
+            // We only care about functions that were written in marble in this class as that's what we want to use
+            if (func->type == FUNCTION_TYPE_WRITTEN)
             {
-                return NODE_LISTENER_ACTION_IGNORE_NODE;
-            }
-            
-            return NODE_LISTENER_ACTION_CARRY_ON;
-        });
+                WrittenFunction* w_func = (WrittenFunction*) func;
+                FunctionNode* f_node = (FunctionNode*) w_func->fnode;
 
-        // Let's test the body of the class node
-        body->onAfterTestNode([&](Node* node) -> void {
-            // If this is true we must ensure that if a function is in the body and it is a constructor it has zero arguments
-            if (zero_arg_constructors_only)
-            {
-                if (node->type == NODE_TYPE_FUNCTION)
+                // Test the function and allow functions to already exist as the function will exist due to the register_functions_for_test function we called early
+                struct extras extra;
+                extra.state = EXTRA_STATE_ALLOW_FUNCTION_TO_EXIST;
+                f_node->test(validator, extra);
+
+                // If we only allow zero argument constructors for this class then we need to ensure that this function node follows this requirement
+                if (zero_arg_constructors_only)
                 {
-                    FunctionNode* f_node = (FunctionNode*) node;
                     if (f_node->name == "__construct" && !f_node->args.empty())
                     {
                         throw TestError("Constructors that have arguments are not allowed for the class with the name: " + name);
                     }
                 }
             }
-        });
-        
-        try
-        {
-            /* By testing the body of the class a new scope will be created. 
-             * we do not want this as we want the class object scope to be the scope of the object.
-             * if we do not instruct the body node to keep our scope then a new parented scope will be created
-             * and the "this" variable will then not work from within the object.*/
-            body->test(validator, KEEP_SCOPE);
-        } catch(TestError& e)
-        {
-            throw TestError(std::string(e.what()) + " at class " + name);
         }
     }, validator, c, OBJECT_ACCESS_TYPE_CLASS_SCAN);
 
+    
+    // Finally let's now test the function bodies of all functions that will now be registered in our class
     validator->endClass();
 
     if (parent_class != NULL)

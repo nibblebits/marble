@@ -173,7 +173,11 @@ Value ExpNode::interpret(Interpreter* interpreter, struct extras extra)
         Scope* accessors_scope = (extra.accessors_scope != NULL ? extra.accessors_scope : interpreter->getCurrentScope());
         // Interpret the right node on the object scope and return the result.
         obj->runThis([&] {
-            result = this->right->interpret(interpreter, {.accessors_scope = accessors_scope, .is_object_exp=true, .current_object=obj});
+            struct extras extra;
+            extra.accessors_scope = accessors_scope;
+            extra.is_object_exp = true;
+            extra.current_object = obj;
+            result = this->right->interpret(interpreter, extra);
         }, interpreter, c);
         return result;
     }
@@ -235,7 +239,11 @@ void ExpNode::test_obj_access(Validator* validator, struct extras extra)
 
         Scope* accessors_scope = (extra.accessors_scope != NULL ? extra.accessors_scope : validator->getCurrentScope());
         obj->runThis([&] {
-            this->right->test(validator, {.accessors_scope = accessors_scope, .is_object_exp=true, .current_object=obj});
+            struct extras extra;
+            extra.accessors_scope = accessors_scope;
+            extra.is_object_exp = true;
+            extra.current_object = obj;
+            this->right->test(validator, extra);
         }, validator, c);   
     }
 }

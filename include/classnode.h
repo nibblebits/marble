@@ -20,6 +20,13 @@ public:
     bool is_final;
 protected:
     void test_variables(Validator* validator, std::shared_ptr<Object> object, Class* c, struct extras* extra);
+    /**
+     * Registers functions for the test validation process this is required so that
+     * classes can reference any function regardless if its below them or not in the class body
+     * 
+     * Later after this function we then test the bodies of all the functions in our classes function system
+     */
+    void register_functions_for_test(Validator* validator, std::shared_ptr<Object> object, Class* c, struct extras* extra);
 };
 #endif
 

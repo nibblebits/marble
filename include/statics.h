@@ -175,6 +175,14 @@ enum
     NODE_LISTENER_ACTION_IGNORE_NODE
 };
 
+enum
+{
+    // Use this state if you want to test only the function declaration
+    EXTRA_STATE_FUNCTION_DECLARATION_ONLY = 0x01,
+    // Use this state if you do not want to throw an error if the function already exists for when you test the function node
+    EXTRA_STATE_ALLOW_FUNCTION_TO_EXIST = 0x02
+};
+
 typedef int SYSTEM_HANDLER_TYPE;
 typedef int MODULE_TYPE;
 typedef int TOKEN_TYPE;
@@ -191,5 +199,6 @@ typedef int BREAK_TYPE;
 typedef int OBJECT_ACCESS_TYPE;
 typedef int SYSTEM_HANDLER_RULES;
 typedef int NODE_LISTENER_ACTION;
+typedef int EXTRA_STATE;
 
 #endif

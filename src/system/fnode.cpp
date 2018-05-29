@@ -38,8 +38,20 @@ void FunctionNode::test(Validator* validator, struct extras extra)
         
     FunctionSystem* func_sys = validator->getFunctionSystem();
     
+    Function* function = NULL;
     if(func_sys->hasFunctionLocally(this->name, var_types))
-        throw TestError("The function with the name \"" + this->name + "\" has already been registered with the same arguments provided");
+    {
+        if (extra.state & EXTRA_STATE_ALLOW_FUNCTION_TO_EXIST)
+        {
+            // The current state allows functions that already exist to not cause an error so let's just store it for later
+            function = func_sys->getFunctionLocallyByNameAndArguments(this->name, var_types);
+        }
+        else
+        {
+            throw TestError("The function with the name \"" + this->name + "\" has already been registered with the same arguments provided");
+        }
+    }
+    
     if (is_pure)
     {
         // We are a pure method lets make sure we are in a class and that our class is pure
@@ -53,13 +65,22 @@ void FunctionNode::test(Validator* validator, struct extras extra)
             throw TestError("The function with the name \"" + this->name + "\" is defined pure. However the class that it is in is not.");
         }
     }
-    // Let's add the function to the list
-    Function* function = func_sys->registerFunction(this);
+
+    // We only want to register the function if it doesn't already exist
+    if (function == NULL)
+    {
+        // Let's add the function to the list
+        function = func_sys->registerFunction(this);
+    }
     if (!is_pure)
     {
-        func_sys->setCurrentFunction(function);
-        this->body->test(validator);
-        func_sys->finishCurrentFunction();
+        // We only want to test the body if the state allows it
+        if (!(extra.state & EXTRA_STATE_FUNCTION_DECLARATION_ONLY))
+        {
+            func_sys->setCurrentFunction(function);
+            this->body->test(validator);
+            func_sys->finishCurrentFunction();
+        }
     }
     validator->finish_parented_scope();
 }
