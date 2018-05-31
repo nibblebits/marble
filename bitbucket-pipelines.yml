@@ -1,4 +1,4 @@
-# This is a sample build configuration for C++ â€“ Make.
+# This is a sample build configuration for C++ – Make.
 # Check our guides at https://confluence.atlassian.com/x/5Q4SMw for more examples.
 # Only use spaces to indent your .yml configuration.
 # -----
@@ -8,5 +8,5 @@ image: gcc:6.1
 pipelines:
   default:
     - step:
-        script: # Modify the commands below to build your repository.
-          - make standalone-modules
+        script: # We cannot build the modules as the pipeline will fail as it depends on system dependencies
+          - make standalone
