@@ -169,12 +169,12 @@ void Object::runThis(std::function<void()> function, SystemHandler* sys_handler,
     sys_handler->setCurrentScope(this);
     sys_handler->setFunctionSystem(c);
     
-    try
-    {
+   // try
+    //{
         // Now the scopes have been adjusted to run on this object we should invoke the function provided
         function();
-    }
-    catch(...)
+    //}
+   /* catch(...)
     {
         // and now restore
         if (access_type == OBJECT_ACCESS_TYPE_OBJECT_ACCESS)
@@ -184,7 +184,7 @@ void Object::runThis(std::function<void()> function, SystemHandler* sys_handler,
         finishRun();
         throw;
     }
-    
+    */
     
     // and now restore
     if (access_type == OBJECT_ACCESS_TYPE_OBJECT_ACCESS)

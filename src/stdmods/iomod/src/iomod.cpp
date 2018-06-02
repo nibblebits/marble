@@ -35,10 +35,14 @@ void IOModule::Init()
         IO_input(interpreter, arguments, return_value, object, caller_scope);
     });
 
+    this->getModuleSystem()->getFunctionSystem()->registerFunction("write", {VarType::fromString("number")}, VarType::fromString("void"), IOModule::IO_Write);
+
     Class* c = this->getModuleSystem()->getClassSystem()->registerClass("IO");
     c->registerFunction("print", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         IO_print(interpreter, arguments, return_value, object, caller_scope);
     });
+
+    c->registerFunction("write", {VarType::fromString("number")}, VarType::fromString("void"), IOModule::IO_Write);
 
     c->registerFunction("input", {}, VarType::fromString("string"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         IO_input(interpreter, arguments, return_value, object, caller_scope);
@@ -109,6 +113,13 @@ void IOModule::IO_print(Interpreter* interpreter, std::vector<Value> values, Val
     interpreter->output(ss.str().c_str());
     return_value->type = VALUE_TYPE_NUMBER;
     return_value->dvalue = 1;
+}
+
+void IOModule::IO_Write(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+{
+    std::string s;
+    s += (unsigned char) values[0].dvalue;
+    interpreter->output(s.c_str());
 }
 
 void IOModule::IO_input(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)

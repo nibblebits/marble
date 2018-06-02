@@ -12,6 +12,7 @@ FileModule_File::FileModule_File(Class* c) : Object(c)
 {
     this->fp = NULL;
     this->output = NULL;
+    this->input = NULL;
 }
 
 FileModule_File::~FileModule_File()
@@ -131,6 +132,7 @@ void FileModule_File::File_Open(Interpreter* interpreter, std::vector<Value> val
 
     FILE* fp = fopen(filename.c_str(), mode.c_str());
     std::shared_ptr<FileModule_File> file_obj = std::dynamic_pointer_cast<FileModule_File>(object);
+
     file_obj->fp = fp;
     file_obj->filename = filename;
     return_value->dvalue = fp != NULL;

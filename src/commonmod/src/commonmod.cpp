@@ -28,8 +28,10 @@ void CommonModule::Init()
     log("--- Registering functions and classes", LOG_LEVEL_NOTICE);
     
     // REGISTER EXCEPTIONS
-    Class* c = this->getModuleSystem()->getClassSystem()->registerClass("EndOfStreamException");
+    Class* exception_cls = this->getModuleSystem()->getClassSystem()->getClassByName("Exception");
+    Class* c = this->getModuleSystem()->getClassSystem()->registerClass("EndOfStreamException", exception_cls);
     c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
+        object->getClass()->invokeObjectParentConstructor(arguments, object, interpreter);
     });
     // END OF EXCEPTIONS
 

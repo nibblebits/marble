@@ -66,7 +66,7 @@ void CommonModule_InputStream::InputStream_Read(Interpreter* interpreter, std::v
     stream->buffer.pop_front();
 
     return_value->type = VALUE_TYPE_NUMBER;
-    return_value->dvalue = (double) c;
+    return_value->dvalue = (unsigned char) c;
 }
 
 void CommonModule_InputStream::InputStream_Put(Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
