@@ -110,7 +110,7 @@ void IOModule::IO_print(Interpreter* interpreter, std::vector<Value> values, Val
          } 
     }
 
-    interpreter->output(ss.str().c_str());
+    interpreter->output(ss.str().c_str(), ss.str().size());
     return_value->type = VALUE_TYPE_NUMBER;
     return_value->dvalue = 1;
 }
@@ -119,7 +119,8 @@ void IOModule::IO_Write(Interpreter* interpreter, std::vector<Value> values, Val
 {
     std::string s;
     s += (unsigned char) values[0].dvalue;
-    interpreter->output(s.c_str());
+
+    interpreter->output(s.c_str(), 1);
 }
 
 void IOModule::IO_input(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)

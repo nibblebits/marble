@@ -21,8 +21,10 @@ bool loadConfiguration()
 {
     std::cout << "LOADING MARBLE CONFIGURATION: " << configFileName << std::endl;
     Interpreter interpreter(moduleSystem->getClassSystem(), moduleSystem->getFunctionSystem());
-    interpreter.setOutputFunction([](const char* data) {
-        std::cout << data;
+    interpreter.setOutputFunction([](const char* data, int length) {
+        for (int i = 0; i < length; i++) {
+            std::cout << (char) data[i];
+        }
     });
     // Configurations should not be bound to permissions.
     interpreter.setNoPermissionRestrictions(true);
@@ -47,8 +49,10 @@ bool loadConfiguration()
 void interpret()
 {
     Interpreter interpreter(moduleSystem->getClassSystem(), moduleSystem->getFunctionSystem());
-    interpreter.setOutputFunction([](const char* data) {
-        std::cout << data;
+    interpreter.setOutputFunction([](const char* data, int length) {
+        for (int i = 0; i < length; i++) {
+            std::cout << (char) data[i];
+        }
     });
     
     interpreter.setInputFunction([]()->std::string {
@@ -78,6 +82,5 @@ int main(int argc, char** argv)
 
     delete baseHandler;
     delete moduleSystem;
-    std::cout << "Program terminated" << std::endl;
     return 0;
 }

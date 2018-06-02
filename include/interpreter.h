@@ -16,7 +16,7 @@
 #include "breakable.h"
 #include "splitter.h"
 
-typedef std::function<void(const char* output)> OUTPUT_FUNCTION;
+typedef std::function<void(const char* output, int length)> OUTPUT_FUNCTION;
 typedef std::function<std::string()> INPUT_FUNCTION;
 
 struct stack_log_part

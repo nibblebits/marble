@@ -234,8 +234,8 @@ static int marble_handler(request_rec *req)
         loadConfiguration(conf->config_location, conf);
         Interpreter interpreter(moduleSystem->getClassSystem(), moduleSystem->getFunctionSystem());
         interpreter.setModuleSystem(moduleSystem);
-        interpreter.setOutputFunction([&](const char* data) {
-            ap_rputs(data, req);
+        interpreter.setOutputFunction([&](const char* data, int length) {
+            ap_rwrite(data, length, req);
         });
 
         // Inject the permissions loaded from the configuration into our root scope granting access
@@ -281,8 +281,9 @@ bool loadConfiguration(std::string configFileName, configuration* conf=NULL)
 {
    std::cout << "LOADING MARBLE CONFIGURATION: " << configFileName << std::endl;
     Interpreter interpreter(moduleSystem->getClassSystem(), moduleSystem->getFunctionSystem());
-    interpreter.setOutputFunction([](const char* data) {
-        std::cout << data;
+    interpreter.setOutputFunction([](const char* data, int length) {
+        for (int i = 0; i < length; i++)
+            std::cout << data[i];
     });
     // Configurations should not be bound to permissions.
     interpreter.setNoPermissionRestrictions(true);

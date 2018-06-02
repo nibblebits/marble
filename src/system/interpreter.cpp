@@ -52,9 +52,12 @@
 
 Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionSystem) : SystemHandler(SYSTEM_HANDLER_INTERPRETER, classSystem, baseFunctionSystem, SYSTEM_HANDLER_NO_PARENT_BASE_CLASS_LINK)
 {   
-    this->output = [](const char* data)
+    this->output = [](const char* data, int length)
     {
-        std::cout << data;
+        for (int i = 0; i < length; i++)
+        {
+            std::cout << (char)data[i];
+        }
     };
   
     this->input = []() -> std::string {
@@ -224,7 +227,7 @@ Node* Interpreter::getAST(const char* code, PosInfo posInfo)
     Token* token = root_token;
     while (token != NULL)
     {
-       // std::cout << "TOken value: " << token->value << ", type: " << token->type << std::endl;
+        std::cout << "Token value: " << token->value << ", type: " << token->type << std::endl;
         token = token->next;
     }
 
@@ -383,7 +386,7 @@ PosInfo Interpreter::handleRawDataForSplit(PosInfo posInfo, split* split)
     CloneForCall(split->output.data, split->output.size, split->output.size+1, [&](const void* ptr, int size) {
         char* output_data = (char*) ptr;
         output_data[split->output.size] = 0;
-        output(output_data);
+        output(output_data, split->output.size);
         handleLineAndColumn(&posInfo, output_data, size);
     });
 
