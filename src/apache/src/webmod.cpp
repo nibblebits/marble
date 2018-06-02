@@ -27,7 +27,7 @@ WebModulePOSTContentObject::~WebModulePOSTContentObject()
 
 WebModuleObject::WebModuleObject(Class* c) : Object(c)
 {
-
+    this->req = NULL;
 }
 
 WebModuleObject::~WebModuleObject()
@@ -71,7 +71,6 @@ void WebModule::Init()
         return_value->dvalue = (args_obj->arguments.find(arguments[0].svalue) != args_obj->arguments.end());
     });
     /* End of RequestArguments Class */
-
 
     /* POSTContent class */
     c = this->getModuleSystem()->getClassSystem()->registerClass("POSTContent");
@@ -126,6 +125,10 @@ void WebModule::Init()
         return_value->svalue = web_mod_obj->requester_ip;
     });
 
+
+    // Used to set response headers for the given HTTP request
+    c->registerFunction("setResponseHeader", {VarType::fromString("string"), VarType::fromString("string")}, {VarType::fromString("void")}, WebModule::Request_setResponseHeader);
+
     /* End of Request class */
 
 }
@@ -146,6 +149,7 @@ void WebModule::parseRequest(Interpreter* interpreter, request_rec* req)
     Variable* variable = root_scope->getVariableAnyScope("Request");
 
     std::shared_ptr<WebModuleObject> object = std::dynamic_pointer_cast<WebModuleObject>(variable->value.ovalue);
+    object->req = (struct request_rec*) req;
     object->request_uri = req->unparsed_uri;
     object->requester_ip = req->useragent_ip;
     object->request_method = req->method;
@@ -210,4 +214,11 @@ std::map<std::string, std::string> WebModule::parseGet(request_rec* req)
         m[urlDecode(name)] = urlDecode(value);
     
     return m;
+}
+
+void WebModule::Request_setResponseHeader(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+{
+    std::shared_ptr<WebModuleObject> wm_obj = std::dynamic_pointer_cast<WebModuleObject>(object);
+    request_rec* req = wm_obj->req;
+    apr_table_set(req->headers_out, values[0].svalue.c_str(), values[1].svalue.c_str());
 }

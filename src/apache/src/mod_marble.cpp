@@ -209,11 +209,12 @@ static int marble_handler(request_rec *req)
         return DECLINED;
 
 
-    req->content_type = "text/html;charset=UTF-8";
+    req->content_type = "";
     
     // ap_table_set is too old API
     apr_table_set(req->headers_out, "X-Content-Type-Options", "nosniff");
-    
+    apr_table_set(req->headers_out, "Content-Type", "text/html");
+
     // Let's check that the file actually exists.
     rc = apr_stat(&finfo, req->filename, APR_FINFO_MIN, req->pool);
     if (rc == APR_SUCCESS)
