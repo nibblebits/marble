@@ -150,7 +150,7 @@ void IOModule::IO_WriteFile(Interpreter* interpreter, std::vector<Value> values,
     while(fs.read(buf, 1024))
     {
         interpreter->output(buf, fs.gcount());
-        if (fs.gcount() != 1024 && !(fs.rdstate() & std::ifstream::eofbit))
+        if (fs.rdstate() & std::ifstream::failbit)
         {
             throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to write all bytes to the file " + values[0].svalue);
         }
