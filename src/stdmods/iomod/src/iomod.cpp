@@ -5,6 +5,7 @@
 #include "iopermission.h"
 #include "exceptionobject.h"
 #include "function.h"
+#include <fstream>
 #include <sstream>
 #include <iostream>
 IOModule::IOModule() : Module("iomod", "IO Module", MODULE_TYPE_MARBLE_LIBRARY)
@@ -36,6 +37,14 @@ void IOModule::Init()
     });
 
     this->getModuleSystem()->getFunctionSystem()->registerFunction("write", {VarType::fromString("number")}, VarType::fromString("void"), IOModule::IO_Write);
+
+    /**
+     * 
+     *  Writes a file to the system output such as the web client or terminal what ever is setup
+     *  throws an IOException if a problem occurs
+     *  function writeFile(string filename) : void
+     */
+    this->getModuleSystem()->getFunctionSystem()->registerFunction("writeFile", {VarType::fromString("string")}, VarType::fromString("void"), IOModule::IO_WriteFile);
 
     Class* c = this->getModuleSystem()->getClassSystem()->registerClass("IO");
     c->registerFunction("print", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
@@ -121,6 +130,34 @@ void IOModule::IO_Write(Interpreter* interpreter, std::vector<Value> values, Val
     s += (unsigned char) values[0].dvalue;
 
     interpreter->output(s.c_str(), 1);
+}
+
+void IOModule::IO_WriteFile(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+{
+    std::ifstream fs;
+    fs.open (values[0].svalue, std::fstream::in | std::fstream::binary);
+    if (!fs.is_open())
+    {
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to open the file " + values[0].svalue + "for reading");
+    }
+
+
+    fs.seekg (0, fs.end);
+    size_t size = fs.tellg();
+    fs.seekg (0, fs.beg);
+
+    char buf[1024] = {0};
+    while(fs.read(buf, 1024))
+    {
+        interpreter->output(buf, fs.gcount());
+        if (fs.gcount() != 1024 && !(fs.rdstate() & std::ifstream::eofbit))
+        {
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to write all bytes to the file " + values[0].svalue);
+        }
+    }
+
+    fs.close();
+    
 }
 
 void IOModule::IO_input(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
