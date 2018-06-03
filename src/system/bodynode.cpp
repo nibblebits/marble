@@ -172,6 +172,5 @@ void BodyNode::interpret_body(BodyNode* node)
     interpreter->finish_parented_scope(); 
     this->node_listener_function = NULL;
     this->on_after_interpret_node_function = NULL;
-    return;
 }
 
