@@ -6,6 +6,8 @@
 
 #define MAX_OUTPUTSTREAM_SIZE_UNTIL_AUTO_FLUSH 1024
 
+#define TMP_DIRECTORY "/tmp"
+
 // Debug mode is enabled; To display comment the line below
 #define DEBUG_ENABLED
 #endif

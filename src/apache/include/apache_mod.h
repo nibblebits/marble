@@ -28,5 +28,5 @@ typedef struct {
 } keyValuePair;
 
 keyValuePair *readPost(request_rec *r);
-
+int util_read(request_rec *r, const char **rbuf, apr_off_t *size);
 #endif

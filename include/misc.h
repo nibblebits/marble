@@ -1,6 +1,7 @@
 #ifndef MISC_H
 #define MISC_H
 #include <string>
+#include <vector>
 #include <functional>
 
 std::string getAbsolutePath(std::string uri);
@@ -17,4 +18,13 @@ bool startsWith(std::string mainStr, std::string toMatch);
  * \param func The function to call to pass this cloned data to
  */
 void CloneForCall(const void* ptr, int size, int new_size, std::function<void(const void*, int)> func);
+
+
+std::vector<std::string> str_split(std::string str, std::string delm);
+
+/**
+ *  Writes the data as a file to the temporary directory in the system then returns the path
+*/
+std::string writeTemp(const char* data, int len);
+
 #endif
