@@ -104,7 +104,7 @@ enum
     EVALUATION_TYPE_DATATYPE = 0x01,
     EVALUATION_TYPE_VARIABLE = 0x02,
     // Signifies a variable should be resolved if possible
-    EVALUATION_FROM_VARIABLE = 0x04,
+    EVALUATION_FROM_VARIABLE = 0x04
 };
 
 enum
