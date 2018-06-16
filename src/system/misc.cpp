@@ -86,7 +86,11 @@ std::string writeTemp(const char* data, int len)
    std::string random_filename = std::to_string(rand_num);
    std::string path = std::string(TMP_DIRECTORY) + "/" + random_filename + ".dat";
    FILE* f = fopen(path.c_str(), "w");
-   fwrite(data, 1, len, f);
+   if (f == NULL)
+	 return "FAILED_OPEN";
+   if(fwrite(data, len, 1, f) != 1)
+	 return "FAILED_WRITE";
+	 
    fclose(f);
 
    return path;

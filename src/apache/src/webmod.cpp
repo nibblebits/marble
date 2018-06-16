@@ -158,7 +158,7 @@ void WebModule::Init()
         return_value->ovalue = web_mod_obj->request_arguments;
     });
 
-    c->registerFunction("getContent", {}, VarType::fromString("POSTContent"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
+    c->registerFunction("getContent", {}, VarType::fromString("PostContent"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         std::shared_ptr<WebModuleObject> web_mod_obj = std::dynamic_pointer_cast<WebModuleObject>(object);
         return_value->type = VALUE_TYPE_OBJECT;
         return_value->ovalue = web_mod_obj->content;
@@ -225,7 +225,7 @@ void WebModule::parseRequest(Interpreter* interpreter, request_rec* req)
 
 std::string WebModule::readNextInBuffer(char* buf_end, char** ptr, std::string delm)
 {
-    std::string result;
+    std::string result = "";
     char* current = *ptr;
     if (current > buf_end)
         return "";
@@ -241,7 +241,11 @@ std::string WebModule::readNextInBuffer(char* buf_end, char** ptr, std::string d
         result += current[i];
     }
     // We want to go past the delemiter
-    *ptr = end + delm.size();
+    char* new_ptr = end + delm.size();
+    if (new_ptr <= buf_end)
+        *ptr = new_ptr;
+    else
+        *ptr = buf_end;
 
     return result;
 }
@@ -252,7 +256,7 @@ std::string WebModule::extractValueFromString(std::string str)
     bool began_string = false;
     for (int i = 0; i < str.size(); i++)
     {
-        if (str[i] == '"')
+        if (str.at(i) == '"')
         {
             // If we have already began this string then we are finally done
             if (began_string)
@@ -261,23 +265,23 @@ std::string WebModule::extractValueFromString(std::string str)
             // We have began the string
             began_string = true;
         }
-        else if(str[i] == '\\')
+        else if(str.at(i) == '\\')
         {
-            if (str[i+1] == '"')
+            if (str.size() >= i+1 && str.at(i+1) == '"')
             {
                 // We have an escape sequence character let's ignore this byte and skip over the next one while adding it to this string
-                processed_string += str[i+1];
+                processed_string += str.at(i+1);
                 i++;
             }
             else
             {
                 // We are not escaping anything here let's make sure we add this character to the string
-                processed_string += str[i];
+                processed_string += str.at(i);
             }
         }
         else
         {
-            processed_string += str[i]; 
+            processed_string += str.at(i);
         }
     }
 
@@ -289,14 +293,16 @@ std::map<std::string, std::string> WebModule::parseKeyAndValueForString(std::str
     std::map<std::string, std::string> m;
 
     std::vector<std::string> outer_splits = str_split(str, ";");
-  
-
     for (int i = 0; i < outer_splits.size(); i++)
     {
         std::string value = "";
         std::string os = outer_splits[i];
         std::vector<std::string> inner_splits = str_split(os, "=");
-        std::string key = inner_splits[0].substr(inner_splits[0].find_first_not_of(" "));
+        std::string key = inner_splits.at(0).substr(inner_splits.at(0).find_first_not_of(" "));
+        // Let's convert the key to lowercase to be used for case insensitivity
+        for (int c = 0; c < key.size(); c++)
+            key[c] = std::tolower(key[c]);
+        
         if (inner_splits.size() > 1)
         {
             value = extractValueFromString(inner_splits[1]);
@@ -317,7 +323,11 @@ std::map<std::string, std::map<std::string, std::string>> WebModule::handleMulti
         std::map<std::string, std::string> value_map;
         std::vector<std::string> header_split = str_split(header, ":");
         std::string header_field_name = header_split.at(0);
-        if (header_split.size() > 0)
+        // the header field name should be converted to lowercase for case insensitivity
+        for (int c = 0; c < header_field_name.size(); c++)
+            header_field_name[c] = std::tolower(header_field_name[c]);
+
+        if (header_split.size() > 1)
         {
             std::string header_field_value = header_split.at(1);
             // We want to ignore trailing white spaces for the value
@@ -338,71 +348,76 @@ struct multipart_parse WebModule::parseMultipartFormData(request_rec* req, Inter
         return p;
 
     std::string contentType = std::string(contentType_cstr);
-    if(contentType.find("multipart/form-data") == 0)
+    if(contentType.find("multipart/form-data") != 0)
     {
-        apr_off_t size;
-        char* buf = NULL;
-        char* pos = NULL;
-        char* end = NULL;
-        if(util_read(req, (const char**) &buf, &size) == OK) {
-            pos = buf;
-           
-            end = pos+size;
+        // We only parse multipart
+        return p;
+    }
+    
+    apr_off_t size;
+    char* buf = NULL;
+    char* pos = NULL;
+    char* end = NULL;
+    if(util_read(req, (const char**) &buf, &size) != OK) {
+        return p;
+    }
+    pos = buf;
+    end = buf+size;
+    std::string signature = readNextInBuffer(end, &pos, "\r\n");
+    while(pos < end)
+    {
+        bool is_file = false;
+        std::string header_info = readNextInBuffer(end, &pos, "\r\n\r\n");
 
-            while(pos < end)
+        std::map<std::string, std::map<std::string, std::string>> header_info_map = handleMultipartHeaderInfo(header_info);
+        if (header_info_map.find("content-disposition") == header_info_map.end())
+        {
+            // Content-Disposition is a required header for multipart data
+            return p;
+        }
+
+        std::map<std::string, std::string> content_disposition_properties = header_info_map.at("content-disposition");
+        if (content_disposition_properties.find("name") == content_disposition_properties.end())
+        {
+            // We need a name so let's just return here as none was provided
+            return p;
+        }
+
+        if (content_disposition_properties.find("filename") != content_disposition_properties.end())
+        {
+            is_file = true;
+            if (header_info_map.find("content-type") == header_info_map.end())
             {
-                bool is_file = false;
-                std::string signature = readNextInBuffer(end, &pos, "\r\n");
-                std::string end_signature = "\r\n" + signature;
-                std::string header_info = readNextInBuffer(end, &pos, "\r\n\r\n");
-                std::map<std::string, std::map<std::string, std::string>> header_info_map = handleMultipartHeaderInfo(header_info);
-                if (header_info_map.find("Content-Disposition") == header_info_map.end())
-                {
-                    // Multipart form-data requires a Content-Disposition so we should just stop here as we don't have one
-                    return p;
-                }
+                // The client has specified that this is a file but has not provided a content type. Lets reject it
+                return p;
+            }
+        }
 
-                std::map<std::string, std::string> content_disposition_properties = header_info_map.at("Content-Disposition");
-                if (content_disposition_properties.find("name") == content_disposition_properties.end())
-                {
-                    // We need a name so let's just return here as none was provided
-                    return p;
-                }
+    
+        std::string data = readNextInBuffer(end, &pos, signature);
 
-                if (content_disposition_properties.find("filename") != content_disposition_properties.end())
-                {
-                    is_file = true;
-                    if (header_info_map.find("Content-Type") == header_info_map.end())
-                    {
-                        // The client has specified that this is a file but has not provided a content type. Lets reject it
-                        return p;
-                    }
-                }
-                std::string data = readNextInBuffer(end, &pos, end_signature);
-                if (!is_file)
-                {
-                    // This is not a file so lets add this to our post field content
-                    p.post_field_content[content_disposition_properties["name"]] = data;
-                }
-                else
-                {
-                    std::shared_ptr<MultipartFileObject> file_obj = std::dynamic_pointer_cast<MultipartFileObject>(Object::create(interpreter->getClassSystem()->getClassByName("MultipartFile")));
-                    file_obj->name = content_disposition_properties["filename"];
-                    file_obj->type = header_info_map["Content-Type"].begin()->first;
+        if (!is_file)
+        {
+            // This is not a file so lets add this to our post field content
+            p.post_field_content[content_disposition_properties["name"]] = data;
+        }
+        else
+        {
+            std::shared_ptr<MultipartFileObject> file_obj = std::dynamic_pointer_cast<MultipartFileObject>(Object::create(interpreter->getClassSystem()->getClassByName("MultipartFile")));
+            file_obj->name = content_disposition_properties["filename"];
+            file_obj->type = header_info_map["content-type"].begin()->first;
 
-                    // Let's write this file to temp
-                    file_obj->path = writeTemp(data.c_str(), data.size());
-                    p.file_field_content[content_disposition_properties["name"]] = file_obj;
-
-                }
-                if (pos < end)
-                {
-                    if (*pos == '-')
-                    {
-                        // We have reached the end --
-                        break;
-                    }
-                }
+            // Let's write this file to temp
+            file_obj->path = writeTemp(data.c_str(), data.size());
+            p.file_field_content[content_disposition_properties["name"]] = file_obj;
+        }
+                
+        if (pos < end)
+        {
+            if (*pos == '-')
+            {
+                // We have reached the end --
+                break;
             }
         }
     }
