@@ -29,22 +29,38 @@ void ArrayNode::test(Validator* validator, struct extras extra)
 Value ArrayNode::interpret(Interpreter* interpreter, struct extras extra)
 {
     Value index_exp = this->index_node->interpret(interpreter);
+
     // If this array node is being interpreted then the next_element is guaranteed to be an expression interpretable node.
     Value next_elem_value = this->next_element->interpret(interpreter);
     if (index_exp.dvalue > 0xffffffff || index_exp.dvalue < 0)
     {
         throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("InvalidIndexException"))));
     }
-    else if(next_elem_value.avalue == NULL)
+    
+    if (next_elem_value.type == VALUE_TYPE_STRING)
     {
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("NullPointerException"))));
+        // This is a string lets get the character
+        if (index_exp.dvalue >= next_elem_value.svalue.size())
+        {
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("InvalidIndexException"))), "Index out of bounds for string");
+        }
+
+        char c = next_elem_value.svalue.at(index_exp.dvalue);
+        return Value((double)c);
     }
-    else if(index_exp.dvalue >= next_elem_value.avalue->count)
+    else
     {
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("InvalidIndexException"))));
-        //throw std::logic_error("Index out of bounds. Index is: " + std::to_string(index_exp.dvalue) + " count is: " + std::to_string(next_elem_value.avalue->count));
+        if(next_elem_value.avalue == NULL)
+        {
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("NullPointerException"))));
+        }
+        else if(index_exp.dvalue >= next_elem_value.avalue->count)
+        {
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("InvalidIndexException"))));
+        }
+
+        return next_elem_value.avalue->variables[(int)index_exp.dvalue].value;
     }
-    return next_elem_value.avalue->variables[(int)index_exp.dvalue].value;
 }
 
 void ArrayNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)
