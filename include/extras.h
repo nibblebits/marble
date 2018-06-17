@@ -21,6 +21,12 @@ struct extras
 
     // The current object that is being accessed
     std::shared_ptr<Object> current_object=NULL;
+
+    /**
+     * This is used to represent the current array index when parsing array indexes.
+     * It starts at one. Zero if no array index is present. It is passed only validation of array indexes and it is not passed to the index node.
+     */
+    int current_array_index = 0;
 };
 
 #endif

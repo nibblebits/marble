@@ -19,11 +19,36 @@ ArrayNode::~ArrayNode()
 
 void ArrayNode::test(Validator* validator, struct extras extra)
 {
+    extra.current_array_index+=1;
     validator->save();
     this->index_node->test(validator);
     validator->restore();
-    
-    this->next_element->test(validator);
+
+    if (this->next_element->type != NODE_TYPE_ARRAY)
+    {
+        // We have reached the end of the array access and we are now at the final element which will be the array variable
+        struct Evaluation evaluation = this->next_element->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE);
+        
+        if (extra.current_array_index > evaluation.datatype.dimensions)
+        {
+            if (evaluation.datatype.type != VARIABLE_TYPE_STRING)
+            {
+                throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(validator->getClassSystem()->getClassByName("InvalidIndexException"))), "Attempting to access an invalid array dimension");
+            }
+
+            // We allow you to access characters of strings so one more index is allowed
+            if (extra.current_array_index > evaluation.datatype.dimensions+1)
+            {
+                throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(validator->getClassSystem()->getClassByName("InvalidIndexException"))), "Attempting to access an invalid array dimension for string");
+            }
+        }
+
+        this->next_element->test(validator, extra);
+    }
+    else
+    {
+        this->next_element->test(validator, extra);
+    }
 }
 
 Value ArrayNode::interpret(Interpreter* interpreter, struct extras extra)
@@ -46,7 +71,7 @@ Value ArrayNode::interpret(Interpreter* interpreter, struct extras extra)
         }
 
         char c = next_elem_value.svalue.at(index_exp.dvalue);
-        return Value((double)c);
+        return Value(std::to_string(c));
     }
     else
     {
