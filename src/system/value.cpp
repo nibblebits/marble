@@ -98,6 +98,9 @@ void Value::set(std::shared_ptr<Object> o)
     this->type = VALUE_TYPE_OBJECT;
     this->type_str = o->getClass()->name;
     this->ovalue = o;
+    // Let's set the array value to this object. The array value will be NULL if casting fails.
+    this->avalue = std::dynamic_pointer_cast<Array>(o);
+
 }
 
 std::string Value::getStringValue(Value* from)

@@ -2,6 +2,7 @@
 #include "variable.h"
 #include "csystem.h"
 #include "class.h"
+#include "misc.h"
 #include <iostream>
 VarType::VarType()
 {
@@ -61,8 +62,10 @@ bool VarType::isArray()
 
 VarType VarType::fromString(std::string value)
 {
+    std::vector<std::string> value_split = str_split(value, "[]");
     VarType type;
-    type.type = Variable::getVariableTypeForString(value);
-    type.value = value;
+    type.value = value_split[0];
+    type.dimensions = value_split.size()-1;
+    type.type = Variable::getVariableTypeForString(value_split[0]);
     return type;
 }

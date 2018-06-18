@@ -80,11 +80,12 @@ std::string writeTemp(const char* data, int len)
    time_t t;
 
    /* Intializes random number generator */
-   srand((unsigned) time(&t));
+   srand((unsigned) time(&t) + len);
 
    int rand_num = rand();
    std::string random_filename = std::to_string(rand_num);
    std::string path = std::string(TMP_DIRECTORY) + "/" + random_filename + ".dat";
+   
    FILE* f = fopen(path.c_str(), "w");
    if (f == NULL)
 	 return "FAILED_OPEN";

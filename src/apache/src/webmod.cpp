@@ -3,6 +3,7 @@
 #include "exceptions/systemexception.h"
 #include "exceptionobject.h"
 #include "misc.h"
+#include "array.h"
 #include <string>
 #include <ctype.h>
 #include <iostream>
@@ -114,6 +115,8 @@ void WebModule::Init()
     c = this->getModuleSystem()->getClassSystem()->registerClass("FileContent");
     c->registerFunction("has", {VarType::fromString("string")}, VarType::fromString("boolean"), WebModule::FileContent_has);
     c->registerFunction("get", {VarType::fromString("string")}, VarType::fromString("MultipartFile"), WebModule::FileContent_get);
+    c->registerFunction("hasArray", {VarType::fromString("string")}, VarType::fromString("boolean"), WebModule::FileContent_hasArray);
+    c->registerFunction("getArray", {VarType::fromString("string")}, VarType::fromString("MultipartFile[]"), WebModule::FileContent_getArray);
     
     /* End of FileContent class */
 
@@ -220,6 +223,7 @@ void WebModule::parseRequest(Interpreter* interpreter, request_rec* req)
        // Put the non file field into the WebModuleObject's POST content
        object->content->content = mparse.post_field_content;
        object->file_content->content = mparse.file_field_content;
+       object->file_content->content_array = mparse.file_field_content_array;
     }
 }
 
@@ -395,11 +399,11 @@ struct multipart_parse WebModule::parseMultipartFormData(request_rec* req, Inter
 
     
         std::string data = readNextInBuffer(end, &pos, signature);
-
+        std::string field_name = content_disposition_properties["name"];
         if (!is_file)
         {
             // This is not a file so lets add this to our post field content
-            p.post_field_content[content_disposition_properties["name"]] = data;
+            p.post_field_content[field_name] = data;
         }
         else
         {
@@ -409,7 +413,16 @@ struct multipart_parse WebModule::parseMultipartFormData(request_rec* req, Inter
 
             // Let's write this file to temp
             file_obj->path = writeTemp(data.c_str(), data.size());
-            p.file_field_content[content_disposition_properties["name"]] = file_obj;
+            if (field_name.find("[]") != std::string::npos)
+            {
+                // This is an array content
+                std::string real_field_name = str_split(field_name, "[]")[0];
+                p.file_field_content_array[real_field_name].push_back(file_obj);
+            }
+            else
+            {
+                p.file_field_content[field_name] = file_obj;
+            }
         }
                 
         if (pos < end)
@@ -521,6 +534,36 @@ void WebModule::FileContent_get(Interpreter* interpreter, std::vector<Value> val
     }
 
     return_value->set(file_content_obj->content[values[0].svalue]);
+}
+
+void WebModule::FileContent_getArray(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+{
+    std::shared_ptr<WebModulePOSTFileContentObject> file_content_obj = std::dynamic_pointer_cast<WebModulePOSTFileContentObject>(object);
+    if(file_content_obj->content_array.find(values[0].svalue) == file_content_obj->content_array.end())
+    {
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("InvalidIndexException"), {})));
+    }
+
+    std::vector<std::shared_ptr<MultipartFileObject>> file_array_list = file_content_obj->content_array[values[0].svalue];
+    Variable* variables = new Variable[file_array_list.size()];
+    for(int i = 0; i < file_array_list.size(); i++)
+    {
+        std::shared_ptr<MultipartFileObject> file_obj = file_array_list.at(i);
+        Variable* var = &variables[i];
+        var->type = VARIABLE_TYPE_OBJECT;
+        var->value.holder = var;
+        var->value.set(file_obj);
+    }
+
+    return_value->type = VALUE_TYPE_ARRAY;
+    return_value->set(std::make_shared<Array>(interpreter->getClassSystem()->getClassByName("array"), variables, file_array_list.size()));
+}
+
+
+void WebModule::FileContent_hasArray(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+{
+     std::shared_ptr<WebModulePOSTFileContentObject> file_content_obj = std::dynamic_pointer_cast<WebModulePOSTFileContentObject>(object);
+     return_value->set(file_content_obj->content_array.find(values[0].svalue) != file_content_obj->content_array.end());
 }
 
 void WebModule::MultipartFile_getType(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)

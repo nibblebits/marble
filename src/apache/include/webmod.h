@@ -30,6 +30,10 @@ struct multipart_parse
     
     // File content for multipart file uploads, key = field name, value = multipart file
     std::map<std::string, std::shared_ptr<MultipartFileObject>> file_field_content;
+
+    // Multipart file uploads whose filename is an array get mapped here
+    std::map<std::string, std::vector<std::shared_ptr<MultipartFileObject>> > file_field_content_array;
+
 };
 
 class WebModuleRequestArgumentsObject : public Object
@@ -56,7 +60,11 @@ public:
     WebModulePOSTFileContentObject(Class* c);
     virtual ~WebModulePOSTFileContentObject();
 
+    // Multipart file uploads whoe filename is singular get mapped here
     std::map<std::string, std::shared_ptr<MultipartFileObject>> content;
+
+    // Multipart file uploads whose filename is an array get mapped here
+    std::map<std::string, std::vector<std::shared_ptr<MultipartFileObject>> > content_array;
 };
 
 
@@ -141,6 +149,8 @@ public:
     static void Request_getFileContent(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
     static void FileContent_has(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
     static void FileContent_get(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
+    static void FileContent_hasArray(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
+    static void FileContent_getArray(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
     static void MultipartFile_getType(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
     static void MultipartFile_getName(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
     static void MultipartFile_getPath(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
