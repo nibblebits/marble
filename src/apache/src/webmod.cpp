@@ -366,6 +366,7 @@ struct multipart_parse WebModule::parseMultipartFormData(request_rec* req, Inter
     if(util_read(req, (const char**) &buf, &size) != OK) {
         return p;
     }
+
     pos = buf;
     end = buf+size;
     std::string signature = readNextInBuffer(end, &pos, "\r\n");
@@ -399,7 +400,7 @@ struct multipart_parse WebModule::parseMultipartFormData(request_rec* req, Inter
         }
 
     
-        std::string data = readNextInBuffer(end, &pos, signature);
+        std::string data = readNextInBuffer(end, &pos, "\r\n" + signature);
         std::string field_name = content_disposition_properties["name"];
         if (!is_file)
         {
@@ -408,28 +409,32 @@ struct multipart_parse WebModule::parseMultipartFormData(request_rec* req, Inter
         }
         else
         {
-            std::shared_ptr<MultipartFileObject> file_obj = std::dynamic_pointer_cast<MultipartFileObject>(Object::create(interpreter->getClassSystem()->getClassByName("MultipartFile")));
-            file_obj->name = content_disposition_properties["filename"];
-            file_obj->type = header_info_map["content-type"].begin()->first;
-            
-            // Let's get the file extension if there is one
-            std::vector<std::string> name_split = str_split(file_obj->name, ".");
-            if (name_split.size() > 1)
+            std::string filename = content_disposition_properties["filename"];
+            if (filename != "")
             {
-                file_obj->ext = name_split[name_split.size()-1];
-            }
+                std::shared_ptr<MultipartFileObject> file_obj = std::dynamic_pointer_cast<MultipartFileObject>(Object::create(interpreter->getClassSystem()->getClassByName("MultipartFile")));
+                file_obj->name = filename;
+                file_obj->type = header_info_map["content-type"].begin()->first;
+                
+                // Let's get the file extension if there is one
+                std::vector<std::string> name_split = str_split(filename, ".");
+                if (name_split.size() > 1)
+                {
+                    file_obj->ext = name_split[name_split.size()-1];
+                }
 
-            // Let's write this file to temp
-            file_obj->path = writeTemp(data.c_str(), data.size());
-            if (field_name.find("[]") != std::string::npos)
-            {
-                // This is an array content
-                std::string real_field_name = str_split(field_name, "[]")[0];
-                p.file_field_content_array[real_field_name].push_back(file_obj);
-            }
-            else
-            {
-                p.file_field_content[field_name] = file_obj;
+                // Let's write this file to temp
+                file_obj->path = writeTemp(data.c_str(), data.size());
+                if (field_name.find("[]") != std::string::npos)
+                {
+                    // This is an array content
+                    std::string real_field_name = str_split(field_name, "[]")[0];
+                    p.file_field_content_array[real_field_name].push_back(file_obj);
+                }
+                else
+                {
+                    p.file_field_content[field_name] = file_obj;
+                }
             }
         }
                 
