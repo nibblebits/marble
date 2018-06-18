@@ -109,6 +109,7 @@ void WebModule::Init()
     c->registerFunction("getType", {}, VarType::fromString("string"), WebModule::MultipartFile_getType);
     c->registerFunction("getName", {}, VarType::fromString("string"), WebModule::MultipartFile_getName);
     c->registerFunction("getPath", {}, VarType::fromString("string"), WebModule::MultipartFile_getPath);
+    c->registerFunction("getExtension", {}, VarType::fromString("string"), WebModule::MultipartFile_getExtension);
     /* End of MultipartFile class */
 
     /* FileContent class */
@@ -410,6 +411,13 @@ struct multipart_parse WebModule::parseMultipartFormData(request_rec* req, Inter
             std::shared_ptr<MultipartFileObject> file_obj = std::dynamic_pointer_cast<MultipartFileObject>(Object::create(interpreter->getClassSystem()->getClassByName("MultipartFile")));
             file_obj->name = content_disposition_properties["filename"];
             file_obj->type = header_info_map["content-type"].begin()->first;
+            
+            // Let's get the file extension if there is one
+            std::vector<std::string> name_split = str_split(file_obj->name, ".");
+            if (name_split.size() > 1)
+            {
+                file_obj->ext = name_split[name_split.size()-1];
+            }
 
             // Let's write this file to temp
             file_obj->path = writeTemp(data.c_str(), data.size());
@@ -582,4 +590,10 @@ void WebModule::MultipartFile_getPath(Interpreter* interpreter, std::vector<Valu
 {
     std::shared_ptr<MultipartFileObject> m_obj = std::dynamic_pointer_cast<MultipartFileObject>(object);
     return_value->set(m_obj->path); 
+}
+
+void WebModule::MultipartFile_getExtension(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+{
+    std::shared_ptr<MultipartFileObject> m_obj = std::dynamic_pointer_cast<MultipartFileObject>(object);
+    return_value->set(m_obj->ext); 
 }
