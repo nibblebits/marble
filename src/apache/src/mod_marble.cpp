@@ -42,6 +42,7 @@
 #include "webmod.h"
 #include "permissionobject.h"
 #include "permissionsobject.h"
+#include "exceptions/timeoutexception.h"
 
 // request handler example
 
@@ -293,7 +294,14 @@ static int marble_handler(request_rec *req)
 
         try
         {
-            interpreter.runScript(req->filename);
+            try
+            {
+                interpreter.runScript(req->filename);
+            }
+            catch(TimeoutException& ex)
+            {
+                logger->error("The script has timed out; If you need more time please increase the timeout limit");
+            }
         }
         catch(...)
         {

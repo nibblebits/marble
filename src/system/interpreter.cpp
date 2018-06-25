@@ -328,6 +328,7 @@ void Interpreter::createDefaultClassesAndFunctions()
         // You can find this at function.cpp
         return_value->ovalue = interpreter->getCurrentScope()->getVariableAnyScope("_caller_permissions")->value.ovalue;
     });
+    
 }
 
 void Interpreter::setupValidator()

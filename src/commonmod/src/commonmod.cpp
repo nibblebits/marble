@@ -6,6 +6,7 @@
 #include "commonmod_sqlresult.h"
 #include "commonmod_sqlrecord.h"
 #include "commonmod_preparedstatement.h"
+#include "commonmod_system.h"
 
 #include <sstream>
 #include <iostream>
@@ -44,6 +45,8 @@ void CommonModule::Init()
     CommonModule_SqlConnection::registerClass(this->getModuleSystem());
     CommonModule_SqlResult::registerClass(this->getModuleSystem());
     CommonModule_SqlRecord::registerClass(this->getModuleSystem());
+    CommonModule_System::registerClass(this->getModuleSystem());
+
     log("Common Module Initialised.", LOG_LEVEL_NOTICE);
 }
 
@@ -55,6 +58,7 @@ void CommonModule::newInterpreter(Interpreter* interpreter)
 
     // Let's let the SqlDriver know we have a new interpreter.
     CommonModule_SqlDriver::newInterpreter(interpreter);
-}
 
-// Native IO functions/methods
+    // Let's let the System know we have a new interpreter
+    CommonModule_System::newInterpreter(interpreter);
+}
