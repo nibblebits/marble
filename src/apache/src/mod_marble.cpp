@@ -57,6 +57,8 @@ typedef struct
     char* config_location;
     // The permissions that all interpreters are bound to. The configuration file loads these.
     std::shared_ptr<PermissionsObject> set_permissions;
+    // The timeout that scripts should stop when they reach
+    int timeout = 0;
 } configuration;
 
 static configuration config;
@@ -281,6 +283,9 @@ static int marble_handler(request_rec *req)
         // Inject the permissions loaded from the configuration into our root scope granting access
         interpreter.getRootScope()->permissions = conf->set_permissions;
 
+        // Let's set the timeout for this interpreter
+        interpreter.setTimeout(conf->timeout);
+
         Logger* logger = interpreter.getLogger();
 
         // We must change our working directory so let's get the directory we are accessing
@@ -349,8 +354,12 @@ bool loadConfiguration(std::string configFileName, configuration* conf=NULL)
        Do be aware this type of setup only works in a single threaded environment in a multithreaded environment the permission object must be cloned
        when inserting it into interpreters that must be run later. */ 
     if (conf != NULL)
+    {
         conf->set_permissions = interpreter.getRootScope()->permissions;
 
+        // We also want to remember the timeout this configuration setup for us
+        conf->timeout = interpreter.getTimeout();
+    }
     return true;
 }
 

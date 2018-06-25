@@ -59,6 +59,11 @@ public:
     void setTimeout(int seconds);
 
     /**
+     * Returns the current timeout for this interpreter
+     */
+    int getTimeout();
+    
+    /**
      * Call this function if you want the Interpreter to check if it has timed out
      * if this is true a TimeoutException is thrown
      * \throws TimeoutException

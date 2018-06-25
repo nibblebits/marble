@@ -97,6 +97,11 @@ void Interpreter::setTimeout(int seconds)
     this->timeout = seconds;
 }
 
+
+int Interpreter::getTimeout()
+{
+    return this->timeout;
+}
     
 void Interpreter::checkTimeout()
 {
