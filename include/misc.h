@@ -27,4 +27,9 @@ std::vector<std::string> str_split(std::string str, std::string delm);
 */
 std::string writeTemp(const char* data, int len);
 
+
+/**
+ * Creates memory that can be shared between child processes created from a fork
+ */
+void* create_shared_memory(size_t size);
 #endif

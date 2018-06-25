@@ -1,4 +1,5 @@
 #include "listnode.h"
+#include "interpreter.h"
 ListNode::ListNode() : ListNode(NODE_TYPE_LIST)
 {
     this->root = NULL;
@@ -24,7 +25,13 @@ Value ListNode::interpret(Interpreter* interpreter, struct extras extra)
 {
     Value v;
     InterpretableNode* current = this->root;
-    while(current != NULL) { current->interpret(interpreter); current = (InterpretableNode*) current->next;}
+    while(current != NULL)
+    { 
+        // Let's see if we have timed out
+        interpreter->checkTimeout();
+        current->interpret(interpreter); 
+        current = (InterpretableNode*) current->next;
+    }
     return v;
 }
 

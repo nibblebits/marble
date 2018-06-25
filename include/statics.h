@@ -183,6 +183,11 @@ enum
     EXTRA_STATE_ALLOW_FUNCTION_TO_EXIST = 0x02
 };
 
+enum
+{
+    RUN_OK,
+    RUN_TIMED_OUT
+};
 typedef int SYSTEM_HANDLER_TYPE;
 typedef int MODULE_TYPE;
 typedef int TOKEN_TYPE;
@@ -200,5 +205,6 @@ typedef int OBJECT_ACCESS_TYPE;
 typedef int SYSTEM_HANDLER_RULES;
 typedef int NODE_LISTENER_ACTION;
 typedef int EXTRA_STATE;
+typedef int RUN_STATE;
 
 #endif

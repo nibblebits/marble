@@ -149,6 +149,9 @@ bool BodyNode::interpret_body_node(Node* node)
 
 void BodyNode::interpret_body(BodyNode* node)
 {
+    // Let's see if we have timed out
+    interpreter->checkTimeout();
+
     // Let's create a new parented scope for this
     interpreter->new_parented_scope();
     // Get the root of the body. The first child.
@@ -157,6 +160,8 @@ void BodyNode::interpret_body(BodyNode* node)
     // Awesome now lets interpret!
     while(current_node != NULL)
     {
+        // Let's see if we have timed out
+        interpreter->checkTimeout();
         if(!interpret_body_node(current_node)) break;
         current_node = current_node->next;
     }

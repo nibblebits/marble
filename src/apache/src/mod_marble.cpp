@@ -32,6 +32,9 @@
 #include <vector>
 #include <stdlib.h>
 #include <unistd.h>
+#include <stdlib.h>
+#include <semaphore.h>
+#include <sys/mman.h>
 
 #include "apache_mod.h"
 #include "interpreter.h"
@@ -287,12 +290,12 @@ static int marble_handler(request_rec *req)
 
         // Let's let the WebModule know about our request
         webModule->parseRequest(&interpreter, req);
-    
 
         try
         {
             interpreter.runScript(req->filename);
-        } catch(...)
+        }
+        catch(...)
         {
             // If the logger has errors then this exception was thrown because of them. This wouldnt be an internal server error we will output these errors later.
             if (!logger->hasErrors())
@@ -344,9 +347,18 @@ bool loadConfiguration(std::string configFileName, configuration* conf=NULL)
 }
 
 /**
- * Initialises this module
+ * Initialises this module's child request
  */
 static void child_init(apr_pool_t*, server_rec* s)
+{
+  
+}
+
+/**
+ * Load everything before our process is forked
+ */
+int post_config(apr_pool_t *pconf, apr_pool_t *plog,
+                          apr_pool_t *ptemp, server_rec *s)
 {
     baseHandler = new BaseSystemHandler();
     moduleSystem = new ModuleSystem(baseHandler->getClassSystem(), baseHandler->getFunctionSystem());
@@ -356,6 +368,7 @@ static void child_init(apr_pool_t*, server_rec* s)
 
     webModule = new WebModule();
     moduleSystem->addModule(webModule);
+    return OK;
 }
 
 static void marble_register_hooks(apr_pool_t* p)
@@ -363,6 +376,7 @@ static void marble_register_hooks(apr_pool_t* p)
     printf("\n ** marble_register_hooks  **\n\n");
     ap_hook_handler(marble_handler, NULL, NULL, APR_HOOK_MIDDLE);
     ap_hook_child_init(child_init, NULL, NULL, APR_HOOK_MIDDLE);
+    ap_hook_post_config(post_config, NULL, NULL, APR_HOOK_MIDDLE);
 }
 
 

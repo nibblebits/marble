@@ -6,6 +6,7 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <semaphore.h>
 #include "scope.h"
 #include "functionsystem.h"
 #include "csystem.h"
@@ -15,6 +16,7 @@
 #include "posinfo.h"
 #include "breakable.h"
 #include "splitter.h"
+#include "statics.h"
 
 typedef std::function<void(const char* output, int length)> OUTPUT_FUNCTION;
 typedef std::function<std::string()> INPUT_FUNCTION;
@@ -39,20 +41,37 @@ class FunctionCallNode;
 class Class;
 class ClassSystem;
 class CommonModule_SqlDriver;
+
 class Interpreter : public SystemHandler
 {
 public:
     Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionSystem);
     virtual ~Interpreter();
     static Class* getDefaultBaseClass();
+
+    /**
+     * Sets the timeout for this Interpreter. Scripts will stop running if the run time goes higher
+     * than the timeout provided. Use 0 if you do not want a timeout.
+     * 
+     * \attention The script is not guaranteed to stop straight away if the run time proceeds the timeout. This is because native functions are not bound to this timeout limit
+     * \param seconds The time in seconds you want this script to timeout if it runs longer than the timeout provided
+     */
+    void setTimeout(int seconds);
+
+    /**
+     * Call this function if you want the Interpreter to check if it has timed out
+     * if this is true a TimeoutException is thrown
+     * \throws TimeoutException
+     */
+    void checkTimeout();
+
     void setOutputFunction(OUTPUT_FUNCTION output);
     void setInputFunction(INPUT_FUNCTION input);
-
     /**
      * Sets the ModuleSystem for this interpreter. You should load your modules before calling this method to ensure modules are told about this interpreter.
      * Upon calling this method special module functions are also created allowing for loading of modules from within the interpreter its self.
      * The interpreter will tell the modules it loads about it's self.
-     * 
+     * IO_ERROR_H
      * \attention The module functions created must not be used when the ModuleSystem is no longer being used in a single threaded environment. As soon as the ModuleSystem is being used between threads these functions should not be allowed so do not provide the permission to the interpreter for the functions to be called.
      */
     void setModuleSystem(ModuleSystem* moduleSystem);
@@ -159,7 +178,6 @@ public:
     */
     INPUT_FUNCTION input;
 
-    
 private:
     /**
      * Creates the default classes and functions that the marble interpreter requires to function properly
@@ -184,6 +202,12 @@ private:
     std::unique_ptr<Lexer> lexer;
     std::unique_ptr<Parser> parser;
     std::unique_ptr<Validator> validator;
+
+    // This is the timeout for this Interpreter instance. Scripts will stop running if this is hit
+    int timeout;
+
+    // This is equal to the time the first run was called
+    time_t execution_started;
 
 };
 

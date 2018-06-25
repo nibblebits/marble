@@ -35,19 +35,22 @@
 #include "commonmod_sqldriver.h"
 #include "exceptions/IOException.h"
 #include "exceptions/systemexception.h"
-    std::string getAllVariablesAsString(Scope* scope)
+#include "exceptions/timeoutexception.h"
+
+
+std::string getAllVariablesAsString(Scope* scope)
+{
+    std::string return_val = "";
+    for (Variable* var : scope->getVariables())
     {
-        std::string return_val = "";
-        for (Variable* var : scope->getVariables())
-        {
-            return_val += var->name + ", ";
-        }
-        
-        if (scope->prev != NULL)
-            return_val += getAllVariablesAsString(scope->prev);
-        
-        return return_val;
+        return_val += var->name + ", ";
     }
+        
+    if (scope->prev != NULL)
+        return_val += getAllVariablesAsString(scope->prev);
+        
+    return return_val;
+}
 
 
 Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionSystem) : SystemHandler(SYSTEM_HANDLER_INTERPRETER, classSystem, baseFunctionSystem, SYSTEM_HANDLER_NO_PARENT_BASE_CLASS_LINK)
@@ -78,11 +81,31 @@ Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionS
    this->moduleSystem = NULL;
    this->first_run = true;
    this->no_permission_restritions = false;
+   this->timeout = 0;
+   this->execution_started = 0;
 
 }
 
 Interpreter::~Interpreter()
 {
+
+}
+
+
+void Interpreter::setTimeout(int seconds)
+{
+    this->timeout = seconds;
+}
+
+    
+void Interpreter::checkTimeout()
+{
+    // No timeout
+    if (this->timeout == 0)
+        return;
+
+    if (time(NULL) - this->execution_started > this->timeout)
+        throw TimeoutException("The interpreter timed out");
 
 }
 
@@ -320,6 +343,14 @@ void Interpreter::setupValidator()
 
 void Interpreter::run(const char* code, PosInfo posInfo, bool ignore_validation)
 {
+    bool this_run_started_execution = false;
+    if (this->execution_started == 0)
+    {
+        // Execution has just started
+        this_run_started_execution = true;
+        this->execution_started = time(NULL);
+    }
+
     ready();
     setupValidator();
     Node* root_node = getAST(code, posInfo);
@@ -335,11 +366,16 @@ void Interpreter::run(const char* code, PosInfo posInfo, bool ignore_validation)
             current_node = (InterpretableNode*) current_node->next;
         }
     }
-    
     catch(SystemException& ex)
     {
-        std::shared_ptr<ExceptionObject> rex = std::dynamic_pointer_cast<ExceptionObject>(ex.getObject());
-        logger.error("System threw a " + rex->getClass()->name +  ", message: " + rex->getMessage(), current_node->posInfo);
+            std::shared_ptr<ExceptionObject> rex = std::dynamic_pointer_cast<ExceptionObject>(ex.getObject());
+            logger.error("System threw a " + rex->getClass()->name +  ", message: " + rex->getMessage(), current_node->posInfo);
+    }
+
+    if (this_run_started_execution)
+    {
+        // We are done reset the execution time
+        this->execution_started = 0;
     }
 }
 
@@ -518,3 +554,4 @@ Class* Interpreter::registerDefaultObjectClass(ClassSystem* class_system, std::s
     });
     return c;
 }
+

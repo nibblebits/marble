@@ -4,6 +4,9 @@
 #include <string.h>
 #include <memory.h>
 #include <memory>
+#include<stdio.h>
+#include<sys/types.h>
+#include<unistd.h>
 #include "interpreter.h"
 #include "basesystemhandler.h"
 #include "object.h"
@@ -29,15 +32,9 @@ bool loadConfiguration()
     // Configurations should not be bound to permissions.
     interpreter.setNoPermissionRestrictions(true);
     interpreter.setModuleSystem(moduleSystem);
-    try
-    {
-        interpreter.runScript(configFileName.c_str());
-    }
-    catch(...)
-    {
-        std::cout << "Failed to load or run the configuration script: " << configFileName << std::endl;
-        throw;
-    }
+
+    interpreter.runScript(configFileName.c_str());
+
 
     /* The set permissions become equal to the permissions of the configuration interpreter
        Do be aware this type of setup only works in a single threaded environment in a multithreaded environment the permission object must be cloned
@@ -48,33 +45,35 @@ bool loadConfiguration()
 }
 void interpret()
 {
-    Interpreter interpreter(moduleSystem->getClassSystem(), moduleSystem->getFunctionSystem());
-    interpreter.setOutputFunction([](const char* data, int length) {
-        for (int i = 0; i < length; i++) {
-            std::cout << (char) data[i];
-        }
-    });
-    
-    interpreter.setInputFunction([]()->std::string {
-        std::string s;
-        std::cin >> s;
-        return s;
-    });
+        Interpreter interpreter(moduleSystem->getClassSystem(), moduleSystem->getFunctionSystem());
+        interpreter.setTimeout(5);
+        interpreter.setOutputFunction([](const char* data, int length) {
+            for (int i = 0; i < length; i++) {
+                std::cout << (char) data[i];
+            }
+        });
+        
+        interpreter.setInputFunction([]()->std::string {
+            std::string s;
+            std::cin >> s;
+            return s;
+        });
 
-    Logger* logger = interpreter.getLogger();
-    interpreter.setModuleSystem(moduleSystem);
-    interpreter.getRootScope()->permissions = set_permissions;
-    interpreter.runScript("./test.marble");
-    for (LogEntry entry : logger->entries)
-    {
-        std::cout << entry.message << " on line: " << entry.posInfo.line << ", col: " << entry.posInfo.col << std::endl;
-    }    
+        Logger* logger = interpreter.getLogger();
+        interpreter.setModuleSystem(moduleSystem);
+        interpreter.getRootScope()->permissions = set_permissions;
+        interpreter.runScript("./test.marble");
+        for (LogEntry entry : logger->entries)
+        {
+            std::cout << entry.message << " on line: " << entry.posInfo.line << ", col: " << entry.posInfo.col << std::endl;
+        }
+  
 }
 int main(int argc, char** argv)
 {
     baseHandler = new BaseSystemHandler();
     moduleSystem = new ModuleSystem(baseHandler->getClassSystem(), baseHandler->getFunctionSystem());
-   // Load the configuration and return on failure
+    // Load the configuration and return on failure
     if(!loadConfiguration())
        return 1;
 

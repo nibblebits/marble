@@ -33,6 +33,9 @@
         "ctime": "cpp",
         "deque": "cpp",
         "cstring": "cpp",
-        "fstream": "cpp"
+        "fstream": "cpp",
+        "chrono": "cpp",
+        "ratio": "cpp",
+        "thread": "cpp"
     }
 }

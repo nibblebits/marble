@@ -43,22 +43,7 @@ SystemHandler::SystemHandler(SYSTEM_HANDLER_TYPE type, ClassSystem* baseClassSys
 
 SystemHandler::~SystemHandler()
 {
-    if (!this->current_obj_stack.empty())
-    {
-        std::string obj_class_names = "";
-        for (int i = 0; i < this->current_obj_stack.size(); i++)
-        {
-        //    struct current_object obj = this->current_obj_stack[i];
-          //  if (obj)
-           // obj_class_names += obj.c->name + ", ";
-        }
-        throw std::logic_error("A current object was set but never finished. please call finishCurrentObject when you are done with the object set with setCurrentObject: " + obj_class_names + " size: " + std::to_string(this->current_obj_stack.size()) + " SystemHandlerType: " + std::to_string(this->type));
-    }
-
-    if (!this->calling_scopes.empty())
-    {
-        throw std::logic_error("When calling setCallingScope you must eventually call finishCallingScope");
-    }
+ 
 
 }
 

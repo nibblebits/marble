@@ -157,6 +157,9 @@ void FunctionCallNode::test(Validator* validator, struct extras extra)
 
 Value FunctionCallNode::interpret(Interpreter* interpreter, struct extras extra)
 {
+   // Let's see if we have timed out
+   interpreter->checkTimeout();
+   
    Value value;
    std::vector<Value> argument_results;
 

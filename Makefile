@@ -8,7 +8,7 @@ INCLUDES = ./include -I ./src/commonmod/include
 common_mod:
 	cd ./src/commonmod && $(MAKE) standalone
 system: ${SYSTEM_OBJECT_FILES}
-	g++ ${SYSTEM_OBJECT_FILES} ${EXTERNAL_OBJECT_FILES} -g -o ${SYSTEM_LIB_FILE_LOCATION} -shared -Wl,-rpath,'./lib'-export-dynamic
+	g++ ${SYSTEM_OBJECT_FILES} ${EXTERNAL_OBJECT_FILES} -g -o ${SYSTEM_LIB_FILE_LOCATION} -lpthread -lm -lrt -shared -Wl,-rpath,'./lib'-export-dynamic
 	
 ./build/system/token.o: ./src/system/token.cpp
 	g++ -I ${INCLUDES} ./src/system/token.cpp -o ./build/system/token.o ${OBJECT_FILE_FLAGS}
@@ -172,7 +172,7 @@ standalone: common_mod system
 standalone-modules: standalone modules
 	cp -a ./src/stdmods/bin/. ./bin/mods
 
-apache2: system
+apache2: common_mod system modules
 	sudo cp ${SYSTEM_LIB_FILE_LOCATION} /usr/lib/${SYSTEM_LIB_LOCAL_FILENAME}
 	cd ./src/apache && $(MAKE) all
 	g++ -fPIC -shared -std=c++14 -I /usr/include/apache2 -I /usr/include/apr-1.0 -I ${INCLUDES} -I ./src/apache/include ./src/apache/src/mod_marble.cpp /usr/lib/${SYSTEM_LIB_LOCAL_FILENAME} -o ./bin/mod_marble.so ${APACHE_OBJECT_FILES}
