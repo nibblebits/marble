@@ -43,6 +43,14 @@ Class* CommonModule_StringUtils::registerClass(ModuleSystem* moduleSystem)
     c->registerFunction("strlen", {VarType::fromString("string")}, VarType::fromString("number"), CommonModule_StringUtils::StringUtils_strlen);
     moduleSystem->getFunctionSystem()->registerFunction("strlen", {VarType::fromString("string")}, VarType::fromString("number"), CommonModule_StringUtils::StringUtils_strlen);
     
+    /**
+     * Returns the position of the needle in the haystack
+     * 
+     * function strpos(string haystack, string needle, number pos) : number
+     */
+    c->registerFunction("strpos", {VarType::fromString("string"), VarType::fromString("string"), VarType::fromString("number")}, VarType::fromString("number"), CommonModule_StringUtils::StringUtils_strpos);
+    moduleSystem->getFunctionSystem()->registerFunction("strpos", {VarType::fromString("string"), VarType::fromString("string"), VarType::fromString("number")}, VarType::fromString("number"), CommonModule_StringUtils::StringUtils_strpos);
+
     
 }
 
@@ -60,7 +68,7 @@ void CommonModule_StringUtils::StringUtils_substr(Interpreter* interpreter, std:
     int start = values[1].dvalue;
     int end = values[2].dvalue;
 
-    if (start >= str.size() || end >= str.size())
+    if (start >= str.size())
         throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("OutOfBoundsException"), {})));
     return_value->set(str.substr(start, end));
 }
@@ -69,4 +77,15 @@ void CommonModule_StringUtils::StringUtils_strlen(Interpreter* interpreter, std:
 {
     std::string str = values[0].svalue;
     return_value->set(str.size());
+}
+
+void CommonModule_StringUtils::StringUtils_strpos(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+{
+    std::string haystack = values[0].svalue;
+    std::string needle = values[1].svalue;
+    int offset = values[2].dvalue;
+    if (offset >= haystack.size())
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("OutOfBoundsException"), {})));
+
+    return_value->set(haystack.find(needle, offset));
 }
