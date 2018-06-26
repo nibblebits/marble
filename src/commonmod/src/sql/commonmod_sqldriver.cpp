@@ -67,7 +67,7 @@ Class* CommonModule_SqlDriver::registerClass(ModuleSystem* moduleSystem)
 void CommonModule_SqlDriver::newInterpreter(Interpreter* interpreter)
 {
     // Create a variable named SQLDriver that just points to an object instance of SQLDriver
-    interpreter->getCurrentScope()->createVariable("SQLDriver", "SQLDriver", Object::create(interpreter->getClassSystem()->getClassByName("SQLDriver")));
+    interpreter->getCurrentScope()->createVariable("SQLDriver", "SQLDriver", Object::create(interpreter, interpreter->getClassSystem()->getClassByName("SQLDriver"), {}));
 }
 
 // Native SQLDriver functions
