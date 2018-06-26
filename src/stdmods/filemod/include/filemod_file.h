@@ -10,6 +10,7 @@
 #include "object.h"
 #include "module.h"
 
+class Interpreter;
 class FileModule_File : public Object
 {
 public:
@@ -27,6 +28,10 @@ public:
      */
     static bool isReadMode(std::string mode);
 
+    /**
+     * Called when a new interpreter is running
+     */
+    static void newInterpreter(Interpreter* interpreter);
 
     FILE* fp;
     std::string filename;
@@ -39,6 +44,9 @@ private:
     static void File_Close(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object);
     static void File_setPosition(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object);
     static void File_GetSize(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object);
+    static void File_Move(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
+
+
 };
 
 #endif

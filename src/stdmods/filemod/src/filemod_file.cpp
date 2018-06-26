@@ -49,6 +49,14 @@ Class* FileModule_File::registerClass(ModuleSystem* moduleSystem)
         file->output->file = file;
         file->input->file = file;
     });
+
+    /**
+     * Moves the filename to the destination
+     * 
+     * function move(string filename, string dst_filename) : void
+     */
+    c->registerFunction("move", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("void"), FileModule_File::File_Move);
+
     c->registerFunction("open", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("boolean"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         File_Open(interpreter, arguments, return_value, object, caller_scope);
     });
@@ -76,6 +84,13 @@ Class* FileModule_File::registerClass(ModuleSystem* moduleSystem)
     });
     return c;
 }
+
+void FileModule_File::newInterpreter(Interpreter* interpreter)
+{
+    // Create a variable called File of type of File this is used to give the illusion of static methods
+    interpreter->getRootScope()->createVariable("File", "File", Object::create(interpreter, interpreter->getClassSystem()->getClassByName("File"), {}));
+}
+
 // Native IO functions/methods
 void FileModule_File::File_Open(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
 {
@@ -161,4 +176,13 @@ void FileModule_File::File_GetSize(Interpreter* interpreter, std::vector<Value> 
     int rc = stat(file_obj->filename.c_str(), &stat_buf);
     return_value->type = VALUE_TYPE_NUMBER;
     return_value->dvalue = rc == 0 ? stat_buf.st_size : -1;
+}
+
+void FileModule_File::File_Move(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+{
+    std::string filename = values[0].svalue;
+    std::string dst_filename = values[1].svalue;
+    if (rename(filename.c_str(), dst_filename.c_str()) != 0)   
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to rename " + filename + " to " + dst_filename);
+
 }

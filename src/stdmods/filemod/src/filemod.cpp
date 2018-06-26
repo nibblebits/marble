@@ -45,5 +45,6 @@ void FileModule::Init()
 
 void FileModule::newInterpreter(Interpreter* interpreter)
 {
-  
+    // Let the File class know about this new interpreter
+    FileModule_File::newInterpreter(interpreter);
 }
