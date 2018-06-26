@@ -283,6 +283,10 @@ void Interpreter::createDefaultClassesAndFunctions()
     if (std::dynamic_pointer_cast<ExceptionObject>(exception_class->getDescriptorObject()) == NULL)
         throw std::logic_error("The Exception class registered in a parent class system has a descriptor object that does not extend the ExceptionObject native class");
 
+    c = getClassSystem()->registerClass("OutOfBoundsException", exception_class);
+        c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
+    });
+    
     c = getClassSystem()->registerClass("InvalidIndexException", exception_class);
         c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
     });

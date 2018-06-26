@@ -13,6 +13,10 @@ public:
     virtual std::shared_ptr<Object> newInstance(Class* c);
 
     static Class* registerClass(ModuleSystem* moduleSystem);
+
+    static void StringUtils_getASCIIString(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
+    static void StringUtils_substr(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
+
 };
 
 
