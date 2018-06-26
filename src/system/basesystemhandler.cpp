@@ -30,6 +30,11 @@ BaseSystemHandler::BaseSystemHandler() : SystemHandler(SYSTEM_HANDLER_BASE_SYSTE
         except_obj->setMessage(arguments[0].svalue);
     });
 
+    exception_class->registerFunction("getMessage", {}, VarType::fromString("string"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
+        std::shared_ptr<ExceptionObject> except_obj = std::dynamic_pointer_cast<ExceptionObject>(object);
+        return_value->set(except_obj->getMessage());
+    });
+    
     exception_class->registerFunction("getStackTrace", {}, VarType::fromString("string"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         std::shared_ptr<ExceptionObject> exception_obj = std::dynamic_pointer_cast<ExceptionObject>(object);
         return_value->type = VALUE_TYPE_STRING;
