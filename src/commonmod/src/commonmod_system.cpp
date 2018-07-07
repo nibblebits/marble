@@ -32,7 +32,7 @@ Class* CommonModule_System::registerClass(ModuleSystem* moduleSystem)
 void CommonModule_System::newInterpreter(Interpreter* interpreter)
 {
     Class* c = interpreter->getClassSystem()->getClassByName("System");
-    interpreter->getCurrentScope()->createVariable("System", "System", Object::create(c));
+    interpreter->getCurrentScope()->createVariable("System", "System", Object::create(interpreter, c, {}));
 }
 
 void CommonModule_System::System_SetTimeout(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
