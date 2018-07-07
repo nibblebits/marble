@@ -74,6 +74,21 @@ FunctionSystem* FunctionSystem::getPreviousFunctionSystem()
     return this->prev_fc_sys;
 }
 
+GroupedFunction* FunctionSystem::createOrAddToGroupForFunction(std::unique_ptr<Function> function)
+{
+    // So we already have this function registered so we may need to create a grouped function if it is not that already
+    Function* current_func = getFunctionByName(function->name);
+    GroupedFunction* grouped_func = (GroupedFunction*) current_func;
+    if (current_func->type != FUNCTION_TYPE_GROUPED)
+    {
+        // Ok we need to create a grouped function and move it into this function
+        grouped_func = replaceFunctionWithGroup(function->name);           
+    }
+        
+    // Now add our new function to this grouped function
+    grouped_func->addFunction(std::move(function));  
+}
+
 GroupedFunction* FunctionSystem::replaceFunctionWithGroup(std::string function_name)
 {
     if (this->sys_handler == NULL)
@@ -94,7 +109,15 @@ Function* FunctionSystem::registerFunction(std::string name, std::vector<VarType
     }
 
     Function* function = new NativeFunction(name, args, return_type, entrypoint);
-    this->functions[name] = std::unique_ptr<Function>(function);
+    if (hasFunctionLocally(name))
+    {
+        std::unique_ptr<Function> unique_func = std::unique_ptr<Function>(function);
+        createOrAddToGroupForFunction(std::move(unique_func));
+    }
+    else
+    {
+        this->functions[name] = std::unique_ptr<Function>(function);
+    }
     return function;
 }
 
@@ -136,17 +159,7 @@ Function* FunctionSystem::registerFunction(FunctionNode* fnode)
     function->access = fnode->access;
     if (hasFunctionLocally(fnode->name))
     {
-        // So we already have this function registered so we may need to create a grouped function if it is not that already
-        Function* current_func = getFunctionByName(fnode->name);
-        GroupedFunction* grouped_func = (GroupedFunction*) current_func;
-        if (current_func->type != FUNCTION_TYPE_GROUPED)
-        {
-           // Ok we need to create a grouped function and move it into this function
-           grouped_func = replaceFunctionWithGroup(fnode->name);           
-        }
-        
-        // Now add our new function to this grouped function
-        grouped_func->addFunction(std::move(function));
+        createOrAddToGroupForFunction(std::move(function));
     }
     else
     {

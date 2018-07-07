@@ -95,6 +95,7 @@ class FunctionSystem
         
         std::shared_ptr<Object> currentObj; /*!< Set to an Object instance when calling an Object Class Function through an object access expression such as <i>Foo.Bar();</i> \note This is useful for when the right node of an expression needs to know the current object of the left node \attention this should only be used during an object access expression*/
     private:
+        GroupedFunction* createOrAddToGroupForFunction(std::unique_ptr<Function> function);
         GroupedFunction* replaceFunctionWithGroup(std::string function_name);
         FunctionSystem* prev_fc_sys; /*!< The previous, parent function system. Set to NULL if no parent exists. \note This is used for classes that extend other classes \see getFunctionByName*/
         std::map<std::string, std::unique_ptr<Function>> functions;
