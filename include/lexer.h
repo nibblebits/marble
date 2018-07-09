@@ -41,6 +41,11 @@ private:
     std::string get_string(const char** ptr);
     std::string get_while(const char** ptr, int expected);
     void ignore_line(const char** ptr);
+    /**
+     * Returns a char based on the sequence for the given character
+     * this is used in strings so you can do \r \n and so on to return new line char codes and such.
+     */
+    char get_char_for_sequence(char c);
 
 private:
     TokenFactory tokenFactory;

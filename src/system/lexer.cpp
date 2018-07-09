@@ -201,6 +201,34 @@ std::string Lexer::get_number(const char** ptr)
     return value;
 }
 
+char Lexer::get_char_for_sequence(char c)
+{
+    char result = 0;
+    switch(c)
+    {
+        case 'r':
+            result = '\r';
+        break;
+        case 'n':
+            result = '\n';
+        break;
+        case '0':
+            result = '\0';
+        break;
+        case '"':
+            result = '"';
+        break;
+        case '\\':
+            result = '\\';
+        break;
+
+        default:
+            logger->error("Bad char sequence for: " + c);
+    }
+
+    return result;
+}
+
 std::string Lexer::get_string(const char** ptr)
 {
     if (!is_string_seperator(**ptr))
@@ -213,19 +241,27 @@ std::string Lexer::get_string(const char** ptr)
     // our_ptr will now point at the start of the string
     const char* our_ptr = *ptr;
     char c = *our_ptr;
+    int length = 0;
     std::string value = "";
 
     // Lets loop until we find an ending string seperator.
     while(bounds_safe(our_ptr) && !is_string_seperator(c))
     {
+        if (c == '\\')
+        {
+            /* Some characters are valid in strings such as carriage returns and new lines \r\n
+             * Let's handle it here*/
+            our_ptr+=1;
+            c = *our_ptr;
+            c = get_char_for_sequence(c);
+        }
         value += c;
-        our_ptr++;
+        our_ptr+=1;
         c = *our_ptr;
     }
 
-
-    // Lets re-adjust the real pointer for the caller, we +1 due to the ending string seperator.
-    *ptr += value.length();
+    // Adjust the main pointer to point to the new position
+    *ptr += (our_ptr - *ptr);
     return value;
 }
 
