@@ -88,6 +88,13 @@ private:
     void parse_boolean();
 
     /**
+     * Parses an output node such as
+     * "Hello world"
+     * with nothing else
+     */
+    void parse_output_node();
+
+    /**
      * Parses multiple expressions seperated by commas ",". If the first token seen is a symbol of ";" then an empty ListNode is pushed to the stack.
      * Multi-expressions also allow for variable declarations when calling this method.
      * While traditional expressions "parse_expression()" do not.

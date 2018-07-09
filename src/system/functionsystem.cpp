@@ -78,15 +78,20 @@ GroupedFunction* FunctionSystem::createOrAddToGroupForFunction(std::unique_ptr<F
 {
     // So we already have this function registered so we may need to create a grouped function if it is not that already
     Function* current_func = getFunctionByName(function->name);
+    if (current_func == NULL)
+        throw std::logic_error("Function not registered already");
+
     GroupedFunction* grouped_func = (GroupedFunction*) current_func;
     if (current_func->type != FUNCTION_TYPE_GROUPED)
     {
         // Ok we need to create a grouped function and move it into this function
         grouped_func = replaceFunctionWithGroup(function->name);           
     }
-        
-    // Now add our new function to this grouped function
+
     grouped_func->addFunction(std::move(function));  
+
+    return grouped_func;
+
 }
 
 GroupedFunction* FunctionSystem::replaceFunctionWithGroup(std::string function_name)

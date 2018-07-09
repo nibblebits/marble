@@ -34,4 +34,5 @@
 #include "nullnode.h"
 #include "requirenode.h"
 #include "booleanliteralnode.h"
+#include "outputnode.h"
 #endif

@@ -196,6 +196,12 @@ Node* NodeFactory::createNode(NODE_TYPE node_type)
         node = new BooleanLiteralNode();
     }
     break;
+
+    case NODE_TYPE_OUTPUT_NODE:
+    {
+        node = new OutputNode();
+    }
+    break;
     
     default:
         throw std::logic_error("Invalid node type provided to NodeFactory::createNode");

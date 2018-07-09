@@ -881,6 +881,17 @@ void Parser::parse_null()
     push_node(null_node);
 }
 
+void Parser::parse_output_node()
+{
+    // Parse the output node expression
+    parse_expression_for_value();
+
+    ExpressionInterpretableNode* exp_node = (ExpressionInterpretableNode*) pop_node();
+
+    OutputNode* output_node = (OutputNode*) factory.createNode(NODE_TYPE_OUTPUT_NODE);
+    output_node->exp = exp_node;
+    push_node(output_node);
+}
 void Parser::parse_boolean()
 {
     Token* next_token = next();
@@ -1374,7 +1385,8 @@ void Parser::parse_body_next()
     }
     else
     {
-        parse_error("That is not legal: " + token_value);
+        parse_output_node();
+        parse_semicolon();
     }
 }
 void Parser::global_parse_next()
