@@ -62,6 +62,15 @@ Class* CommonModule_StringUtils::registerClass(ModuleSystem* moduleSystem)
      */
     c->registerFunction("split", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("string[]"), CommonModule_StringUtils::StringUtils_split);
     moduleSystem->getFunctionSystem()->registerFunction("split", { VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("string[]"), CommonModule_StringUtils::StringUtils_split);
+
+    /**
+     * Replaces all instances of to_replace from the target with the replace_with string
+     *
+     * function str_replace(string target, string to_replace, string replace_with) : string
+     */
+    c->registerFunction("str_replace", {VarType::fromString("string"), VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_str_replace);
+    moduleSystem->getFunctionSystem()->registerFunction("str_replace", {VarType::fromString("string"), VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_str_replace);
+
 }
 
 
@@ -117,4 +126,14 @@ void CommonModule_StringUtils::StringUtils_split(Interpreter* interpreter, std::
         var->value.svalue = splits[i];
     }
     return_value->set(std::make_shared<Array>(interpreter->getClassSystem()->getClassByName("array"), variables, splits.size()));
+}
+
+void CommonModule_StringUtils::StringUtils_str_replace(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+{
+    std::string target = values[0].svalue;
+    std::string to_replace = values[1].svalue;
+    std::string replace_with = values[2].svalue;
+
+    target = str_replace(target, to_replace, replace_with);
+    return_value->set(target);
 }
