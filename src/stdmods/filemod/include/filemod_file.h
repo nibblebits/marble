@@ -11,6 +11,7 @@
 #include "module.h"
 
 class Interpreter;
+class Scope;
 class FileModule_File : public Object
 {
 public:
@@ -19,14 +20,6 @@ public:
     virtual std::shared_ptr<Object> newInstance(Class* c);
     static Class* registerClass(ModuleSystem* moduleSystem);
 
-    /**
-    * Returns if the given mode is a writeable mode
-    */
-    static bool isWriteMode(std::string mode);
-    /**
-     * Returns if the given mode is a readable mode
-     */
-    static bool isReadMode(std::string mode);
 
     /**
      * Called when a new interpreter is running
