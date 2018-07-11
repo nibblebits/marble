@@ -8,6 +8,7 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <algorithm>
 #include <errno.h>
 
 #include <stdio.h>
@@ -382,8 +383,8 @@ void Interpreter::run(const char* code, PosInfo posInfo, bool ignore_validation)
     }
     catch(SystemException& ex)
     {
-            std::shared_ptr<ExceptionObject> rex = std::dynamic_pointer_cast<ExceptionObject>(ex.getObject());
-            logger.error("System threw a " + rex->getClass()->name +  ", message: " + rex->getMessage(), current_node->posInfo);
+        std::shared_ptr<ExceptionObject> rex = std::dynamic_pointer_cast<ExceptionObject>(ex.getObject());
+        logger.error("System threw a " + rex->getClass()->name +  ", message: " + rex->getMessage(), current_node->posInfo);
     }
 
     if (this_run_started_execution)
@@ -401,65 +402,81 @@ void Interpreter::fail()
 
 
 
-void Interpreter::handleLineAndColumn(PosInfo* posInfo, const char* data, int length)
+void Interpreter::handleLineAndColumn(PosInfo& posInfo, const char* data, int length)
 {
     for (int i = 0; i < length; i++)
     {
         if (data[i] == 0x0a)
         {
-            posInfo->line += 1;
-            posInfo->col = 1;
+            posInfo.line += 1;
+            posInfo.col = 1;
         }
         else
         {
-            posInfo->col+=1;
+            posInfo.col+=1;
         }
     }
 }
 
-PosInfo Interpreter::handleCodeDataForSplit(PosInfo posInfo, split* split, bool ignore_validation)
+std::string Interpreter::handleSplitData(data_descriptor* descriptor)
 {
-    CloneForCall(split->code.data, split->code.size, split->code.size+1, [&](const void* ptr, int size) {
-        char* code_data = (char*) ptr;
-        code_data[split->code.size] = 0;
-        // Marble tag "<marble>" should be added to the current position
-        posInfo.col += strlen(MARBLE_OPEN_TAG);
-        run(code_data, posInfo, ignore_validation);
-        handleLineAndColumn(&posInfo, code_data, size);
+    std::string data = "";
+    CloneForCall(descriptor->data, descriptor->size, descriptor->size+1, [&](const void* ptr, int size) {
+        char* raw_data = (char*) ptr;
+        raw_data[descriptor->size] = 0;
+        data = raw_data;
     });
 
-    return posInfo;
+    return data;
 }
 
-PosInfo Interpreter::handleRawDataForSplit(PosInfo posInfo, split* split)
+std::string Interpreter::handleCodeDataForSplit(split* split)
 {
-    CloneForCall(split->output.data, split->output.size, split->output.size+1, [&](const void* ptr, int size) {
-        char* output_data = (char*) ptr;
-        output_data[split->output.size] = 0;
-        output(output_data, split->output.size);
-        handleLineAndColumn(&posInfo, output_data, size);
-    });
+    return handleSplitData(&split->code);
+}
 
-    return posInfo;
+std::string Interpreter::handleRawDataForSplit(split* split)
+{
+    return handleSplitData(&split->output);
+}
+
+std::string Interpreter::mergeCodeAndDataForSplit(split* split)
+{
+    // This is any data parsed
+    std::string output_data = "";
+    std::string code_data = "";
+    std::string result = "";
+
+    // Output the data
+    if (split->has_data)
+    {
+        output_data = handleRawDataForSplit(split);
+        result += "\"" + str_replace(output_data, "\"", "\\\"") + "\";\n";
+    }
+
+    // Run the code
+    if (split->has_code)
+    {
+        code_data = handleCodeDataForSplit(split);
+        result += code_data;
+    }
+
+    return result;
 }
 
 void Interpreter::handleSplitterSplits(Splitter& splitter, PosInfo& posInfo)
 {
     split split;
+    std::string result = "";
+
     while(splitter.split(&split))
     {
-        // Output the data
-        if (split.has_data)
-        {
-            posInfo = handleRawDataForSplit(posInfo, &split);
-        }
-
-        // Run the code
-        if (split.has_code)
-        {
-            posInfo = handleCodeDataForSplit(posInfo, &split);
-        }
+       result += mergeCodeAndDataForSplit(&split);
     }
+
+    // Finally run the merged code
+    run(result.c_str(), posInfo);
+
 }
 
 void Interpreter::runScript(const char* filename)

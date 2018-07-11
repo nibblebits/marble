@@ -27,6 +27,10 @@ std::vector<std::string> str_split(std::string str, std::string delm);
 */
 std::string writeTemp(const char* data, int len);
 
+/**
+ * Replaces to_replace with replace_with for the given data
+ */
+std::string str_replace(std::string data, std::string to_replace, std::string replace_with);
 
 /**
  * Creates memory that can be shared between child processes created from a fork

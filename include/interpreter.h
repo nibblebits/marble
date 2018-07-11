@@ -87,10 +87,12 @@ public:
     void runScript(const char* filename);
     Splitter loadScript(const char* filename);
     
-    PosInfo handleCodeDataForSplit(PosInfo posInfo, split* split, bool ignore_validation=false);
-    PosInfo handleRawDataForSplit(PosInfo posInfo, split* split);
+    std::string handleSplitData(data_descriptor* descriptor);
+    std::string handleCodeDataForSplit(split* split);
+    std::string handleRawDataForSplit(split* split);
+    std::string mergeCodeAndDataForSplit(split* split);
     void handleSplitterSplits(Splitter& splitter, PosInfo& posInfo);
-    void handleLineAndColumn(PosInfo* posInfo, const char* data, int length);
+    void handleLineAndColumn(PosInfo& posInfo, const char* data, int length);
 
     /**
      * Registers the default object class in the class_system provided and returns the Class.

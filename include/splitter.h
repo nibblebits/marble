@@ -10,7 +10,7 @@ struct data_descriptor
     int end;
     int size;
     bool finished;
-    
+
     const char* data;
 
     struct split* split;

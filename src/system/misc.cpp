@@ -4,6 +4,7 @@
 #include <stdio.h> 
 #include <stdlib.h>
 #include <cstring>
+#include <iostream>
 #include <stdexcept>
 #include <linux/limits.h>
 #include <sys/mman.h>
@@ -97,6 +98,18 @@ std::string writeTemp(const char* data, int len)
    fclose(f);
 
    return path;
+}
+
+std::string str_replace(std::string data, std::string to_replace, std::string replace_with)
+{
+	size_t current_pos = 0;
+	while((current_pos = data.find(to_replace, current_pos)) != std::string::npos)
+	{
+		data = data.replace(current_pos, to_replace.size(), replace_with);
+		current_pos += replace_with.size();
+	}
+
+	return data;
 }
 
 void* create_shared_memory(size_t size) {

@@ -37,7 +37,7 @@ void RequireNode::test(Validator* validator, struct extras extra)
                     posInfo.col += strlen(MARBLE_OPEN_TAG);
                     Node* root_node = interpreter->getAST(code_data, posInfo);
                     validator->validate(root_node);
-                    interpreter->handleLineAndColumn(&posInfo, code_data, size);
+                    interpreter->handleLineAndColumn(posInfo, code_data, size);
                 });
             }
             this->splits.push_back(split);
@@ -61,24 +61,17 @@ Value RequireNode::interpret(Interpreter* interpreter, struct extras extra)
     posInfo.filename = this->filename.c_str();
     posInfo.line = 1;
     posInfo.col = 1;
+    std::string result = "";
+
     while(!this->splits.empty())
-    {
+    {        
         split split = this->splits.front();
-        // Output the data
-        if (split.has_data)
-        {
-            posInfo = interpreter->handleRawDataForSplit(posInfo, &split);
-        }
-
-        // Run the code
-        if (split.has_code)
-        {
-            posInfo = interpreter->handleCodeDataForSplit(posInfo, &split, true);
-        }
-
+        result += interpreter->mergeCodeAndDataForSplit(&split);
         this->splits.pop_front();
     }
 
+    // Now we are done let's run the result we also want to ignore validation as we did it during testing
+    interpreter->run(result.c_str(), posInfo, true);
     Value v;
     return v;
 }

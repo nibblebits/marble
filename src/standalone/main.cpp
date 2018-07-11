@@ -13,6 +13,7 @@
 #include "permissionsobject.h"
 #include "permissionobject.h"
 #include "exceptionobject.h"
+#include "misc.h"
 #include "exceptions/systemexception.h"
 #include "../stdmods/iomod/include/iopermission.h"
 
