@@ -21,7 +21,7 @@ BaseSystemHandler::BaseSystemHandler() : SystemHandler(SYSTEM_HANDLER_BASE_SYSTE
 
      /* Let's register an Exception class that is to be inherited by all classes that can be thrown*/
     Class* exception_class = getClassSystem()->registerClass("Exception");
-    exception_class->registerFunction("__construct", { VarType::fromString("void") }, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
+    exception_class->registerFunction("__construct", { }, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         // Blank constructor so just call the parent
         object->getClass()->invokeObjectParentConstructor({}, object, interpreter);
     });
