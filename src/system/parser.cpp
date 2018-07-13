@@ -724,11 +724,24 @@ void Parser::parse_try()
     
     parse_body();
     BodyNode* catch_body = (BodyNode*) pop_node();
+    BodyNode* finally_node = NULL;
+
+    // Do we have a finally?
+    if (peek()->isKeyword("finally"))
+    {
+        // Ignore finally keyword
+        next();
+
+        // Parse the finally body
+        parse_body();
+        finally_node = (BodyNode*) pop_node();
+    }
     
     TryNode* try_node = (TryNode*) factory.createNode(NODE_TYPE_TRY);
     try_node->try_body = try_body;
     try_node->catch_varnode = catch_varnode; 
     try_node->catch_body = catch_body;
+    try_node->finally_body = finally_node;
     push_node(try_node);
 }
 

@@ -89,9 +89,7 @@ GroupedFunction* FunctionSystem::createOrAddToGroupForFunction(std::unique_ptr<F
     }
 
     grouped_func->addFunction(std::move(function));  
-
     return grouped_func;
-
 }
 
 GroupedFunction* FunctionSystem::replaceFunctionWithGroup(std::string function_name)

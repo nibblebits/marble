@@ -12,6 +12,7 @@ TryNode::TryNode() : InterpretableNode(NODE_TYPE_TRY)
     this->try_body = NULL;
     this->catch_varnode = NULL;
     this->catch_body = NULL;
+    this->finally_body = NULL;
 }
 
 TryNode::~TryNode()
@@ -40,6 +41,9 @@ void TryNode::test(Validator* validator, struct extras extra)
     }
          
     this->catch_body->test(validator);
+
+    if (this->finally_body != NULL)
+        this->finally_body->test(validator);
 }
 
 Value TryNode::interpret(Interpreter* interpreter, struct extras extra)
@@ -47,7 +51,8 @@ Value TryNode::interpret(Interpreter* interpreter, struct extras extra)
     try
     {
         this->try_body->interpret(interpreter);
-    } catch(SystemException& ex)
+    }
+    catch(SystemException& ex)
     {
         std::shared_ptr<ExceptionObject> thrown_object = ex.getObject();
         // Let's see if we can actually catch this, if not we will rethrow the exception
@@ -56,6 +61,8 @@ Value TryNode::interpret(Interpreter* interpreter, struct extras extra)
         Class* exception_class = interpreter->getClassSystem()->getClassByName(evaluation.datatype.value);
         if (!thrown_exception_class->instanceOf(exception_class))
         {
+            if (this->finally_body != NULL)
+                this->finally_body->interpret(interpreter);
             // Ok the exception that was thrown is not an instance of our defined exception class so lets just rethrow it so it can be dealt with else where
             throw SystemException(thrown_object);
         }
@@ -73,7 +80,9 @@ Value TryNode::interpret(Interpreter* interpreter, struct extras extra)
         // We now must interpret the catch body
         this->catch_body->interpret(interpreter);
     }
-    
+
+    if (this->finally_body != NULL)
+        this->finally_body->interpret(interpreter);
     Value v;
     return v;
 }

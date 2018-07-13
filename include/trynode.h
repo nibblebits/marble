@@ -15,6 +15,7 @@ class TryNode : public InterpretableNode
         virtual Value interpret(Interpreter* interpreter, struct extras extra);
         virtual void evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation);
         BodyNode* try_body;
+        BodyNode* finally_body;
         /** The variable node representing the variable that the exception that was thrown should be stored in */
         VarNode* catch_varnode;
         BodyNode* catch_body;
