@@ -2,8 +2,11 @@
 #include "apache_mod.h"
 #include "exceptions/systemexception.h"
 #include "exceptionobject.h"
+#include "responseobject.h"
+#include "modulesystem.h"
 #include "misc.h"
 #include "array.h"
+#include "object.h"
 #include <string>
 #include <ctype.h>
 #include <iostream>
@@ -81,6 +84,9 @@ WebModule::~WebModule()
 void WebModule::Init()
 {
     log("Web Module initialised", LOG_LEVEL_NOTICE);
+
+    // Register the Response class
+    WebModule_ResponseObject::registerClass(this->getModuleSystem());
 
     /* RequestArguments Class*/
     Class* c = this->getModuleSystem()->getClassSystem()->registerClass("RequestArguments");
@@ -200,14 +206,16 @@ void WebModule::newInterpreter(Interpreter* interpreter)
     object->content = std::make_shared<WebModulePOSTContentObject>(this->getModuleSystem()->getClassSystem()->getClassByName("PostContent"));
     object->file_content = std::make_shared<WebModulePOSTFileContentObject>(this->getModuleSystem()->getClassSystem()->getClassByName("FileContent"));
     root_scope->createVariable("Request", "Request", object);
+
+    std::shared_ptr<WebModule_ResponseObject> response_obj = std::dynamic_pointer_cast<WebModule_ResponseObject>(Object::create(interpreter, this->getModuleSystem()->getClassSystem()->getClassByName("Response"), {}));
+    root_scope->createVariable("Response", "Response", response_obj);
 }
 
-void WebModule::parseRequest(Interpreter* interpreter, request_rec* req)
+void WebModule::parseForRequestObject(Scope* root_scope, Interpreter* interpreter, request_rec* req)
 {
-    Scope* root_scope = interpreter->getRootScope();
-    Variable* variable = root_scope->getVariableAnyScope("Request");
-
-    std::shared_ptr<WebModuleObject> object = std::dynamic_pointer_cast<WebModuleObject>(variable->value.ovalue);
+    Variable* request_variable = root_scope->getVariableAnyScope("Request");
+  
+    std::shared_ptr<WebModuleObject> object = std::dynamic_pointer_cast<WebModuleObject>(request_variable->value.ovalue);
     object->req = (struct request_rec*) req;
     object->request_uri = req->unparsed_uri;
     object->requester_ip = req->useragent_ip;
@@ -234,6 +242,22 @@ void WebModule::parseRequest(Interpreter* interpreter, request_rec* req)
        object->file_content->content = mparse.file_field_content;
        object->file_content->content_array = mparse.file_field_content_array;
     }
+
+}
+
+void WebModule::parseForResponseObject(Scope* root_scope, Interpreter* interpreter, request_rec* req)
+{
+    // Let's setup the Response object essentials so that it can work correctly
+    Variable* response_variable = root_scope->getVariableAnyScope("Response");
+    std::shared_ptr<WebModule_ResponseObject> response_obj = std::dynamic_pointer_cast<WebModule_ResponseObject>(response_variable->value.ovalue);
+    response_obj->req = req;
+}
+
+void WebModule::parseRequest(Interpreter* interpreter, request_rec* req)
+{
+    Scope* root_scope = interpreter->getRootScope();
+    parseForRequestObject(root_scope, interpreter, req);
+    parseForResponseObject(root_scope, interpreter, req);
 }
 
 std::string WebModule::readNextInBuffer(char* buf_end, char** ptr, std::string delm)

@@ -94,6 +94,9 @@ public:
     virtual ~WebModule();
     void Init();
     void newInterpreter(Interpreter* interpreter);
+
+    void parseForRequestObject(Scope* root_scope, Interpreter* interpreter, request_rec* req);
+    void parseForResponseObject(Scope* root_scope, Interpreter* interpreter, request_rec* req);
     void parseRequest(Interpreter* interpreter, request_rec* req);
 
     std::string readNextInBuffer(char* buf_end, char** ptr, std::string delm);
