@@ -47,6 +47,15 @@ void MathModule::Init()
      */
     c->registerFunction("acos", {VarType::fromString("number")}, VarType::fromString("number"), MathModule::Math_acos);
 
+    /**
+     * Compute area hyperbolic cosine
+     * Returns the nonnegative area hyperbolic cosine of x.
+     * The area hyperbolic cosine is the inverse operation of the hyperbolic cosine.
+     * 
+     * function acos(number x) : number
+     */
+    c->registerFunction("acosh", {VarType::fromString("number")}, VarType::fromString("number"), MathModule::Math_acosh);
+
 
     log("Math Module Initialised.", LOG_LEVEL_NOTICE);
 }
@@ -73,4 +82,12 @@ void MathModule::Math_acos(Interpreter* interpreter, std::vector<Value> values, 
 {
     return_value->set((double) acos(values[0].dvalue));
 }
+
+
+void MathModule::Math_acosh(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+{
+    return_value->set((double) acosh(values[0].dvalue));
+}
+
+
 
