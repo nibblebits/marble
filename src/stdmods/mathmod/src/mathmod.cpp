@@ -32,6 +32,13 @@ void MathModule::Init()
      */
     c->registerFunction("sin", {VarType::fromString("number")}, VarType::fromString("number"), MathModule::Math_sin);
 
+    /**
+     * Returns the absolute number
+     * 
+     * function abs(number value) : number
+     */
+    c->registerFunction("abs", {VarType::fromString("number")}, VarType::fromString("number"), MathModule::Math_abs);
+
     log("Math Module Initialised.", LOG_LEVEL_NOTICE);
 }
 
@@ -46,4 +53,9 @@ void MathModule::newInterpreter(Interpreter* interpreter)
 void MathModule::Math_sin(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
 {
     return_value->set((double) sin(values[0].dvalue));
+}
+
+void MathModule::Math_abs(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+{
+    return_value->set((double) abs(values[0].dvalue));
 }
