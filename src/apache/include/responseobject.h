@@ -27,6 +27,7 @@ public:
      */
     static void errorCheck(std::shared_ptr<WebModule_ResponseObject> obj);
 
+    // Native ResponseObject Marble Methods
     static void Response_setCookie(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
 
     // The given apache request object

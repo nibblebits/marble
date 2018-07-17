@@ -4,6 +4,7 @@
 #include "exceptionobject.h"
 #include "responseobject.h"
 #include "modulesystem.h"
+#include "cookiepermission.h"
 #include "misc.h"
 #include "array.h"
 #include "object.h"
@@ -84,6 +85,9 @@ WebModule::~WebModule()
 void WebModule::Init()
 {
     log("Web Module initialised", LOG_LEVEL_NOTICE);
+
+    // Register the CookiePermission class
+    CookiePermission::registerClass(this->getModuleSystem());
 
     // Register the Response class
     WebModule_ResponseObject::registerClass(this->getModuleSystem());
