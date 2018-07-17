@@ -22,5 +22,10 @@ Value NegNode::interpret(Interpreter* interpreter, struct extras extra)
 
 void NegNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)
 {
-    throw std::logic_error("NegNode's do not support evaluation");
+    if (expected_evaluation & EVALUATION_TYPE_DATATYPE)
+    {
+        // Since this is a negative literal node and they are expecting a datatype we should return a "number" type as this is the standard type for literal nodes.
+        evaluation->datatype.type = VARIABLE_TYPE_NUMBER;
+        evaluation->datatype.value = "number"; 
+    }
 }
