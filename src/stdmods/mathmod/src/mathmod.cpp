@@ -39,6 +39,15 @@ void MathModule::Init()
      */
     c->registerFunction("abs", {VarType::fromString("number")}, VarType::fromString("number"), MathModule::Math_abs);
 
+    /**
+     * Returns the principal value of the arc cosine of x, expressed in radians.
+     * In trigonometrics, arc cosine is the inverse operation of cosine.
+     * 
+     * function acos(number x) : number
+     */
+    c->registerFunction("acos", {VarType::fromString("number")}, VarType::fromString("number"), MathModule::Math_acos);
+
+
     log("Math Module Initialised.", LOG_LEVEL_NOTICE);
 }
 
@@ -59,3 +68,9 @@ void MathModule::Math_abs(Interpreter* interpreter, std::vector<Value> values, V
 {
     return_value->set((double) abs(values[0].dvalue));
 }
+
+void MathModule::Math_acos(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+{
+    return_value->set((double) acos(values[0].dvalue));
+}
+
