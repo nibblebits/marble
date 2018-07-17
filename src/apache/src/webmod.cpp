@@ -101,6 +101,7 @@ void WebModule::Init()
         return_value->type = VALUE_TYPE_NUMBER;
         return_value->dvalue = (args_obj->arguments.find(arguments[0].svalue) != args_obj->arguments.end());
     });
+
     /* End of RequestArguments Class */
 
     /* MultipartFile class*/
@@ -168,6 +169,12 @@ void WebModule::Init()
         return_value->ovalue = web_mod_obj->content;
     });
 
+    /**
+     * Returns the cookie with the given name. Empty string is returned if no cookie was found.
+     * function getCookie(string cookieName) : string
+     */
+    c->registerFunction("getCookie", {VarType::fromString("string")}, VarType::fromString("string"), WebModule::Request_getCookie);
+    
     c->registerFunction("getFileContent", {}, VarType::fromString("FileContent"), WebModule::Request_getFileContent);
 
     c->registerFunction("getRequesterIP", {}, VarType::fromString("string"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
@@ -206,6 +213,7 @@ void WebModule::parseRequest(Interpreter* interpreter, request_rec* req)
     object->requester_ip = req->useragent_ip;
     object->request_method = req->method;
     object->request_arguments->arguments = parseGet(req);
+    object->cookies = parseCookies(req);
 
     const char* contentType_cstr = apr_table_get(req->headers_in, "content-type");
     if (!contentType_cstr)
@@ -519,6 +527,19 @@ std::map<std::string, std::string> WebModule::parseGet(request_rec* req)
     return m;
 }
 
+std::map<std::string, std::string> WebModule::parseCookies(request_rec* req)
+{
+    std::map<std::string, std::string> result;
+    const char* cookies = apr_table_get(req->headers_in, "Cookie");
+    if (cookies)
+    {
+        // We have cookies lets parse them
+        result = parseKeyAndValueForString(cookies);
+    }
+
+    return result;
+}
+
 void WebModule::Request_setResponseHeader(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
 {
     std::shared_ptr<WebModuleObject> wm_obj = std::dynamic_pointer_cast<WebModuleObject>(object);
@@ -530,6 +551,18 @@ void WebModule::Request_getFileContent(Interpreter* interpreter, std::vector<Val
 {
     std::shared_ptr<WebModuleObject> wm_obj = std::dynamic_pointer_cast<WebModuleObject>(object);
     return_value->set(wm_obj->file_content);
+}
+
+void WebModule::Request_getCookie(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+{
+    std::shared_ptr<WebModuleObject> wm_obj = std::dynamic_pointer_cast<WebModuleObject>(object);
+    if(wm_obj->cookies.find(values[0].svalue) != wm_obj->cookies.end())
+    {
+        return_value->set(wm_obj->cookies[values[0].svalue]);
+        return;
+    }
+
+    return_value->set("");
 }
 
 void WebModule::FileContent_has(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)

@@ -280,6 +280,7 @@ static int marble_handler(request_rec *req)
             ap_rwrite(data, length, req);
         });
 
+
         // Inject the permissions loaded from the configuration into our root scope granting access
         interpreter.getRootScope()->permissions = conf->set_permissions;
 

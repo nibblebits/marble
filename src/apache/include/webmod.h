@@ -84,6 +84,7 @@ public:
     std::shared_ptr<WebModulePOSTContentObject> content;
     std::shared_ptr<WebModulePOSTFileContentObject> file_content;
     std::shared_ptr<WebModuleRequestArgumentsObject> request_arguments;
+    std::map<std::string, std::string> cookies;
 };
 
 class WebModule : public Module
@@ -144,10 +145,13 @@ public:
     struct multipart_parse parseMultipartFormData(request_rec* req, Interpreter* interpreter);
     std::map<std::string, std::string> parsePost(request_rec* req);
     std::map<std::string, std::string> parseGet(request_rec* req);
+    std::map<std::string, std::string> parseCookies(request_rec* req);
 
     // Static methods to be called in the marble language
     static void Request_setResponseHeader(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
     static void Request_getFileContent(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
+    static void Request_getCookie(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
+
     static void FileContent_has(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
     static void FileContent_get(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
     static void FileContent_hasArray(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
