@@ -46,6 +46,7 @@ void WebModule_ResponseObject::Response_setCookie(Interpreter* interpreter, std:
 
     if (!interpreter->hasNoPermissionRestrictions())
     {
+
         std::vector<std::shared_ptr<PermissionObject>> permission_list = caller_scope->getPermissionList("CookiePermission");
         // If the permission list is empty then we don't have permission to write cookies
         if (permission_list.empty())
