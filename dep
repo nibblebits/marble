@@ -1,0 +1,11 @@
+Marble requires the following libaries to be installed to compile
+
+libjsoncpp-dev
+
+
+
+
+Debain:
+
+sudo apt-get install libjsoncpp-dev
+
