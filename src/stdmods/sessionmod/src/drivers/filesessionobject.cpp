@@ -5,7 +5,6 @@
 #include "exceptions/systemexception.h"
 #include "exceptionobject.h"
 #include <iostream>
-#include <fstream>
 
 FileSessionObject::FileSessionObject(Class* c) : SessionObject(c)
 {
@@ -14,7 +13,7 @@ FileSessionObject::FileSessionObject(Class* c) : SessionObject(c)
 
 FileSessionObject::~FileSessionObject()
 {
-
+    this->file.close();
 }
 
 void FileSessionObject::registerClass(ModuleSystem* moduleSystem)
@@ -32,6 +31,13 @@ void FileSessionObject::registerClass(ModuleSystem* moduleSystem)
      */
     Function *create_func = c->registerFunction("create", {VarType::fromString("string")}, VarType::fromString("void"), FileSessionObject::FileSession_Create);
 
+    /**
+     * 
+     * Saves the current session.
+     * This method is called before destruction of a Session object
+     * function save() : void
+     */
+    Function* save_func = c->registerFunction("save", {}, VarType::fromString("void"), FileSessionObject::FileSession_Save);
 
 }
 
@@ -41,7 +47,7 @@ std::shared_ptr<Object> FileSessionObject::newInstance(Class* c)
 }
 
 
-std::map<std::string, Value> FileSessionObject::getSystemValuesForJSONValue(Json::Value& values)
+std::map<std::string, Value> FileSessionObject::getSystemValuesForJSONValue(Interpreter* interpreter, Json::Value& values)
 {
     std::map<std::string, Value> system_values;
     Json::Value::Members member_names = values.getMemberNames();
@@ -68,7 +74,11 @@ std::map<std::string, Value> FileSessionObject::getSystemValuesForJSONValue(Json
             break;
 
             case Json::ValueType::objectValue:
-
+                // Let's create a new SystemValues object for this Json object value
+                std::shared_ptr<SessionValuesObject> sv_obj = 
+                        std::dynamic_pointer_cast<SessionValuesObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("SessionValues"), {}));
+                sv_obj->values = FileSessionObject::getSystemValuesForJSONValue(interpreter, json_value);
+                system_values[name] = Value(sv_obj);
             break;
         }
     }
@@ -79,20 +89,74 @@ std::map<std::string, Value> FileSessionObject::getSystemValuesForJSONValue(Json
 void FileSessionObject::FileSession_Create(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
 {
     std::shared_ptr<FileSessionObject> fs_obj = std::dynamic_pointer_cast<FileSessionObject>(object);
-    std::fstream file;
-    file.open("./testing_json.txt", std::ios::out | std::ios::in);
+    fs_obj->file.open("./testing_json.txt", std::ios::out | std::ios::in);
     Json::Reader reader;
     Json::Value obj;
     Json::Value::Members members;
     try
     {
-        file >> obj;
-        fs_obj->values = FileSessionObject::getSystemValuesForJSONValue(obj);
-        
+        fs_obj->file >> obj;
+        fs_obj->values = FileSessionObject::getSystemValuesForJSONValue(interpreter, obj);
     }
     catch(...)
     {
         throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {})), "Failed to load or create session");
     }
+
+}
+
+std::string FileSessionObject::parseMapToJson(std::map<std::string, Value> map)
+{
+    std::string new_session_json = "{";
+    for (auto it = map.begin(); it != map.end(); it++)
+    {
+        std::string key = it->first;
+        Value& value = it->second;
+        new_session_json += "\"" + key + "\":";
+        switch(value.type)
+        {
+            case VALUE_TYPE_NUMBER:
+                new_session_json += std::to_string(value.dvalue);
+            break;
+
+            case VALUE_TYPE_STRING:
+                new_session_json += "\"" + value.svalue + "\"";
+            break;
+
+            case VALUE_TYPE_OBJECT:
+                std::shared_ptr<SessionValuesObject> sv_obj = std::dynamic_pointer_cast<SessionValuesObject>(value.ovalue);
+                new_session_json += FileSessionObject::parseMapToJson(sv_obj->values);
+            break;
+        }
+
+        if (it != std::prev(map.end()))
+        {
+            new_session_json += ",";
+        }
+    }
+
+    new_session_json += "}";
+
+    return new_session_json;
+}
+
+void FileSessionObject::FileSession_Save(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+{
+    std::shared_ptr<FileSessionObject> fs_obj = std::dynamic_pointer_cast<FileSessionObject>(object);
+    std::string new_session_json = FileSessionObject::parseMapToJson(fs_obj->values);
+
+
+    // Reset to the start of the stream
+    fs_obj->file.clear();
+    fs_obj->file.seekg(0, std::ios::end);
+    int file_length = fs_obj->file.tellg();
+
+    // Ignore all characters in the stream currently
+    fs_obj->file.ignore(file_length);
+    fs_obj->file.seekg(0, std::ios::beg);
+
+    // Save the session
+    fs_obj->file.write(new_session_json.c_str(), new_session_json.size());
+    fs_obj->file.flush();
 
 }

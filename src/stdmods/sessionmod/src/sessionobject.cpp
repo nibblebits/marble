@@ -24,13 +24,19 @@ void SessionObject::registerClass(ModuleSystem* moduleSystem)
     /**
      * 
      * Creates or loads the session with the provided key.
-     * This Session must be bound to a driver for this method to function
      * pure function create(string session_key) : void
      */
     Function* create_func = c->registerFunction("create", {VarType::fromString("string")}, VarType::fromString("void"), Function::Blank);
     create_func->is_pure = true;
 
-
+    /**
+     * 
+     * Saves the current session.
+     * This method is called before destruction of a Session object
+     * pure function save() : void
+     */
+    Function* save_func = c->registerFunction("save", {}, VarType::fromString("void"), Function::Blank);
+    create_func->is_pure = true;
 
 }
 
