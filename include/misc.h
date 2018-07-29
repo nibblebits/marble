@@ -36,4 +36,23 @@ std::string str_replace(std::string data, std::string to_replace, std::string re
  * Creates memory that can be shared between child processes created from a fork
  */
 void* create_shared_memory(size_t size);
+
+/**
+ * 
+ * Returns true if the given filename exists otherwise false
+ */
+
+bool file_exists(std::string filename);
+
+/**
+ * Converts the integer to a hex value
+ */
+
+std::string to_hex(int c);
+
+
+/**
+ * Returns a random hex string that is the size of total_bytes
+ */
+std::string random_hex(size_t total_bytes);
 #endif

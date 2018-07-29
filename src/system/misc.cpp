@@ -4,8 +4,10 @@
 #include <stdio.h> 
 #include <stdlib.h>
 #include <cstring>
+#include <fstream>
 #include <iostream>
 #include <stdexcept>
+#include <sstream>
 #include <linux/limits.h>
 #include <sys/mman.h>
 
@@ -124,4 +126,39 @@ void* create_shared_memory(size_t size) {
   // The remaining parameters to `mmap()` are not important for this use case,
   // but the manpage for `mmap` explains their purpose.
   return mmap(NULL, size, protection, visibility, 0, 0);
+}
+
+bool file_exists(std::string filename)
+{
+  std::ifstream ifile(filename);
+  return ifile.good();
+}
+
+std::string to_hex(int c)
+{
+	std::stringstream ss;
+	ss << std::hex << c;
+	return ss.str();
+}
+
+std::string random_hex(size_t total_bytes)
+{
+	char binary_buf[total_bytes];
+	// Let's open /dev/urandom
+	FILE* file = fopen("/dev/urandom", "r");
+	if (!file)
+		throw std::logic_error("Failed to generate random hex as failed to open /dev/urandom");
+	
+	if(fread(binary_buf, total_bytes, 1, file) == 0)
+		throw std::logic_error("Failed to read from /dev/urandom");
+
+	fclose(file);
+
+	std::string result = "";
+	for (int i = 0; i < total_bytes; i++)
+	{
+		result += to_hex(binary_buf[i]);
+	}
+
+	return result.substr(0, total_bytes);
 }
