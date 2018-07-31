@@ -90,6 +90,10 @@ std::map<std::string, Value> FileSessionObject::getSystemValuesForJSONValue(Inte
 void FileSessionObject::FileSession_Create(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
 {
     std::shared_ptr<FileSessionObject> fs_obj = std::dynamic_pointer_cast<FileSessionObject>(object);
+   
+    // Invoke the parent class Create method
+    fs_obj->getClass()->parent->getFunctionByNameAndArguments("create", {VarType::fromString("string")})->invoke(interpreter, values, return_value, object, caller_scope);
+
     if (interpreter->properties.find("session_key") == interpreter->properties.end())
     {
         throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {})), "Cannot create Session as no session key has been setup for this client");

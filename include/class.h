@@ -33,6 +33,8 @@ public:
      * \param values The values to pass to the parent constructor
      * \param object The Object to invoke the constructor on
      * \param interpreter The Interpreter at the time of calling this function
+     * 
+     * \attention Ensure that the parent Class does have a constructor registered
      */
     void invokeObjectParentConstructor(std::vector<Value> values, std::shared_ptr<Object> object, Interpreter* interpreter);
     
