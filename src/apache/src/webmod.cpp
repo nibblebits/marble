@@ -3,8 +3,10 @@
 #include "exceptions/systemexception.h"
 #include "exceptionobject.h"
 #include "responseobject.h"
+#include "requestargumentsobject.h"
 #include "modulesystem.h"
 #include "cookiepermission.h"
+
 #include "misc.h"
 #include "array.h"
 #include "object.h"
@@ -26,16 +28,6 @@ MultipartFileObject::~MultipartFileObject()
 std::shared_ptr<Object> MultipartFileObject::newInstance(Class* c)
 {
     return std::make_shared<MultipartFileObject>(c);
-}
-
-WebModuleRequestArgumentsObject::WebModuleRequestArgumentsObject(Class* c) : Object(c)
-{
-
-}
-
-WebModuleRequestArgumentsObject::~WebModuleRequestArgumentsObject()
-{
-
 }
 
 WebModulePOSTContentObject::WebModulePOSTContentObject(Class* c) : Object(c)
@@ -92,30 +84,11 @@ void WebModule::Init()
     // Register the Response class
     WebModule_ResponseObject::registerClass(this->getModuleSystem());
 
-    /* RequestArguments Class*/
-    Class* c = this->getModuleSystem()->getClassSystem()->registerClass("RequestArguments");
-    c->registerFunction("get", {VarType::fromString("string")}, VarType::fromString("string"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
-        std::shared_ptr<WebModuleRequestArgumentsObject> args_obj = std::dynamic_pointer_cast<WebModuleRequestArgumentsObject>(object);
-        return_value->type = VALUE_TYPE_STRING;
-
-        if (args_obj->arguments.find(arguments[0].svalue) == args_obj->arguments.end())
-        {
-            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("InvalidIndexException"), {})));
-        }
-
-        return_value->svalue = args_obj->arguments[arguments[0].svalue];
-    });
-
-    c->registerFunction("has", {VarType::fromString("string")}, VarType::fromString("boolean"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
-        std::shared_ptr<WebModuleRequestArgumentsObject> args_obj = std::dynamic_pointer_cast<WebModuleRequestArgumentsObject>(object);
-        return_value->type = VALUE_TYPE_NUMBER;
-        return_value->dvalue = (args_obj->arguments.find(arguments[0].svalue) != args_obj->arguments.end());
-    });
-
-    /* End of RequestArguments Class */
+    // Register the RequestArguments class
+    WebModuleRequestArgumentsObject::registerClass(this->getModuleSystem());
 
     /* MultipartFile class*/
-    c = this->getModuleSystem()->getClassSystem()->registerClass("MultipartFile");
+    Class* c = this->getModuleSystem()->getClassSystem()->registerClass("MultipartFile");
     c->setDescriptorObject(std::make_shared<MultipartFileObject>(c));
     c->registerFunction("getType", {}, VarType::fromString("string"), WebModule::MultipartFile_getType);
     c->registerFunction("getName", {}, VarType::fromString("string"), WebModule::MultipartFile_getName);

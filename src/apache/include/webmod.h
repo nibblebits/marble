@@ -37,15 +37,6 @@ struct multipart_parse
 
 };
 
-class WebModuleRequestArgumentsObject : public Object
-{
-public:
-    WebModuleRequestArgumentsObject(Class* c);
-    virtual ~WebModuleRequestArgumentsObject();
-
-    std::map<std::string, std::string> arguments;
-};
-
 class WebModulePOSTContentObject : public Object
 {
 public:
@@ -68,6 +59,8 @@ public:
     std::map<std::string, std::vector<std::shared_ptr<MultipartFileObject>> > content_array;
 };
 
+
+class WebModuleRequestArgumentsObject;
 
 class WebModuleObject : public Object
 {
