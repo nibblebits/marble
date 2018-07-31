@@ -185,6 +185,9 @@ public:
     */
     INPUT_FUNCTION input;
 
+    // This is a properties map to allow communication between the interpreter and modules
+    std::map<std::string, std::string> properties;
+
 private:
     /**
      * Creates the default classes and functions that the marble interpreter requires to function properly

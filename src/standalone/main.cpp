@@ -63,6 +63,9 @@ void interpret()
         Logger* logger = interpreter.getLogger();
         interpreter.setModuleSystem(moduleSystem);
         interpreter.getRootScope()->permissions = set_permissions;
+        // Let's setup the session key
+        interpreter.properties["session_key"] = "simpleclientsessionkey";
+
         interpreter.runScript("./test.marble");
         for (LogEntry entry : logger->entries)
         {
