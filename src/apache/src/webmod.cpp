@@ -4,6 +4,7 @@
 #include "exceptionobject.h"
 #include "responseobject.h"
 #include "requestargumentsobject.h"
+#include "multipartfileobject.h"
 #include "modulesystem.h"
 #include "cookiepermission.h"
 
@@ -14,21 +15,6 @@
 #include <ctype.h>
 #include <iostream>
 #include <sstream>
-
-MultipartFileObject::MultipartFileObject(Class* c) : Object(c)
-{
-
-}
-
-MultipartFileObject::~MultipartFileObject()
-{
-
-}
-
-std::shared_ptr<Object> MultipartFileObject::newInstance(Class* c)
-{
-    return std::make_shared<MultipartFileObject>(c);
-}
 
 WebModulePOSTContentObject::WebModulePOSTContentObject(Class* c) : Object(c)
 {
@@ -87,17 +73,11 @@ void WebModule::Init()
     // Register the RequestArguments class
     WebModuleRequestArgumentsObject::registerClass(this->getModuleSystem());
 
-    /* MultipartFile class*/
-    Class* c = this->getModuleSystem()->getClassSystem()->registerClass("MultipartFile");
-    c->setDescriptorObject(std::make_shared<MultipartFileObject>(c));
-    c->registerFunction("getType", {}, VarType::fromString("string"), WebModule::MultipartFile_getType);
-    c->registerFunction("getName", {}, VarType::fromString("string"), WebModule::MultipartFile_getName);
-    c->registerFunction("getPath", {}, VarType::fromString("string"), WebModule::MultipartFile_getPath);
-    c->registerFunction("getExtension", {}, VarType::fromString("string"), WebModule::MultipartFile_getExtension);
-    /* End of MultipartFile class */
+    // Register the MultipartFile class
+    MultipartFileObject::registerClass(this->getModuleSystem());
 
     /* FileContent class */
-    c = this->getModuleSystem()->getClassSystem()->registerClass("FileContent");
+    Class* c = this->getModuleSystem()->getClassSystem()->registerClass("FileContent");
     c->registerFunction("has", {VarType::fromString("string")}, VarType::fromString("boolean"), WebModule::FileContent_has);
     c->registerFunction("get", {VarType::fromString("string")}, VarType::fromString("MultipartFile"), WebModule::FileContent_get);
     c->registerFunction("hasArray", {VarType::fromString("string")}, VarType::fromString("boolean"), WebModule::FileContent_hasArray);
@@ -611,28 +591,4 @@ void WebModule::FileContent_hasArray(Interpreter* interpreter, std::vector<Value
 {
      std::shared_ptr<WebModulePOSTFileContentObject> file_content_obj = std::dynamic_pointer_cast<WebModulePOSTFileContentObject>(object);
      return_value->set(file_content_obj->content_array.find(values[0].svalue) != file_content_obj->content_array.end());
-}
-
-void WebModule::MultipartFile_getType(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
-{
-    std::shared_ptr<MultipartFileObject> m_obj = std::dynamic_pointer_cast<MultipartFileObject>(object);
-    return_value->set(m_obj->type);
-}
-
-void WebModule::MultipartFile_getName(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
-{
-    std::shared_ptr<MultipartFileObject> m_obj = std::dynamic_pointer_cast<MultipartFileObject>(object);
-    return_value->set(m_obj->name); 
-}
-
-void WebModule::MultipartFile_getPath(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
-{
-    std::shared_ptr<MultipartFileObject> m_obj = std::dynamic_pointer_cast<MultipartFileObject>(object);
-    return_value->set(m_obj->path); 
-}
-
-void WebModule::MultipartFile_getExtension(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
-{
-    std::shared_ptr<MultipartFileObject> m_obj = std::dynamic_pointer_cast<MultipartFileObject>(object);
-    return_value->set(m_obj->ext); 
 }

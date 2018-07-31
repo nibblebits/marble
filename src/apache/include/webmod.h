@@ -11,17 +11,7 @@
 #include "class.h"
 #include "object.h"
 
-class MultipartFileObject : public Object
-{
-public:
-    MultipartFileObject(Class* c);
-    virtual ~MultipartFileObject();
-    virtual std::shared_ptr<Object> newInstance(Class* c);
-    std::string name;
-    std::string ext;
-    std::string type;
-    std::string path;
-};
+class MultipartFileObject;
 
 // The structure for multipart parses
 struct multipart_parse
