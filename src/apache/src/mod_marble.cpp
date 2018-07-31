@@ -40,6 +40,7 @@
 #include "interpreter.h"
 #include "basesystemhandler.h"
 #include "webmod.h"
+#include "misc.h"
 #include "permissionobject.h"
 #include "permissionsobject.h"
 #include "exceptions/timeoutexception.h"
@@ -286,6 +287,23 @@ static int marble_handler(request_rec *req)
 
         // Let's set the timeout for this interpreter
         interpreter.setTimeout(conf->timeout);
+        std::map<std::string, std::string> cookies = webModule->parseCookies(req);
+        // We must get the session cookie if it exists if it does not we must set it
+        std::string session_cookie_value = "";
+        if (cookies.find("marble_sess") == cookies.end())
+        {
+            // Session key does not exist lets create one
+            session_cookie_value = random_hex(50);
+            std::string session_cookie_header = "marble_sess=" + session_cookie_value;
+            apr_table_set(req->headers_out, "Set-Cookie", session_cookie_header.c_str());
+        }
+        else
+        {
+            session_cookie_value = cookies["marble_sess"];
+        }
+
+        // Set the session key for this interpreter
+        interpreter.properties["session_key"] = session_cookie_value;
 
         Logger* logger = interpreter.getLogger();
 

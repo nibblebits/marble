@@ -165,6 +165,8 @@ void FileSessionObject::FileSession_Save(Interpreter* interpreter, std::vector<V
     std::shared_ptr<FileSessionObject> fs_obj = std::dynamic_pointer_cast<FileSessionObject>(object);
     std::string new_session_json = FileSessionObject::parseMapToJson(fs_obj->values);
 
+    if (!fs_obj->file.is_open())
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {})), "Failed to save session as you never created it. Call create(string session_password)");
 
     // Reset to the start of the stream
     fs_obj->file.clear();
