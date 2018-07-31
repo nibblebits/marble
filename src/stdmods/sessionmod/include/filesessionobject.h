@@ -7,6 +7,8 @@
 #include <vector> 
 #include <fstream>
 
+#define TMP_DIRECTORY "/var/tmp"
+
 class ModuleSystem;
 class FileSessionObject : public SessionObject
 {

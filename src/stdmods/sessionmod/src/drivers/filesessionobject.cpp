@@ -4,6 +4,7 @@
 #include "function.h"
 #include "exceptions/systemexception.h"
 #include "exceptionobject.h"
+#include "misc.h"
 #include <iostream>
 
 FileSessionObject::FileSessionObject(Class* c) : SessionObject(c)
@@ -89,19 +90,31 @@ std::map<std::string, Value> FileSessionObject::getSystemValuesForJSONValue(Inte
 void FileSessionObject::FileSession_Create(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
 {
     std::shared_ptr<FileSessionObject> fs_obj = std::dynamic_pointer_cast<FileSessionObject>(object);
-    fs_obj->file.open("./testing_json.txt", std::ios::out | std::ios::in);
-    Json::Reader reader;
-    Json::Value obj;
-    Json::Value::Members members;
-    try
+    std::string path = std::string(TMP_DIRECTORY) + "/marble_session_" + values[0].svalue + ".txt";
+    bool exists = file_exists(path);
+    if (exists)
     {
-        fs_obj->file >> obj;
-        fs_obj->values = FileSessionObject::getSystemValuesForJSONValue(interpreter, obj);
+        fs_obj->file.open(path, std::ios::out | std::ios::in);
+        Json::Reader reader;
+        Json::Value obj;
+        Json::Value::Members members;
+        try
+        {
+            fs_obj->file >> obj;
+            fs_obj->values = FileSessionObject::getSystemValuesForJSONValue(interpreter, obj);
+        }
+        catch(...)
+        {
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {})), "Failed to load or create session");
+        }
     }
-    catch(...)
+    else
     {
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {})), "Failed to load or create session");
+        // This is a new session
+        fs_obj->file.open(path, std::ios::out);
+        fs_obj->file.write("{}", 2);
     }
+
 
 }
 
