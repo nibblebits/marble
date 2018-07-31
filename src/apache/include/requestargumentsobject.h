@@ -19,6 +19,10 @@ public:
     virtual ~WebModuleRequestArgumentsObject();
     virtual std::shared_ptr<Object> newInstance(Class* c);
 
+    /**
+     *
+     * Registers the RequestArguments class
+     */
     static Class* registerClass(ModuleSystem* moduleSystem);
 
     std::map<std::string, std::string> arguments;
