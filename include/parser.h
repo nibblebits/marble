@@ -86,7 +86,7 @@ private:
     void parse_permission_node();
     void parse_null();
     void parse_boolean();
-
+    
     /**
      * Parses an output node such as
      * "Hello world"
@@ -118,6 +118,8 @@ private:
     void parse_function_call();
     void parse_arguments(std::vector<ExpressionInterpretableNode*>* argument_nodes);
     void parse_function();
+    void parse_limit_scope();
+    
     /**
      * If is_in_value == TRUE then we treat it as a value such as parse_value. Otherwise we use parse_body_next.
      */
@@ -128,6 +130,7 @@ private:
     void parse_pure_function();
     void parse_function_declaration();
     std::vector<VarNode*> parse_declared_arguments();
+
 
     Token* next();
     Token* peek(int ahead);

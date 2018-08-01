@@ -338,6 +338,31 @@ void Parser::parse_function()
     push_node(f_node);
 }
 
+void Parser::parse_limit_scope()
+{
+    if(!next()->isKeyword("limit"))
+    {
+        parse_error("Expecting a limit keyword for limiting scopes");
+    }
+    
+    parse_body();
+    BodyNode* limit_to_body = (BodyNode*) pop_node();
+
+    if (!next()->isKeyword("scope"))
+    {
+        parse_error("Expecting a scope to limit use the scope keyword limit {} scope {}");
+    }
+
+    parse_body();
+    BodyNode* scope_body = (BodyNode*) pop_node();
+
+    LimitScopeNode* limit_scope_node = (LimitScopeNode*) factory.createNode(NODE_TYPE_LIMIT_SCOPE);
+    limit_scope_node->limit_to = limit_to_body;
+    limit_scope_node->scope = scope_body;
+    push_node(limit_scope_node);
+}
+
+
 void Parser::parse_ignore_validation(bool is_in_value)
 {
     if (!next()->isSymbol("@"))
@@ -1335,6 +1360,10 @@ void Parser::parse_body_next()
     {
         // A pure entity is expected
         parse_pure();
+    }
+    else if(this->current_token->isKeyword("limit"))
+    {
+        parse_limit_scope();
     }
     else if(this->current_token->isKeyword("class"))
     {

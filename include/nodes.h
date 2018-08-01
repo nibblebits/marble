@@ -35,4 +35,5 @@
 #include "requirenode.h"
 #include "booleanliteralnode.h"
 #include "outputnode.h"
+#include "limitscopenode.h"
 #endif

@@ -203,6 +203,12 @@ Node* NodeFactory::createNode(NODE_TYPE node_type)
     }
     break;
     
+    case NODE_TYPE_LIMIT_SCOPE:
+    {
+        node = new LimitScopeNode();
+    }
+    break;
+
     default:
         throw std::logic_error("Invalid node type provided to NodeFactory::createNode");
     }
