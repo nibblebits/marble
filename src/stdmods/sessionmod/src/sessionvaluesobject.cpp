@@ -20,6 +20,16 @@ void SessionValuesObject::registerClass(ModuleSystem *moduleSystem)
     // Create an empty constructor for the SessionValues class
     c->registerFunction("__construct", {}, VarType::fromString("void"), Function::Blank);
 
+
+    /**
+     * 
+     * Returns true if an index with the given name exists
+     * 
+     *  function has(string index_name) : boolean
+     */
+    Function *has_func = c->registerFunction("has", {VarType::fromString("string")}, VarType::fromString("boolean"), SessionValuesObject::SessionValues_Has);
+
+
     /**
      * 
      * Sets the number for the index provided
@@ -81,6 +91,13 @@ void SessionValuesObject::ensureIndexExists(Interpreter* interpreter, std::strin
 }
 
 // Native SessionValues functions/methods
+
+void SessionValuesObject::SessionValues_Has(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+{
+    std::shared_ptr<SessionValuesObject> sv_obj = std::dynamic_pointer_cast<SessionValuesObject>(object);
+    return_value->set(sv_obj->values.find(values[0].svalue) != sv_obj->values.end());
+}
+
 void SessionValuesObject::SessionValues_SetNumber(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
 {
     std::shared_ptr<SessionValuesObject> sv_obj = std::dynamic_pointer_cast<SessionValuesObject>(object);
