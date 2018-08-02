@@ -1,6 +1,7 @@
 #include "requirenode.h"
 #include "interpreter.h"
 #include "validator.h"
+#include "filepermission.h"
 #include "misc.h"
 #include "exceptions/testerror.h"
 #include "exceptions/IOException.h"
@@ -21,6 +22,7 @@ void RequireNode::test(Validator* validator, struct extras extra)
     try
     {
         Interpreter* interpreter = validator->getInterpreter();
+
         this->splitter = interpreter->loadScript(this->filename.c_str());
         split split;
         PosInfo posInfo;
@@ -60,9 +62,12 @@ void RequireNode::test(Validator* validator, struct extras extra)
 
 Value RequireNode::interpret(Interpreter* interpreter, struct extras extra)
 {
+    std::string absolute_path = getAbsolutePath(this->filename);
+    // Before we do anything let's make sure we have permission to load this file
+    FilePermission::checkPermissionAllows(interpreter, interpreter->getCurrentScope(), absolute_path.c_str(), "r");
 
     PosInfo posInfo;
-    posInfo.filename = this->filename.c_str();
+    posInfo.filename = absolute_path.c_str();
     posInfo.line = 1;
     posInfo.col = 1;
     // Now we are done let's run the result we also want to ignore validation as we did it during testing

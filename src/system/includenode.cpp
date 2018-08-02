@@ -3,6 +3,8 @@
 #include "interpreter.h"
 #include "validator.h"
 #include "statics.h"
+#include "filepermission.h"
+#include "misc.h"
 #include "exceptionobject.h"
 #include "exceptions/systemexception.h"
 #include "exceptions/IOException.h"
@@ -31,6 +33,11 @@ Value IncludeNode::interpret(Interpreter* interpreter, struct extras extra)
 {
     Value v;
     v = this->exp->interpret(interpreter);
+
+    std::string absolute_path = getAbsolutePath(v.svalue);
+    // Before we do anything let's make sure we have permission to load this file
+    FilePermission::checkPermissionAllows(interpreter, interpreter->getCurrentScope(), absolute_path.c_str(), "r");
+    
     interpreter->new_parented_scope();
     try
     {
