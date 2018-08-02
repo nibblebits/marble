@@ -14,6 +14,7 @@ public:
     virtual void test(Validator* validator, struct extras extra={});
     void test(Validator* validator, SCOPE_PROPERTIES scope_properties);
     virtual Value interpret(Interpreter* interpreter, struct extras extra={});
+    virtual Value interpret(Interpreter* interpreter, SCOPE_PROPERTIES properties, struct extras extra={});
     virtual void evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation);
     virtual void didBreak(BREAK_TYPE type);
     
@@ -22,7 +23,7 @@ public:
     void onAfterInterpretNode(std::function<void(Node* node, Value v)> on_after_interpret_node_function);
     void apply_node_listener(std::function<NODE_LISTENER_ACTION(Node* node)> node_listener_function);
 	bool interpret_body_node(Node* node);
-    void interpret_body(BodyNode* node);
+    void interpret_body(BodyNode* node, SCOPE_PROPERTIES scope_properties);
     
     
 private:
