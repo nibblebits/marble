@@ -65,7 +65,6 @@ Value RequireNode::interpret(Interpreter* interpreter, struct extras extra)
     posInfo.filename = this->filename.c_str();
     posInfo.line = 1;
     posInfo.col = 1;
-    
     // Now we are done let's run the result we also want to ignore validation as we did it during testing
     interpreter->run(this->code_result.c_str(), posInfo, true);
     Value v;

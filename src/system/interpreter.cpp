@@ -256,7 +256,6 @@ Node* Interpreter::getAST(const char* code, PosInfo posInfo)
     Token* token = root_token;
     while (token != NULL)
     {
-        std::cout << "Token value: " << token->value << ", type: " << token->type << std::endl;
         token = token->next;
     }
 
