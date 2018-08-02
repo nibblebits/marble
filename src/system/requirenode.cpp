@@ -17,6 +17,7 @@ RequireNode::~RequireNode()
 
 void RequireNode::test(Validator* validator, struct extras extra)
 {
+    this->code_result = "";
     try
     {
         Interpreter* interpreter = validator->getInterpreter();
@@ -26,26 +27,20 @@ void RequireNode::test(Validator* validator, struct extras extra)
         posInfo.filename = this->filename.c_str();
         posInfo.line = 1;
         posInfo.col = 1;
+        
+        // Merge the splits to create one final code result
         while(this->splitter.split(&split))
         {
-            if (split.has_code)
-            {
-                CloneForCall(split.code.data, split.code.size, split.code.size+1, [&](const void* ptr, int size) {
-                    char* code_data = (char*) ptr;
-                    code_data[split.code.size] = 0;
-                    // Marble tag "<marble>" should be added to the current position
-                    posInfo.col += strlen(MARBLE_OPEN_TAG);
-                    Node* root_node = interpreter->getAST(code_data, posInfo);
-                    validator->validate(root_node);
-                    Logger* logger = validator->getLogger();
-                    if (logger->hasErrors())
-                    {
-                       throw TestError(logger->entries[0].message);
-                    }
-                    interpreter->handleLineAndColumn(posInfo, code_data, size);
-                });
-            }
-            this->splits.push_back(split);
+            // Merge the code and data for this split
+            this->code_result += interpreter->mergeCodeAndDataForSplit(&split);
+        }
+
+        Node* root_node = interpreter->getAST(code_result.c_str(), posInfo);
+        validator->validate(root_node);
+        Logger* logger = validator->getLogger();
+        if (logger->hasErrors())
+        {
+            throw TestError(logger->entries[0].message);
         }
     }
     catch(TestError& ex)
@@ -70,17 +65,9 @@ Value RequireNode::interpret(Interpreter* interpreter, struct extras extra)
     posInfo.filename = this->filename.c_str();
     posInfo.line = 1;
     posInfo.col = 1;
-    std::string result = "";
-
-    while(!this->splits.empty())
-    {        
-        split split = this->splits.front();
-        result += interpreter->mergeCodeAndDataForSplit(&split);
-        this->splits.pop_front();
-    }
-
+    
     // Now we are done let's run the result we also want to ignore validation as we did it during testing
-    interpreter->run(result.c_str(), posInfo, true);
+    interpreter->run(this->code_result.c_str(), posInfo, true);
     Value v;
     return v;
 }

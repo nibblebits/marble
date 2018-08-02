@@ -17,6 +17,6 @@ public:
     std::string filename;
 private:
     Splitter splitter;
-    std::deque<split> splits;
+    std::string code_result;
 };
 #endif
