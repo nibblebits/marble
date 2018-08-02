@@ -55,4 +55,9 @@ std::string to_hex(int c);
  * Returns a random hex string that is the size of total_bytes
  */
 std::string random_hex(size_t total_bytes);
+
+/**
+ * Returns the provided string in lower case
+ */
+std::string to_lower(std::string s);
 #endif

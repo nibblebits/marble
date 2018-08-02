@@ -270,7 +270,7 @@ static int marble_handler(request_rec *req)
     else 
         return HTTP_NOT_FOUND;
 
-
+    int statusCode = 200;
     if (!req->header_only) {
         // Load marble configuration
         configuration* conf = (configuration*) ap_get_module_config(req->per_dir_config, &mod_marble_module);
@@ -342,10 +342,13 @@ static int marble_handler(request_rec *req)
                 ap_rputs(format_log_entry(entry).c_str(), req);
             }
         }
+
+        statusCode = std::stoi(interpreter.properties["response_code"]);
     }
     
     
-    return OK;
+    // OK = 0 but when returning 200 we get an error so we need to do this
+    return statusCode == 200 ? OK : statusCode;
 }
 
 bool loadConfiguration(std::string configFileName, configuration* conf=NULL)

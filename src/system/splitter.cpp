@@ -121,7 +121,7 @@ bool Splitter::split(struct split* split)
     {
         // There is no more marble tags
         output_data->start = start;
-        output_data->end = this->length;
+        output_data->end = this->length-1 < 0 ? 0 : this->length;
         output_data->data = this->data+start;
         output_data->update();
         split->is_last = true;

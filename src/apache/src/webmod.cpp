@@ -16,6 +16,7 @@
 #include <iostream>
 #include <sstream>
 
+
 WebModulePOSTContentObject::WebModulePOSTContentObject(Class* c) : Object(c)
 {
     
@@ -166,6 +167,9 @@ void WebModule::newInterpreter(Interpreter* interpreter)
 
     std::shared_ptr<WebModule_ResponseObject> response_obj = std::dynamic_pointer_cast<WebModule_ResponseObject>(Object::create(interpreter, this->getModuleSystem()->getClassSystem()->getClassByName("Response"), {}));
     root_scope->createVariable("Response", "Response", response_obj);
+
+    // Set the default response code to 200 OK
+    interpreter->properties["response_code"] = std::to_string(200);
 }
 
 void WebModule::parseForRequestObject(Scope* root_scope, Interpreter* interpreter, request_rec* req)
@@ -526,6 +530,12 @@ void WebModule::Request_setResponseHeader(Interpreter* interpreter, std::vector<
     std::shared_ptr<WebModuleObject> wm_obj = std::dynamic_pointer_cast<WebModuleObject>(object);
     request_rec* req = wm_obj->req;
     apr_table_set(req->headers_out, values[0].svalue.c_str(), values[1].svalue.c_str());
+
+    if (to_lower(values[0].svalue) == "location")
+    {
+        // We need a 302 response code
+        interpreter->properties["response_code"] = std::to_string(302);
+    }
 }
 
 void WebModule::Request_getFileContent(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)

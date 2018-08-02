@@ -8,6 +8,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <sstream>
+#include <algorithm>
 #include <linux/limits.h>
 #include <sys/mman.h>
 
@@ -161,4 +162,10 @@ std::string random_hex(size_t total_bytes)
 	}
 
 	return result.substr(0, total_bytes);
+}
+
+std::string to_lower(std::string s)
+{
+	std::transform(s.begin(), s.end(), s.begin(), ::tolower);
+	return s;
 }

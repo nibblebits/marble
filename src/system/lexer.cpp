@@ -4,6 +4,7 @@
 #include <memory.h>
 #include <stdlib.h>
 #include <memory>
+#include <ctype.h>
 #include "statics.h"
 #include "config.h"
 const char keywords[][MAX_KEYWORD_SIZE] = {"public", "private", "protected", "function", "number", "string", "int", "boolean", "true", "false", "class", "return", "continue", "break", "void", "new", "if", "else", "extends", "throw", "try", "catch", "finally", "do", "while", "break", "continue", "for", "include", "include_once", "pure", "final", "permission", "null", "require", "limit", "scope"};
@@ -49,7 +50,7 @@ bool Lexer::is_keyword(std::string value)
 
 bool Lexer::is_whitespace(char c)
 {
-    return c < 33;
+    return isspace(c);
 }
 
 bool Lexer::is_operator(char c)
