@@ -4,6 +4,7 @@
 #include "permissionsobject.h"
 #include "permissionpropertyobject.h"
 #include "modulehandlingpermissionobject.h"
+#include "filepermission.h"
 #include "array.h"
 #include "function.h"
 BaseSystemHandler::BaseSystemHandler() : SystemHandler(SYSTEM_HANDLER_BASE_SYSTEM_HANDLER, NULL, NULL)
@@ -49,6 +50,9 @@ BaseSystemHandler::BaseSystemHandler() : SystemHandler(SYSTEM_HANDLER_BASE_SYSTE
     });
 
 
+
+    // Register the FilePermission class
+    FilePermission::registerClass(this);
 
     // We need a permission class to help manage permissions
     PermissionObject::registerClass(this);

@@ -1,6 +1,6 @@
 #include "filemod_file.h"
 #include "filemod.h"
-#include "filemod_filepermission.h"
+#include "filepermission.h"
 #include "exceptionobject.h"
 #include "exceptions/systemexception.h"
 #include "misc.h"

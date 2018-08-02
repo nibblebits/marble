@@ -1,7 +1,7 @@
 #include "filemod.h"
 #include "object.h"
 #include "function.h"
-#include "filemod_filepermission.h"
+#include "filepermission.h"
 #include "exceptionobject.h"
 #include "exceptions/systemexception.h"
 #include "misc.h"
@@ -32,8 +32,6 @@ void FileModule::Init()
     log("--- Registering functions and classes", LOG_LEVEL_NOTICE);
     
     ClassSystem* c_system = this->getModuleSystem()->getClassSystem();
-    // Register the FilePermission class
-    FileModule_FilePermission::registerClass(this->getModuleSystem());
 
     // Register the FileOutputStream class
     FileModule_FileOutputStream::registerClass(this->getModuleSystem());
@@ -87,7 +85,7 @@ void FileModule::permissionCheck(Interpreter* interpreter, Scope* caller_scope, 
         }
         for (std::shared_ptr<PermissionObject> perm : permission_list)
         {
-            std::shared_ptr<FileModule_FilePermission> permission = std::dynamic_pointer_cast<FileModule_FilePermission>(perm);
+            std::shared_ptr<FilePermission> permission = std::dynamic_pointer_cast<FilePermission>(perm);
             // Do we have access to the directory we are trying to access?
             if (startsWith(absolute_filename_path, permission->location->value.svalue))
             {

@@ -1,4 +1,4 @@
-SYSTEM_OBJECT_FILES = ./build/main.o ./build/filemod.o ./build/filemod_fileoutputstream.o ./build/filemod_fileinputstream.o ./build/filemod_file.o ./build/filemod_filepermission.o ./build/filemod_directory.o
+SYSTEM_OBJECT_FILES = ./build/main.o ./build/filemod.o ./build/filemod_fileoutputstream.o ./build/filemod_fileinputstream.o ./build/filemod_file.o ./build/filemod_directory.o
 INCLUDES = -I ../../../include -I ./include
 OBJECT_FILE_FLAGS = -c -g -fPIC -std=c++14
 SYSTEM_LIB_LOCAL_FILENAME = libmarble.so
@@ -15,8 +15,6 @@ module: ${SYSTEM_OBJECT_FILES}
 	g++ ${INCLUDES} ./src/filemod_fileinputstream.cpp -o ./build/filemod_fileinputstream.o ${OBJECT_FILE_FLAGS}
 ./build/filemod_file.o: ./src/filemod_file.cpp
 	g++ ${INCLUDES} ./src/filemod_file.cpp -o ./build/filemod_file.o ${OBJECT_FILE_FLAGS}
-./build/filemod_filepermission.o: ./src/filemod_filepermission.cpp
-	g++ ${INCLUDES} ./src/filemod_filepermission.cpp -o ./build/filemod_filepermission.o ${OBJECT_FILE_FLAGS}
 ./build/filemod_directory.o: ./src/filemod_directory.cpp
 	g++ ${INCLUDES} ./src/filemod_directory.cpp -o ./build/filemod_directory.o ${OBJECT_FILE_FLAGS}
 standalone: module

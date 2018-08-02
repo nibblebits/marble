@@ -4,7 +4,7 @@
 #include <memory>
 #include <string>
 #include <stdio.h>
-#include "filemod_filepermission.h"
+#include "filepermission.h"
 #include "object.h"
 #include "module.h"
 

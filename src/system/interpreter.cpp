@@ -32,6 +32,7 @@
 #include "permissionobject.h"
 #include "permissionsobject.h"
 #include "permissionpropertyobject.h"
+#include "filepermission.h"
 #include "modulehandlingpermissionobject.h"
 #include "commonmod_sqldriver.h"
 #include "exceptions/IOException.h"
@@ -282,6 +283,7 @@ void Interpreter::createDefaultClassesAndFunctions()
     
     if (std::dynamic_pointer_cast<ExceptionObject>(exception_class->getDescriptorObject()) == NULL)
         throw std::logic_error("The Exception class registered in a parent class system has a descriptor object that does not extend the ExceptionObject native class");
+
 
     c = getClassSystem()->registerClass("OutOfBoundsException", exception_class);
         c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {

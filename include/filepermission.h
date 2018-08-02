@@ -4,15 +4,15 @@
 #include "permissionobject.h"
 #include <string>
 class Variable;
-class ModuleSystem;
-class FileModule_FilePermission : public PermissionObject
+class SystemHandler;
+class FilePermission : public PermissionObject
 {
 public:
-    FileModule_FilePermission(Class* c);
-    virtual ~FileModule_FilePermission();
+    FilePermission(Class* c);
+    virtual ~FilePermission();
     virtual std::shared_ptr<Object> newInstance(Class* c);
 
-    static void registerClass(ModuleSystem* moduleSystem);
+    static void registerClass(SystemHandler* systemHandler);
 
     // The location this FilePermission is bound to
     Variable* location;
