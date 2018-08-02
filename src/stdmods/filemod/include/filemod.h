@@ -30,8 +30,6 @@ public:
      */
     static bool isReadMode(std::string mode);
     
-    static void permissionCheck(Interpreter* interpreter, Scope* caller_scope, std::string absolute_filename_path, std::string mode);
-
 
 private:
 

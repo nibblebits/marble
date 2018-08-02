@@ -90,7 +90,7 @@ void FileModule_File::File_Open(Interpreter *interpreter, std::vector<Value> val
     std::string absolute_filename_path = getAbsolutePath(filename);
 
     // We need to make sure the scope has access to this file
-    FileModule::permissionCheck(interpreter, caller_scope, absolute_filename_path, mode);
+    FilePermission::checkPermissionAllows(interpreter, caller_scope, absolute_filename_path, mode);
 
     FILE *fp = fopen(filename.c_str(), mode.c_str());
     std::shared_ptr<FileModule_File> file_obj = std::dynamic_pointer_cast<FileModule_File>(object);

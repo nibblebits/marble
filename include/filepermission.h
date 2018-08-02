@@ -19,6 +19,11 @@ public:
     Variable* can_read;
     Variable* can_write;
 
+    static bool isWriteMode(std::string mode);
+    static bool isReadMode(std::string mode);
+    static void checkPermissionAllows(Interpreter* interpreter, Scope* caller_scope, std::string absolute_filename_path, std::string mode);
+
+
     // Native FilePermission functions/methods
     static void FilePermission_SetLocation(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
     static void FilePermission_GetLocation(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);

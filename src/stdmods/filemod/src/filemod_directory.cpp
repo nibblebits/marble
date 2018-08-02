@@ -47,7 +47,7 @@ void FileModule_Directory::Directory_Create(Interpreter* interpreter, std::vecto
 {
     // Do we have permission for this?
     std::string abs_path = getAbsolutePath(values[0].svalue);
-    FileModule::permissionCheck(interpreter, caller_scope, abs_path, "w");
+    FilePermission::checkPermissionAllows(interpreter, caller_scope, abs_path, "w");
     
     // Create the directory and return weather it was ok or not
     return_value->set(mkdir(values[0].svalue.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == 0);
