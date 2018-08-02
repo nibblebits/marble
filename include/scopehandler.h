@@ -12,7 +12,7 @@ public:
     virtual ~ScopeHandler();
     Scope* getCurrentScope();
     Scope* getRootScope();
-    
+    Scope* getGlobalScope();
     void setCurrentScope(Scope* scope);
     void new_parented_scope();
     void finish_parented_scope();
@@ -28,6 +28,13 @@ public:
 private:
     std::unique_ptr<Scope> root_scope;
     Scope* current_scope;
+
+    /**
+     * The global_scope holds written variables in the global scope of a marble script
+     */
+    Scope* global_scope;
+
+
     /*
     * The action_scope holds the scope that any action is preformed on. For example
     * if a variable is set from the root scope such as. foo.bar = 50; Then during the point of foo.bar being set the action scope will be equal

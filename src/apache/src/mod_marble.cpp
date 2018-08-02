@@ -283,7 +283,7 @@ static int marble_handler(request_rec *req)
 
 
         // Inject the permissions loaded from the configuration into our root scope granting access
-        interpreter.getRootScope()->permissions = conf->set_permissions;
+        interpreter.getGlobalScope()->permissions = conf->set_permissions;
 
         // Let's set the timeout for this interpreter
         interpreter.setTimeout(conf->timeout);
@@ -374,7 +374,7 @@ bool loadConfiguration(std::string configFileName, configuration* conf=NULL)
        when inserting it into interpreters that must be run later. */ 
     if (conf != NULL)
     {
-        conf->set_permissions = interpreter.getRootScope()->permissions;
+        conf->set_permissions = interpreter.getGlobalScope()->permissions;
 
         // We also want to remember the timeout this configuration setup for us
         conf->timeout = interpreter.getTimeout();

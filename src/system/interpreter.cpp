@@ -75,8 +75,8 @@ Interpreter::Interpreter(ClassSystem* classSystem, FunctionSystem* baseFunctionS
     // Creat ethe default classes and functions for this interpreter
     createDefaultClassesAndFunctions();
 
-    // We must now create a permission object for our root scope
-    getRootScope()->permissions = std::dynamic_pointer_cast<PermissionsObject>(Object::create(getClassSystem()->getClassByName("Permissions")));
+    // We must now create a permission object for our global scope
+    getGlobalScope()->permissions = std::dynamic_pointer_cast<PermissionsObject>(Object::create(getClassSystem()->getClassByName("Permissions")));
 
    this->lastFunctionCallNode = NULL;
    this->moduleSystem = NULL;
@@ -328,7 +328,7 @@ void Interpreter::createDefaultClassesAndFunctions()
 
 
     // We must now create a permission object for our root scope
-    getRootScope()->permissions = std::dynamic_pointer_cast<PermissionsObject>(Object::create(getClassSystem()->getClassByName("Permissions")));
+    getGlobalScope()->permissions = std::dynamic_pointer_cast<PermissionsObject>(Object::create(getClassSystem()->getClassByName("Permissions")));
 
     // It is also wise to create a method for getting the current permissions
     getFunctionSystem()->registerFunction("getScopePermissions", {}, VarType::fromString("Permissions"),[&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
@@ -352,8 +352,9 @@ void Interpreter::setupValidator()
         validator = std::unique_ptr<Validator>(new Validator(&logger, this));
     }
 
+
     // We must set the validators previous scope to our own so that native variables are recognised.
-    validator->getCurrentScope()->prev = this->getCurrentScope();
+    validator->getRootScope()->prev = this->getCurrentScope();
 }
 
 void Interpreter::run(const char* code, PosInfo posInfo, bool ignore_validation)

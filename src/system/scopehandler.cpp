@@ -7,11 +7,16 @@ ScopeHandler::ScopeHandler()
     this->root_scope = std::unique_ptr<Scope>(new Scope(NULL));
     this->action_scope = root_scope.get();
     this->current_scope = root_scope.get();
+
+    // We don't want the root scope to be our current scope as root scope is for native variables
+    new_parented_scope();
+    this->action_scope = getCurrentScope();
+    this->global_scope = getCurrentScope();
 }
 
 ScopeHandler::~ScopeHandler()
 {
-
+    finish_parented_scope();
 }
 
 Scope* ScopeHandler::getCurrentScope()
@@ -22,6 +27,11 @@ Scope* ScopeHandler::getCurrentScope()
 Scope* ScopeHandler::getRootScope()
 {
     return this->root_scope.get();
+}
+
+Scope* ScopeHandler::getGlobalScope()
+{
+    return this->global_scope;
 }
 
 void ScopeHandler::setCurrentScope(Scope* scope)

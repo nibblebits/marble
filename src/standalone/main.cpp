@@ -40,7 +40,7 @@ bool loadConfiguration()
     /* The set permissions become equal to the permissions of the configuration interpreter
        Do be aware this type of setup only works in a single threaded environment in a multithreaded environment the permission object must be cloned
        when inserting it into interpreters that must be run later. */ 
-    set_permissions = interpreter.getRootScope()->permissions;
+    set_permissions = interpreter.getGlobalScope()->permissions;
 
     return true;
 }
@@ -62,7 +62,7 @@ void interpret()
 
         Logger* logger = interpreter.getLogger();
         interpreter.setModuleSystem(moduleSystem);
-        interpreter.getRootScope()->permissions = set_permissions;
+        interpreter.getGlobalScope()->permissions = set_permissions;
         // Let's setup the session key
         interpreter.properties["session_key"] = "simpleclientsessionkey";
 

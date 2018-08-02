@@ -37,11 +37,20 @@ void RequireNode::test(Validator* validator, struct extras extra)
                     posInfo.col += strlen(MARBLE_OPEN_TAG);
                     Node* root_node = interpreter->getAST(code_data, posInfo);
                     validator->validate(root_node);
+                    Logger* logger = validator->getLogger();
+                    if (logger->hasErrors())
+                    {
+                       throw TestError(logger->entries[0].message);
+                    }
                     interpreter->handleLineAndColumn(posInfo, code_data, size);
                 });
             }
             this->splits.push_back(split);
         }
+    }
+    catch(TestError& ex)
+    {
+        throw TestError("Failed to require file: " + this->filename + " " + ex.what());
     }
     catch(IOException& ex)
     {
