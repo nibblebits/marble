@@ -36,4 +36,5 @@
 #include "booleanliteralnode.h"
 #include "outputnode.h"
 #include "limitscopenode.h"
+#include "outputfilternode.h"
 #endif

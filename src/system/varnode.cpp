@@ -28,6 +28,11 @@ VarNode::~VarNode()
 void VarNode::test(Validator* validator, struct extras extra)
 {
    std::string type_str = getTypeAsString();
+   if (validator->isExpecting())
+   {
+       if (type_str != validator->getExpectingType())
+        throw TestError("This variable must be of type " + validator->getExpectingType() + " but a " + type_str + " was provided");
+   }
 
    // We need to check if the variable already exists in this scope
    if (validator->getCurrentScope()->getVariable(this->name) != NULL)
@@ -51,6 +56,7 @@ void VarNode::test(Validator* validator, struct extras extra)
    
    if (this->value != NULL)
    {   
+       validator->save();
        validator->expecting(type_str);
        if (isArray())
            validator->expectingArray(this->dimensions);
@@ -63,6 +69,7 @@ void VarNode::test(Validator* validator, struct extras extra)
        }
    
        validator->endExpecting();
+       validator->restore();
    }
    
    Variable* var = validator->getCurrentScope()->createVariable();

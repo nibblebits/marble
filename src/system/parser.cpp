@@ -943,6 +943,39 @@ void Parser::parse_boolean()
     push_node(boolean_literal_node);
 }
 
+void Parser::parse_filter_output_node()
+{
+    if (!next()->isKeyword("filter"))
+        parse_error("Expecting a filter keyword for filter output statements");
+    
+    // Parse the filter body
+    parse_body();
+    BodyNode* filter_body = (BodyNode*) pop_node();
+
+    if (!next()->isKeyword("output"))
+        parse_error("Expecting an output keyword after filter statement");
+    
+    if (!next()->isSymbol("("))
+        parse_error("Expecting a left bracket after output keyword");
+
+    // Parse the filter expression
+    parse_variable_declaration();
+    VarNode* filter_variable = (VarNode*) pop_node();
+
+    if (!next()->isSymbol(")"))
+        parse_error("Expecting a right bracket to finish output keywords expression");
+
+    // Parse the output body
+    parse_body();
+    BodyNode* output_body = (BodyNode*) pop_node();    
+
+    OutputFilterNode* output_filter_node = (OutputFilterNode*) factory.createNode(NODE_TYPE_OUTPUT_FILTER);
+    output_filter_node->filter_body = filter_body;
+    output_filter_node->filter_variable = filter_variable;
+    output_filter_node->output_body = output_body;
+    push_node(output_filter_node);
+}
+
 void Parser::parse_multi_expression()
 {
     ListNode* list_node = (ListNode*) factory.createNode(NODE_TYPE_LIST);
@@ -1364,6 +1397,10 @@ void Parser::parse_body_next()
     else if(this->current_token->isKeyword("limit"))
     {
         parse_limit_scope();
+    }
+    else if(this->current_token->isKeyword("filter"))
+    {
+        parse_filter_output_node();
     }
     else if(this->current_token->isKeyword("class"))
     {

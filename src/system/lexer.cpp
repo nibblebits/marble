@@ -7,7 +7,7 @@
 #include <ctype.h>
 #include "statics.h"
 #include "config.h"
-const char keywords[][MAX_KEYWORD_SIZE] = {"public", "private", "protected", "function", "number", "string", "int", "boolean", "true", "false", "class", "return", "continue", "break", "void", "new", "if", "else", "extends", "throw", "try", "catch", "finally", "do", "while", "break", "continue", "for", "include", "include_once", "pure", "final", "permission", "null", "require", "limit", "scope"};
+const char keywords[][MAX_KEYWORD_SIZE] = {"public", "private", "protected", "function", "number", "string", "int", "boolean", "true", "false", "class", "return", "continue", "break", "void", "new", "if", "else", "extends", "throw", "try", "catch", "finally", "do", "while", "break", "continue", "for", "include", "include_once", "pure", "final", "permission", "null", "require", "limit", "scope", "filter", "output"};
 const char valid_operators[][MAX_OPERATORS_SIZE] = {"+", "-", "*", "/", "++", "--", "+=", "-=", "/=", "*=", "-=", "=", ".", "&", "|", "!", "==", "!=", ">=", ">", "<=", "<", "&&", "||"};
 const char symbols[] = {';',',','(', ')', '{', '}','[',']', ':', '@'};
 Lexer::Lexer(Logger* logger, PosInfo posInfo)

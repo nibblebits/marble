@@ -6,7 +6,6 @@
 #include <vector>
 #include <string>
 #include <memory>
-#include <semaphore.h>
 #include "scope.h"
 #include "functionsystem.h"
 #include "csystem.h"
@@ -70,8 +69,17 @@ public:
      */
     void checkTimeout();
 
+    /**
+     * Saves the current output function and sets a new one
+     */
     void setOutputFunction(OUTPUT_FUNCTION output);
     void setInputFunction(INPUT_FUNCTION input);
+
+    /**
+     * Finishes the current output function restoring the previous output function
+     */
+    void finishOutputFunction();
+
     /**
      * Sets the ModuleSystem for this interpreter. You should load your modules before calling this method to ensure modules are told about this interpreter.
      * Upon calling this method special module functions are also created allowing for loading of modules from within the interpreter its self.
@@ -178,6 +186,7 @@ public:
      */
     OUTPUT_FUNCTION output;
 
+
     /**
     * Calls the input function assinged to this Interpreter
     * The input function should return a string based on the input of the interpreter.
@@ -201,6 +210,14 @@ private:
     bool first_run;
     // Set to true if permission checks should not take place.
     bool no_permission_restritions;
+
+    /**
+     * Outputs can be filtered infinitely therefore we required an output function stack that will hold all the output functions
+     * that are valid. Pushing to this stack can happen at any time so can removing functions from the stack. The stack can also be empty
+     * the OUTPUT_FUNCTION used is set in the output variable
+    */
+    std::vector<OUTPUT_FUNCTION> output_function_stack;
+
     ModuleSystem* moduleSystem;
     FunctionCallNode* lastFunctionCallNode;
     std::vector<std::string> nested_scripts_run;

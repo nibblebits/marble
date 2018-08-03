@@ -86,6 +86,7 @@ private:
     void parse_permission_node();
     void parse_null();
     void parse_boolean();
+    void parse_filter_output_node();
     
     /**
      * Parses an output node such as

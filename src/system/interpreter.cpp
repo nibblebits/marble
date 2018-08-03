@@ -118,12 +118,27 @@ void Interpreter::checkTimeout()
 
 void Interpreter::setOutputFunction(OUTPUT_FUNCTION output)
 {
+    if (this->output != NULL)
+    {
+        // We must save the current output function
+        this->output_function_stack.push_back(this->output);
+    }
     this->output = output;
 }
 
 void Interpreter::setInputFunction(INPUT_FUNCTION input)
 {
     this->input = input;
+}
+
+    
+void Interpreter::finishOutputFunction()
+{
+    if (!this->output_function_stack.empty())
+    {
+        this->output = this->output_function_stack.back();
+        this->output_function_stack.pop_back();
+    }
 }
 
 void Interpreter::setModuleSystem(ModuleSystem* moduleSystem)
