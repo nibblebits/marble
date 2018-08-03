@@ -106,6 +106,9 @@ std::string writeTemp(const char* data, int len)
 std::string str_replace(std::string data, std::string to_replace, std::string replace_with)
 {
 	size_t current_pos = 0;
+	if (to_replace == "" || data == "")
+		return data;
+
 	while((current_pos = data.find(to_replace, current_pos)) != std::string::npos)
 	{
 		data = data.replace(current_pos, to_replace.size(), replace_with);
