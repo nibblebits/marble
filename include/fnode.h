@@ -24,6 +24,15 @@ public:
     int dimensions;
 
 
+    /**
+    * is_operator_overloading should be true if the function is an overloaded operator
+    * the overloaded_operator string should be set to the operator that is overloaded
+    */
+    bool is_operator_overloading;
+    std::string overloaded_operator;
+
+
+
     // Is this a private, protected or public variable?
     MODIFIER_ACCESS access;
 };

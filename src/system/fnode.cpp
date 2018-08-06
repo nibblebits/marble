@@ -15,6 +15,7 @@ FunctionNode::FunctionNode() : ExpressionInterpretableNode(NODE_TYPE_FUNCTION)
     this->is_pure = false;
     this->access = MODIFIER_ACCESS_PUBLIC;
     this->dimensions = 0;
+    this->is_operator_overloading = false;
 }
 
 FunctionNode::~FunctionNode()

@@ -1,5 +1,6 @@
 #include "class.h"
 #include "function.h"
+#include "singlefunction.h"
 #include "interpreter.h"
 #include "fnode.h"
 Class::Class(SystemHandler* sys_handler, std::string name, FunctionSystem* prev_fc_sys, std::shared_ptr<Object> descriptor_obj) : FunctionSystem(sys_handler, prev_fc_sys)
@@ -104,6 +105,60 @@ bool Class::hasVariableWithName(std::string name)
 std::vector<Variable> Class::getVariables()
 {
     return this->local_variables;
+}
+
+std::vector<Function*> Class::getOverloadedOperatorFunctions()
+{
+    std::vector<Function*> functions;
+    std::vector<Function*> all_functions = getFunctions();
+    for(Function* function : all_functions)
+    {
+        if (function->is_operator_overloading)
+            functions.push_back(function);
+    }
+
+    return functions;
+}
+
+std::vector<Function*> Class::getOverloadedOperatorFunctions(std::string op)
+{
+    std::vector<Function*> functions = getOverloadedOperatorFunctions();
+    std::vector<Function*> valid_functions;
+    for(Function* function : functions)
+    {
+        if (function->overloaded_operator == op)
+            valid_functions.push_back(function);
+    }
+
+    return valid_functions;
+}
+
+bool Class::hasOverloadedOperator(std::string op, std::string argument1)
+{
+    std::vector<Function*> functions = getOverloadedOperatorFunctions(op);
+    for (Function* function : functions)
+    {
+        SingleFunction* single_function = (SingleFunction*) function;
+        if (single_function->argument_types.size() > 0)
+        {
+            if  (single_function->argument_types[0].value == argument1)
+                return true;
+        }
+    }
+
+    return false;
+}
+
+bool Class::hasOverloadedOperator(std::string op)
+{
+    std::vector<Function*> functions = getOverloadedOperatorFunctions();
+    for (Function* function : functions)
+    {
+        if (function->overloaded_operator == op)
+            return true;
+    }
+
+    return false;
 }
 
 bool Class::instanceOf(std::string class_name)

@@ -8,6 +8,7 @@
 #include "node.h"
 #include "evaluatingnode.h"
 #include "inode.h"
+class ExpressionInterpretableNode;
 class VarNode : public InterpretableNode
 {
 public:
@@ -15,6 +16,12 @@ public:
     virtual ~VarNode();
     virtual void test(Validator* validator, struct extras extra={});
     virtual Value interpret(Interpreter* interpreter, struct extras extra={});
+
+    /**
+     * Attempts to interpret and handle operator overloading assignments
+     * if this is invalid for this assignment it returns false otherwise true
+     */
+    bool handleOperatorOverloadIfValid(Interpreter* interpreter, std::string type_str, Variable* variable, ExpressionInterpretableNode* value_node);
     virtual void evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation);
     std::string getTypeAsString();
     bool isArray();

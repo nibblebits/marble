@@ -432,18 +432,49 @@ void Parser::parse_function_declaration()
     std::vector<VarNode*> args;
     ExpressionInterpretableNode* return_type;
     FunctionNode* function_node;
+    bool is_operator_overloading = false;
+    std::string overloaded_operator = "";
+
+    std::string function_name = "";
     if (!next()->isKeyword("function"))
     {
         parse_error("Expecting a function keyword for a function");
     }
     
-    if (!peek()->isIdentifier())
+    if (peek()->isKeyword("operator"))
+    {
+        // This is an operator function. A function that should be called when an operator is present. Seek operator overloading
+        // Ignore operator token
+        next();
+        if (!next()->isSymbol(":"))
+        {
+            parse_error("Expecting \":\" after operator");
+        }
+
+        // Now comes the operator this function is overloading
+        if (!peek()->isOperator())
+        {
+            parse_error("Expecting an operator when operator overloading");
+        }
+
+        std::string _overloaded_operator = next()->value;
+        function_name = "operator:" + _overloaded_operator;
+        is_operator_overloading = true;
+        overloaded_operator = _overloaded_operator;
+    }
+    else if (peek()->isIdentifier())
+    {
+        // This is a standard function so grab the name
+        parse_single_token();
+        name_node = (IdentifierNode*) pop_node();
+        function_name = name_node->value;
+    }
+    else
     {
         parse_error("Expecting a function name when declaring a function");
+
     }
     
-    parse_single_token();
-    name_node = (IdentifierNode*) pop_node();
     if (!next()->isSymbol("("))
     {
         parse_error("Expecting a left bracket for function arguments");
@@ -470,11 +501,13 @@ void Parser::parse_function_declaration()
     return_type = (ExpressionInterpretableNode*) convertToSingleNode(next());
     int array_dimensions = parse_array_dimensions();
     function_node = (FunctionNode*) factory.createNode(NODE_TYPE_FUNCTION);
-    function_node->name = name_node->value;
+    function_node->name = function_name;
     function_node->args = args;
     function_node->return_type = return_type;
     function_node->dimensions = array_dimensions;
     function_node->access = access;
+    function_node->is_operator_overloading = is_operator_overloading;
+    function_node->overloaded_operator = overloaded_operator;
     push_node(function_node);   
 }
 

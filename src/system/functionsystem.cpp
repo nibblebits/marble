@@ -159,6 +159,9 @@ Function* FunctionSystem::registerFunction(FunctionNode* fnode)
     }
 
     std::unique_ptr<SingleFunction> function = std::unique_ptr<SingleFunction>(function_raw);
+    function->is_operator_overloading = fnode->is_operator_overloading;
+    function->overloaded_operator = fnode->overloaded_operator;
+
     function->access = fnode->access;
     if (hasFunctionLocally(fnode->name))
     {

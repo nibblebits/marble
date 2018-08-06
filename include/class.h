@@ -24,6 +24,11 @@ public:
     Variable getVariable(std::string name);
     std::vector<Variable> getVariables();
     
+    std::vector<Function*> getOverloadedOperatorFunctions();
+    std::vector<Function*> getOverloadedOperatorFunctions(std::string op);
+    bool hasOverloadedOperator(std::string op, std::string argument1);
+    bool hasOverloadedOperator(std::string op);
+
     Class* getClassWhoHasVariable(std::string name);
     void setDescriptorObject(std::shared_ptr<Object> object);
     std::shared_ptr<Object> getDescriptorObject();
