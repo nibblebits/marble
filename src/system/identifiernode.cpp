@@ -19,6 +19,32 @@ IdentifierNode::~IdentifierNode()
 
 }
 
+bool IdentifierNode::objectHasConvertingMethod(SystemHandler* system_handler, VARIABLE_TYPE expecting_type, Variable* variable)
+{
+    /**
+    * Let's check to see if this variable has a method that can return the correct value type
+    * such as toString() or toNumber() in an object. When passed to a variable of type string toString() will be called on the object
+    * the result will be returned. This applies for numbers also
+    */
+    if (variable->type == VARIABLE_TYPE_OBJECT)
+    {
+        Class *c = system_handler->getClassSystem()->getClassByName(variable->type_name);
+        if (expecting_type == VARIABLE_TYPE_NUMBER 
+                      || expecting_type == VARIABLE_TYPE_BOOLEAN)
+        {
+            if (c->hasFunction("toNumber"))
+                return true;
+        }
+        else if(expecting_type == VARIABLE_TYPE_STRING)
+        {
+            if (c->hasFunction("toString"))
+                return true;
+        }
+    }
+
+    return false;
+}
+
 void IdentifierNode::test(Validator* validator, struct extras extra)
 {
     ClassSystem* class_sys = validator->getClassSystem();
@@ -79,9 +105,16 @@ void IdentifierNode::test(Validator* validator, struct extras extra)
     
     // We now need to check if the type is valid
     VARIABLE_TYPE expecting_type = validator->getExpectingVariableType();
+
     if (variable->type != expecting_type)
+    {
+        // Object has a converting method so lets just return
+        if (this->objectHasConvertingMethod(validator, expecting_type, variable))
+            return;
+
         throw TestError("a " + variable->type_name + " " + (variable->isArray() ? " array" : "") + " was provided");
-        
+    }
+
     if (variable->type == VARIABLE_TYPE_OBJECT)
     {
         // We must ensure the object types are compatible
@@ -96,6 +129,26 @@ Value IdentifierNode::interpret(Interpreter* interpreter, struct extras extra)
     Value v;
     Variable* var = interpreter->getVariableByName(this->value);
     v = var->value;
+    VARIABLE_TYPE expecting_type = interpreter->getExpectingVariableType();
+    if (expecting_type != var->type)
+    {
+        // The values are incompatible but as we have passed validation we are aware that we can get a valid value from an object
+        if (expecting_type == VARIABLE_TYPE_NUMBER)
+        {
+            // Let's call toNumber on the object
+            Class* c = interpreter->getClassSystem()->getClassByName(var->value.ovalue->getClass()->name);
+            Function* to_number_func = c->getFunctionByName("toNumber");
+            to_number_func->invoke(interpreter, {}, &v, var->value.ovalue, interpreter->getCurrentScope());
+        }
+        else if (expecting_type == VARIABLE_TYPE_STRING)
+        {
+            // Let's call toString on the object
+            Class* c = interpreter->getClassSystem()->getClassByName(var->value.ovalue->getClass()->name);
+            Function* to_number_func = c->getFunctionByName("toString");
+            to_number_func->invoke(interpreter, {}, &v, var->value.ovalue, interpreter->getCurrentScope());
+        }
+        
+    }
     return v;
 }
 

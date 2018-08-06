@@ -27,6 +27,7 @@ void FunctionCallNode::test_args(Validator *validator, std::vector<VarType> *typ
 {
     struct extras arg_extra = extra;
     arg_extra.accessors_scope = extra.accessors_scope;
+
     // We must use the global function system for function arguments
     validator->useFunctionSystem(validator->getGlobalFunctionSystem(), [&] {
         validator->useScope([&] {

@@ -137,3 +137,72 @@ bool SystemHandler::isAccessingObject()
 {
     return getCurrentObject() != NULL;
 }
+
+void SystemHandler::save()
+{
+    this->rules_stack.push_back(this->rules);
+    struct rules r;
+    this->rules = r;
+}
+
+void SystemHandler::restore()
+{
+    this->rules = this->rules_stack.back();
+    this->rules_stack.pop_back();
+}
+
+
+void SystemHandler::expectingArray(int dimensions)
+{
+    if (!isExpecting())
+        throw std::logic_error("You must start expecting a type before specifying the array dimensions");
+
+    this->rules.expected_array_dimensions = dimensions;
+}
+
+void SystemHandler::expecting(std::string type)
+{
+    if (isExpecting())
+        throw std::logic_error("The validator is already expecting");
+    this->rules.expecting_type = type;
+    this->rules.expecting_value_type = Value::getValueTypeForString(type);
+    this->rules.expecting_variable_type = Variable::getVariableTypeForString(type);
+}
+
+bool SystemHandler::isExpecting()
+{
+    return this->rules.expecting_type != "";
+}
+
+bool SystemHandler::isExpectingArray()
+{
+    return this->rules.expected_array_dimensions > 0;
+}
+
+int SystemHandler::getExpectedArrayDimensions()
+{
+    return this->rules.expected_array_dimensions;
+}
+
+void SystemHandler::endExpecting()
+{
+    this->rules.expecting_type = "";
+    this->rules.expected_array_dimensions = 0;
+}
+
+std::string SystemHandler::getExpectingType()
+{
+    return this->rules.expecting_type;
+}
+
+VALUE_TYPE SystemHandler::getExpectingValueType()
+{
+    return this->rules.expecting_value_type;
+}
+
+VARIABLE_TYPE SystemHandler::getExpectingVariableType()
+{
+    return this->rules.expecting_variable_type;
+}
+
+

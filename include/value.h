@@ -8,6 +8,7 @@
 class Variable;
 class Array;
 class Object;
+class Interpreter;
 class Value
 {
 public:
@@ -28,14 +29,16 @@ public:
     /**
      * Gets a string for the Value provided regardless of type
      * \param from The Value to get the string from 
+     * \param interpreter The interpreter for this instance
      */
-    static std::string getStringValue(Value* from);
+    static std::string getStringValue(Value* from, Interpreter* interpreter=NULL);
     /**
      * Gets a double for the Value provided regardless of type
      * on failure to convert to double an exception is thrown.
      * \param from The value to get the double from
+     * \param interpreter The interpreter for this instance
      */
-    static double getDoubleValue(Value* from);
+    static double getDoubleValue(Value* from, Interpreter* interpreter=NULL);
 
     VALUE_TYPE type;
     // Holds the string type of the value. So for example string, number, int, Object, Dog, Cat

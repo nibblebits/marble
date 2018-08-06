@@ -190,8 +190,12 @@ Value VarNode::interpret(Interpreter *interpreter, struct extras extra)
     {
         if (value_node != NULL)
         {
+            interpreter->save();
+            interpreter->expecting(type_str);
             variable->value = value_node->interpret(interpreter);
             variable->value.holder = variable;
+            interpreter->endExpecting();
+            interpreter->restore();
         }
         else
         {

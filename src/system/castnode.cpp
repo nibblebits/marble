@@ -22,17 +22,17 @@ Value CastNode::interpret(Interpreter* interpreter, struct extras extra)
 {
     Value v = this->to_cast->interpret(interpreter);
     struct Evaluation evaluation = this->casting_to->evaluate(interpreter, EVALUATION_TYPE_DATATYPE);
-    try
-    {
+  //  try
+  //  {
         if (evaluation.datatype.value == "number")
         {
-            v.dvalue = (double) Value::getDoubleValue(&v);
+            v.dvalue = (double) Value::getDoubleValue(&v, interpreter);
             v.type = VALUE_TYPE_NUMBER;
             v.type_str = "number";
         }
         else if(evaluation.datatype.value == "int")
         {
-            v.dvalue = (int) Value::getDoubleValue(&v);
+            v.dvalue = (int) Value::getDoubleValue(&v, interpreter);
             v.type = VALUE_TYPE_NUMBER;
             v.type_str = "number";
         }
@@ -43,7 +43,7 @@ Value CastNode::interpret(Interpreter* interpreter, struct extras extra)
         }
         else if(evaluation.datatype.value == "string")
         {
-            v.svalue = Value::getStringValue(&v);
+            v.svalue = Value::getStringValue(&v, interpreter);
             v.type = VALUE_TYPE_STRING;
             v.type_str = "string";
         }
@@ -55,11 +55,11 @@ Value CastNode::interpret(Interpreter* interpreter, struct extras extra)
                 v.type_str = evaluation.datatype.value;
             }
         }
-    }
-    catch(...)
-    {
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("InvalidCastException"), {})));
-    }
+   // }
+    //catch(...)
+  //  {
+   //     throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("InvalidCastException"), {}),));
+   // }
 
 
     // Nothing to do for all other situations

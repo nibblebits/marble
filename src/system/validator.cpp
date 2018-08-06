@@ -61,19 +61,6 @@ std::shared_ptr<Object> Validator::getClassObject(std::string name)
     return NULL;
 }
 
-void Validator::save()
-{
-    this->rules_stack.push_back(this->rules);
-    struct rules r;
-    this->rules = r;
-}
-
-void Validator::restore()
-{
-    this->rules = this->rules_stack.back();
-    this->rules_stack.pop_back();
-}
-
 
 void Validator::validate(Node* root_node)
 {
@@ -118,61 +105,6 @@ Class* Validator::getCurrentClass()
 {
     return this->current_class;
 }
-
-
-void Validator::expectingArray(int dimensions)
-{
-    if (!isExpecting())
-        throw std::logic_error("You must start expecting a type before specifying the array dimensions");
-
-    this->rules.expected_array_dimensions = dimensions;
-}
-
-void Validator::expecting(std::string type)
-{
-    if (isExpecting())
-        throw std::logic_error("The validator is already expecting");
-    this->rules.expecting_type = type;
-    this->rules.expecting_value_type = Value::getValueTypeForString(type);
-    this->rules.expecting_variable_type = Variable::getVariableTypeForString(type);
-}
-
-bool Validator::isExpecting()
-{
-    return this->rules.expecting_type != "";
-}
-
-bool Validator::isExpectingArray()
-{
-    return this->rules.expected_array_dimensions > 0;
-}
-
-int Validator::getExpectedArrayDimensions()
-{
-    return this->rules.expected_array_dimensions;
-}
-
-void Validator::endExpecting()
-{
-    this->rules.expecting_type = "";
-    this->rules.expected_array_dimensions = 0;
-}
-
-std::string Validator::getExpectingType()
-{
-    return this->rules.expecting_type;
-}
-
-VALUE_TYPE Validator::getExpectingValueType()
-{
-    return this->rules.expecting_value_type;
-}
-
-VARIABLE_TYPE Validator::getExpectingVariableType()
-{
-    return this->rules.expecting_variable_type;
-}
-
 
 void Validator::ignoreClass(std::string class_name)
 {

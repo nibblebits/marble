@@ -1,6 +1,8 @@
 #include "value.h"
 #include "array.h"
 #include "object.h"
+#include "interpreter.h"
+#include "function.h"
 #include <stdexcept>
 
 Value::Value()
@@ -103,7 +105,7 @@ void Value::set(std::shared_ptr<Object> o)
 
 }
 
-std::string Value::getStringValue(Value* from)
+std::string Value::getStringValue(Value* from, Interpreter* interpreter)
 {
     switch(from->type)
     {
@@ -117,13 +119,33 @@ std::string Value::getStringValue(Value* from)
         {
             return std::to_string(from->dvalue);
         };
+
+        case VALUE_TYPE_OBJECT:
+        {
+            if (interpreter != NULL)
+            {
+                Function* f = from->ovalue->getClass()->getFunctionByName("toString");
+                if (f == NULL)
+                {
+                    throw std::logic_error("toString function not available for object. Cannot get string value");
+                }
+
+                Value returnValue;
+                from->ovalue->runThis([&]() {
+                    f->invoke(interpreter, {}, &returnValue, from->ovalue, interpreter->getCurrentScope());
+                }, interpreter, from->ovalue->getClass());
+                return returnValue.svalue;
+            }
+
+            throw std::logic_error("Unable to get string value");
+        };
         
         default:
             throw std::logic_error("Unable to get string value");
     };
 }
 
-double Value::getDoubleValue(Value* from)
+double Value::getDoubleValue(Value* from, Interpreter* interpreter)
 {
     switch(from->type)
     {

@@ -3,6 +3,7 @@
 #include "einode.h"
 #include "statics.h"
 #include <string>
+class Variable;
 class IdentifierNode : public ExpressionInterpretableNode
 {
 public:
@@ -11,6 +12,8 @@ public:
     virtual void test(Validator* validator, struct extras extra);
     virtual Value interpret(Interpreter* interpreter, struct extras extra);
     virtual void evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation);
+
+    bool objectHasConvertingMethod(SystemHandler* handler, VARIABLE_TYPE expecting_type, Variable* variable);
     std::string value;
 };
 
