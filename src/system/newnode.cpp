@@ -185,7 +185,8 @@ void NewNode::handle_array(Interpreter* interpreter, Value& v, std::vector<Expre
             {
                 KeywordNode* keyword_type = (KeywordNode*) type_node;
                 var_type = Variable::getVariableTypeForString(keyword_type->value);
-                v.avalue = new_variable_array(interpreter, var_type, total_elements);            }
+                v.avalue = new_variable_array(interpreter, var_type, total_elements);            
+            }
             break;
             
             case NODE_TYPE_IDENTIFIER:
@@ -223,6 +224,17 @@ Value NewNode::interpret(Interpreter* interpreter, struct extras extra)
 
 void NewNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)
 {
-    throw std::logic_error("Evaluating of new nodes is not yet supported");
+    if (expected_evaluation & EVALUATION_TYPE_DATATYPE)
+    {
+        if(this->type_node->type == NODE_TYPE_FUNCTION_CALL)
+        {
+            FunctionCallNode* fc_node = (FunctionCallNode*) this->type_node;
+            evaluation->datatype = VarType::fromString(fc_node->name->value);
+        }
+        else
+        {
+            this->type_node->evaluate(handler, expected_evaluation, evaluation);
+        }
+    }
 }
 

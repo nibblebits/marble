@@ -4,7 +4,9 @@
 #include "fnode.h"
 #include "functionsystem.h"
 #include "interpreter.h"
+#include "singlefunction.h"
 #include "validator.h"
+#include "function.h"
 #include "exceptions/testerror.h"
 FunctionNode::FunctionNode() : ExpressionInterpretableNode(NODE_TYPE_FUNCTION)
 {
