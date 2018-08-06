@@ -44,7 +44,7 @@ bool loadConfiguration()
 
     return true;
 }
-void interpret()
+void interpret(std::string filename)
 {
         Interpreter interpreter(moduleSystem->getClassSystem(), moduleSystem->getFunctionSystem());
         interpreter.setTimeout(5);
@@ -66,7 +66,7 @@ void interpret()
         // Let's setup the session key
         interpreter.properties["session_key"] = "simpleclientsessionkey";
 
-        interpreter.runScript("./test.marble");
+        interpreter.runScript(filename.c_str());
         for (LogEntry entry : logger->entries)
         {
             std::cout << entry.message << " on line: " << entry.posInfo.line << ", col: " << entry.posInfo.col << std::endl;
@@ -81,7 +81,10 @@ int main(int argc, char** argv)
     if(!loadConfiguration())
        return 1;
 
-    interpret();
+    chdir("./marblelab");
+    if (argc < 2)
+        throw std::logic_error("You must provide a filename");
+    interpret(argv[1]);
 
     delete baseHandler;
     delete moduleSystem;

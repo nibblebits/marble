@@ -12,6 +12,9 @@ Validator::Validator(Logger* logger, Interpreter* interpreter) : SystemHandler(S
     this->interpreter = interpreter;
     this->logger = logger;
     this->current_class = NULL;
+    this->current_node = NULL;
+    this->previous_node = NULL;
+    
     ClassSystem* c_system = interpreter->getClassSystem();
     // We must create class objects for all current classes so that they will be compatible with the validation system
     for (Class* c : c_system->getAllClasses())
@@ -25,6 +28,7 @@ Validator::Validator(Logger* logger, Interpreter* interpreter) : SystemHandler(S
         throw std::logic_error("The base class system must have a non NULL object descriptor before initializing a validator");
         
     getClassSystem()->setDefaultObjectDescriptor(c_system->getDefaultObjectDescriptor());
+
     
 }
 
@@ -73,7 +77,9 @@ void Validator::restore()
 
 void Validator::validate(Node* root_node)
 {
-    InterpretableNode* current_node = (InterpretableNode*) root_node;
+    previous_node =  NULL;
+
+    current_node = (InterpretableNode*) root_node;
     while(current_node != NULL)
     {
         try
@@ -83,6 +89,8 @@ void Validator::validate(Node* root_node)
         {
             this->logger->error(ex.what(), current_node->posInfo);
         }
+        
+        previous_node = current_node;
         current_node = (InterpretableNode*) current_node->next;
     }
 }

@@ -517,7 +517,7 @@ Splitter Interpreter::loadScript(const char* filename)
 {
     if (this->isNestedScript(std::string(filename)))
     {
-        throw IOException("The script: " + std::string(filename) + " has already run once before in this run session. This script cannot run again as its possible this can result in an infinite loop");
+       //throw IOException("The script: " + std::string(filename) + " has already run once before in this run session. This script cannot run again as its possible this can result in an infinite loop");
     }
     this->nested_scripts_run.push_back(getAbsolutePath(filename));
     this->filename = filename;

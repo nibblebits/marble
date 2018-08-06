@@ -10,6 +10,7 @@ class Class;
 class Logger;
 class Node;
 class Interpreter;
+class InterpretableNode;
 class Validator : public SystemHandler
 {
 public:
@@ -58,9 +59,16 @@ public:
      *  \param class_name The class name to check is ignored
      */
     bool isClassIgnored(std::string class_name);
+
+    // The current node being validated
+    InterpretableNode* current_node;
+    // The previous node that was validated
+    InterpretableNode* previous_node;
+
 private:
     Interpreter* interpreter;
     Logger* logger;
+
     
     // We must be able to stack the rules so that they can be reset for different operations
     struct rules

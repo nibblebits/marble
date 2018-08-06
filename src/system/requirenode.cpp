@@ -16,17 +16,18 @@ RequireNode::~RequireNode()
     this->splitter.free();
 }
 
+
 void RequireNode::test(Validator* validator, struct extras extra)
 {
     this->code_result = "";
     try
     {
         Interpreter* interpreter = validator->getInterpreter();
-
-        this->splitter = interpreter->loadScript(this->filename.c_str());
+        std::string absolute_path = getAbsolutePath(this->filename);
+        this->splitter = interpreter->loadScript(absolute_path.c_str());
         split split;
         PosInfo posInfo;
-        posInfo.filename = this->filename.c_str();
+        posInfo.filename = absolute_path.c_str();
         posInfo.line = 1;
         posInfo.col = 1;
         
@@ -38,12 +39,26 @@ void RequireNode::test(Validator* validator, struct extras extra)
         }
 
         Node* root_node = interpreter->getAST(code_result.c_str(), posInfo);
-        validator->validate(root_node);
-        Logger* logger = validator->getLogger();
-        if (logger->hasErrors())
+        Node* final_node = root_node;
+        while(1)
         {
-            throw TestError(logger->entries[0].message);
+            if (final_node->next == NULL)
+                break;
+            final_node = final_node->next;
         }
+
+        Node* after_node = validator->current_node->next;
+        // Replace this require node with the new AST. The previous nodes next is us
+        if (validator->previous_node == NULL)
+        {
+            validator->current_node->next = (InterpretableNode*) root_node;
+        }
+        else
+        {
+            validator->previous_node->next = (InterpretableNode*) root_node;
+            validator->current_node = validator->previous_node;
+        }
+        final_node->next = after_node;
     }
     catch(TestError& ex)
     {
@@ -55,25 +70,16 @@ void RequireNode::test(Validator* validator, struct extras extra)
     }
     catch(...)
     {
-        throw TestError("There was a problem requiring the file: " + this->filename + " we do not know why");
+        throw;
+        //throw TestError("There was a problem requiring the file: " + this->filename + " we do not know why");
     }
 
 }
 
 Value RequireNode::interpret(Interpreter* interpreter, struct extras extra)
 {
-    std::string absolute_path = getAbsolutePath(this->filename);
-    // Before we do anything let's make sure we have permission to load this file
-    FilePermission::checkPermissionAllows(interpreter, interpreter->getCurrentScope(), absolute_path.c_str(), "r");
-
-    PosInfo posInfo;
-    posInfo.filename = absolute_path.c_str();
-    posInfo.line = 1;
-    posInfo.col = 1;
-    // Now we are done let's run the result we also want to ignore validation as we did it during testing
-    interpreter->run(this->code_result.c_str(), posInfo, true);
-    Value v;
-    return v;
+    Value v2;
+    return v2;
 }
 
 void RequireNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)

@@ -398,9 +398,7 @@ Token* Lexer::stage1()
         posInfo.col+=1;
     }
     
-    if (root_token == NULL)
-        logger->error("No input provided", posInfo);
-        
+
     return root_token;
 }
 
