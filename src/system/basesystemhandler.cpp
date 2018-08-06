@@ -51,9 +51,6 @@ BaseSystemHandler::BaseSystemHandler() : SystemHandler(SYSTEM_HANDLER_BASE_SYSTE
 
 
 
-    // Register the FilePermission class
-    FilePermission::registerClass(this);
-
     // We need a permission class to help manage permissions
     PermissionObject::registerClass(this);
 
@@ -63,6 +60,10 @@ BaseSystemHandler::BaseSystemHandler() : SystemHandler(SYSTEM_HANDLER_BASE_SYSTE
     // We need to register the PermissionProperty class which will hold a variable name and value for a permission variable.
     PermissionPropertyObject::registerClass(this);
 
+
+    // Register the FilePermission class
+    FilePermission::registerClass(this);
+    
     // We need a module handling permissions object that will allow a marble programmer to load modules
     ModuleHandlingPermissionObject::registerClass(this);
 }
