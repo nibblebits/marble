@@ -9,10 +9,10 @@
 class Lexer
 {
 public:
-    Lexer(Logger* logger, PosInfo posInfo);
+    Lexer(Logger* logger);
     virtual ~Lexer();
     void setInput(const char* buf, int size);
-    Token* lex();
+    Token* lex(PosInfo posInfo);
 
 private:
     Token* root;
@@ -20,7 +20,7 @@ private:
     const char* end;
     int size;
 
-    Token* stage1();
+    Token* stage1(PosInfo posInfo);
     void stage2(Token* root_token);
     bool bounds_safe(const char* ptr);
     bool is_keyword(std::string value);
@@ -35,11 +35,11 @@ private:
     int is_character(char c);
     bool is_stackable(int token_type);
     void error(std::string message, PosInfo posInfo);
-    int get_type_of_char(char c);
+    int get_type_of_char(char c, PosInfo& posInfo);
     std::string get_operator(const char** ptr);
     std::string get_number(const char** ptr);
-    std::string get_string(const char** ptr);
-    std::string get_while(const char** ptr, int expected);
+    std::string get_string(const char** ptr, PosInfo& posInfo);
+    std::string get_while(const char** ptr, int expected, PosInfo& posInfo);
     void ignore_line(const char** ptr);
     /**
      * Returns a char based on the sequence for the given character
@@ -50,7 +50,6 @@ private:
 private:
     TokenFactory tokenFactory;
     Logger* logger;
-    PosInfo posInfo;
     const char* filename;
 };
 #endif

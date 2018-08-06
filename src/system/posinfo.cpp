@@ -3,7 +3,7 @@ PosInfo::PosInfo() : PosInfo(-1, -1, "")
 {
    
 }
-PosInfo::PosInfo(int line, int col, const char* filename)
+PosInfo::PosInfo(int line, int col, std::string filename)
 {
     this->line = line;
     this->col = col;

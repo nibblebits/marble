@@ -266,9 +266,9 @@ Node* Interpreter::getAST(const char* code, PosInfo posInfo)
 {
     ready();
     if (lexer == NULL)
-        lexer = std::unique_ptr<Lexer>(new Lexer(&logger, posInfo));
+        lexer = std::unique_ptr<Lexer>(new Lexer(&logger));
     lexer->setInput(code, strlen(code));
-    Token* root_token = lexer->lex();
+    Token* root_token = lexer->lex(posInfo);
     Token* token = root_token;
     while (token != NULL)
     {

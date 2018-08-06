@@ -27,7 +27,7 @@ void RequireNode::test(Validator* validator, struct extras extra)
         this->splitter = interpreter->loadScript(absolute_path.c_str());
         split split;
         PosInfo posInfo;
-        posInfo.filename = absolute_path.c_str();
+        posInfo.filename = absolute_path;
         posInfo.line = 1;
         posInfo.col = 1;
         
@@ -37,7 +37,6 @@ void RequireNode::test(Validator* validator, struct extras extra)
             // Merge the code and data for this split
             this->code_result += interpreter->mergeCodeAndDataForSplit(&split);
         }
-
         Node* root_node = interpreter->getAST(code_result.c_str(), posInfo);
         Node* final_node = root_node;
         while(1)
@@ -70,8 +69,7 @@ void RequireNode::test(Validator* validator, struct extras extra)
     }
     catch(...)
     {
-        throw;
-        //throw TestError("There was a problem requiring the file: " + this->filename + " we do not know why");
+        throw TestError("There was a problem requiring the file: " + this->filename + " we do not know why");
     }
 
 }

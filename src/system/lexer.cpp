@@ -10,11 +10,10 @@
 const char keywords[][MAX_KEYWORD_SIZE] = {"public", "private", "protected", "function", "number", "string", "int", "boolean", "true", "false", "class", "return", "continue", "break", "void", "new", "if", "else", "extends", "throw", "try", "catch", "finally", "do", "while", "break", "continue", "for", "include", "include_once", "pure", "final", "permission", "null", "require", "limit", "scope", "filter", "output"};
 const char valid_operators[][MAX_OPERATORS_SIZE] = {"+", "-", "*", "/", "++", "--", "+=", "-=", "/=", "*=", "-=", "=", ".", "&", "|", "!", "==", "!=", ">=", ">", "<=", "<", "&&", "||"};
 const char symbols[] = {';',',','(', ')', '{', '}','[',']', ':', '@'};
-Lexer::Lexer(Logger* logger, PosInfo posInfo)
+Lexer::Lexer(Logger* logger)
 {
     this->logger = logger;
     this->root = NULL;
-    this->posInfo = posInfo;
 }
 Lexer::~Lexer()
 {
@@ -133,7 +132,7 @@ void Lexer::error(std::string message, PosInfo posInfo)
     logger->error(message, posInfo);
 }
 
-int Lexer::get_type_of_char(char c)
+int Lexer::get_type_of_char(char c, PosInfo& posInfo)
 {
     int type = -1;
     if (is_character(c))
@@ -230,7 +229,7 @@ char Lexer::get_char_for_sequence(char c)
     return result;
 }
 
-std::string Lexer::get_string(const char** ptr)
+std::string Lexer::get_string(const char** ptr, PosInfo& posInfo)
 {
     if (!is_string_seperator(**ptr))
     {
@@ -267,11 +266,11 @@ std::string Lexer::get_string(const char** ptr)
 }
 
 
-std::string Lexer::get_while(const char** ptr, int expected)
+std::string Lexer::get_while(const char** ptr, int expected, PosInfo& posInfo)
 {
     std::string tokenValue = "";
     char c = **ptr;
-    int type = get_type_of_char(c);
+    int type = get_type_of_char(c, posInfo);
     if (!(type & expected))
     {
         error("While calling \"get_while\" the first character must be of the expected type", posInfo);
@@ -279,7 +278,7 @@ std::string Lexer::get_while(const char** ptr, int expected)
     while(bounds_safe(*ptr))
     {
         c = **ptr;
-        type = get_type_of_char(c);
+        type = get_type_of_char(c, posInfo);
         if (!(type & expected))
         {
             // Numbers can have decimal points which is seen as an operator
@@ -310,7 +309,7 @@ void Lexer::ignore_line(const char** ptr)
 /**
  * Stage 1 will remove all comments, and create tokens based on the input
 */
-Token* Lexer::stage1()
+Token* Lexer::stage1(PosInfo posInfo)
 {
     Token* root_token = NULL;
     Token* last_token = NULL;
@@ -340,7 +339,7 @@ Token* Lexer::stage1()
         if (is_string_seperator(c))
         {
             token_type = TOKEN_TYPE_STRING;
-            token_value = get_string(&ptr);
+            token_value = get_string(&ptr, posInfo);
         }
         else if(is_comment(c))
         {
@@ -349,15 +348,15 @@ Token* Lexer::stage1()
         }
         else
         {
-            int c_type = get_type_of_char(c);
+            int c_type = get_type_of_char(c, posInfo);
             switch(c_type)
             {
                 case IS_OPERATOR:
                     token_type = TOKEN_TYPE_OPERATOR;
-                    token_value = get_while(&ptr, IS_OPERATOR);
+                    token_value = get_while(&ptr, IS_OPERATOR, posInfo);
                 break;
                 case IS_CHARACTER:
-                    token_value = get_while(&ptr, IS_CHARACTER | IS_NUMBER);
+                    token_value = get_while(&ptr, IS_CHARACTER | IS_NUMBER, posInfo);
                     if (is_keyword(token_value))
                     {
                         token_type = TOKEN_TYPE_KEYWORD;
@@ -369,7 +368,7 @@ Token* Lexer::stage1()
                 break;
                 case IS_NUMBER:
                     token_type = TOKEN_TYPE_NUMBER;
-                    token_value = get_while(&ptr, IS_NUMBER);
+                    token_value = get_while(&ptr, IS_NUMBER, posInfo);
                 break;
                 case IS_SYMBOL:
                     token_type = TOKEN_TYPE_SYMBOL;
@@ -429,10 +428,10 @@ void Lexer::stage2(Token* root_token)
     }
 }
 
-Token* Lexer::lex()
+Token* Lexer::lex(PosInfo posInfo)
 {
     // Stage 1 - Remove comments; Create tokens
-    this->root = stage1();
+    this->root = stage1(posInfo);
     // Stage 2 - Identify errors such as illegal operators
     stage2(this->root);
     return this->root;

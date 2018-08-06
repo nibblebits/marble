@@ -221,8 +221,7 @@ std::string format_log_entry(LogEntry entry)
     std::string message = "<b>" + type + "</b>" + ": <i>" + entry.message + "</i> ";
     if (entry.posInfo.line != -1) 
        message += "on line " + std::to_string(entry.posInfo.line) + ", column "  + std::to_string(entry.posInfo.col);
-    if (entry.posInfo.filename != "")
-        message += " in file " + std::string(entry.posInfo.filename) + "<br />";
+       message += " in file " + entry.posInfo.filename + "<br />";
     return message;
 }
 
