@@ -19,7 +19,6 @@ public:
     virtual ~Value();
     static VALUE_TYPE getValueTypeForString(std::string str);
     static VALUE_TYPE getValueTypeFromVariableType(VARIABLE_TYPE type);
-    
     static std::string getValueStringForType(VALUE_TYPE type);
     void set(Value* v);
     void set(std::string s);
@@ -41,6 +40,7 @@ public:
     static double getDoubleValue(Value* from, Interpreter* interpreter=NULL);
 
     VALUE_TYPE type;
+    
     // Holds the string type of the value. So for example string, number, int, Object, Dog, Cat
     std::string type_str;
     

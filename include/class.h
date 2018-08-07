@@ -27,6 +27,7 @@ public:
     std::vector<Function*> getOverloadedOperatorFunctions();
     std::vector<Function*> getOverloadedOperatorFunctions(std::string op);
     bool hasOverloadedOperator(std::string op, std::string argument1);
+    bool hasOverloadedOperator(std::string op, std::string argument1, std::string argument2);
     bool hasOverloadedOperator(std::string op);
 
     Class* getClassWhoHasVariable(std::string name);

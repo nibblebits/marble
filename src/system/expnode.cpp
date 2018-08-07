@@ -33,6 +33,54 @@ bool ExpNode::isAssignmentOperator()
     return this->op == "=" || this->op == "+=" || this->op == "-=" || this->op == "*=" || this->op == "/=";
 }
 
+Value ExpNode::objectCompareOperatorOverloadExecute(Value &value1, Value &value2, std::string op, Interpreter *interpreter, bool dont_flip)
+{
+    Value result;
+    // Value1 and 2 differ but value1 is an object so let's see if we can pull a method to get the value we are looking for
+    if (value1.ovalue != NULL)
+    {
+        Class *c = value1.ovalue->getClass();
+        Function *function = c->getFunctionByName("operator:" + op);
+        if (function == NULL && !dont_flip)
+        {
+            result = objectCompareOperatorOverloadExecute(value2, value1, op, interpreter, true);
+        }
+        else
+        {
+            value1.ovalue->runThis([&] {
+                function->invoke(interpreter, {value1, value2}, &result, value1.ovalue, interpreter->getCurrentScope());
+            },
+                                   interpreter, c);
+        }
+    }
+    else if (!dont_flip)
+    {
+        result = objectCompareOperatorOverloadExecute(value2, value1, op, interpreter, true);
+    }
+
+    return result;
+}
+
+Value ExpNode::compareGetResult(Value& value1, Value& value2, std::string op, Interpreter* interpreter)
+{
+    Value result;
+    if ((value1.type == VALUE_TYPE_OBJECT && value2.type != VALUE_TYPE_OBJECT) 
+        || (value2.type == VALUE_TYPE_OBJECT && value1.type != VALUE_TYPE_OBJECT))
+    {
+        result = objectCompareOperatorOverloadExecute(value1, value2, op, interpreter);
+        if (result.type == -1)
+        {
+            result = (value1 == value2);
+        }
+    }
+    else
+    {
+        result = (value1 == value2);
+    }
+
+    return result;
+}
+
 Value ExpNode::mathify(Value &value1, Value &value2, std::string op, Interpreter *interpreter)
 {
     Value result;
@@ -95,15 +143,11 @@ Value ExpNode::mathify(Value &value1, Value &value2, std::string op, Interpreter
     }
     else if (op == "==")
     {
-        Value v;
-        v.set((double)(value1 == value2));
-        result = v;
+        result = compareGetResult(value1, value2, "==", interpreter);
     }
     else if (op == "!=")
     {
-        Value v;
-        v.set((double)(value1 != value2));
-        result = v;
+        result = compareGetResult(value1, value2, "!=", interpreter);
     }
     else if (op == "&&")
     {
@@ -309,6 +353,34 @@ void ExpNode::test_assign(Validator *validator)
         validator->endExpecting();
 }
 
+bool ExpNode::checkShouldIgnoreExpecting(Validator *validator, ExpressionInterpretableNode *left_node, ExpressionInterpretableNode *right_node, bool no_loop)
+{
+    bool ignore_expecting = false;
+    struct Evaluation left_evaluation = left_node->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE);
+    std::string left_type_str = left_evaluation.datatype.value;
+    if (Variable::getVariableTypeForString(left_type_str) == VARIABLE_TYPE_OBJECT)
+    {
+        /* Let's just check if this class has overridden the operator provided
+            * if it does we should not instruct the validator to expects a given type
+            */
+        Class *c = validator->getClassSystem()->getClassByName(left_type_str);
+
+        struct Evaluation right_evaluation = right_node->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE);
+        if (c->hasOverloadedOperator(this->op, left_evaluation.datatype.value, right_evaluation.datatype.value))
+        {
+            ignore_expecting = true;
+        }
+    }
+
+    if (!ignore_expecting && !no_loop)
+    {
+        // As we should not ignore expecting for the left_node with the right_node let's check the right_node with the left_node
+        return checkShouldIgnoreExpecting(validator, right_node, left_node, true);
+    }
+
+    return ignore_expecting;
+}
+
 void ExpNode::test_regular_exp(Validator *validator)
 {
     if (Operator::isCompareOperator(this->op))
@@ -325,21 +397,29 @@ void ExpNode::test_regular_exp(Validator *validator)
         validator->save();
     }
 
+    // Test the left and right nodes
+    left->test(validator);
+
     struct Evaluation left_evaluation = left->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE);
     std::string left_type_str = left_evaluation.datatype.value;
 
-    // Test the left and right nodes
-    left->test(validator);
-    validator->expecting(left_type_str);
+    // We need to check weather to ignore expecting for the left node with right node
+    bool ignore_expecting = checkShouldIgnoreExpecting(validator, left, right);
+
+    if (!ignore_expecting)
+        validator->expecting(left_type_str);
+
     try
     {
         right->test(validator);
     }
-    catch(TestError& ex)
+    catch (TestError &ex)
     {
         throw TestError(std::string(ex.what()) + " but this expression requires a " + left_type_str + (left_evaluation.datatype.isArray() ? " with " + std::to_string(left_evaluation.datatype.dimensions) + " array dimensions" : ""));
     }
-    validator->endExpecting();
+
+    if (!ignore_expecting)
+        validator->endExpecting();
 
     if (Operator::isCompareOperator(this->op))
     {
