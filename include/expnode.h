@@ -6,6 +6,7 @@
 #include "einode.h"
 #include "evaluatingnode.h"
 #include "validator.h"
+class Interpreter;
 class ExpNode : public ExpressionInterpretableNode
 {
 public:
@@ -25,6 +26,6 @@ public:
     bool isAssignmentOperator();
    
 private:
-    Value mathify(Value& value1, Value& value2, std::string op);
+    Value mathify(Value& value1, Value& value2, std::string op, Interpreter* interpreter);
 };
 #endif

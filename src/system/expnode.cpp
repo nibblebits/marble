@@ -13,6 +13,8 @@
 #include "debug.h"
 #include "object.h"
 #include "operator.h"
+#include "function.h"
+#include "class.h"
 #include <iostream>
 #include <memory>
 ExpNode::ExpNode() : ExpressionInterpretableNode(NODE_TYPE_EXPRESSION)
@@ -24,7 +26,6 @@ ExpNode::ExpNode() : ExpressionInterpretableNode(NODE_TYPE_EXPRESSION)
 
 ExpNode::~ExpNode()
 {
-
 }
 
 bool ExpNode::isAssignmentOperator()
@@ -32,97 +33,120 @@ bool ExpNode::isAssignmentOperator()
     return this->op == "=" || this->op == "+=" || this->op == "-=" || this->op == "*=" || this->op == "/=";
 }
 
-Value ExpNode::mathify(Value& value1, Value& value2, std::string op)
+Value ExpNode::mathify(Value &value1, Value &value2, std::string op, Interpreter* interpreter)
 {
     Value result;
     if (op == "+" || op == "+=")
     {
+        if (value1.type == VALUE_TYPE_OBJECT && value2.type != VALUE_TYPE_OBJECT)
+        {
+            // Value1 and 2 differ but value1 is an object so let's see if we can pull a method to get the value we are looking for
+            if (value1.ovalue != NULL)
+            {
+                if (value2.type == VALUE_TYPE_NUMBER)
+                {
+                    Class* c = value1.ovalue->getClass();
+                    Function* toNumber = c->getFunctionByNameAndArguments("toNumber", {});
+                    value1.ovalue->runThis([&] {
+                        toNumber->invoke(interpreter, {}, &value1, value1.ovalue, interpreter->getCurrentScope());
+                    }, interpreter, c);
+                }
+                else if(value2.type == VALUE_TYPE_STRING)
+                {
+                    Class* c = value1.ovalue->getClass();
+                    Function* toString = c->getFunctionByNameAndArguments("toString", {});
+                    value1.ovalue->runThis([&] {
+                        toString->invoke(interpreter, {}, &value1, value1.ovalue, interpreter->getCurrentScope());  
+                    }, interpreter, c);
+                }
+            }
+        }
         result = value1 + value2;
     }
-    else if(op == "-" || op == "-=")
+    else if (op == "-" || op == "-=")
     {
         result = value1 - value2;
     }
-    else if(op == "*" || op == "*=")
+    else if (op == "*" || op == "*=")
     {
         result = value1 * value2;
     }
-    else if(op == "/" || op == "/=")
+    else if (op == "/" || op == "/=")
     {
         result = value1 / value2;
     }
-    else if(op == ">")
+    else if (op == ">")
     {
         result = value1 > value2;
     }
-    else if(op == ">=")
+    else if (op == ">=")
     {
         result = value1 >= value2;
     }
-    else if(op == "<=")
+    else if (op == "<=")
     {
         result == value1 <= value2;
     }
-    else if(op == "<")
+    else if (op == "<")
     {
         result = value1 < value2;
     }
-    else if(op == "==")
+    else if (op == "==")
     {
         Value v;
-        v.set((double) (value1 == value2));
+        v.set((double)(value1 == value2));
         result = v;
     }
-    else if(op == "!=")
+    else if (op == "!=")
     {
         Value v;
-        v.set((double) (value1 != value2));
+        v.set((double)(value1 != value2));
         result = v;
     }
-    else if(op == "&&")
+    else if (op == "&&")
     {
         result = value1 && value2;
     }
-    else if(op == "||")
+    else if (op == "||")
     {
         result = value1 || value2;
     }
-    else if(op == "=")
+    else if (op == "=")
     {
         result = value2;
     }
     else
     {
-        throw std::logic_error("Value ExpNode::mathify(Value value1, Value2 value2, std::string op): Invalid operator provided");
+        throw std::logic_error("Value ExpNode::mathify(Value value1, Value2 value2, std::string op, Interperter* interpreter): Invalid operator provided");
     }
-    
+
     return result;
 }
 
 /*
 * this must be split into multiple methods in the same way the test routine is.
 */
-Value ExpNode::interpret(Interpreter* interpreter, struct extras extra)
+Value ExpNode::interpret(Interpreter *interpreter, struct extras extra)
 {
     Value result;
     if (isAssignmentOperator())
     {
         // This is to be an assignment. We must interpret the left node and then we will have the variable we need to assign to the right node
         Value left_v = left->interpret(interpreter);
-        Variable* var_to_assign = left_v.holder;
+        Variable *var_to_assign = left_v.holder;
         if (var_to_assign == NULL)
             throw std::logic_error("Problem as the value returned when interpreting the left node of this assignment does not have a holder: Value string: " + left_v.svalue);
-        
+
         // Ok now lets get the value and assign it to the variable
         Value right_v = right->interpret(interpreter);
-        
+
         if (this->op == "=")
-        {      
+        {
             result = right_v;
         }
         else
         {
-            result = mathify(left_v, right_v, this->op);
+            result = mathify(left_v, right_v, this->op, interpreter);
         }
 
         if (var_to_assign->is_locked)
@@ -130,8 +154,8 @@ Value ExpNode::interpret(Interpreter* interpreter, struct extras extra)
             // The variable we want to assign is locked so we just have to throw an exception and refuse this
             throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("VariableLockedException"))), "The variable " + var_to_assign->name + " is locked and cannot be modified");
         }
-        var_to_assign->setValue(result);
-        return result;        
+        var_to_assign->setValue(result, interpreter);
+        return result;
     }
 
     Value left_v = this->left->interpret(interpreter);
@@ -161,16 +185,16 @@ Value ExpNode::interpret(Interpreter* interpreter, struct extras extra)
             // Throw a NULL pointer exception here. This will be a SystemException so it may be caught from within marble.
             throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("NullPointerException"), {})));
         }
-        
-        Class* c = NULL;
+
+        Class *c = NULL;
         if (left_v.holder != NULL)
         {
             // If the left variables name is "super" then we must be accessing a super-class and we should take the parent's class.
             if (left_v.holder->name == "super")
                 c = obj->getClass()->parent;
         }
-        
-        Scope* accessors_scope = (extra.accessors_scope != NULL ? extra.accessors_scope : interpreter->getCurrentScope());
+
+        Scope *accessors_scope = (extra.accessors_scope != NULL ? extra.accessors_scope : interpreter->getCurrentScope());
         // Interpret the right node on the object scope and return the result.
         obj->runThis([&] {
             struct extras extra;
@@ -178,34 +202,33 @@ Value ExpNode::interpret(Interpreter* interpreter, struct extras extra)
             extra.is_object_exp = true;
             extra.current_object = obj;
             result = this->right->interpret(interpreter, extra);
-        }, interpreter, c);
+        },
+                     interpreter, c);
         return result;
     }
-    
+
     Value right_v = this->right->interpret(interpreter);
-    result = mathify(left_v, right_v, this->op);
+    result = mathify(left_v, right_v, this->op, interpreter);
     return result;
 }
 
-void ExpNode::test(Validator* validator, struct extras extra)
-{  
-   if (this->op == ".")
-   {
-      test_obj_access(validator, extra);
-   }
-   else if(this->isAssignmentOperator())
-   {
-      test_assign(validator);
-   }
-   else
-   {
-      test_regular_exp(validator);
-   }
-    
+void ExpNode::test(Validator *validator, struct extras extra)
+{
+    if (this->op == ".")
+    {
+        test_obj_access(validator, extra);
+    }
+    else if (this->isAssignmentOperator())
+    {
+        test_assign(validator);
+    }
+    else
+    {
+        test_regular_exp(validator);
+    }
 }
 
-
-void ExpNode::test_obj_access(Validator* validator, struct extras extra)
+void ExpNode::test_obj_access(Validator *validator, struct extras extra)
 {
     /* While testing the left node we don't really want to care about testing weather or not a type matches
      * as we only care about this for the right operand. For example if an assignment is expecting a string it does not make sense
@@ -216,12 +239,12 @@ void ExpNode::test_obj_access(Validator* validator, struct extras extra)
     validator->save();
     left->test(validator, extra);
     validator->restore();
-    
+
     struct Evaluation evaluation;
     evaluation.extra = extra;
     left->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_TYPE_VARIABLE | EVALUATION_FROM_VARIABLE, &evaluation);
 
-    Class* c = NULL;
+    Class *c = NULL;
     std::string class_name = evaluation.datatype.isArray() ? "array" : evaluation.datatype.value;
     if (!validator->isClassIgnored(class_name))
     {
@@ -237,44 +260,64 @@ void ExpNode::test_obj_access(Validator* validator, struct extras extra)
                 c = obj->getClass()->parent;
         }
 
-        Scope* accessors_scope = (extra.accessors_scope != NULL ? extra.accessors_scope : validator->getCurrentScope());
+        Scope *accessors_scope = (extra.accessors_scope != NULL ? extra.accessors_scope : validator->getCurrentScope());
         obj->runThis([&] {
             struct extras extra;
             extra.accessors_scope = accessors_scope;
             extra.is_object_exp = true;
             extra.current_object = obj;
             this->right->test(validator, extra);
-        }, validator, c);   
+        },
+                     validator, c);
     }
 }
 
-void ExpNode::test_assign(Validator* validator)
+void ExpNode::test_assign(Validator *validator)
 {
     left->test(validator);
-    struct Evaluation evaluation = left->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE);
-    validator->expecting(evaluation.datatype.value);
-    
+    struct Evaluation left_evaluation = left->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE); 
+    std::string left_type_str = left_evaluation.datatype.value;   
+    bool ignore_expecting = false;
+    if (Variable::getVariableTypeForString(left_type_str) == VARIABLE_TYPE_OBJECT)
+    {
+        /* Let's just check if this class has overridden the "=" operator 
+            * if it does we should not instruct the validator to expects a given type
+            */
+        Class *c = validator->getClassSystem()->getClassByName(left_type_str);
+
+        struct Evaluation right_evaluation = this->right->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE);
+        if (c->hasOverloadedOperator("=", right_evaluation.datatype.value))
+        {
+            ignore_expecting = true;
+        }
+    }
+
+    if (!ignore_expecting)
+        validator->expecting(left_type_str);
     try
     {
         right->test(validator);
-    } catch(TestError& ex)
-    {
-       throw TestError(std::string(ex.what()) + " but this assignment requires a " + evaluation.datatype.value + (evaluation.datatype.isArray() ? " with " + std::to_string(evaluation.datatype.dimensions) + " array dimensions" : ""));
     }
-    validator->endExpecting();
+    catch (TestError &ex)
+    {
+        throw TestError(std::string(ex.what()) + " but this assignment requires a " + left_type_str + (left_evaluation.datatype.isArray() ? " with " + std::to_string(left_evaluation.datatype.dimensions) + " array dimensions" : ""));
+    }
+    
+    if (!ignore_expecting)
+        validator->endExpecting();
 }
 
-void ExpNode::test_regular_exp(Validator* validator)
+void ExpNode::test_regular_exp(Validator *validator)
 {
     if (Operator::isCompareOperator(this->op))
     {
         /*
          * We are a compare operator so let's ensure that the validator is expecting a boolean
          */
-        if(validator->isExpecting() && validator->getExpectingType() != "boolean")
+        if (validator->isExpecting() && validator->getExpectingType() != "boolean")
         {
             throw TestError("a boolean was provided");
-        } 
+        }
 
         // Good so far so good now we need to save the validators state as we don't want to apply these rules to the left and right operands
         validator->save();
@@ -291,24 +334,24 @@ void ExpNode::test_regular_exp(Validator* validator)
     }
 }
 
-void ExpNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)
+void ExpNode::evaluate_impl(SystemHandler *handler, EVALUATION_TYPE expected_evaluation, struct Evaluation *evaluation)
 {
     if (expected_evaluation & EVALUATION_TYPE_DATATYPE)
     {
         VarType left_vartype;
         left->evaluate(handler, expected_evaluation, evaluation);
         left_vartype = evaluation->datatype;
-        FunctionSystem* old_fc_system;
-        Scope* old_scope;
+        FunctionSystem *old_fc_system;
+        Scope *old_scope;
         if (this->op == ".")
         {
             if (handler->getType() != SYSTEM_HANDLER_VALIDATOR)
-                throw std::logic_error("Evaluating the access of classes or objects is only allowed for validators"); 
-            
+                throw std::logic_error("Evaluating the access of classes or objects is only allowed for validators");
+
             old_fc_system = handler->getFunctionSystem();
-            old_scope = handler->getCurrentScope();   
-                 
-            Validator* validator = (Validator*) handler;
+            old_scope = handler->getCurrentScope();
+
+            Validator *validator = (Validator *)handler;
             std::shared_ptr<Object> obj = validator->getClassObject(evaluation->datatype.value);
             handler->setCurrentScope(obj.get());
             handler->setFunctionSystem(obj->getClass());
