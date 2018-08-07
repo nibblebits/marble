@@ -68,7 +68,7 @@ void VarNode::test(Validator *validator, struct extras extra)
             if (c->hasOverloadedOperator("=", evaluation.datatype.value))
             {
                 ignore_expecting = true;
-            }  
+            }
         }
 
         if (!ignore_expecting)
@@ -148,8 +148,7 @@ bool VarNode::isObject()
     return !isPrimitive();
 }
 
-
-bool VarNode::handleOperatorOverloadIfValid(Interpreter* interpreter, std::string type_str, Variable* variable, ExpressionInterpretableNode* value_node)
+bool VarNode::handleOperatorOverloadIfValid(Interpreter *interpreter, std::string type_str, Variable *variable, ExpressionInterpretableNode *value_node)
 {
     if (Variable::getVariableTypeForString(type_str) == VARIABLE_TYPE_OBJECT)
     {
@@ -158,16 +157,16 @@ bool VarNode::handleOperatorOverloadIfValid(Interpreter* interpreter, std::strin
         struct Evaluation evaluation = this->value->evaluate(interpreter, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE);
         if (c->hasOverloadedOperator("=", evaluation.datatype.value))
         {
-           /* Ok we have an equal operator that has been overloaded so let's call the overloaded operator function
+            /* Ok we have an equal operator that has been overloaded so let's call the overloaded operator function
             * we will use the value returned to set to this variables value
             */
-           Function* f = c->getFunctionByNameAndArguments("operator:=", {evaluation.datatype});
-           Value value_node_value = value_node->interpret(interpreter);
-           Value return_value;
-           f->invoke(interpreter, {value_node_value}, &return_value, NULL, interpreter->getCurrentScope());
-           variable->value = return_value;
-           variable->value.holder = variable;
-           return true;
+            Function *f = c->getFunctionByNameAndArguments("operator:=", {evaluation.datatype});
+            Value value_node_value = value_node->interpret(interpreter);
+            Value return_value;
+            f->invoke(interpreter, {value_node_value}, &return_value, NULL, interpreter->getCurrentScope());
+            variable->value = return_value;
+            variable->value.holder = variable;
+            return true;
         }
     }
 
@@ -185,10 +184,12 @@ Value VarNode::interpret(Interpreter *interpreter, struct extras extra)
 
     ExpressionInterpretableNode *value_node = (ExpressionInterpretableNode *)value;
     Variable *variable = interpreter->getCurrentScope()->createVariable();
-    // Is this an operator overload assignment? If not process it as a normal assignment
-    if (!handleOperatorOverloadIfValid(interpreter, type_str, variable, value_node))
+    variable->value.type = Value::getValueTypeForString(type_str);
+
+    if (value_node != NULL)
     {
-        if (value_node != NULL)
+        // Is this an operator overload assignment? If not process it as a normal assignment
+        if (!handleOperatorOverloadIfValid(interpreter, type_str, variable, value_node))
         {
             interpreter->save();
             interpreter->expecting(type_str);
@@ -197,12 +198,8 @@ Value VarNode::interpret(Interpreter *interpreter, struct extras extra)
             interpreter->endExpecting();
             interpreter->restore();
         }
-        else
-        {
-            variable->value.type = Value::getValueTypeForString(type_str);
-        }
     }
-
+    
     variable->value.holder = variable;
     variable->name = name;
     variable->access = this->access;
