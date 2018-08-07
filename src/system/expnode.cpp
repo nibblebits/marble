@@ -33,7 +33,7 @@ bool ExpNode::isAssignmentOperator()
     return this->op == "=" || this->op == "+=" || this->op == "-=" || this->op == "*=" || this->op == "/=";
 }
 
-Value ExpNode::mathify(Value &value1, Value &value2, std::string op, Interpreter* interpreter)
+Value ExpNode::mathify(Value &value1, Value &value2, std::string op, Interpreter *interpreter)
 {
     Value result;
     if (op == "+" || op == "+=")
@@ -45,19 +45,21 @@ Value ExpNode::mathify(Value &value1, Value &value2, std::string op, Interpreter
             {
                 if (value2.type == VALUE_TYPE_NUMBER)
                 {
-                    Class* c = value1.ovalue->getClass();
-                    Function* toNumber = c->getFunctionByNameAndArguments("toNumber", {});
+                    Class *c = value1.ovalue->getClass();
+                    Function *toNumber = c->getFunctionByNameAndArguments("toNumber", {});
                     value1.ovalue->runThis([&] {
                         toNumber->invoke(interpreter, {}, &value1, value1.ovalue, interpreter->getCurrentScope());
-                    }, interpreter, c);
+                    },
+                                           interpreter, c);
                 }
-                else if(value2.type == VALUE_TYPE_STRING)
+                else if (value2.type == VALUE_TYPE_STRING)
                 {
-                    Class* c = value1.ovalue->getClass();
-                    Function* toString = c->getFunctionByNameAndArguments("toString", {});
+                    Class *c = value1.ovalue->getClass();
+                    Function *toString = c->getFunctionByNameAndArguments("toString", {});
                     value1.ovalue->runThis([&] {
-                        toString->invoke(interpreter, {}, &value1, value1.ovalue, interpreter->getCurrentScope());  
-                    }, interpreter, c);
+                        toString->invoke(interpreter, {}, &value1, value1.ovalue, interpreter->getCurrentScope());
+                    },
+                                           interpreter, c);
                 }
             }
         }
@@ -275,8 +277,8 @@ void ExpNode::test_obj_access(Validator *validator, struct extras extra)
 void ExpNode::test_assign(Validator *validator)
 {
     left->test(validator);
-    struct Evaluation left_evaluation = left->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE); 
-    std::string left_type_str = left_evaluation.datatype.value;   
+    struct Evaluation left_evaluation = left->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE);
+    std::string left_type_str = left_evaluation.datatype.value;
     bool ignore_expecting = false;
     if (Variable::getVariableTypeForString(left_type_str) == VARIABLE_TYPE_OBJECT)
     {
@@ -302,7 +304,7 @@ void ExpNode::test_assign(Validator *validator)
     {
         throw TestError(std::string(ex.what()) + " but this assignment requires a " + left_type_str + (left_evaluation.datatype.isArray() ? " with " + std::to_string(left_evaluation.datatype.dimensions) + " array dimensions" : ""));
     }
-    
+
     if (!ignore_expecting)
         validator->endExpecting();
 }
@@ -323,9 +325,21 @@ void ExpNode::test_regular_exp(Validator *validator)
         validator->save();
     }
 
+    struct Evaluation left_evaluation = left->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE);
+    std::string left_type_str = left_evaluation.datatype.value;
+
     // Test the left and right nodes
     left->test(validator);
-    right->test(validator);
+    validator->expecting(left_type_str);
+    try
+    {
+        right->test(validator);
+    }
+    catch(TestError& ex)
+    {
+        throw TestError(std::string(ex.what()) + " but this expression requires a " + left_type_str + (left_evaluation.datatype.isArray() ? " with " + std::to_string(left_evaluation.datatype.dimensions) + " array dimensions" : ""));
+    }
+    validator->endExpecting();
 
     if (Operator::isCompareOperator(this->op))
     {
