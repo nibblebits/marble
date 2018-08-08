@@ -198,7 +198,6 @@ Value FunctionCallNode::interpret(Interpreter *interpreter, struct extras extra)
     }
     catch (SystemException &ex)
     {
-        std::cout << "THROWING SYSTEM EXCEPTION" << std::endl;
         throw ex;
     }
 
@@ -246,8 +245,17 @@ void FunctionCallNode::evaluate_impl(SystemHandler *handler, EVALUATION_TYPE exp
         }
 
         if (function == NULL)
-            throw std::logic_error("The function call to evaluate has a call to a function that does not exist: " + this->name->value + ", is object exp: " + std::to_string(evaluation->extra.is_object_exp));
-
+        {
+            if (this->shouldIgnoreValidation())
+            {
+                // We can't get the datatype of a function call we do not know exists so let's just return
+                return;
+            }
+            else
+            {
+                throw std::logic_error("The function call to evaluate has a call to a function that does not exist: " + this->name->value + ", is object exp: " + std::to_string(evaluation->extra.is_object_exp));
+            }
+        }
         evaluation->datatype = function->return_type;
     }
 }

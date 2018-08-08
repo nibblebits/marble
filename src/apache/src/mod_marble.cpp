@@ -328,9 +328,10 @@ static int marble_handler(request_rec *req)
         }
         catch(...)
         {
+            throw;
             // If the logger has errors then this exception was thrown because of them. This wouldnt be an internal server error we will output these errors later.
-            if (!logger->hasErrors())
-                return HTTP_INTERNAL_SERVER_ERROR;
+          //  if (!logger->hasErrors())
+            //    return HTTP_INTERNAL_SERVER_ERROR;
         }
         
         if (logger->hasLog())

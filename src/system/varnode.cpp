@@ -63,8 +63,8 @@ void VarNode::test(Validator *validator, struct extras extra)
             * if it does we should not instruct the validator to expects a given type
             */
             Class *c = validator->getClassSystem()->getClassByName(type_str);
-
-            struct Evaluation evaluation = this->value->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE);
+            struct Evaluation evaluation;
+            evaluation = this->value->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE);
             if (c->hasOverloadedOperator("=", evaluation.datatype.value))
             {
                 ignore_expecting = true;

@@ -392,14 +392,12 @@ void ExpNode::test_regular_exp(Validator *validator)
         {
             throw TestError("a boolean was provided");
         }
-
-        // Good so far so good now we need to save the validators state as we don't want to apply these rules to the left and right operands
-        validator->save();
     }
 
     // Test the left and right nodes
     left->test(validator);
 
+    validator->save();
     struct Evaluation left_evaluation = left->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE);
     std::string left_type_str = left_evaluation.datatype.value;
 
@@ -419,13 +417,10 @@ void ExpNode::test_regular_exp(Validator *validator)
     }
 
     if (!ignore_expecting)
-        validator->endExpecting();
+      validator->endExpecting();
 
-    if (Operator::isCompareOperator(this->op))
-    {
-        // Let's restore the validator
-        validator->restore();
-    }
+    validator->restore();
+    
 }
 
 void ExpNode::evaluate_impl(SystemHandler *handler, EVALUATION_TYPE expected_evaluation, struct Evaluation *evaluation)
@@ -446,7 +441,12 @@ void ExpNode::evaluate_impl(SystemHandler *handler, EVALUATION_TYPE expected_eva
             old_scope = handler->getCurrentScope();
 
             Validator *validator = (Validator *)handler;
-            std::shared_ptr<Object> obj = validator->getClassObject(evaluation->datatype.value);
+            std::string class_obj_name = evaluation->datatype.value;
+            if (evaluation->datatype.dimensions > 0)
+            {
+                class_obj_name = "array";
+            }
+            std::shared_ptr<Object> obj = validator->getClassObject(class_obj_name);
             handler->setCurrentScope(obj.get());
             handler->setFunctionSystem(obj->getClass());
         }
