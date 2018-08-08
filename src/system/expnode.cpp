@@ -291,12 +291,12 @@ void ExpNode::test_obj_access(Validator *validator, struct extras extra)
     left->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_TYPE_VARIABLE | EVALUATION_FROM_VARIABLE, &evaluation);
 
     Class *c = NULL;
-    std::string class_name = evaluation.datatype.isArray() ? "array" : evaluation.datatype.value;
-    if (!validator->isClassIgnored(class_name))
+    std::string datatype_name = evaluation.datatype.isArray() ? "array" : evaluation.datatype.value;
+    if (!validator->isClassIgnored(datatype_name))
     {
-        std::shared_ptr<Object> obj = validator->getClassObject(class_name);
+        std::shared_ptr<Object> obj = validator->getClassObject(datatype_name);
         if (obj == NULL)
-            throw std::logic_error("NULL object from validator: " + class_name);
+            throw TestError("This is not an object but a " + datatype_name);
 
         c = obj->getClass();
         if (evaluation.variable != NULL)
