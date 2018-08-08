@@ -449,9 +449,9 @@ void ExpNode::evaluate_impl(SystemHandler *handler, EVALUATION_TYPE expected_eva
             std::shared_ptr<Object> obj = validator->getClassObject(class_obj_name);
             handler->setCurrentScope(obj.get());
             handler->setFunctionSystem(obj->getClass());
+            evaluation->extra.is_object_exp = true;
         }
-
-        evaluation->extra.is_object_exp = true;
+        
         right->evaluate(handler, expected_evaluation, evaluation);
         if (this->op != ".")
         {

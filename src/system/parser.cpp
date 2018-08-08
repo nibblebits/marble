@@ -1269,7 +1269,7 @@ void Parser::parse_else()
     next();
 
     // Is this an else if?
-    if (peek()->isSymbol("if"))
+    if (peek()->isKeyword("if"))
     {
         // Ok this is an else if lets parse the if statement
         parse_if_stmt();
