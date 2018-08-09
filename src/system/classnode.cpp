@@ -32,23 +32,25 @@ void ClassNode::test_variables(Validator* validator, std::shared_ptr<Object> obj
 {
 
     object->runThis([&]() { 
+
+        /**
+         * We only want to test variable declarations at this point as we are testing class variables
+         */
         body->apply_node_listener([&](Node* node) -> NODE_LISTENER_ACTION {
             if (node->type == NODE_TYPE_VARIABLE_DECLARATION)
             {
-                /* The way I am creating class variables is a terrible way of doing it. This will work but a better way should be made. 
-                * I would of liked to have create a variable creation listener for scopes. This would be a much prefeered and future proof
-                * way of doing it. The only issue is upon creating variables you do not know there name and type. This may have to be changed in the future to allow for this*/
-                if (node->type == NODE_TYPE_VARIABLE_DECLARATION)
-                {
-                    c->addVariable(Variable::getFromPointer(object->getLastRegisteredVariable()));
-                }
+                // This is a variable declaration let's carry on and test it
                return NODE_LISTENER_ACTION_CARRY_ON;
             }
-            else
-            {
-                // This is not a variable declaration so ignore it, we only care about variables here
-                return NODE_LISTENER_ACTION_IGNORE_NODE;
-            }
+        
+            // This is not a variable declaration so ignore it, we only care about variables here
+            return NODE_LISTENER_ACTION_IGNORE_NODE;
+            
+        });
+
+        body->onAfterTestNode([&](Node* node) {
+            // We have just tested the variable declaration let's add the last registered object variable to our class variables
+            c->addVariable(Variable::getFromPointer(object->getLastRegisteredVariable()));
         });
 
         try

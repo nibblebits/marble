@@ -84,7 +84,7 @@ void IdentifierNode::test(Validator* validator, struct extras extra)
         {
             if (var_class != current_class)
             {
-                throw TestError("variable \"" + this->value + "\" is private in class " + var_class->name);
+               throw TestError("variable \"" + this->value + "\" is private in class " + var_class->name);
             }
         }
         else
