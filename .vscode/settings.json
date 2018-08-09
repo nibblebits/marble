@@ -37,6 +37,9 @@
         "chrono": "cpp",
         "ratio": "cpp",
         "thread": "cpp",
-        "bitset": "cpp"
+        "bitset": "cpp",
+        "unordered_map": "cpp",
+        "vector": "cpp",
+        "numeric": "cpp"
     }
 }

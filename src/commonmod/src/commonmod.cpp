@@ -7,6 +7,8 @@
 #include "commonmod_sqlrecord.h"
 #include "commonmod_preparedstatement.h"
 #include "commonmod_system.h"
+#include "commonmod_value.h"
+#include "commonmod_list.h"
 
 #include <sstream>
 #include <iostream>
@@ -46,6 +48,8 @@ void CommonModule::Init()
     CommonModule_SqlResult::registerClass(this->getModuleSystem());
     CommonModule_SqlRecord::registerClass(this->getModuleSystem());
     CommonModule_System::registerClass(this->getModuleSystem());
+    CommonModule_Value::registerClass(this->getModuleSystem());
+    CommonModule_List::registerClass(this->getModuleSystem());
 
     log("Common Module Initialised.", LOG_LEVEL_NOTICE);
 }
