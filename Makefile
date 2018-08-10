@@ -192,3 +192,4 @@ clean:
 	rm ${SYSTEM_OBJECT_FILES}
 	cd ./src/stdmods && $(MAKE) clean
 	cd ./src/commonmod && $(MAKE) clean
+	cd ./src/apache && $(MAKE) clean
