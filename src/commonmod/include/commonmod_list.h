@@ -17,9 +17,6 @@ public:
 
     static Class* registerClass(ModuleSystem* moduleSystem);
 
-    static void List_Push(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
-
-
 };
 
 

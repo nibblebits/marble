@@ -9,6 +9,7 @@
 #include "commonmod_system.h"
 #include "commonmod_value.h"
 #include "commonmod_list.h"
+#include "commonmod_vector.h"
 
 #include <sstream>
 #include <iostream>
@@ -50,6 +51,7 @@ void CommonModule::Init()
     CommonModule_System::registerClass(this->getModuleSystem());
     CommonModule_Value::registerClass(this->getModuleSystem());
     CommonModule_List::registerClass(this->getModuleSystem());
+    CommonModule_Vector::registerClass(this->getModuleSystem());
 
     log("Common Module Initialised.", LOG_LEVEL_NOTICE);
 }

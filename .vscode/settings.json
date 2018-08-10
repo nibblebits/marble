@@ -40,6 +40,8 @@
         "bitset": "cpp",
         "unordered_map": "cpp",
         "vector": "cpp",
-        "numeric": "cpp"
+        "numeric": "cpp",
+        "cstdarg": "cpp",
+        "list": "cpp"
     }
 }
