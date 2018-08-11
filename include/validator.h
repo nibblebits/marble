@@ -50,10 +50,6 @@ public:
      */
     bool isClassIgnored(std::string class_name);
 
-    // The current node being validated
-    InterpretableNode* current_node;
-    // The previous node that was validated
-    InterpretableNode* previous_node;
 
 private:
     Interpreter* interpreter;

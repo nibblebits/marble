@@ -12,8 +12,6 @@ Validator::Validator(Logger* logger, Interpreter* interpreter) : SystemHandler(S
     this->interpreter = interpreter;
     this->logger = logger;
     this->current_class = NULL;
-    this->current_node = NULL;
-    this->previous_node = NULL;
     
     ClassSystem* c_system = interpreter->getClassSystem();
     // We must create class objects for all current classes so that they will be compatible with the validation system
@@ -64,9 +62,7 @@ std::shared_ptr<Object> Validator::getClassObject(std::string name)
 
 void Validator::validate(Node* root_node)
 {
-    previous_node =  NULL;
-
-    current_node = (InterpretableNode*) root_node;
+    InterpretableNode* current_node = (InterpretableNode*) root_node;
     while(current_node != NULL)
     {
         try
@@ -77,7 +73,6 @@ void Validator::validate(Node* root_node)
             this->logger->error(ex.what(), current_node->posInfo);
         }
         
-        previous_node = current_node;
         current_node = (InterpretableNode*) current_node->next;
     }
 }

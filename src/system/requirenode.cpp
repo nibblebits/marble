@@ -8,7 +8,7 @@
 
 RequireNode::RequireNode() : InterpretableNode(NODE_TYPE_REQUIRE)
 {
-
+    this->required_ast = NULL;
 }
 
 RequireNode::~RequireNode()
@@ -38,26 +38,10 @@ void RequireNode::test(Validator* validator, struct extras extra)
             this->code_result += interpreter->mergeCodeAndDataForSplit(&split);
         }
         Node* root_node = interpreter->getAST(code_result.c_str(), posInfo);
-        Node* final_node = root_node;
-        while(1)
-        {
-            if (final_node->next == NULL)
-                break;
-            final_node = final_node->next;
-        }
-
-        Node* after_node = validator->current_node->next;
-        // Replace this require node with the new AST. The previous nodes next is us
-        if (validator->previous_node == NULL)
-        {
-            validator->current_node->next = (InterpretableNode*) root_node;
-        }
-        else
-        {
-            validator->previous_node->next = (InterpretableNode*) root_node;
-            validator->current_node = validator->previous_node;
-        }
-        final_node->next = after_node;
+        this->required_ast = (InterpretableNode*) root_node;
+        
+        // Test the AST
+        validator->validate(this->required_ast);
     }
     catch(TestError& ex)
     {
@@ -76,8 +60,21 @@ void RequireNode::test(Validator* validator, struct extras extra)
 
 Value RequireNode::interpret(Interpreter* interpreter, struct extras extra)
 {
-    Value v2;
-    return v2;
+
+    std::string absolute_path = getAbsolutePath(this->filename);
+    // Before we do anything let's make sure we have permission to load this file
+    FilePermission::checkPermissionAllows(interpreter, interpreter->getCurrentScope(), absolute_path.c_str(), "r");
+
+    // Run the nodes for the file that was required
+    InterpretableNode* current_node = this->required_ast;
+    while(current_node != NULL)
+    {
+        current_node->interpret(interpreter);
+        current_node = (InterpretableNode*) current_node->next;
+    }
+
+    Value v;
+    return v;
 }
 
 void RequireNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)

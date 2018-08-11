@@ -15,6 +15,8 @@ public:
     virtual void evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation);
 
     std::string filename;
+    // The AST of the required marble source file once it has been tested
+    InterpretableNode* required_ast;
 private:
     Splitter splitter;
     std::string code_result;
