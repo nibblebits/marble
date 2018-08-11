@@ -137,15 +137,17 @@ Value IdentifierNode::interpret(Interpreter* interpreter, struct extras extra)
         {
             // Let's call toNumber on the object
             Class* c = interpreter->getClassSystem()->getClassByName(var->value.ovalue->getClass()->name);
-            Function* to_number_func = c->getFunctionByName("toNumber");
-            to_number_func->invoke(interpreter, {}, &v, var->value.ovalue, interpreter->getCurrentScope());
+            Function* to_number_func = c->getFunctionByNameAndArguments("toNumber", {});
+            if (to_number_func != NULL)
+                to_number_func->invoke(interpreter, {}, &v, var->value.ovalue, interpreter->getCurrentScope());
         }
         else if (expecting_type == VARIABLE_TYPE_STRING)
         {
             // Let's call toString on the object
             Class* c = interpreter->getClassSystem()->getClassByName(var->value.ovalue->getClass()->name);
-            Function* to_number_func = c->getFunctionByName("toString");
-            to_number_func->invoke(interpreter, {}, &v, var->value.ovalue, interpreter->getCurrentScope());
+            Function* to_string_func = c->getFunctionByNameAndArguments("toString", {});
+            if (to_string_func != NULL)
+                to_string_func->invoke(interpreter, {}, &v, var->value.ovalue, interpreter->getCurrentScope());
         }
         
     }

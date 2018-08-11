@@ -72,7 +72,7 @@ Class *FileModule_File::registerClass(ModuleSystem *moduleSystem)
         File_setPosition(interpreter, arguments, return_value, object);
     });
 
-    c->registerFunction("getSize", {}, VarType::fromString("void"), [&](Interpreter *interpreter, std::vector<Value> arguments, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope) {
+    c->registerFunction("getSize", {}, VarType::fromString("number"), [&](Interpreter *interpreter, std::vector<Value> arguments, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope) {
         File_GetSize(interpreter, arguments, return_value, object);
     });
 
