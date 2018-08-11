@@ -437,18 +437,29 @@ void ExpNode::evaluate_impl(SystemHandler *handler, EVALUATION_TYPE expected_eva
         Scope *old_scope;
         if (this->op == ".")
         {
-            if (handler->getType() != SYSTEM_HANDLER_VALIDATOR)
-                throw std::logic_error("Evaluating the access of classes or objects is only allowed for validators");
-
             old_fc_system = handler->getFunctionSystem();
             old_scope = handler->getCurrentScope();
 
-            Validator *validator = (Validator *)handler;
+
             std::string class_obj_name = evaluation->datatype.value;
             if (evaluation->datatype.dimensions > 0)
             {
                 class_obj_name = "array";
             }
+            Validator *validator = NULL;
+            if (handler->getType() == SYSTEM_HANDLER_VALIDATOR)
+            {
+                validator = (Validator*) handler;
+            }
+            else if(handler->getType() == SYSTEM_HANDLER_INTERPRETER)
+            {
+                validator = ((Interpreter*) handler)->getValidator();
+            }
+            else
+            {
+                throw std::logic_error("Invalid SystemHandler provided that cannot be used to get class object");
+            }
+
             std::shared_ptr<Object> obj = validator->getClassObject(class_obj_name);
             handler->setCurrentScope(obj.get());
             handler->setFunctionSystem(obj->getClass());

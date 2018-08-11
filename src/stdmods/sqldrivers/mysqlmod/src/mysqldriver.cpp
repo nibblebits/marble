@@ -29,7 +29,8 @@ void MysqlDriver::Init(ModuleSystem* moduleSystem)
     c->registerFunction("__construct", {}, VarType::fromString("void"), Function::Blank);
 
     // function connect(string host, string username, string password, string database) : SQLConnection
-    Function* connect_function = c->registerFunction("connect", {VarType::fromString("string"),
+    Function* connect_function = c->registerFunction("connect", {
+                                    VarType::fromString("string"),
                                     VarType::fromString("string"),
                                     VarType::fromString("string"),
                                     VarType::fromString("string")},

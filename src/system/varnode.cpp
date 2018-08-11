@@ -62,9 +62,11 @@ void VarNode::test(Validator *validator, struct extras extra)
             /* Let's just check if this class has overridden the "=" operator 
             * if it does we should not instruct the validator to expects a given type
             */
+           
             Class *c = validator->getClassSystem()->getClassByName(type_str);
             struct Evaluation evaluation;
-            evaluation = this->value->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE);
+            evaluation.extra.accessors_scope = validator->getCurrentScope();
+            this->value->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE, &evaluation);
             if (c->hasOverloadedOperator("=", evaluation.datatype.value))
             {
                 ignore_expecting = true;
@@ -154,8 +156,10 @@ bool VarNode::handleOperatorOverloadIfValid(Interpreter *interpreter, std::strin
     {
         Class *c = interpreter->getClassSystem()->getClassByName(type_str);
         if (!c) return false;
-        
-        struct Evaluation evaluation = this->value->evaluate(interpreter, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE);
+
+        struct Evaluation evaluation;
+        evaluation.extra.accessors_scope = interpreter->getCurrentScope();
+        this->value->evaluate(interpreter, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE, &evaluation);
         if (c->hasOverloadedOperator("=", evaluation.datatype.value))
         {
             /* Ok we have an equal operator that has been overloaded so let's call the overloaded operator function

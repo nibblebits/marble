@@ -373,6 +373,11 @@ void Interpreter::setupValidator()
     validator->getRootScope()->prev = this->getCurrentScope();
 }
 
+Validator* Interpreter::getValidator()
+{
+    return this->validator.get();
+}
+
 void Interpreter::run(const char* code, PosInfo posInfo, bool ignore_validation)
 {
     bool this_run_started_execution = false;

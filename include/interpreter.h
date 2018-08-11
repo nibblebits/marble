@@ -119,6 +119,11 @@ public:
     void addToStackTrace(std::string function_name, PosInfo posInfo);
     void popFromStackTrace();
     std::vector<struct stack_log_part> getStackTraceLog();
+
+    /**
+     * Gets the validator for this Interpreter
+     */
+    Validator* getValidator();
     
     /**
     * Sets the current Breakable entity. This could be a while loop, for loop or something else.
