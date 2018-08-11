@@ -15,6 +15,16 @@ Value::Value()
     this->dvalue = 0;
 }
 
+Value::Value(Value* value)
+{
+    this->type = value->type;
+    this->type_str = value->type_str;
+    this->holder = value->holder;
+    this->ovalue = value->ovalue;
+    this->avalue = value->avalue;
+    this->dvalue = value->dvalue;
+}
+
 Value::Value(std::shared_ptr<Object> object) : Value()
 {
     set(object);

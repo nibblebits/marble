@@ -1,4 +1,4 @@
-SYSTEM_OBJECT_FILES = ./build/main.o ./build/commonmod.o ./build/commonmod_system.o ./build/commonmod_outputstream.o ./build/commonmod_inputstream.o ./build/commonmod_stringutils.o ./build/commonmod_sqldriver.o ./build/commonmod_sqlstatement.o ./build/commonmod_preparedstatement.o ./build/commonmod_sqlconnection.o ./build/commonmod_sqlresult.o ./build/commonmod_sqlrecord.o ./build/commonmod_list.o ./build/commonmod_value.o ./build/commonmod_vector.o
+SYSTEM_OBJECT_FILES = ./build/main.o ./build/commonmod.o ./build/commonmod_system.o ./build/commonmod_outputstream.o ./build/commonmod_inputstream.o ./build/commonmod_stringutils.o ./build/commonmod_sqldriver.o ./build/commonmod_sqlstatement.o ./build/commonmod_preparedstatement.o ./build/commonmod_sqlconnection.o ./build/commonmod_sqlresult.o ./build/commonmod_sqlrecord.o ./build/commonmod_list.o ./build/commonmod_value.o ./build/commonmod_vector.o ./build/commonmod_map.o
 INCLUDES = -I ../../include -I ./include
 OBJECT_FILE_FLAGS = -c -g -fPIC -std=c++14
 SYSTEM_LIB_LOCAL_FILENAME = libmarble.so
@@ -35,6 +35,8 @@ module: ${SYSTEM_OBJECT_FILES}
 	g++ ${INCLUDES} ./src/storage/commonmod_value.cpp -o ./build/commonmod_value.o ${OBJECT_FILE_FLAGS}
 ./build/commonmod_vector.o: ./src/storage/commonmod_vector.cpp
 	g++ ${INCLUDES} ./src/storage/commonmod_vector.cpp -o ./build/commonmod_vector.o ${OBJECT_FILE_FLAGS}
+./build/commonmod_map.o: ./src/storage/commonmod_map.cpp
+	g++ ${INCLUDES} ./src/storage/commonmod_map.cpp -o ./build/commonmod_map.o ${OBJECT_FILE_FLAGS}
 standalone: module
 	ld -r ${SYSTEM_OBJECT_FILES} -o ./bin/marble_commonmod.o
 clean:

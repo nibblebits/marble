@@ -13,6 +13,7 @@ class Value
 {
 public:
     Value();
+    Value(Value* value);
     Value(std::shared_ptr<Object> object);
     Value(std::string str);
     Value(double number);
