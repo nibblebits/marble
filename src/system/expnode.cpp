@@ -61,21 +61,25 @@ Value ExpNode::objectCompareOperatorOverloadExecute(Value &value1, Value &value2
     return result;
 }
 
-Value ExpNode::compareGetResult(Value& value1, Value& value2, std::string op, Interpreter* interpreter)
+Value ExpNode::compareGetResult(Value &value1, Value &value2, std::string op, Interpreter *interpreter)
 {
     Value result;
-    if ((value1.type == VALUE_TYPE_OBJECT && value2.type != VALUE_TYPE_OBJECT) 
-        || (value2.type == VALUE_TYPE_OBJECT && value1.type != VALUE_TYPE_OBJECT))
+    if ((value1.type == VALUE_TYPE_OBJECT && value2.type != VALUE_TYPE_OBJECT) || (value2.type == VALUE_TYPE_OBJECT && value1.type != VALUE_TYPE_OBJECT))
     {
         result = objectCompareOperatorOverloadExecute(value1, value2, op, interpreter);
-        if (result.type == -1)
+    }
+
+    // No compare operator is overloaded let's do the compare on the values
+    if (result.type == -1)
+    {
+        if (op == "==")
         {
             result = (value1 == value2);
         }
-    }
-    else
-    {
-        result = (value1 == value2);
+        else if (op == "!=")
+        {
+            result = (value1 != value2);
+        }
     }
 
     return result;
@@ -364,7 +368,7 @@ bool ExpNode::checkShouldIgnoreExpecting(Validator *validator, ExpressionInterpr
             * if it does we should not instruct the validator to expects a given type
             */
         Class *c = validator->getClassSystem()->getClassByName(left_type_str);
-
+        std::cout << left_type_str << std::endl;
         struct Evaluation right_evaluation = right_node->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE);
         if (c->hasOverloadedOperator(this->op, left_evaluation.datatype.value, right_evaluation.datatype.value))
         {
@@ -417,10 +421,9 @@ void ExpNode::test_regular_exp(Validator *validator)
     }
 
     if (!ignore_expecting)
-      validator->endExpecting();
+        validator->endExpecting();
 
     validator->restore();
-    
 }
 
 void ExpNode::evaluate_impl(SystemHandler *handler, EVALUATION_TYPE expected_evaluation, struct Evaluation *evaluation)
@@ -451,7 +454,7 @@ void ExpNode::evaluate_impl(SystemHandler *handler, EVALUATION_TYPE expected_eva
             handler->setFunctionSystem(obj->getClass());
             evaluation->extra.is_object_exp = true;
         }
-        
+
         right->evaluate(handler, expected_evaluation, evaluation);
         if (this->op != ".")
         {
