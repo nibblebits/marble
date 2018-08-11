@@ -46,6 +46,13 @@ Class *FileModule_File::registerClass(ModuleSystem *moduleSystem)
      */
     c->registerFunction("move", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("void"), FileModule_File::File_Move);
 
+    /**
+     * Returns true if the given path is a file, returns false if it is a directory or an error occured
+     * 
+     * function isFile() : boolean
+     */
+    c->registerFunction("isFile", {VarType::fromString("string")}, VarType::fromString("boolean"), FileModule_File::File_IsFile);
+
     c->registerFunction("open", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("boolean"), [&](Interpreter *interpreter, std::vector<Value> arguments, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope) {
         File_Open(interpreter, arguments, return_value, object, caller_scope);
     });
@@ -68,6 +75,7 @@ Class *FileModule_File::registerClass(ModuleSystem *moduleSystem)
     c->registerFunction("getSize", {}, VarType::fromString("void"), [&](Interpreter *interpreter, std::vector<Value> arguments, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope) {
         File_GetSize(interpreter, arguments, return_value, object);
     });
+
     c->registerFunction("close", {}, VarType::fromString("void"), [&](Interpreter *interpreter, std::vector<Value> arguments, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope) {
         File_Close(interpreter, arguments, return_value, object);
     });
@@ -131,4 +139,9 @@ void FileModule_File::File_Move(Interpreter *interpreter, std::vector<Value> val
     std::string dst_filename = values[1].svalue;
     if (rename(filename.c_str(), dst_filename.c_str()) != 0)
         throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to rename " + filename + " to " + dst_filename);
+}
+
+void FileModule_File::File_IsFile(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+{
+    return_value->set(isFile(values[0].svalue));
 }

@@ -3,6 +3,10 @@
 #include <string>
 #include <vector>
 #include <functional>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
 
 std::string getAbsolutePath(std::string uri);
 std::string urlDecode(std::string &eString);
@@ -60,4 +64,11 @@ std::string random_hex(size_t total_bytes);
  * Returns the provided string in lower case
  */
 std::string to_lower(std::string s);
+
+
+/**
+ * Returns true if the given path is a file
+ */
+bool isFile(std::string path);
+
 #endif
