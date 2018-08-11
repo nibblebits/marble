@@ -42,6 +42,7 @@
         "vector": "cpp",
         "numeric": "cpp",
         "cstdarg": "cpp",
-        "list": "cpp"
+        "list": "cpp",
+        "filesystem": "cpp"
     }
 }
