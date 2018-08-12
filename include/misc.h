@@ -71,4 +71,10 @@ std::string to_lower(std::string s);
  */
 bool isFile(std::string path);
 
+/**
+ * Matches all occurences in the target provided based on the regex provided.
+ * \return Returns a vector of string that holds the occurences found
+ */
+std::vector<std::string> preg_match_all(std::string target, std::string regex);
+
 #endif

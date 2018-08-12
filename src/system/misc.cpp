@@ -6,6 +6,7 @@
 #include <cstring>
 #include <fstream>
 #include <iostream>
+#include <regex>
 #include <stdexcept>
 #include <sstream>
 #include <algorithm>
@@ -182,11 +183,29 @@ bool isFile(std::string path)
 	struct stat s;
 	if (stat(path.c_str(), &s) == 0)
 	{
-	    if (s.st_mode & S_IFREG)
+		if (s.st_mode & S_IFREG)
 		{
 			return true;
 		}
 	}
 
 	return false;
+}
+
+std::vector<std::string> preg_match_all(std::string target, std::string regex)
+{
+	std::vector<std::string> occurrences;
+	std::string s(target);
+	std::smatch m;
+	std::regex e(regex);
+	while (std::regex_search(s, m, e))
+	{
+		for (auto x : m)
+		{
+			occurrences.push_back(x.str());
+		}
+		s = m.suffix().str();
+	}
+
+	return occurrences;
 }

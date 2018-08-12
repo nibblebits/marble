@@ -7,27 +7,25 @@
 #include "exceptionobject.h"
 #include <iostream>
 
-CommonModule_StringUtils::CommonModule_StringUtils(Class* c) : Object(c)
+CommonModule_StringUtils::CommonModule_StringUtils(Class *c) : Object(c)
 {
-  
 }
 
 CommonModule_StringUtils::~CommonModule_StringUtils()
 {
-
 }
 
-std::shared_ptr<Object> CommonModule_StringUtils::newInstance(Class* c)
+std::shared_ptr<Object> CommonModule_StringUtils::newInstance(Class *c)
 {
     return std::make_shared<CommonModule_StringUtils>(c);
 }
 
-Class* CommonModule_StringUtils::registerClass(ModuleSystem* moduleSystem)
+Class *CommonModule_StringUtils::registerClass(ModuleSystem *moduleSystem)
 {
-    Class* c = moduleSystem->getClassSystem()->registerClass("StringUtils");
+    Class *c = moduleSystem->getClassSystem()->registerClass("StringUtils");
     c->setDescriptorObject(std::make_shared<CommonModule_StringUtils>(c));
     c->registerFunction("getASCIIString", {VarType::fromString("number")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_getASCIIString);
-    
+
     /**
      * Returns a part of a string based on the position and total
      * 
@@ -46,7 +44,7 @@ Class* CommonModule_StringUtils::registerClass(ModuleSystem* moduleSystem)
      */
     c->registerFunction("strlen", {VarType::fromString("string")}, VarType::fromString("number"), CommonModule_StringUtils::StringUtils_strlen);
     moduleSystem->getFunctionSystem()->registerFunction("strlen", {VarType::fromString("string")}, VarType::fromString("number"), CommonModule_StringUtils::StringUtils_strlen);
-    
+
     /**
      * Returns the position of the needle in the haystack
      * 
@@ -61,7 +59,7 @@ Class* CommonModule_StringUtils::registerClass(ModuleSystem* moduleSystem)
      * function split(string target, string delim) : string[]
      */
     c->registerFunction("split", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("string[]"), CommonModule_StringUtils::StringUtils_split);
-    moduleSystem->getFunctionSystem()->registerFunction("split", { VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("string[]"), CommonModule_StringUtils::StringUtils_split);
+    moduleSystem->getFunctionSystem()->registerFunction("split", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("string[]"), CommonModule_StringUtils::StringUtils_split);
 
     /**
      * Replaces all instances of to_replace from the target with the replace_with string
@@ -71,35 +69,41 @@ Class* CommonModule_StringUtils::registerClass(ModuleSystem* moduleSystem)
     c->registerFunction("str_replace", {VarType::fromString("string"), VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_str_replace);
     moduleSystem->getFunctionSystem()->registerFunction("str_replace", {VarType::fromString("string"), VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_str_replace);
 
+    /**
+     * Matches all occurences in the target based on the regex string provided.
+     * Returns a string array of all the occurences found
+     * function preg_match_all(string target, string regex) : string[]
+     */
+    c->registerFunction("preg_match_all", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("string[]"), CommonModule_StringUtils::StringUtils_preg_match_all);
+    moduleSystem->getFunctionSystem()->registerFunction("preg_match_all", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("string[]"), CommonModule_StringUtils::StringUtils_preg_match_all);
 }
 
-
-void CommonModule_StringUtils::StringUtils_getASCIIString(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+void CommonModule_StringUtils::StringUtils_getASCIIString(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
     return_value->type = VALUE_TYPE_STRING;
-    return_value->svalue += (char) values[0].dvalue;
+    return_value->svalue += (char)values[0].dvalue;
 }
 
-void CommonModule_StringUtils::StringUtils_substr(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+void CommonModule_StringUtils::StringUtils_substr(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
     std::string str = values[0].svalue;
     int start = values[1].dvalue;
 
     // Is the end argument provided? if not default to 4 billion
-    int end = values.size() > 2 ? values[2].dvalue  : 0xffffffff;
+    int end = values.size() > 2 ? values[2].dvalue : 0xffffffff;
 
     if (start >= str.size())
         throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("OutOfBoundsException"), {})));
     return_value->set(str.substr(start, end));
 }
 
-void CommonModule_StringUtils::StringUtils_strlen(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+void CommonModule_StringUtils::StringUtils_strlen(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
     std::string str = values[0].svalue;
     return_value->set(str.size());
 }
 
-void CommonModule_StringUtils::StringUtils_strpos(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+void CommonModule_StringUtils::StringUtils_strpos(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
     std::string haystack = values[0].svalue;
     std::string needle = values[1].svalue;
@@ -110,16 +114,16 @@ void CommonModule_StringUtils::StringUtils_strpos(Interpreter* interpreter, std:
     return_value->set(haystack.find(needle, offset));
 }
 
-void CommonModule_StringUtils::StringUtils_split(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+void CommonModule_StringUtils::StringUtils_split(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
     std::string target = values[0].svalue;
     std::string delm = values[1].svalue;
 
     std::vector<std::string> splits = str_split(target, delm);
-    Variable* variables = new Variable[splits.size()];
+    Variable *variables = new Variable[splits.size()];
     for (int i = 0; i < splits.size(); i++)
     {
-        Variable* var = &variables[i];
+        Variable *var = &variables[i];
         var->type = VARIABLE_TYPE_STRING;
         var->value.type = VALUE_TYPE_STRING;
         var->value.holder = var;
@@ -128,7 +132,7 @@ void CommonModule_StringUtils::StringUtils_split(Interpreter* interpreter, std::
     return_value->set(std::make_shared<Array>(interpreter->getClassSystem()->getClassByName("array"), variables, splits.size()));
 }
 
-void CommonModule_StringUtils::StringUtils_str_replace(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+void CommonModule_StringUtils::StringUtils_str_replace(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
     std::string target = values[0].svalue;
     std::string to_replace = values[1].svalue;
@@ -136,4 +140,28 @@ void CommonModule_StringUtils::StringUtils_str_replace(Interpreter* interpreter,
 
     target = str_replace(target, to_replace, replace_with);
     return_value->set(target);
+}
+
+void CommonModule_StringUtils::StringUtils_preg_match_all(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
+{
+    std::string target = values[0].svalue;
+    std::string regex = values[1].svalue;
+    try
+    {
+        std::vector<std::string> results = preg_match_all(target, regex);
+        Variable *variables = new Variable[results.size()];
+        for (int i = 0; i < results.size(); i++)
+        {
+            Variable *var = &variables[i];
+            var->type = VARIABLE_TYPE_STRING;
+            var->value.type = VALUE_TYPE_STRING;
+            var->value.holder = var;
+            var->value.svalue = results[i];
+        }
+        return_value->set(std::make_shared<Array>(interpreter->getClassSystem()->getClassByName("array"), variables, results.size()));
+    }
+    catch (...)
+    {
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("LogicException"), {})));
+    }
 }
