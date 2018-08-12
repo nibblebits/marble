@@ -23,3 +23,8 @@ BREAK_TYPE Breakable::getBreakType()
 {
     return this->break_type;
 }
+
+void Breakable::releaseBreak()
+{
+    breakNow(BREAK_TYPE_NO_BREAK);
+}

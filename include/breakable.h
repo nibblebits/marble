@@ -14,7 +14,8 @@ class Breakable
      Breakable();
      virtual ~Breakable();
      /**
-     * Invoke to break out of this entity
+     * Invoke to break out of this entity.
+     * 
      * \param type Requires a BREAK_TYPE to be provided. This BREAK_TYPE will specify the type of break this is such as a break of continue or a break of break.
      */
      void breakNow(BREAK_TYPE type);
@@ -27,9 +28,15 @@ class Breakable
      * Returns the BREAK_TYPE of the current break.
      */
      BREAK_TYPE getBreakType();
+
+     /**
+      * Releases this break setting it back to BREAK_TYPE_NO_BREAK
+      */
+     void releaseBreak();
  protected:
      /**
      * This pure method is invoked upon breaking with the "breakNow" method.
+     * When releasing breaks this method is also called and BREAK_TYPE_NO_BREAK is passed
      */
      virtual void didBreak(BREAK_TYPE type) = 0;
  private:

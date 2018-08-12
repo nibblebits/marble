@@ -48,16 +48,20 @@ Value ForNode::interpret(Interpreter* interpreter, struct extras extra)
     while (v.dvalue == 1)
     {
         body->interpret(interpreter);
+        loop->interpret(interpreter);
+        v = cond->interpret(interpreter);
         if (isBroken())
         {
             BREAK_TYPE type = getBreakType();
+            // Let's release the break
+            releaseBreak();
+
             if (type == BREAK_TYPE_BREAK)
                 break;
             if (type == BREAK_TYPE_CONTINUE)
                 continue;
         }
-        loop->interpret(interpreter);
-        v = cond->interpret(interpreter);
+
     }
     interpreter->finishBreakable();
     interpreter->finish_parented_scope();

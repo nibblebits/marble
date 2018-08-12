@@ -38,15 +38,21 @@ Value WhileNode::interpret(Interpreter* interpreter, struct extras extra)
     while (v.dvalue == 1)
     {
         body->interpret(interpreter);
+        v = exp->interpret(interpreter);
+
         if (isBroken())
         {
             BREAK_TYPE type = getBreakType();
+            // Release the break
+            releaseBreak();
+
             if (type == BREAK_TYPE_BREAK)
                 break;
             if (type == BREAK_TYPE_CONTINUE)
+            {
                 continue;
+            }
         }
-        v = exp->interpret(interpreter);
     }
     interpreter->finishBreakable();
     return v;
