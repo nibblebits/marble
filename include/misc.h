@@ -77,4 +77,19 @@ bool isFile(std::string path);
  */
 std::vector<std::string> preg_match_all(std::string target, std::string regex);
 
+/**
+ * Trims all whitespace on the left of this string
+ */
+std::string trim_left(const std::string& str);
+/**
+ * Trims all whitespace on the right of this string
+ */
+std::string trim_right(const std::string& str);
+/**
+ * Trims all whitespace on the left and right of this string
+ */
+std::string trim(const std::string& str);
+
+
+
 #endif

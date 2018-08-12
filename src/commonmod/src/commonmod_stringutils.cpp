@@ -76,6 +76,15 @@ Class *CommonModule_StringUtils::registerClass(ModuleSystem *moduleSystem)
      */
     c->registerFunction("preg_match_all", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("string[]"), CommonModule_StringUtils::StringUtils_preg_match_all);
     moduleSystem->getFunctionSystem()->registerFunction("preg_match_all", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("string[]"), CommonModule_StringUtils::StringUtils_preg_match_all);
+
+    /**
+     * Trims whitespace from the left and right of the provided string target
+     *
+     * function trim(string target) : string
+     */
+    c->registerFunction("trim", {VarType::fromString("string")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_trim);
+    moduleSystem->getFunctionSystem()->registerFunction("trim", {VarType::fromString("string")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_trim);
+
 }
 
 void CommonModule_StringUtils::StringUtils_getASCIIString(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
@@ -164,4 +173,10 @@ void CommonModule_StringUtils::StringUtils_preg_match_all(Interpreter *interpret
     {
         throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("LogicException"), {})));
     }
+}
+
+void CommonModule_StringUtils::StringUtils_trim(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+{
+    std::string target = values[0].svalue;
+    return_value->set(trim(target));
 }
