@@ -129,31 +129,6 @@ Value IdentifierNode::interpret(Interpreter* interpreter, struct extras extra)
     Value v;
     Variable* var = interpreter->getVariableByName(this->value);
     v = var->value;
-    if (interpreter->isExpecting())
-    {
-        VARIABLE_TYPE expecting_type = interpreter->getExpectingVariableType();
-        if (expecting_type != var->type)
-        {
-            // The values are incompatible but as we have passed validation we are aware that we can get a valid value from an object
-            if (expecting_type == VARIABLE_TYPE_NUMBER)
-            {
-                // Let's call toNumber on the object
-                Class* c = interpreter->getClassSystem()->getClassByName(var->value.ovalue->getClass()->name);
-                Function* to_number_func = c->getFunctionByNameAndArguments("toNumber", {});
-                if (to_number_func != NULL)
-                    to_number_func->invoke(interpreter, {}, &v, var->value.ovalue, interpreter->getCurrentScope());
-            }
-            else if (expecting_type == VARIABLE_TYPE_STRING)
-            {
-                // Let's call toString on the object
-                Class* c = interpreter->getClassSystem()->getClassByName(var->value.ovalue->getClass()->name);
-                Function* to_string_func = c->getFunctionByNameAndArguments("toString", {});
-                if (to_string_func != NULL)
-                    to_string_func->invoke(interpreter, {}, &v, var->value.ovalue, interpreter->getCurrentScope());
-            }
-            
-        }
-    }
     return v;
 }
 

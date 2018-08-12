@@ -196,12 +196,7 @@ Value VarNode::interpret(Interpreter *interpreter, struct extras extra)
         // Is this an operator overload assignment? If not process it as a normal assignment
         if (!handleOperatorOverloadIfValid(interpreter, type_str, variable, value_node))
         {
-            interpreter->save();
-            interpreter->expecting(type_str);
             variable->value = value_node->interpret(interpreter);
-            variable->value.holder = variable;
-            interpreter->endExpecting();
-            interpreter->restore();
         }
     }
     

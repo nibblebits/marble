@@ -54,6 +54,7 @@ void ArrayNode::test(Validator* validator, struct extras extra)
 Value ArrayNode::interpret(Interpreter* interpreter, struct extras extra)
 {
     Value index_exp = this->index_node->interpret(interpreter);
+    
     // If this array node is being interpreted then the next_element is guaranteed to be an expression interpretable node.
     Value next_elem_value = this->next_element->interpret(interpreter);
     if (index_exp.dvalue > 0xffffffff || index_exp.dvalue < 0)
