@@ -584,6 +584,11 @@ void Parser::parse_value(int rules)
 	    parse_negative_expression();
         node = pop_node();
     }
+    else if(token->isOperator("!"))
+    {
+        parse_not_expression();
+        node = pop_node();
+    }
     else if(token->isKeyword("new"))
     {
         // This is for a new statement e.g new number[20];
@@ -1223,6 +1228,21 @@ void Parser::parse_negative_expression()
     NegNode* neg_node = (NegNode*) factory.createNode(NODE_TYPE_NEGATIVE);
     neg_node->node = node;
     push_node(neg_node);
+}
+
+void Parser::parse_not_expression()
+{
+    if (!next()->isOperator("!"))
+        parse_error("Expecting a ! for logical not. This is a bug and should be reported");
+    
+    // The logical not expression
+    parse_value();
+
+    ExpressionInterpretableNode* node = (ExpressionInterpretableNode*) pop_node();
+    
+    NotNode* not_node = (NotNode*) factory.createNode(NODE_TYPE_NOT);
+    not_node->node = node;
+    push_node(not_node);
 }
 
 void Parser::parse_if_stmt()

@@ -46,6 +46,7 @@ private:
     void parse_expression_for_value(int extra_rules=0);
     void parse_expression(int rules=0);
     void parse_negative_expression();
+    void parse_not_expression();
     void parse_single_token();
     void parse_if_stmt();
     void parse_else();

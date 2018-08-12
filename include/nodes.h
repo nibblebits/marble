@@ -37,4 +37,5 @@
 #include "outputnode.h"
 #include "limitscopenode.h"
 #include "outputfilternode.h"
+#include "notnode.h"
 #endif
