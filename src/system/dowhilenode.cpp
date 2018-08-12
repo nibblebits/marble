@@ -35,20 +35,31 @@ Value DoWhileNode::interpret(Interpreter* interpreter, struct extras extra)
     // Do while nodes are breakable so lets tell the interpreter we are the current breakable
     interpreter->setCurrentBreakable(this);
     Value v;
-    do
+    try
     {
-        body->interpret(interpreter);
-        if (isBroken())
+        do
         {
-            BREAK_TYPE type = getBreakType();
-            if (type == BREAK_TYPE_BREAK)
-                break;
-            if (type == BREAK_TYPE_CONTINUE)
-                continue;
+            body->interpret(interpreter);
+            v = exp->interpret(interpreter);
+            if (isBroken())
+            {
+                BREAK_TYPE type = getBreakType();
+                // Release the break
+                releaseBreak();
+                if (type == BREAK_TYPE_BREAK)
+                    break;
+                if (type == BREAK_TYPE_CONTINUE)
+                    continue;
+            }
         }
-        v = exp->interpret(interpreter);
+        while(v.dvalue == 1);
+    } 
+    catch(...)
+    {
+        interpreter->finishBreakable();
+        throw;
     }
-    while(v.dvalue == 1);
+    
     interpreter->finishBreakable();
     return v;
 }

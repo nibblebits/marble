@@ -35,24 +35,32 @@ Value WhileNode::interpret(Interpreter* interpreter, struct extras extra)
     // While nodes are breakable so lets tell the interpreter we are the current breakable
     interpreter->setCurrentBreakable(this);
     Value v = exp->interpret(interpreter);
-    while (v.dvalue == 1)
+    try
     {
-        body->interpret(interpreter);
-        v = exp->interpret(interpreter);
-
-        if (isBroken())
+        while (v.dvalue == 1)
         {
-            BREAK_TYPE type = getBreakType();
-            // Release the break
-            releaseBreak();
+            body->interpret(interpreter);
+            v = exp->interpret(interpreter);
 
-            if (type == BREAK_TYPE_BREAK)
-                break;
-            if (type == BREAK_TYPE_CONTINUE)
+            if (isBroken())
             {
-                continue;
+                BREAK_TYPE type = getBreakType();
+                // Release the break
+                releaseBreak();
+
+                if (type == BREAK_TYPE_BREAK)
+                    break;
+                if (type == BREAK_TYPE_CONTINUE)
+                {
+                    continue;
+                }
             }
         }
+    }
+    catch(...)
+    {
+        interpreter->finishBreakable();
+        throw;
     }
     interpreter->finishBreakable();
     return v;
