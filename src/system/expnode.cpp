@@ -292,6 +292,8 @@ void ExpNode::test_obj_access(Validator *validator, struct extras extra)
 
     struct Evaluation evaluation;
     evaluation.extra = extra;
+    Scope *accessors_scope = (extra.accessors_scope != NULL ? extra.accessors_scope : validator->getCurrentScope());
+    evaluation.extra.accessors_scope = accessors_scope;
     left->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_TYPE_VARIABLE | EVALUATION_FROM_VARIABLE, &evaluation);
 
     Class *c = NULL;
@@ -310,7 +312,6 @@ void ExpNode::test_obj_access(Validator *validator, struct extras extra)
                 c = obj->getClass()->parent;
         }
 
-        Scope *accessors_scope = (extra.accessors_scope != NULL ? extra.accessors_scope : validator->getCurrentScope());
         obj->runThis([&] {
             struct extras extra;
             extra.accessors_scope = accessors_scope;
@@ -428,6 +429,10 @@ void ExpNode::test_regular_exp(Validator *validator)
 
 void ExpNode::evaluate_impl(SystemHandler *handler, EVALUATION_TYPE expected_evaluation, struct Evaluation *evaluation)
 {
+    // If we have no accessors scope lets set one
+    if (evaluation->extra.accessors_scope == NULL)
+        evaluation->extra.accessors_scope = handler->getCurrentScope();
+
     if (expected_evaluation & EVALUATION_TYPE_DATATYPE)
     {
         VarType left_vartype;

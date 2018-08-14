@@ -108,7 +108,18 @@ void Value::set(double v)
 void Value::set(std::shared_ptr<Object> o)
 {
     this->type = VALUE_TYPE_OBJECT;
+    // Is this a NULL object?
+    if (o == NULL)
+    {
+        this->type_str = "Object";
+        this->ovalue = NULL;
+        this->avalue = NULL;
+        return;
+    }
+
     this->type_str = o->getClass()->name;
+
+
     this->ovalue = o;
     // Let's set the array value to this object. The array value will be NULL if casting fails.
     this->avalue = std::dynamic_pointer_cast<Array>(o);
