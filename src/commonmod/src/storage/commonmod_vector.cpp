@@ -71,6 +71,14 @@ Class *CommonModule_Vector::registerClass(ModuleSystem *moduleSystem)
      */
     Function *isEmpty_function = c->registerFunction("isEmpty", {}, VarType::fromString("boolean"), CommonModule_Vector::Vector_isEmpty);
 
+    /**
+     * function size() : number
+     * 
+     * Returns the size of this Vector
+     */
+    Function *size_function = c->registerFunction("size", {}, VarType::fromString("number"), CommonModule_Vector::Vector_Size);
+
+
 
 }
 
@@ -113,4 +121,10 @@ void CommonModule_Vector::Vector_isEmpty(Interpreter* interpreter, std::vector<V
 {
     std::shared_ptr<CommonModule_Vector> vector_obj = std::dynamic_pointer_cast<CommonModule_Vector>(object);
     return_value->set(vector_obj->vec_values.empty());
+}
+
+void CommonModule_Vector::Vector_Size(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+{
+    std::shared_ptr<CommonModule_Vector> vector_obj = std::dynamic_pointer_cast<CommonModule_Vector>(object);
+    return_value->set(vector_obj->vec_values.size());
 }

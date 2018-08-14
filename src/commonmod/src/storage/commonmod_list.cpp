@@ -49,4 +49,30 @@ Class* CommonModule_List::registerClass(ModuleSystem* moduleSystem)
     Function* pop_function = c->registerFunction("pop", {}, VarType::fromString("Value"), Function::Blank);
     pop_function->is_pure = true;
 
+
+    /**
+     * function get(number index) : Value
+     * 
+     * Gets the Value with the provided index from the list
+     */
+    Function *get_function = c->registerFunction("get", {VarType::fromString("number")}, VarType::fromString("Value"), Function::Blank);
+    get_function->is_pure = true;
+
+    /**
+     * function isEmpty() : boolean
+     * 
+     * Returns true if this List is empty otherwise false
+     */
+    Function *isEmpty_function = c->registerFunction("isEmpty", {}, VarType::fromString("boolean"), Function::Blank);
+    isEmpty_function->is_pure = true;
+
+    /**
+     * function size() : number
+     * 
+     * Returns the size of this List
+     */
+    Function *size_function = c->registerFunction("size", {}, VarType::fromString("number"), Function::Blank);
+    size_function->is_pure = true;
+
+
 }
