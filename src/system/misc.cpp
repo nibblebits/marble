@@ -183,13 +183,17 @@ bool isFile(std::string path)
 	struct stat s;
 	if (stat(path.c_str(), &s) == 0)
 	{
-		if (s.st_mode & S_IFREG)
+		if (S_ISDIR(s.st_mode))
 		{
-			return true;
+			return false;
 		}
 	}
+	else
+	{
+		return false;
+	}
 
-	return false;
+	return true;
 }
 
 std::vector<std::string> preg_match_all(std::string target, std::string regex)

@@ -1,5 +1,6 @@
 #include "breaknode.h"
 #include "interpreter.h"
+#include "exceptions/breakexception.h"
 
 BreakNode::BreakNode() : InterpretableNode(NODE_TYPE_BREAK)
 {
@@ -17,13 +18,7 @@ void BreakNode::test(Validator* validator, struct extras extra)
 
 Value BreakNode::interpret(Interpreter* interpreter, struct extras extra)
 {
-    if (interpreter->hasBreakable())
-    {
-        interpreter->getCurrentBreakable()->breakNow(BREAK_TYPE_BREAK);
-    }
- 
-    Value v;
-    return v;   
+    throw BreakException(BREAK_TYPE_BREAK); 
 }
 
 void BreakNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)

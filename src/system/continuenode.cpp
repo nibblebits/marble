@@ -1,5 +1,7 @@
 #include "continuenode.h"
 #include "interpreter.h"
+#include "statics.h"
+#include "exceptions/breakexception.h"
 
 ContinueNode::ContinueNode() : InterpretableNode(NODE_TYPE_CONTINUE)
 {
@@ -17,13 +19,7 @@ void ContinueNode::test(Validator* validator, struct extras extra)
 
 Value ContinueNode::interpret(Interpreter* interpreter, struct extras extra)
 {
-    if (interpreter->hasBreakable())
-    {
-        interpreter->getCurrentBreakable()->breakNow(BREAK_TYPE_CONTINUE);
-    }
- 
-    Value v;
-    return v;   
+    throw BreakException(BREAK_TYPE_CONTINUE);
 }
 
 void ContinueNode::evaluate_impl(SystemHandler* handler, EVALUATION_TYPE expected_evaluation, struct Evaluation* evaluation)

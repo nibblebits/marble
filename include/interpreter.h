@@ -13,7 +13,6 @@
 #include "modulesystem.h"
 #include "logger.h"
 #include "posinfo.h"
-#include "breakable.h"
 #include "splitter.h"
 #include "statics.h"
 
@@ -125,27 +124,7 @@ public:
      */
     Validator* getValidator();
     
-    /**
-    * Sets the current Breakable entity. This could be a while loop, for loop or something else.
-    * The Breakable entity that gets set is the entity that is currently being processed or dealt with such as interpreting the body of a while loop.
-    */
-    void setCurrentBreakable(Breakable* breakable); 
-    
-    /**
-    * Returns true if there is a Breakable available. Breakables are set using the setCurrentBreakable method.
-    */
-    bool hasBreakable();
-    
-    /**
-    *  Gets the current Breakable entity such as a while or for loop that is currently being interpreted
-    */
-    Breakable* getCurrentBreakable();
-    
-    /**
-    * Finishes the current Breakable and must be called at some point after the setCurrentBreakable method is called.
-    */
-    void finishBreakable();
-    
+
     /**
      * Returns true if this Interpreter instance has run the script with the address provided.
      * \param script_address A local URI to the script that you wish to check has been run.
@@ -228,7 +207,7 @@ private:
     std::vector<std::string> nested_scripts_run;
     std::vector<std::string> scripts_run;
     std::vector<struct stack_log_part> stack_log;
-    std::vector<Breakable*> breakables;
+
     // The registered sql drivers for this interpreter instance
     std::vector<std::shared_ptr<CommonModule_SqlDriver>> sql_drivers;
     std::unique_ptr<Lexer> lexer;

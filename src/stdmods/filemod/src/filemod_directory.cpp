@@ -76,7 +76,7 @@ void FileModule_Directory::Directory_List(Interpreter *interpreter, std::vector<
     }
     else
     {
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to list directories in location: " + values[0].svalue);
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to list directories in location: \"" + values[0].svalue + "\"");
     }
 
     if (entries.size() > 0)

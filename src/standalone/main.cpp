@@ -47,7 +47,7 @@ bool loadConfiguration()
 void interpret(std::string filename)
 {
         Interpreter interpreter(moduleSystem->getClassSystem(), moduleSystem->getFunctionSystem());
-        interpreter.setTimeout(5);
+        interpreter.setTimeout(5000);
         interpreter.setOutputFunction([](const char* data, int length) {
             for (int i = 0; i < length; i++) {
                 std::cout << (char) data[i];
