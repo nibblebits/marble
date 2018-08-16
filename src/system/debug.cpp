@@ -127,6 +127,23 @@ void Debug::PrintValueForNode(Node* value_node, int tabbing)
             StringNode* string_node = (StringNode*) value_node;
             std::cout << "STRING NODE: " << string_node->value << std::endl;
         }
+        else if(value_node->type == NODE_TYPE_NOT)
+        {
+            NotNode* not_node = (NotNode*) value_node;
+            std::cout << "NOT NODE " << std::endl;
+            PrintValueForNode(not_node->node, tabbing+1);
+        }
+        else if(value_node->type == NODE_TYPE_FUNCTION_CALL)
+        {
+            FunctionCallNode* fc_node = (FunctionCallNode*) value_node;
+            std::cout << "FUNCTION CALL: " << fc_node->name->value << std::endl;
+        } 
+        else if(value_node->type == NODE_TYPE_OUTPUT_NODE)
+        {
+            OutputNode* output_node = (OutputNode*) value_node;
+            std::cout << "OUTPUT NODE" << std::endl;
+            PrintValueForNode(output_node->exp, tabbing+1);
+        }
 	    else
 	    {
 	        OutputTabbing(tabbing);

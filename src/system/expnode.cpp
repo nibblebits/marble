@@ -369,7 +369,6 @@ bool ExpNode::checkShouldIgnoreExpecting(Validator *validator, ExpressionInterpr
             * if it does we should not instruct the validator to expects a given type
             */
         Class *c = validator->getClassSystem()->getClassByName(left_type_str);
-        std::cout << left_type_str << std::endl;
         struct Evaluation right_evaluation = right_node->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE);
         if (c->hasOverloadedOperator(this->op, left_evaluation.datatype.value, right_evaluation.datatype.value))
         {

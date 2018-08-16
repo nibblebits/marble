@@ -1236,7 +1236,7 @@ void Parser::parse_not_expression()
         parse_error("Expecting a ! for logical not. This is a bug and should be reported");
     
     // The logical not expression
-    parse_value();
+    parse_expression_for_value();
 
     ExpressionInterpretableNode* node = (ExpressionInterpretableNode*) pop_node();
     

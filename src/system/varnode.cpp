@@ -190,7 +190,6 @@ Value VarNode::interpret(Interpreter *interpreter, struct extras extra)
     ExpressionInterpretableNode *value_node = (ExpressionInterpretableNode *)value;
     Variable *variable = interpreter->getCurrentScope()->createVariable();
     variable->value.type = Value::getValueTypeForString(type_str);
-
     if (value_node != NULL)
     {
         // Is this an operator overload assignment? If not process it as a normal assignment
