@@ -137,6 +137,16 @@ Class *CommonModule_StringUtils::registerClass(ModuleSystem *moduleSystem)
 
 
 
+    /**
+     * Preforms a number format on the given target 
+     *
+     * function number_format(string target, number places) : string
+     */
+    c->registerFunction("number_format", {VarType::fromString("string"), VarType::fromString("number")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_number_format);
+    moduleSystem->getFunctionSystem()->registerFunction("number_format", {VarType::fromString("string"), VarType::fromString("number")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_number_format);
+
+
+
 }
 
 void CommonModule_StringUtils::StringUtils_getASCIIString(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
@@ -258,4 +268,12 @@ void CommonModule_StringUtils::StringUtils_rtrim(Interpreter* interpreter, std::
         pattern = values[1].svalue;
     }
     return_value->set(trim_right(target, pattern));
+}
+
+
+void CommonModule_StringUtils::StringUtils_number_format(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+{
+    std::string target = values[0].svalue;
+    int places = values[1].dvalue;
+    return_value->set(number_format(target, places));
 }

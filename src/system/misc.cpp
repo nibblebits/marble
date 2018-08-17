@@ -230,3 +230,11 @@ std::string trim(const std::string& str, std::string pattern)
   return trim_left(trim_right(str, pattern), pattern);
 }
 
+std::string number_format(std::string target, int places)
+{
+	std::vector<std::string> splits = str_split(target, ".");
+	if (splits.size() == 1)
+		return target;
+	
+	return splits[0] + "." + splits[1].substr(0, places);
+}

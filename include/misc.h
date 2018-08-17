@@ -91,5 +91,8 @@ std::string trim_right(const std::string& str, std::string pattern="\f\n\r\t\v")
 std::string trim(const std::string& str, std::string pattern="\f\n\r\t\v");
 
 
-
+/**
+ * Formats a string to the correct amount of number places
+ */
+std::string number_format(std::string target, int places);
 #endif
