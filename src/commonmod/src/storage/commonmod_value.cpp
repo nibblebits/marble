@@ -143,6 +143,8 @@ void CommonModule_Value::Value_Set(Interpreter* interpreter, std::vector<Value> 
 void CommonModule_Value::Value_GetString(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
 {
     std::shared_ptr<CommonModule_Value> vobject = std::dynamic_pointer_cast<CommonModule_Value>(object);
+    if (vobject->value.type == VALUE_TYPE_NUMBER)
+        vobject->value.svalue = std::to_string(vobject->value.dvalue);
     return_value->set(vobject->value.svalue);
 }
 
