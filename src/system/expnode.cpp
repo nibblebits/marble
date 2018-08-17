@@ -399,7 +399,8 @@ bool ExpNode::checkOperatorOverloadPossible(Validator *validator, ExpressionInte
 
 void ExpNode::test_logical_operator_exp(Validator *validator)
 {
-
+    validator->save();
+    validator->expecting("boolean");
     try
     {
         this->left->test(validator);
@@ -409,6 +410,8 @@ void ExpNode::test_logical_operator_exp(Validator *validator)
     {
         throw TestError("expecting a boolean but " + ex.getMessage());
     }
+    validator->endExpecting();
+    validator->restore();
 }
 
 void ExpNode::test_compare_expression(Validator *validator)
