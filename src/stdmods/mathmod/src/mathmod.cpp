@@ -33,6 +33,11 @@ void MathModule::Init()
     c->registerFunction("sin", {VarType::fromString("number")}, VarType::fromString("number"), MathModule::Math_sin);
 
     /**
+     * Returns the cosine of an angle of x radians
+     */
+    c->registerFunction("cos", {VarType::fromString("number")}, VarType::fromString("number"), MathModule::Math_cos);
+
+    /**
      * Returns the absolute number
      * 
      * function abs(number value) : number
@@ -67,6 +72,11 @@ void MathModule::newInterpreter(Interpreter* interpreter)
     root_scope->createVariable("Math", "Math", Object::create(interpreter, this->getModuleSystem()->getClassSystem()->getClassByName("Math"), {}));
 }
 
+
+void MathModule::Math_cos(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+{
+    return_value->set((double) cos(values[0].dvalue));
+}
 
 void MathModule::Math_sin(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
 {
