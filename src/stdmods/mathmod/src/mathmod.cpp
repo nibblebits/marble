@@ -34,6 +34,8 @@ void MathModule::Init()
 
     /**
      * Returns the cosine of an angle of x radians
+     * 
+     * function cos(number value) : number
      */
     c->registerFunction("cos", {VarType::fromString("number")}, VarType::fromString("number"), MathModule::Math_cos);
 
