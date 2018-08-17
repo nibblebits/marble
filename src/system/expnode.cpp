@@ -272,6 +272,14 @@ void ExpNode::test(Validator *validator, struct extras extra)
     {
         test_assign(validator);
     }
+    else if (this->op == "&&" || this->op == "||")
+    {
+        test_logical_operator_exp(validator);
+    }
+    else if (Operator::isCompareOperator(this->op))
+    {
+        test_compare_expression(validator);
+    }
     else
     {
         test_regular_exp(validator);
@@ -358,7 +366,11 @@ void ExpNode::test_assign(Validator *validator)
         validator->endExpecting();
 }
 
-bool ExpNode::checkShouldIgnoreExpecting(Validator *validator, ExpressionInterpretableNode *left_node, ExpressionInterpretableNode *right_node, bool no_loop)
+/**
+ * This method is no longer used due to how difficult it currently is to implement operator overloading other than "="
+ * I will return and get the rest working eventually
+ */
+bool ExpNode::checkOperatorOverloadPossible(Validator *validator, ExpressionInterpretableNode *left_node, ExpressionInterpretableNode *right_node, bool no_loop)
 {
     bool ignore_expecting = false;
     struct Evaluation left_evaluation = left_node->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE);
@@ -379,37 +391,70 @@ bool ExpNode::checkShouldIgnoreExpecting(Validator *validator, ExpressionInterpr
     if (!ignore_expecting && !no_loop)
     {
         // As we should not ignore expecting for the left_node with the right_node let's check the right_node with the left_node
-        return checkShouldIgnoreExpecting(validator, right_node, left_node, true);
+        return checkOperatorOverloadPossible(validator, right_node, left_node, true);
     }
 
     return ignore_expecting;
 }
 
-void ExpNode::test_regular_exp(Validator *validator)
+void ExpNode::test_logical_operator_exp(Validator *validator)
 {
-    if (Operator::isCompareOperator(this->op))
+
+    try
     {
-        /*
+        this->left->test(validator);
+        this->right->test(validator);
+    }
+    catch (TestError &ex)
+    {
+        throw TestError("expecting a boolean but " + ex.getMessage());
+    }
+}
+
+void ExpNode::test_compare_expression(Validator *validator)
+{
+    /*
          * We are a compare operator so let's ensure that the validator is expecting a boolean
          */
-        if (validator->isExpecting() && validator->getExpectingType() != "boolean")
-        {
-            throw TestError("a boolean was provided");
-        }
+    if (validator->isExpecting() && validator->getExpectingType() != "boolean")
+    {
+        throw TestError("a boolean was provided");
     }
 
+    // Save the validator as the left node does not have to be a boolean
+    validator->save();
+    left->test(validator);
+
+    struct Evaluation left_evaluation = left->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE);
+    std::string left_type_str = left_evaluation.datatype.value;
+    validator->expecting(left_type_str);
+    try
+    {
+        right->test(validator);
+    }
+    catch(TestError& ex)
+    {
+        throw TestError("The expression requires the right to be the same type of the left a type of \"" + left_type_str + "\"");
+    }
+    validator->endExpecting();
+    validator->restore();
+}
+
+void ExpNode::test_regular_exp(Validator *validator)
+{
+ 
     // Test the left and right nodes
     left->test(validator);
 
     validator->save();
+
+    /**
+     * There is a chance that operator overloading has taken place in which case those methods should be invoked for this expression
+     */
     struct Evaluation left_evaluation = left->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE);
     std::string left_type_str = left_evaluation.datatype.value;
 
-    // We need to check weather to ignore expecting for the left node with right node
-    bool ignore_expecting = checkShouldIgnoreExpecting(validator, left, right);
-
-    if (!ignore_expecting)
-        validator->expecting(left_type_str);
+    validator->expecting(left_type_str);
 
     try
     {
@@ -420,8 +465,7 @@ void ExpNode::test_regular_exp(Validator *validator)
         throw TestError(std::string(ex.what()) + " but this expression requires a " + left_type_str + (left_evaluation.datatype.isArray() ? " with " + std::to_string(left_evaluation.datatype.dimensions) + " array dimensions" : ""));
     }
 
-    if (!ignore_expecting)
-        validator->endExpecting();
+    validator->endExpecting();
 
     validator->restore();
 }
@@ -444,7 +488,6 @@ void ExpNode::evaluate_impl(SystemHandler *handler, EVALUATION_TYPE expected_eva
             old_fc_system = handler->getFunctionSystem();
             old_scope = handler->getCurrentScope();
 
-
             std::string class_obj_name = evaluation->datatype.value;
             if (evaluation->datatype.dimensions > 0)
             {
@@ -453,11 +496,11 @@ void ExpNode::evaluate_impl(SystemHandler *handler, EVALUATION_TYPE expected_eva
             Validator *validator = NULL;
             if (handler->getType() == SYSTEM_HANDLER_VALIDATOR)
             {
-                validator = (Validator*) handler;
+                validator = (Validator *)handler;
             }
-            else if(handler->getType() == SYSTEM_HANDLER_INTERPRETER)
+            else if (handler->getType() == SYSTEM_HANDLER_INTERPRETER)
             {
-                validator = ((Interpreter*) handler)->getValidator();
+                validator = ((Interpreter *)handler)->getValidator();
             }
             else
             {

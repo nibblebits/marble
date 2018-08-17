@@ -5,6 +5,7 @@
 #include "class.h"
 #include "interpreter.h"
 #include "csystem.h"
+#include "debug.h"
 #include <iostream>
 #include "exceptions/testerror.h"
 Validator::Validator(Logger* logger, Interpreter* interpreter) : SystemHandler(SYSTEM_HANDLER_VALIDATOR, interpreter->getClassSystem(), interpreter->getFunctionSystem())
@@ -67,6 +68,7 @@ void Validator::validate(Node* root_node)
     {
         try
         {
+            Debug::PrintValueForNode(current_node);
             current_node->test(this);
         } catch(TestError& ex)
         {
