@@ -78,12 +78,64 @@ Class *CommonModule_StringUtils::registerClass(ModuleSystem *moduleSystem)
     moduleSystem->getFunctionSystem()->registerFunction("preg_match_all", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("string[]"), CommonModule_StringUtils::StringUtils_preg_match_all);
 
     /**
-     * Trims whitespace from the left and right of the provided string target
+     * @Class StringUtils
+     * Trims whitespace from the left and right of the provided string target unless a pattern is provided
+     * If a pattern is provided then the pattern is what is tripped from the string.
      *
-     * function trim(string target) : string
+     * function trim(string target, string pattern) : string
      */
     c->registerFunction("trim", {VarType::fromString("string")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_trim);
+    c->registerFunction("trim", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_trim);
+
+    /**
+     *
+     * Trims whitespace from the left and right of the provided string target unless a pattern is provided
+     * If a pattern is provided then the pattern is what is tripped from the string.
+     *
+     * function trim(string target, string pattern) : string
+     */
+    moduleSystem->getFunctionSystem()->registerFunction("trim", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_trim);
     moduleSystem->getFunctionSystem()->registerFunction("trim", {VarType::fromString("string")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_trim);
+
+     /**
+     * @Class StringUtils
+     * Trims whitespace from the left of the provided string target unless a pattern is provided
+     * If a pattern is provided then the pattern is what is tripped from the string.
+     *
+     * function trim(string target, string pattern) : string
+     */
+    c->registerFunction("ltrim", {VarType::fromString("string")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_ltrim);
+    c->registerFunction("ltrim", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_ltrim);
+
+    /**
+     * Trims whitespace from the left of the provided string target unless a pattern is provided
+     * If a pattern is provided then the pattern is what is tripped from the string.
+     *
+     * function ltrim(string target, string pattern) : string
+     */
+    moduleSystem->getFunctionSystem()->registerFunction("ltrim", {VarType::fromString("string")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_ltrim);
+    moduleSystem->getFunctionSystem()->registerFunction("ltrim", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_ltrim);
+
+    /**
+     * @Class StringUtils
+     * Trims whitespace from the right of the provided string target unless a pattern is provided
+     * If a pattern is provided then the pattern is what is tripped from the string.
+     *
+     * function rtrim(string target, string pattern) : string
+     */
+    c->registerFunction("rtrim", {VarType::fromString("string")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_rtrim);
+    c->registerFunction("rtrim", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_rtrim);
+
+    /**
+     * Trims whitespace from the right of the provided string target unless a pattern is provided
+     * If a pattern is provided then the pattern is what is tripped from the string.
+     *
+     * function rtrim(string target, string pattern) : string
+     */
+    moduleSystem->getFunctionSystem()->registerFunction("rtrim", {VarType::fromString("string")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_rtrim);
+    moduleSystem->getFunctionSystem()->registerFunction("rtrim", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_rtrim);
+
+
 
 }
 
@@ -178,5 +230,32 @@ void CommonModule_StringUtils::StringUtils_preg_match_all(Interpreter *interpret
 void CommonModule_StringUtils::StringUtils_trim(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
 {
     std::string target = values[0].svalue;
-    return_value->set(trim(target));
+    std::string pattern = "\f\n\r\t\v";
+    if (values.size() > 1)
+    {
+        pattern = values[1].svalue;
+    }
+    return_value->set(trim(target, pattern));
+}
+
+void CommonModule_StringUtils::StringUtils_ltrim(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+{
+    std::string target = values[0].svalue;
+    std::string pattern = "\f\n\r\t\v";
+    if (values.size() > 1)
+    {
+        pattern = values[1].svalue;
+    }
+    return_value->set(trim_left(target, pattern));
+}
+
+void CommonModule_StringUtils::StringUtils_rtrim(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+{
+    std::string target = values[0].svalue;
+    std::string pattern = "\f\n\r\t\v";
+    if (values.size() > 1)
+    {
+        pattern = values[1].svalue;
+    }
+    return_value->set(trim_right(target, pattern));
 }
