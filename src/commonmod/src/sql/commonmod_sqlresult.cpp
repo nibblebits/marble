@@ -32,7 +32,7 @@ Class* CommonModule_SqlResult::registerClass(ModuleSystem* moduleSystem)
     /**
      * Returns the next record available otherwise returns NULL
      * 
-     * function getNextRecord() : SQLRecord
+       function getNextRecord() : SQLRecord
      */
     c->registerFunction("getNextRecord", {}, VarType::fromString("SQLRecord"), CommonModule_SqlResult::SQLResult_getNextRecord);
 

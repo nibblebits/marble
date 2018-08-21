@@ -22,6 +22,12 @@ std::shared_ptr<Object> CommonModule_StringUtils::newInstance(Class *c)
 
 Class *CommonModule_StringUtils::registerClass(ModuleSystem *moduleSystem)
 {
+    
+    /**
+     * class StringUtils extends Object
+     * 
+     * The StringUtils class provides many methods to help manipulate strings within the marble language.
+     * These methods include the ability to split strings, get the length of strings, substr and more*/
     Class *c = moduleSystem->getClassSystem()->registerClass("StringUtils");
     c->setDescriptorObject(std::make_shared<CommonModule_StringUtils>(c));
     c->registerFunction("getASCIIString", {VarType::fromString("number")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_getASCIIString);
@@ -78,7 +84,7 @@ Class *CommonModule_StringUtils::registerClass(ModuleSystem *moduleSystem)
     moduleSystem->getFunctionSystem()->registerFunction("preg_match_all", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("string[]"), CommonModule_StringUtils::StringUtils_preg_match_all);
 
     /**
-     * @Class StringUtils
+     * @class StringUtils
      * Trims whitespace from the left and right of the provided string target unless a pattern is provided
      * If a pattern is provided then the pattern is what is tripped from the string.
      *
@@ -98,7 +104,7 @@ Class *CommonModule_StringUtils::registerClass(ModuleSystem *moduleSystem)
     moduleSystem->getFunctionSystem()->registerFunction("trim", {VarType::fromString("string")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_trim);
 
      /**
-     * @Class StringUtils
+     * @class StringUtils
      * Trims whitespace from the left of the provided string target unless a pattern is provided
      * If a pattern is provided then the pattern is what is tripped from the string.
      *
@@ -117,7 +123,7 @@ Class *CommonModule_StringUtils::registerClass(ModuleSystem *moduleSystem)
     moduleSystem->getFunctionSystem()->registerFunction("ltrim", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_ltrim);
 
     /**
-     * @Class StringUtils
+     * @class StringUtils
      * Trims whitespace from the right of the provided string target unless a pattern is provided
      * If a pattern is provided then the pattern is what is tripped from the string.
      *
