@@ -5,7 +5,7 @@ all:
 	cd ./sqldrivers/mysqlmod && $(MAKE) standalone
 	cd ./mathmod && $(MAKE) standalone
 	cd ./sessionmod && $(MAKE) standalone
-	cd ./socketmod && $(MAKE) standalone
+	cd ./networkmod && $(MAKE) standalone
 clean:
 	cd ./iomod && $(MAKE) clean
 	cd ./timemod && $(MAKE) clean
@@ -13,5 +13,5 @@ clean:
 	cd ./sqldrivers/mysqlmod && $(MAKE) clean
 	cd ./mathmod && $(MAKE) clean
 	cd ./sessionmod && $(MAKE) clean
-	cd ./socketmod && $(MAKE) clean
+	cd ./networkmod && $(MAKE) clean
 
