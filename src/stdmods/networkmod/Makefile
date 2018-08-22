@@ -1,4 +1,4 @@
-SYSTEM_OBJECT_FILES = ./build/main.o ./build/networkmod.o ./build/socketobject.o ./build/internetprotocolobject.o ./build/ipv4addressobject.o
+SYSTEM_OBJECT_FILES = ./build/main.o ./build/networkmod.o ./build/socketobject.o ./build/internetprotocolobject.o ./build/ipv4addressobject.o ./build/curlobject.o
 INCLUDES = -I ../../../include -I ./include
 OBJECT_FILE_FLAGS = -c -g -fPIC -std=c++14
 SYSTEM_LIB_LOCAL_FILENAME = libmarble.so
@@ -15,7 +15,9 @@ module: ${SYSTEM_OBJECT_FILES}
 	g++ ${INCLUDES} ./src/internetprotocolobject.cpp -o ./build/internetprotocolobject.o ${OBJECT_FILE_FLAGS}
 ./build/ipv4addressobject.o: ./src/ipv4addressobject.cpp
 	g++ ${INCLUDES} ./src/ipv4addressobject.cpp -o ./build/ipv4addressobject.o ${OBJECT_FILE_FLAGS}
+./build/curlobject.o: ./src/curlobject.cpp
+	g++ ${INCLUDES} ./src/curlobject.cpp -o ./build/curlobject.o ${OBJECT_FILE_FLAGS}
 standalone: module
-	g++ -fPIC -shared -std=c++14 -unresolved-symbols=ignore-in-shared-libs ${INCLUDES} ${SYSTEM_OBJECT_FILES} -o ../bin/marble_networkmod.so
+	g++ -fPIC -shared -std=c++14  -unresolved-symbols=ignore-in-shared-libs ${INCLUDES} ${SYSTEM_OBJECT_FILES} -lcurl -o ../bin/marble_networkmod.so
 clean:
 	rm ${SYSTEM_OBJECT_FILES}

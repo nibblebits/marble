@@ -4,10 +4,6 @@
 #include "modulesystem.h"
 #include "interpreter.h"
 #include "function.h"
-#include <sys/socket.h>
-#include <errno.h> //For errno - the error number
-#include <netdb.h> //hostent
-#include <arpa/inet.h>
 
 Ipv4AddressObject::Ipv4AddressObject(Class *c) : Object(c)
 {

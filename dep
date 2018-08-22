@@ -1,11 +1,13 @@
 Marble requires the following libaries to be installed to compile
 
 libjsoncpp-dev
-
-
+    Used for file sessions
+    
+libcurl4-openssl-dev
+    Used for the network module
 
 
 Debain:
 
 sudo apt-get install libjsoncpp-dev
-
+sudo apt-get install libcurl4-openssl-dev
