@@ -5,6 +5,7 @@
 #include "modulesystem.h"
 #include "interpreter.h"
 #include "function.h"
+#include "networkpermission.h"
 #include "object.h"
 #include <sys/socket.h>
 #include <errno.h> //For errno - the error number
@@ -42,6 +43,9 @@ void InternetProtocolObject::registerClass(ModuleSystem *moduleSystem)
 
 void InternetProtocolObject::InternetProtocol_getAddressForHostname(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
+    // Ensure that we have network permissions
+    NetworkPermission::ensurePermission(interpreter, caller_scope);
+    
     struct hostent *he;
     struct in_addr **addr_list;
     std::string hostname = values[0].svalue;

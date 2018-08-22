@@ -6,6 +6,7 @@
 #include "internetprotocolobject.h"
 #include "ipv4addressobject.h"
 #include "curlobject.h"
+#include "networkpermission.h"
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -33,6 +34,9 @@ void NetworkModule::Init()
 
    // Let's setup CURL for use in other objects in the NetworkModule
    curl_global_init(CURL_GLOBAL_ALL);
+
+   // Register the NetworkPermission class
+   NetworkPermission::registerClass(this->getModuleSystem());
 
    // Register the Ipv4Address class
    Ipv4AddressObject::registerClass(this->getModuleSystem());

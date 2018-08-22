@@ -53,7 +53,6 @@ void PermissionObject::ensurePermissionValid(Interpreter* interpreter, std::shar
     if (permission_obj->getClass()->name != this->getClass()->name)
         throw std::logic_error("Passing a PermissionObject whose class differs from this objects class");
 
-    std::cout << "Permission check for class: " << permission_obj->getClass()->name << std::endl;
     std::vector<Variable*> variables = this->getVariables();
     for (Variable* var : variables)
     {
