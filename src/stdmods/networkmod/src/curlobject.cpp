@@ -6,6 +6,7 @@
 #include "function.h"
 #include "networkmod.h"
 #include "networkpermission.h"
+#include "misc.h"
 
 CurlObject::CurlObject(Class *c) : Object(c)
 {
@@ -554,6 +555,12 @@ void CurlObject::registerClass(ModuleSystem *moduleSystem)
 void CurlObject::Curl_setopt(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
     std::shared_ptr<CurlObject> curl_obj = std::dynamic_pointer_cast<CurlObject>(object);
+    if (values[0].dvalue == CURLOPT_UPLOAD)
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Uploading files with CURL has been disabled for now while we come up with a way for it to work well with the permission system");
+
+    if (startsWith(values[1].svalue, "file://"))
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "File access is not allowed with the CURL module for now as we need to come up with a way for it to work well with the permission system");
+
     curl_easy_setopt(curl_obj->curl, (CURLoption)values[0].dvalue, values[1].svalue.c_str());
 }
 
