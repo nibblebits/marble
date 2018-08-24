@@ -43,6 +43,7 @@
         "numeric": "cpp",
         "cstdarg": "cpp",
         "list": "cpp",
-        "filesystem": "cpp"
+        "filesystem": "cpp",
+        "cinttypes": "cpp"
     }
 }

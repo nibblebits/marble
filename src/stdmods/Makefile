@@ -6,6 +6,8 @@ all:
 	cd ./mathmod && $(MAKE) standalone
 	cd ./sessionmod && $(MAKE) standalone
 	cd ./networkmod && $(MAKE) standalone
+	cd ./processmod && $(MAKE) standalone
+
 clean:
 	cd ./iomod && $(MAKE) clean
 	cd ./timemod && $(MAKE) clean
@@ -14,4 +16,6 @@ clean:
 	cd ./mathmod && $(MAKE) clean
 	cd ./sessionmod && $(MAKE) clean
 	cd ./networkmod && $(MAKE) clean
+	cd ./processmod && $(MAKE) clean
+
 

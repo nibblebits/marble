@@ -238,3 +238,19 @@ std::string number_format(std::string target, int places)
 	
 	return splits[0] + "." + splits[1].substr(0, places);
 }
+
+std::string exec(std::string cmd, int& return_value) {
+    std::array<char, 128> buffer;
+    std::string result;
+
+    FILE* pipe = popen(cmd.c_str(), "r");
+    if (!pipe) throw std::runtime_error("popen() failed!");
+    while (!feof(pipe)) {
+        if (fgets(buffer.data(), 128, pipe) != nullptr)
+            result += buffer.data();
+    }
+    
+    return_value = fclose(pipe) / 256;
+    return result;
+}
+

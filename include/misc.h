@@ -95,4 +95,11 @@ std::string trim(const std::string& str, std::string pattern="\x20\t\n\r\0\x0B")
  * Formats a string to the correct amount of number places
  */
 std::string number_format(std::string target, int places);
+
+/**
+ * Executes a command and returns the output and return code
+ */
+
+std::string exec(std::string cmd, int& return_value);
+
 #endif

@@ -1,5 +1,5 @@
-#ifndef SOCKETMODULE_H
-#define SOCKETMODULE_H
+#ifndef NETWORKMODULE_H
+#define NETWORKMODULE_H
 #include "module.h"
 class Scope;
 /**
