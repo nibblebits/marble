@@ -6,6 +6,7 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <thread>
 #include "scope.h"
 #include "functionsystem.h"
 #include "csystem.h"
@@ -47,6 +48,11 @@ public:
     virtual ~Interpreter();
     static Class* getDefaultBaseClass();
 
+    /**
+     * Adds the thread to the active threads vector. All threads are joined when the Interpreter destructs
+     */
+    void addThread(std::thread t);
+    
     /**
      * Sets the timeout for this Interpreter. Scripts will stop running if the run time goes higher
      * than the timeout provided. Use 0 if you do not want a timeout.
@@ -219,6 +225,9 @@ private:
 
     // This is equal to the time the first run was called
     time_t execution_started;
+
+    // Spawned active threads can be placed here
+    std::vector<std::thread> active_threads;
 
 };
 

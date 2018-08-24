@@ -84,6 +84,14 @@ Interpreter::Interpreter(ClassSystem *classSystem, FunctionSystem *baseFunctionS
 
 Interpreter::~Interpreter()
 {
+    // Join the threads before we leave
+    for (auto &t : this->active_threads)
+        t.join();
+}
+
+void Interpreter::addThread(std::thread t)
+{
+    this->active_threads.push_back(std::move(t));
 }
 
 void Interpreter::setTimeout(int seconds)
