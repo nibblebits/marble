@@ -14,10 +14,16 @@ public:
     static Class* registerClass(ModuleSystem* moduleSystem);
 private:
     // The unix timestamp for this date
-    time_t time;
+    time_t chosen_time;
     std::string format;
+
+    // These are offsets from UTC to allow different timezones to be used
+    int utc_hours_offset;
+    int utc_minutes_offset;
+
     // Native Time functions/methods
     static void Date_ConstructWithTimestamp(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object);
+    static void Date_setTimezone(Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);  
     static void Date_setFormat(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object);  
     static void Date_getFormattedString(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object);
 };

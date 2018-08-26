@@ -102,4 +102,11 @@ std::string number_format(std::string target, int places);
 
 std::string exec(std::string cmd, int& return_value);
 
+
+/**
+ * Gets the current timezone as a string. E.g BST
+ */
+
+std::string get_current_timezone();
+
 #endif

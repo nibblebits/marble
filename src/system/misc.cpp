@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include <cstring>
 #include <fstream>
 #include <iostream>
@@ -254,3 +255,13 @@ std::string exec(std::string cmd, int& return_value) {
     return result;
 }
 
+
+std::string get_current_timezone()
+{
+	time_t t = time(NULL);
+	struct tm lt = {0};
+
+	localtime_r(&t, &lt);
+
+	return lt.tm_zone;
+}
