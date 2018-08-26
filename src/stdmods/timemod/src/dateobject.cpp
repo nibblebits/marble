@@ -46,7 +46,7 @@ Class* DateObject::registerClass(ModuleSystem* moduleSystem)
 void DateObject::Date_ConstructWithTimestamp(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object)
 {
     // Invoke the parent constructor
-    object->getClass("DateObject")->invokeObjectParentConstructor(values, object, interpreter);
+    object->getClass()->invokeObjectParentConstructor(values, object, interpreter);
 
     std::shared_ptr<DateObject> date_obj = std::dynamic_pointer_cast<DateObject>(object); 
     date_obj->time = (time_t)values[0].dvalue;
