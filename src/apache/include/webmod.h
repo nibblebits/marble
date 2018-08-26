@@ -64,6 +64,7 @@ public:
     std::string request_uri;
     std::string requester_ip;
     std::string request_method;
+    std::string protocol;
     std::shared_ptr<WebModulePOSTContentObject> content;
     std::shared_ptr<WebModulePOSTFileContentObject> file_content;
     std::shared_ptr<WebModuleRequestArgumentsObject> request_arguments;
@@ -137,6 +138,7 @@ public:
     static void Request_setResponseHeader(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
     static void Request_getFileContent(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
     static void Request_getCookie(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
+    static void Request_getProtocol(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
 
     static void FileContent_has(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
     static void FileContent_get(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);

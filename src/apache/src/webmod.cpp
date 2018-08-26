@@ -139,6 +139,12 @@ void WebModule::Init()
      */
     c->registerFunction("getCookie", {VarType::fromString("string")}, VarType::fromString("string"), WebModule::Request_getCookie);
     
+    /**
+     * Returns the protocol such as HTTP or HTTPS
+     * function getProtocol() : string
+     */
+    c->registerFunction("getProtocol", {}, VarType::fromString("string"), WebModule::Request_getProtocol);
+
     c->registerFunction("getFileContent", {}, VarType::fromString("FileContent"), WebModule::Request_getFileContent);
 
     c->registerFunction("getRequesterIP", {}, VarType::fromString("string"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
@@ -183,6 +189,7 @@ void WebModule::parseForRequestObject(Scope* root_scope, Interpreter* interprete
     object->request_method = req->method;
     object->request_arguments->arguments = parseGet(req);
     object->cookies = parseCookies(req);
+    object->protocol = req->protocol;
 
     const char* contentType_cstr = apr_table_get(req->headers_in, "content-type");
     if (!contentType_cstr)
@@ -554,6 +561,12 @@ void WebModule::Request_getCookie(Interpreter* interpreter, std::vector<Value> v
     }
 
     return_value->set("");
+}
+
+void WebModule::Request_getProtocol(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+{
+    std::shared_ptr<WebModuleObject> wm_obj = std::dynamic_pointer_cast<WebModuleObject>(object);
+    return_value->set(wm_obj->protocol);
 }
 
 void WebModule::FileContent_has(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
