@@ -71,7 +71,7 @@ std::map<std::string, Value> FileSessionObject::getSystemValuesForJSONValue(Inte
             break;
 
             case Json::ValueType::arrayValue:
-            
+                
             break;
 
             case Json::ValueType::objectValue:

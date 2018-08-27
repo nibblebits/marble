@@ -7,6 +7,7 @@ all:
 	cd ./sessionmod && $(MAKE) standalone
 	cd ./networkmod && $(MAKE) standalone
 	cd ./processmod && $(MAKE) standalone
+	cd ./jsonmod && $(MAKE) standalone
 
 clean:
 	cd ./iomod && $(MAKE) clean
@@ -17,5 +18,6 @@ clean:
 	cd ./sessionmod && $(MAKE) clean
 	cd ./networkmod && $(MAKE) clean
 	cd ./processmod && $(MAKE) clean
+	cd ./jsonmod && $(MAKE) clean
 
 
