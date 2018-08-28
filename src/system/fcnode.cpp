@@ -239,7 +239,6 @@ void FunctionCallNode::evaluate_impl(SystemHandler *handler, EVALUATION_TYPE exp
         {
             Class* a = (Class*) function_sys;
             function = (SingleFunction *)function_sys->getFunctionByNameAndArguments(this->name->value, types);
-
         }
         else
         {

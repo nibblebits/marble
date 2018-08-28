@@ -439,7 +439,7 @@ void ExpNode::test_compare_expression(Validator *validator)
     {
         right->test(validator);
     }
-    catch(TestError& ex)
+    catch (TestError &ex)
     {
         throw TestError("The expression requires the right to be the same type of the left a type of \"" + left_type_str + "\"");
     }
@@ -449,7 +449,7 @@ void ExpNode::test_compare_expression(Validator *validator)
 
 void ExpNode::test_regular_exp(Validator *validator)
 {
- 
+
     // Test the left and right nodes
     left->test(validator);
 
@@ -496,7 +496,11 @@ void ExpNode::evaluate_impl(SystemHandler *handler, EVALUATION_TYPE expected_eva
             old_scope = handler->getCurrentScope();
 
             std::string class_obj_name = evaluation->datatype.value;
-            if (evaluation->datatype.dimensions > 0)
+            /* If the datatype is an array but we are also not accessing an array index we should switch the datatype to array 
+       which will give access to the array class.
+       abc[0] = Array but the left node is NODE_TYPE_ARRAY as we are accessing array indexes. Here we use the datatype of abc
+       abc.size() = Left is an Array but we are not accessing it as an array so use the array class*/
+            if (evaluation->datatype.dimensions > 0 && left->type != NODE_TYPE_ARRAY)
             {
                 class_obj_name = "array";
             }
