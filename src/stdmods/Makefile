@@ -8,6 +8,7 @@ all:
 	cd ./networkmod && $(MAKE) standalone
 	cd ./processmod && $(MAKE) standalone
 	cd ./jsonmod && $(MAKE) standalone
+	cd ./cryptomod && $(MAKE) standalone
 
 clean:
 	cd ./iomod && $(MAKE) clean
@@ -19,5 +20,6 @@ clean:
 	cd ./networkmod && $(MAKE) clean
 	cd ./processmod && $(MAKE) clean
 	cd ./jsonmod && $(MAKE) clean
+	cd ./cryptomod && $(MAKE) clean
 
 
