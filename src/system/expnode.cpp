@@ -305,7 +305,11 @@ void ExpNode::test_obj_access(Validator *validator, struct extras extra)
     left->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_TYPE_VARIABLE | EVALUATION_FROM_VARIABLE, &evaluation);
 
     Class *c = NULL;
-    std::string datatype_name = evaluation.datatype.isArray() ? "array" : evaluation.datatype.value;
+    /* If the datatype is an array but we are also not accessing an array index we should switch the datatype to array 
+       which will give access to the array class.
+       abc[0] = Array but the left node is NODE_TYPE_ARRAY as we are accessing array indexes. Here we use the datatype of abc
+       abc.size() = Left is an Array but we are not accessing it as an array so use the array class*/
+    std::string datatype_name = (evaluation.datatype.isArray() && left->type != NODE_TYPE_ARRAY) ? "array" : evaluation.datatype.value;
     if (!validator->isClassIgnored(datatype_name))
     {
         std::shared_ptr<Object> obj = validator->getClassObject(datatype_name);

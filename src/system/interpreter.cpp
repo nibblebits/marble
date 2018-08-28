@@ -375,6 +375,7 @@ void Interpreter::run(const char *code, PosInfo posInfo, bool ignore_validation)
         // Awesome now lets interpret!
         while (current_node != NULL)
         {
+            Debug::PrintValueForNode(current_node);
             current_node->interpret(this);
             current_node = (InterpretableNode *)current_node->next;
         }
