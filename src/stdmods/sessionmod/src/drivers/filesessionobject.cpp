@@ -2,6 +2,8 @@
 #include "modulesystem.h"
 #include "interpreter.h"
 #include "function.h"
+#include "../../../commonmod/include/commonmod_value.h"
+#include "array.h"
 #include "exceptions/systemexception.h"
 #include "exceptionobject.h"
 #include "misc.h"
@@ -40,6 +42,7 @@ void FileSessionObject::registerClass(ModuleSystem* moduleSystem)
      */
     Function* save_func = c->registerFunction("save", {}, VarType::fromString("void"), FileSessionObject::FileSession_Save);
 
+
 }
 
 std::shared_ptr<Object> FileSessionObject::newInstance(Class* c)
@@ -48,43 +51,135 @@ std::shared_ptr<Object> FileSessionObject::newInstance(Class* c)
 }
 
 
-std::map<std::string, Value> FileSessionObject::getSystemValuesForJSONValue(Interpreter* interpreter, Json::Value& values)
+
+Value FileSessionObject::getNonNamedValueForJSONValue(Interpreter *interpreter, Json::Value &json_value)
+{
+    Json::ValueType type = json_value.type();
+    switch (type)
+    {
+    case Json::ValueType::nullValue:
+    case Json::ValueType::intValue:
+    case Json::ValueType::uintValue:
+    case Json::ValueType::realValue:
+    case Json::ValueType::booleanValue:
+    {
+        return Value(json_value.asDouble());
+    }
+    case Json::ValueType::stringValue:
+    {
+        return Value(json_value.asString());
+    }
+
+    case Json::ValueType::arrayValue:
+    {
+        Variable *vars = new Variable[json_value.size()];
+        for (int i = 0; i < json_value.size(); i++)
+        {
+            Value result = FileSessionObject::getNonNamedValueForJSONValue(interpreter, json_value[i]);
+            // We must create a Value object to hold this result
+            Class *value_cls = interpreter->getClassSystem()->getClassByName("Value");
+            std::shared_ptr<Object> v_obj = Object::create(interpreter, interpreter->getClassSystem()->getClassByName("Value"), {});
+            Function *set_function = value_cls->getFunctionByName("set");
+            Value return_val;
+            set_function->invoke(interpreter, {result}, &return_val, v_obj, interpreter->getCurrentScope());
+            Variable *var = &vars[i];
+            var->type = VARIABLE_TYPE_OBJECT;
+            var->value = v_obj;
+            var->value.holder = var;
+        }
+
+        return Value(std::make_shared<Array>(interpreter->getClassSystem()->getClassByName("array"), vars, json_value.size()));
+    }
+
+    case Json::ValueType::objectValue:
+    {
+        // Let's create a new JsonValues object for this Json object value
+        std::shared_ptr<SessionValuesObject> jv_obj =
+            std::dynamic_pointer_cast<SessionValuesObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("SessionValues"), {}));
+        jv_obj->values = FileSessionObject::getSystemValuesForJSONValue(interpreter, json_value);
+        return Value(jv_obj);
+    }
+    }
+}
+
+std::map<std::string, Value> FileSessionObject::getSystemValuesForJSONValue(Interpreter *interpreter, Json::Value &values)
 {
     std::map<std::string, Value> system_values;
     Json::Value::Members member_names = values.getMemberNames();
     for (std::string name : member_names)
     {
-        Json::Value json_value = values[name];
-        Json::ValueType type = json_value.type();
-        switch(type)
-        {
-            case Json::ValueType::nullValue:
-            case Json::ValueType::intValue:
-            case Json::ValueType::uintValue:
-            case Json::ValueType::realValue:
-            case Json::ValueType::booleanValue:
-                system_values[name] = Value(json_value.asDouble());
-            break;
-        
-            case Json::ValueType::stringValue:
-                 system_values[name] = Value(json_value.asString());
-            break;
-
-            case Json::ValueType::arrayValue:
-                
-            break;
-
-            case Json::ValueType::objectValue:
-                // Let's create a new SystemValues object for this Json object value
-                std::shared_ptr<SessionValuesObject> sv_obj = 
-                        std::dynamic_pointer_cast<SessionValuesObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("SessionValues"), {}));
-                sv_obj->values = FileSessionObject::getSystemValuesForJSONValue(interpreter, json_value);
-                system_values[name] = Value(sv_obj);
-            break;
-        }
+        system_values[name] = FileSessionObject::getNonNamedValueForJSONValue(interpreter, values[name]);
     }
 
     return system_values;
+}
+
+std::string FileSessionObject::parseValueToJson(Value &value)
+{
+    std::string json_string = "";
+    switch (value.type)
+    {
+    case VALUE_TYPE_NUMBER:
+        json_string += std::to_string(value.dvalue);
+        break;
+
+    case VALUE_TYPE_STRING:
+        json_string += "\"" + value.svalue + "\"";
+        break;
+
+    case VALUE_TYPE_OBJECT:
+        if (value.type_str == "array")
+        {
+            json_string += "[";
+            std::shared_ptr<Array> array_obj = std::dynamic_pointer_cast<Array>(value.ovalue);
+            for (int i = 0; i < array_obj->count; i++)
+            {
+               std::shared_ptr<CommonModule_Value> v_obj = std::dynamic_pointer_cast<CommonModule_Value>(array_obj->variables[i].value.ovalue);
+               if (v_obj == NULL)
+               {
+                   json_string += "null";
+               }
+               else
+               {
+                   json_string += FileSessionObject::parseValueToJson(v_obj->value);
+               }
+               json_string += ",";
+            }
+            json_string = trim_right(json_string, ",");
+            json_string += "]";
+            std::cout << json_string << std::endl;
+        }
+        else
+        {
+            std::shared_ptr<SessionValuesObject> jv_obj = std::dynamic_pointer_cast<SessionValuesObject>(value.ovalue);
+            json_string += FileSessionObject::parseMapToJson(jv_obj->values);
+        }
+        break;
+    }
+
+    return json_string;
+}
+
+std::string FileSessionObject::parseMapToJson(std::map<std::string, Value> map)
+{
+    std::string json_string = "{";
+    for (auto it = map.begin(); it != map.end(); it++)
+    {
+        std::string key = it->first;
+        Value &value = it->second;
+        json_string += "\"" + key + "\":";
+        
+        json_string += FileSessionObject::parseValueToJson(value);
+
+        if (it != std::prev(map.end()))
+        {
+            json_string += ",";
+        }
+    }
+
+    json_string += "}";
+
+    return json_string;
 }
 
 void FileSessionObject::FileSession_Create(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
@@ -127,41 +222,6 @@ void FileSessionObject::FileSession_Create(Interpreter* interpreter, std::vector
     }
 
 
-}
-
-std::string FileSessionObject::parseMapToJson(std::map<std::string, Value> map)
-{
-    std::string new_session_json = "{";
-    for (auto it = map.begin(); it != map.end(); it++)
-    {
-        std::string key = it->first;
-        Value& value = it->second;
-        new_session_json += "\"" + key + "\":";
-        switch(value.type)
-        {
-            case VALUE_TYPE_NUMBER:
-                new_session_json += std::to_string(value.dvalue);
-            break;
-
-            case VALUE_TYPE_STRING:
-                new_session_json += "\"" + value.svalue + "\"";
-            break;
-
-            case VALUE_TYPE_OBJECT:
-                std::shared_ptr<SessionValuesObject> sv_obj = std::dynamic_pointer_cast<SessionValuesObject>(value.ovalue);
-                new_session_json += FileSessionObject::parseMapToJson(sv_obj->values);
-            break;
-        }
-
-        if (it != std::prev(map.end()))
-        {
-            new_session_json += ",";
-        }
-    }
-
-    new_session_json += "}";
-
-    return new_session_json;
 }
 
 void FileSessionObject::FileSession_Save(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)

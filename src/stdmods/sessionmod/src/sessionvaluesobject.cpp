@@ -77,6 +77,16 @@ void SessionValuesObject::registerClass(ModuleSystem *moduleSystem)
      *  function getObject(string name) : SessionValues
      */
     Function *getObject_func = c->registerFunction("getObject", {VarType::fromString("string")}, VarType::fromString("SessionValues"), SessionValuesObject::SessionValues_GetObject);
+
+
+     /**
+     * 
+     * Gets the array for the index provided
+     * 
+     *  function getArray(string name) : array
+     */
+    Function *getArray_func = c->registerFunction("getArray", {VarType::fromString("string")}, VarType::fromString("Value[]"), SessionValuesObject::SessionValues_GetArray);
+
 }
 
 std::shared_ptr<Object> SessionValuesObject::newInstance(Class *c)
@@ -160,3 +170,18 @@ void SessionValuesObject::SessionValues_GetObject(Interpreter *interpreter, std:
 
     return_value->set(sv_obj->values[index_name].ovalue);
 }
+
+
+void SessionValuesObject::SessionValues_GetArray(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
+{
+    std::shared_ptr<SessionValuesObject> sv_obj = std::dynamic_pointer_cast<SessionValuesObject>(object);
+    std::string index_name = values[0].svalue;
+    sv_obj->ensureIndexExists(interpreter, index_name);
+
+    Value &v = sv_obj->values[index_name];
+    if (v.type != VALUE_TYPE_OBJECT || v.type_str != "array")
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {})), "The index with the name \"" + index_name + "\" is not an array");
+
+    return_value->set(sv_obj->values[index_name].ovalue);
+}
+
