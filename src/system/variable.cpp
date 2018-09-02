@@ -18,6 +18,7 @@ Variable::Variable()
 
 Variable::~Variable()
 {
+
 }
 
 int Variable::getVariableTypeForString(std::string str)

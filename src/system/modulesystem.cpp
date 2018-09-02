@@ -44,7 +44,7 @@ ModuleSystem::ModuleSystem(ClassSystem* classSystem, FunctionSystem* baseFunctio
 
 ModuleSystem::~ModuleSystem()
 {
-
+    unloadModules();
 }
 
 void ModuleSystem::addModule(Module* module)
@@ -66,8 +66,19 @@ Module* ModuleSystem::loadModule(const char* filename)
     Module* module = init();
     if (!module)
         throw std::logic_error("The module: " + std::string(filename) + " returned a NULL module upon calling its init method \"marble_mod_init\"");
+    
+    module->setFilename(filename);
+    module->setModulePointer(module_ptr);
     addModule(module);
     return module;
+}
+
+void ModuleSystem::unloadModules()
+{
+    for (Module* module : this->modules)
+    {
+        delete module;
+    }
 }
 
 void ModuleSystem::tellModules(Interpreter* interpreter)

@@ -194,6 +194,10 @@ Value FunctionCallNode::interpret(Interpreter *interpreter, struct extras extra)
     if (function == NULL)
     {
         Value except_value;
+        for (Function* function : functionSystem->getFunctions())
+        {
+            std::cout << "FUNCTION: " << function->name << std::endl;
+        }
         except_value.set("The function with the name " + name->value + " has not been registered");
         throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("EntityNotRegisteredException"), {except_value})));
     }

@@ -23,6 +23,7 @@ Class::Class(SystemHandler *sys_handler, std::string name, Class *parent, std::s
 
 Class::~Class()
 {
+
 }
 
 Class *Class::getClassWhoHasVariable(std::string name)

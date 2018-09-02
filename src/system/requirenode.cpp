@@ -51,10 +51,10 @@ void RequireNode::test(Validator* validator, struct extras extra)
     {
         throw TestError("There was a problem requiring the file: " + this->filename + ", message: " + ex.what());
     }
-    catch(...)
+  /*  catch(...)
     {
         throw TestError("There was a problem requiring the file: " + this->filename + " we do not know why");
-    }
+    }*/
 
 }
 

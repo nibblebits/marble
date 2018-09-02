@@ -7,12 +7,14 @@
 
 FileModule_FileInputStream::FileModule_FileInputStream(Class* c) : CommonModule_InputStream(c)
 {
-
+    this->file = NULL;
 }
+
 FileModule_FileInputStream::~FileModule_FileInputStream()
 {
 
 }
+
 std::shared_ptr<Object> FileModule_FileInputStream::newInstance(Class* c)
 {
     return std::make_shared<FileModule_FileInputStream>(c);
@@ -38,9 +40,8 @@ void FileModule_FileInputStream::FileInputStream_Fill(Interpreter* interpreter, 
     if (stream->file == NULL)
         throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))));
     
-    // Let's get the FileModule_File and get the native FILE* and write this buffer
-    std::shared_ptr<FileModule_File> file_obj = stream->file;
-    FILE* file = file_obj->fp;
+    // Let's get the native FILE* and write this buffer
+    FILE* file = stream->file;
 
     int amount = (int)arguments[0].dvalue;
     char buf[amount];

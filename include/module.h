@@ -14,6 +14,10 @@ public:
     MODULE_TYPE getType();
     void log(std::string message, LOG_TYPE type);
     void setModuleSystem(ModuleSystem* moduleSystem);
+    void setFilename(std::string filename);
+    std::string getFilename();
+    void setModulePointer(void* module_ptr);
+    void* getModulePointer();
     ModuleSystem* getModuleSystem();
     /**
      * The newInterpreter method is called when a new Interpreter is created that may or may not have access to this module in the future.
@@ -25,6 +29,9 @@ private:
     MODULE_TYPE type;
     std::string descriptor;
     std::string name;
+    std::string filename;
+    // The pointer to the library loaded with dlopen
+    void* module_ptr;
     ModuleSystem* moduleSystem;
 };
 #endif

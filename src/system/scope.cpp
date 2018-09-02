@@ -126,8 +126,6 @@ void Scope::removeVariable(Variable* variable)
 {
      variables.erase(std::remove_if(variables.begin(), variables.end(),
                        [&](Variable* v) { return v == variable; }), variables.end());
-     unique_variables.erase(std::remove_if(unique_variables.begin(), unique_variables.end(),
-                    [&](std::unique_ptr<Variable>& v) { return v.get() == variable; }), unique_variables.end());
 }
 
 // Events

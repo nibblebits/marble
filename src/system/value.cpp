@@ -324,7 +324,7 @@ bool Value::operator==(const Value &other)
     }
     break;
     default:
-        throw std::logic_error("Unexpected issue when compareing strings, this is a bug please report this");
+        throw std::logic_error("Unexpected issue when compareing strings, this is a bug please report this: " + std::to_string(type) + ", " + std::to_string(other.type));
     }
 }
 bool Value::operator!=(const Value &other)
@@ -350,7 +350,7 @@ bool Value::operator!=(const Value &other)
     }
     break;
     default:
-        throw std::logic_error("Unexpected issue when compareing strings, this is a bug please report this");
+        throw std::logic_error("Unexpected issue when compareing strings, this is a bug please report this: " + std::to_string(type) + ", " + std::to_string(other.type));
     }
 }
 Value Value::operator&&(const Value &other)

@@ -35,8 +35,8 @@ Class *FileModule_File::registerClass(ModuleSystem *moduleSystem)
         std::shared_ptr<FileModule_File> file = std::dynamic_pointer_cast<FileModule_File>(object);
         file->output = std::dynamic_pointer_cast<FileModule_FileOutputStream>(Object::create(moduleSystem->getClassSystem()->getClassByName("FileOutputStream")));
         file->input = std::dynamic_pointer_cast<FileModule_FileInputStream>(Object::create(moduleSystem->getClassSystem()->getClassByName("FileInputStream")));
-        file->output->file = file;
-        file->input->file = file;
+        file->output->file = file->fp;
+        file->input->file = file->fp;
     });
 
     /**

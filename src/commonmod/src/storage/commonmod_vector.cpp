@@ -85,7 +85,8 @@ Class *CommonModule_Vector::registerClass(ModuleSystem *moduleSystem)
 void CommonModule_Vector::Vector_Push(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
     std::shared_ptr<CommonModule_Vector> vector_obj = std::dynamic_pointer_cast<CommonModule_Vector>(object);
-    vector_obj->vec_values.push_back(values[0]);
+    values[0].holder = NULL;
+    vector_obj->vec_values.push_back(Value(&values[0]));
 }
 
 void CommonModule_Vector::Vector_Pop(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)

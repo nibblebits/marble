@@ -36,6 +36,8 @@ public:
      */
     void useFunctionSystem(FunctionSystem* f_system, std::function<void()> call);
 
+    void useScopeAndFunctionSystem(Scope* scope, FunctionSystem* f_system, std::function<void()> call);
+
     /**
     * Gets the last known Object that was accessed. This object will be the value of the object that currently a method is being called on or an attribute being accessed on.. E.g obj.function();
     */

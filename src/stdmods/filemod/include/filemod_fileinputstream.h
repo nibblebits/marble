@@ -12,7 +12,7 @@ public:
     virtual ~FileModule_FileInputStream();
     virtual std::shared_ptr<Object> newInstance(Class* c);
     static Class* registerClass(ModuleSystem* moduleSystem);
-    std::shared_ptr<FileModule_File> file;
+    FILE* file;
 
     // Native FileOutputStream methods
 

@@ -43,8 +43,8 @@ SystemHandler::SystemHandler(SYSTEM_HANDLER_TYPE type, ClassSystem* baseClassSys
 
 SystemHandler::~SystemHandler()
 {
- 
-
+    if (!this->current_obj_stack.empty())
+        throw std::logic_error("SystemHandler destructed but object stack not empty this is a bug");
 }
 
 
@@ -100,6 +100,13 @@ void SystemHandler::useFunctionSystem(FunctionSystem* f_system, std::function<vo
     }
     this->setFunctionSystem(old_fc_sys);
 
+}
+
+void SystemHandler::useScopeAndFunctionSystem(Scope* scope, FunctionSystem* f_system, std::function<void()> call)
+{
+    this->useScope([&] {
+        this->useFunctionSystem(f_system, call);
+    }, scope);
 }
 
 SYSTEM_HANDLER_TYPE SystemHandler::getType()

@@ -57,6 +57,10 @@ void PermissionObject::ensurePermissionValid(Interpreter* interpreter, std::shar
     for (Variable* var : variables)
     {
         Variable* other_permission_var = permission_obj->getVariableAnyScope(var->name);
+        // Ignore this and super we don't want to use them for this permission checking as they are unrelated to the rules
+        if (other_permission_var->name == "this" 
+                || other_permission_var->name == "super")
+            continue;
         if (other_permission_var->value != var->value)
         {
             // The permission values do not match so we must invoke our own __permission_check function to allow or disallow this action

@@ -5,7 +5,7 @@
 #include "filemod_fileoutputstream.h"
 FileModule_FileOutputStream::FileModule_FileOutputStream(Class* c) : CommonModule_OutputStream(c)
 {
-    file = NULL;
+    this->file = NULL;
 }
 
 FileModule_FileOutputStream::~FileModule_FileOutputStream()
@@ -41,9 +41,8 @@ void FileModule_FileOutputStream::FileOutputStream_Flush(Interpreter* interprete
     if (stream->file == NULL)
         throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))));
     
-    // Let's get the FileModule_File and get the native FILE* and write this buffer
-    std::shared_ptr<FileModule_File> file_obj = stream->file;
-    FILE* file = file_obj->fp;
+    // Let's get the FILE* and write this buffer
+    FILE* file = stream->file;
 
     // If the file is not open then lets throw an exception
     if (!file)

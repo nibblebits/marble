@@ -55,7 +55,6 @@ void VarNode::test(Validator *validator, struct extras extra)
 
     if (this->value != NULL)
     {
-        validator->save();
         bool ignore_expecting = false;
         if (Variable::getVariableTypeForString(type_str) == VARIABLE_TYPE_OBJECT && !shouldIgnoreValidation())
         {
@@ -66,12 +65,17 @@ void VarNode::test(Validator *validator, struct extras extra)
             Class *c = validator->getClassSystem()->getClassByName(type_str);
             struct Evaluation evaluation;
             evaluation.extra.accessors_scope = validator->getCurrentScope();
-            this->value->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE, &evaluation);
-            if (c->hasOverloadedOperator("=", evaluation.datatype.value))
+            try
             {
-                ignore_expecting = true;
+                this->value->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE, &evaluation);
+                if (c->hasOverloadedOperator("=", evaluation.datatype.value))
+                {
+                    ignore_expecting = true;
+                }
             }
+            catch(...) {}
         }
+        validator->save();
 
         if (!ignore_expecting)
         {
@@ -159,7 +163,14 @@ bool VarNode::handleOperatorOverloadIfValid(Interpreter *interpreter, std::strin
 
         struct Evaluation evaluation;
         evaluation.extra.accessors_scope = interpreter->getCurrentScope();
-        this->value->evaluate(interpreter, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE, &evaluation);
+        try
+        {
+           this->value->evaluate(interpreter, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE, &evaluation);
+        }
+        catch(...)
+        {
+            return false;
+        }
         if (c->hasOverloadedOperator("=", evaluation.datatype.value))
         {
             /* Ok we have an equal operator that has been overloaded so let's call the overloaded operator function
@@ -207,5 +218,6 @@ Value VarNode::interpret(Interpreter *interpreter, struct extras extra)
     variable->type_name = type_str;
     variable->value.type_str = type_str;
     Value v = variable->value;
+    std::cout << "created variable: " << variable->name << std::endl;
     return v;
 }

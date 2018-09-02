@@ -87,6 +87,9 @@ Interpreter::~Interpreter()
     // Join the threads before we leave
     for (auto &t : this->active_threads)
         t.join();
+
+    std::cout << "INTERPRETER DESTRUCTED" << std::endl;
+
 }
 
 void Interpreter::addThread(std::thread t)
@@ -182,6 +185,7 @@ void Interpreter::setupModuleMarbleFunctions(ModuleSystem *moduleSystem)
         {
             throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(getClassSystem()->getClassByName("IOException"))));
         }
+
     });
 }
 
@@ -332,9 +336,7 @@ void Interpreter::createDefaultClassesAndFunctions()
 
     getFunctionSystem()->registerFunction("getCallerPermissions", {}, VarType::fromString("Permissions"), [&](Interpreter *interpreter, std::vector<Value> arguments, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope) {
         return_value->type = VALUE_TYPE_OBJECT;
-        // The _caller_permissions variable is a special variable registered when calling a function. It only exists for the scope of the function
-        // You can find this at function.cpp
-        return_value->ovalue = interpreter->getCurrentScope()->getVariableAnyScope("_caller_permissions")->value.ovalue;
+        return_value->ovalue = interpreter->getCallerPermissions();
     });
 }
 
@@ -396,6 +398,24 @@ void Interpreter::run(const char *code, PosInfo posInfo, bool ignore_validation)
 void Interpreter::fail()
 {
     throw std::logic_error("Something has gone terribly wrong, semantic validation has clearly messed up. Please report this");
+}
+
+
+void Interpreter::setCallerPermissions(std::shared_ptr<PermissionsObject> perms_obj)
+{
+    this->caller_permissions.push_back(this->caller_permission);
+    this->caller_permission = perms_obj;
+}
+
+void Interpreter::finishCallerPermissions()
+{
+    this->caller_permission = this->caller_permissions.back();
+    this->caller_permissions.pop_back();
+}
+
+std::shared_ptr<PermissionsObject> Interpreter::getCallerPermissions()
+{
+    return this->caller_permission;
 }
 
 void Interpreter::handleLineAndColumn(PosInfo &posInfo, const char *data, int length)

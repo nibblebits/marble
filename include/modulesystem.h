@@ -36,6 +36,11 @@ public:
      * Tell's all the modules about this newly existing Interpreter.
      */
     void tellModules(Interpreter* interpreter);
+
+    /**
+     * Unloads the modules apart of this ModuleSystem. If the same module is in multiple ModuleSystems it won't be a good idea to call this
+     */
+    void unloadModules();
 private:
     std::vector<Module*> modules;
     LOG_HANDLER_FUNCTION log_handler;

@@ -22,6 +22,7 @@ public:
     
     // The scope this is a part of. For example if this variable is declared in an IF statement the scope will be the IF statement scope.
     Scope* scope;
+    
     // The object this variable is a part of. NULL if there is no object.
     Object* object;
     

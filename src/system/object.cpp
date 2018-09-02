@@ -12,6 +12,13 @@
 
 Object::Object(Class *c) : Object(c, NULL)
 {
+    Variable* this_var = createVariable();
+    this_var->type = VARIABLE_TYPE_OBJECT;
+    this_var->type_name = getClass()->name;
+    this_var->name = "this";
+    this_var->value.holder = this_var;
+    Variable *super_var = cloneCreate(this_var);
+    super_var->name = "super";
 }
 
 Object::Object(Class *c, std::shared_ptr<PermissionsObject> permissions) : Scope(permissions)
@@ -62,12 +69,14 @@ std::shared_ptr<Object> Object::create(Interpreter *interpreter, Class *object_c
         except_value.set("The class provided has not been registered");
         throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("EntityNotRegisteredException"), {except_value})));
     }
+
     std::shared_ptr<Object> object = object_class->getDescriptorObject()->newInstance();
     // The constructor must now be called
     Function *constructor = object_class->getFunctionByName("__construct");
 
     // The caller scope will be the scope before invoking the constructor
     Scope *caller_scope = interpreter->getCurrentScope();
+    std::cout << "CLASS NAME: " << object_class->name << std::endl;
 
     // Before calling the function we must also setup the permissions for this object. The permissions will be inherited from the scope thats creating this object
     object->permissions = caller_scope->permissions;
@@ -194,24 +203,21 @@ void Object::runThis(std::function<void()> function, SystemHandler *sys_handler,
 void Object::onEnterScope()
 {
     // Let's create the "this" and "super" variables when entering scope
-    Variable *variable = createVariable();
-    variable->type = VARIABLE_TYPE_OBJECT;
-    variable->type_name = getClass()->name;
-    variable->name = "this";
-    variable->value.ovalue = shared_from_this();
-    variable->value.holder = variable;
 
-    variable = cloneCreate(variable);
-    variable->name = "super";
+    Variable *this_var = getVariable("this");
+    Variable *super_var = getVariable("super");
+    this_var->value.ovalue = shared_from_this();
+    super_var->value.ovalue = shared_from_this();
 }
 
 void Object::onLeaveScope()
 {
-    /* To avoid memory leaks we need to remove the "this" and "super" variables upon leaving scope. This is because the shared_ptr will point to its self otherwise.
-    * another reason for removing these variables is to prevent outside access to them.
+    /* To avoid memory leaks we need to remove the object references for this and super.
     */
-    removeVariable(getVariable("this"));
-    removeVariable(getVariable("super"));
+    Variable *this_var = getVariable("this");
+    Variable *super_var = getVariable("super");
+    this_var->value.ovalue = NULL;
+    super_var->value.ovalue = NULL;
 }
 
 void Object::newRun()

@@ -108,6 +108,20 @@ public:
     void handleLineAndColumn(PosInfo& posInfo, const char* data, int length);
 
     /**
+     * Sets the new caller permissions
+     */
+    void setCallerPermissions(std::shared_ptr<PermissionsObject> perms_obj);
+    /**
+     * Finishes the current caller permissions. This is called after a function call
+     */
+    void finishCallerPermissions();
+
+    /**
+     * Returns the current caller permissions
+     */
+    std::shared_ptr<PermissionsObject> getCallerPermissions();
+
+    /**
      * Registers the default object class in the class_system provided and returns the Class.
      * \note This does not set the default object descriptor in the class_system you must do this manually.
      */
@@ -213,6 +227,11 @@ private:
     std::vector<std::string> nested_scripts_run;
     std::vector<std::string> scripts_run;
     std::vector<struct stack_log_part> stack_log;
+
+    // Function call permissions stack
+    std::vector<std::shared_ptr<PermissionsObject>> caller_permissions;
+    // The current caller permission
+    std::shared_ptr<PermissionsObject> caller_permission;
 
     // The registered sql drivers for this interpreter instance
     std::vector<std::shared_ptr<CommonModule_SqlDriver>> sql_drivers;

@@ -45,6 +45,8 @@ Value OutputFilterNode::interpret(Interpreter* interpreter, struct extras extra)
     catch(...)
     {
         interpreter->finish_parented_scope();
+        Value v;
+        return v;
     }
 
     interpreter->finish_parented_scope();

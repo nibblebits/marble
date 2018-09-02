@@ -162,7 +162,7 @@ void Splitter::free()
 
     if (this->data != NULL)
     {
-        delete this->data;
+        delete[] this->data;
         this->data = NULL;
     }
 

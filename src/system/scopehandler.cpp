@@ -17,6 +17,7 @@ ScopeHandler::ScopeHandler()
 ScopeHandler::~ScopeHandler()
 {
     finish_parented_scope();
+    std::cout << "SCOPE HANDLER DESTRUCTED" << std::endl;
 }
 
 Scope* ScopeHandler::getCurrentScope()

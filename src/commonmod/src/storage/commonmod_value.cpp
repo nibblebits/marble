@@ -130,6 +130,7 @@ void CommonModule_Value::Value_AssignmentSet(Interpreter* interpreter, std::vect
 {
     std::shared_ptr<CommonModule_Value> new_value_obj
                      = std::dynamic_pointer_cast<CommonModule_Value>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("Value"), {}));
+    values[0].holder = NULL;
     new_value_obj->value = values[0];
     return_value->set(new_value_obj);
 }
@@ -137,6 +138,7 @@ void CommonModule_Value::Value_AssignmentSet(Interpreter* interpreter, std::vect
 void CommonModule_Value::Value_Set(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
 {
     std::shared_ptr<CommonModule_Value> vobject = std::dynamic_pointer_cast<CommonModule_Value>(object);
+    values[0].holder = NULL;
     vobject->value = values[0];
 }
 

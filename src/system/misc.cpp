@@ -61,11 +61,11 @@ void CloneForCall(const void *ptr, int size, int new_size, std::function<void(co
 	try
 	{
 		func((const void *)cloned_data, new_size);
-		delete cloned_data;
+		delete[] cloned_data;
 	}
 	catch (...)
 	{
-		delete cloned_data;
+		delete[] cloned_data;
 		throw;
 	}
 }

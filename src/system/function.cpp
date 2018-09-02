@@ -53,16 +53,13 @@ void Function::invoke(Interpreter* interpreter, std::vector<Value> values, Value
     {
         // Lets create a new parented scope for any extras before the invoke
         interpreter->new_parented_scope();
-        // Before invoking lets create a variable called caller_permissions that will hold the permissions of the caller of this function
-        // The _caller_permissions variable will not be accessible directly as it would not exist at validation time. You can get the permissions
-        // by calling getCallerPermissions() from within marble.
-        // This function is registered inside the Interpreter class.
-        #warning I want to create a better way of doing this, it is not ideal what so ever as we have a bit of a hack here where we check the function isnt getCallerPermissions
-        if (this->name != "getCallerPermissions")
-        {
-            interpreter->getCurrentScope()->createVariable("_caller_permissions", "Permissions", caller_scope->permissions);
-        }
+        /**
+         * Before invoking the function we must tell the interpreter the current caller permissions
+         */
+        interpreter->setCallerPermissions(caller_scope->permissions);
         this->invoke_impl(interpreter, values, return_value, object, caller_scope);
+        interpreter->finishCallerPermissions();
+        
         interpreter->finish_parented_scope();
     }
     catch(SystemException& ex)

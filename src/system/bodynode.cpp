@@ -48,7 +48,6 @@ void BodyNode::test(Validator *validator, SCOPE_PROPERTIES scope_properties)
     {
         if (this->node_listener_function != NULL)
         {
-
             NODE_LISTENER_ACTION action = this->node_listener_function(current_node);
             if (action == NODE_LISTENER_ACTION_LEAVE)
                 break;

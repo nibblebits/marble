@@ -33,7 +33,6 @@ Validator::Validator(Logger* logger, Interpreter* interpreter) : SystemHandler(S
 
 Validator::~Validator()
 {
-
 }
 
 

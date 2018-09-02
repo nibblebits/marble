@@ -17,7 +17,7 @@ void IfStatementNode::test(Validator* validator, struct extras extra)
 {
     try
     {
-    	this->exp->test(validator);
+    	//this->exp->test(validator);
    	    this->body->test(validator);
     }
     catch(TestError& ex)

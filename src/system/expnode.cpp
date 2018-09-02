@@ -15,6 +15,7 @@
 #include "operator.h"
 #include "function.h"
 #include "class.h"
+#include <unistd.h>
 #include <iostream>
 #include <memory>
 ExpNode::ExpNode() : ExpressionInterpretableNode(NODE_TYPE_EXPRESSION)
@@ -240,6 +241,7 @@ Value ExpNode::interpret(Interpreter *interpreter, struct extras extra)
         if (left_v.holder != NULL)
         {
             // If the left variables name is "super" then we must be accessing a super-class and we should take the parent's class.
+            std::cout << "CLASS NAME: " << left_v.ovalue->getClass()->name << std::endl;
             if (left_v.holder->name == "super")
                 c = obj->getClass()->parent;
         }

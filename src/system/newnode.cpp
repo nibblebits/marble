@@ -80,6 +80,7 @@ void NewNode::test_for_object(Validator* validator)
                 }
             }
             validator->restore();
+
         }
     }
 }

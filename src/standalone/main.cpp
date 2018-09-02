@@ -85,7 +85,7 @@ int main(int argc, char** argv)
     if (argc < 2)
         throw std::logic_error("You must provide a filename");
     interpret(argv[1]);
-
+    
     delete baseHandler;
     delete moduleSystem;
     return 0;
