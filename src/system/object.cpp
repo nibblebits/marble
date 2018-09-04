@@ -43,7 +43,7 @@ Object::Object(Class *c, std::shared_ptr<PermissionsObject> permissions) : Scope
     }
 
     if (this->sys_handler != NULL)
-        prev = sys_handler->getRootScope();
+        prev = sys_handler->getGlobalScope();
 
     this->is_running = false;
 }
@@ -71,8 +71,7 @@ std::shared_ptr<Object> Object::create(Interpreter *interpreter, Class *object_c
     }
 
     std::shared_ptr<Object> object = object_class->getDescriptorObject()->newInstance();
-    // Let's set this objects previous scope to our current scope
-    object->prev = interpreter->getGlobalScope();
+
     // The constructor must now be called
     Function *constructor = object_class->getFunctionByName("__construct");
 
