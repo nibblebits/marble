@@ -23,7 +23,6 @@ FileModule_File::~FileModule_File()
         fclose(this->fp);
 }
 
-
 Class *FileModule_File::registerClass(ModuleSystem *moduleSystem)
 {
     Class *c = moduleSystem->getClassSystem()->registerClass("File");
@@ -102,7 +101,8 @@ void FileModule_File::File_Open(Interpreter *interpreter, std::vector<Value> val
 
     FILE *fp = fopen(filename.c_str(), mode.c_str());
     std::shared_ptr<FileModule_File> file_obj = std::dynamic_pointer_cast<FileModule_File>(object);
-
+    file_obj->input->file = fp;
+    file_obj->output->file = fp;
     file_obj->fp = fp;
     file_obj->filename = filename;
     return_value->dvalue = fp != NULL;
@@ -111,9 +111,12 @@ void FileModule_File::File_Open(Interpreter *interpreter, std::vector<Value> val
 void FileModule_File::File_Close(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object)
 {
     std::shared_ptr<FileModule_File> file_obj = std::dynamic_pointer_cast<FileModule_File>(object);
+    file_obj->input->file = NULL;
+    file_obj->output->file = NULL;
     int response = (file_obj->fp == NULL ? 1 : fclose(file_obj->fp));
     if (response != 0)
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to close file");
+    file_obj->fp = NULL;
 }
 
 void FileModule_File::File_setPosition(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object)
@@ -121,7 +124,7 @@ void FileModule_File::File_setPosition(Interpreter *interpreter, std::vector<Val
     std::shared_ptr<FileModule_File> file_obj = std::dynamic_pointer_cast<FileModule_File>(object);
     int response = (file_obj->fp == NULL ? 1 : fseek(file_obj->fp, values[0].dvalue, SEEK_SET));
     if (response != 0)
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to set file position");
 }
 
 void FileModule_File::File_GetSize(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object)
@@ -141,7 +144,7 @@ void FileModule_File::File_Move(Interpreter *interpreter, std::vector<Value> val
         throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to rename " + filename + " to " + dst_filename);
 }
 
-void FileModule_File::File_IsFile(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+void FileModule_File::File_IsFile(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
     return_value->set(isFile(values[0].svalue));
 }
