@@ -34,6 +34,34 @@ Class* CommonModule_Value::registerClass(ModuleSystem* moduleSystem)
     Function* constructor = c->registerFunction("__construct", {}, VarType::fromString("void"), Function::Blank);
 
     /**
+     * 
+     * @class Value
+     * Constructs this Value object and sets its value to the provided string
+     * 
+     * function __construct(string str_value) : void
+     */
+    constructor = c->registerFunction("__construct", {VarType::fromString("string")}, VarType::fromString("void"), CommonModule_Value::Value_Set);
+
+    /**
+     * 
+     * @class Value
+     * Constructs this Value object and sets its value to the provided number
+     * 
+     * function __construct(number number_value) : void
+     */
+    constructor = c->registerFunction("__construct", {VarType::fromString("number")}, VarType::fromString("void"), CommonModule_Value::Value_Set);
+
+    /**
+     * 
+     * @class Value
+     * Constructs this Value object and sets its value to the provided Object
+     * 
+     * function __construct(Object object_value) : void
+     */
+    constructor = c->registerFunction("__construct", {VarType::fromString("Object")}, VarType::fromString("void"), CommonModule_Value::Value_Set);
+
+
+    /**
      * function set(string value) : void
      * 
      * Set's this Value object to have a string value
