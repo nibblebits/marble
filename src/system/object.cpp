@@ -71,6 +71,8 @@ std::shared_ptr<Object> Object::create(Interpreter *interpreter, Class *object_c
     }
 
     std::shared_ptr<Object> object = object_class->getDescriptorObject()->newInstance();
+    // Let's set this objects previous scope to our current scope
+    object->prev = interpreter->getGlobalScope();
     // The constructor must now be called
     Function *constructor = object_class->getFunctionByName("__construct");
 
