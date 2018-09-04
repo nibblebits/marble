@@ -42,8 +42,7 @@ Object::Object(Class *c, std::shared_ptr<PermissionsObject> permissions) : Scope
         current = current->parent;
     }
 
-    if (this->sys_handler != NULL)
-        prev = sys_handler->getGlobalScope();
+    this->prev = NULL;
 
     this->is_running = false;
 }
@@ -172,6 +171,11 @@ void Object::runThis(std::function<void()> function, SystemHandler *sys_handler,
     old_scope = sys_handler->getCurrentScope();
     if (access_type == OBJECT_ACCESS_TYPE_OBJECT_ACCESS)
         sys_handler->setCurrentObject(shared_from_this(), c);
+    Scope *old_prev_scope = this->prev;
+
+    // We must set our objects previous scope to the system handlers global scope so global variables are recognized
+    this->prev = sys_handler->getGlobalScope();
+    
     sys_handler->setCurrentScope(this);
     sys_handler->setFunctionSystem(c);
 
@@ -187,6 +191,10 @@ void Object::runThis(std::function<void()> function, SystemHandler *sys_handler,
             sys_handler->finishCurrentObject();
         sys_handler->setCurrentScope(old_scope);
         sys_handler->setFunctionSystem(old_fc_system);
+        if (old_scope != this)
+        {
+            this->prev = old_prev_scope;
+        }
         finishRun();
         throw;
     }
@@ -197,6 +205,9 @@ void Object::runThis(std::function<void()> function, SystemHandler *sys_handler,
     sys_handler->setCurrentScope(old_scope);
     sys_handler->setFunctionSystem(old_fc_system);
 
+    // Let's restore our previous scope
+    this->prev = old_prev_scope;
+    
     finishRun();
 }
 
