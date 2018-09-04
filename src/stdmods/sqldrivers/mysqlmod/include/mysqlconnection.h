@@ -15,6 +15,7 @@ public:
     // Native MysqlConnection functions
     static void MysqlConnection_Construct(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
     static void MysqlConnection_Close(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
+    static void MysqlConnection_getInsertId(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope);
 
     MYSQL* mysql_connection;
 };

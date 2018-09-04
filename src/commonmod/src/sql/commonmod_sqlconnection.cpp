@@ -25,6 +25,11 @@ std::shared_ptr<Object> CommonModule_SqlConnection::newInstance(Class* c)
 Class* CommonModule_SqlConnection::registerClass(ModuleSystem* moduleSystem)
 {
     moduleSystem->getClassSystem()->registerClass("SQLConnectionException", moduleSystem->getClassSystem()->getClassByName("Exception"));
+    /**
+     * class SQLConnection
+     * 
+     * The SQLConnection class is the base class of all SQLConnection's and contains base class information such as pure methods
+     */
     Class* c = moduleSystem->getClassSystem()->registerClass("SQLConnection");
     c->setDescriptorObject(std::make_shared<CommonModule_SqlConnection>(c));
     c->is_pure = true;
@@ -33,6 +38,7 @@ Class* CommonModule_SqlConnection::registerClass(ModuleSystem* moduleSystem)
     c->registerFunction("getPreparedStatement", {}, VarType::fromString("PreparedStatement"), CommonModule_SqlConnection::SQLConnection_getPreparedStatement);
 
     /**
+     * @SQLConnection
      * Escapes the given value to protect against sql injection and returns the escaped value
      * 
      * function escape(string value) : string
@@ -40,7 +46,17 @@ Class* CommonModule_SqlConnection::registerClass(ModuleSystem* moduleSystem)
     c->registerFunction("escape", {VarType::fromString("string")}, VarType::fromString("string"), CommonModule_SqlConnection::SQLConnection_Escape);
 
     /**
-     * @class SQLDriver
+     * @SQLConnection
+     * Returns the last insert id to the database for this SQLConnection.
+     * This should be implemented by SQL Driver connections that handle insert ids
+     * 
+     * function getInsertId() : number
+     */
+    c->registerFunction("getInsertId", {}, VarType::fromString("number"), Function::Blank);
+
+
+    /**
+     * @class SQLConnection
      * 
      * Closes this connection to the database
      * pure function close() : void
