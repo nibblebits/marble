@@ -25,6 +25,7 @@ public:
      */
     virtual void newInterpreter(Interpreter* interpreter) = 0;
     virtual void Init() = 0;
+    virtual void unload();
 private:
     MODULE_TYPE type;
     std::string descriptor;

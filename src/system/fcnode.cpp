@@ -58,8 +58,6 @@ void FunctionCallNode::test(Validator *validator, struct extras extra)
         return;
     }
 
-    std::cout << "TESTING FUNCTION: " << this->name->value << std::endl;
-
     /*
     * If the accessors scope is NULL then we will default to the current validators scope
     */
@@ -85,10 +83,6 @@ void FunctionCallNode::test(Validator *validator, struct extras extra)
     {
         if (!function_sys->hasFunction(this->name->value))
         {
-            std::cout << extra.is_object_exp << std::endl;
-            if (function_sys == validator->getGlobalFunctionSystem())
-                std::cout << "IS GLOBAL YES" << std::endl;
-
             throw TestError("The function \"" + this->name->value + "\" has not been declared");
         }
         throw TestError("The function \"" + this->name->value + "\" has not been declared that takes the given arguments");
@@ -194,10 +188,6 @@ Value FunctionCallNode::interpret(Interpreter *interpreter, struct extras extra)
     if (function == NULL)
     {
         Value except_value;
-        for (Function* function : functionSystem->getFunctions())
-        {
-            std::cout << "FUNCTION: " << function->name << std::endl;
-        }
         except_value.set("The function with the name " + name->value + " has not been registered");
         throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("EntityNotRegisteredException"), {except_value})));
     }

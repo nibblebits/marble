@@ -34,8 +34,8 @@ public:
     void removeVariable(Variable* variable);
     
     // Events
-    virtual void onEnterScope();
-    virtual void onLeaveScope();
+    virtual void onEnterScope(bool tell_parents);
+    virtual void onLeaveScope(bool tell_parents);
     
     // Returns weather this scope is nested in the scope provided.
     bool isNestedInScope(Scope* scope);
@@ -49,6 +49,7 @@ public:
 
     // The permissions for this scope, defaulted to NULL.
     std::shared_ptr<PermissionsObject> permissions;
+
 private:
     std::vector<Variable*> variables;
     Variable* last_registered_variable;

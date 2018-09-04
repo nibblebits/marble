@@ -6,6 +6,7 @@
 #include "filepermission.h"
 #include "misc.h"
 #include "exceptionobject.h"
+#include "debug.h"
 #include "exceptions/systemexception.h"
 #include "exceptions/IOException.h"
 #include "object.h"
@@ -38,6 +39,7 @@ Value IncludeNode::interpret(Interpreter* interpreter, struct extras extra)
     FilePermission::checkPermissionAllows(interpreter, interpreter->getCurrentScope(), absolute_path.c_str(), "r");
     
     interpreter->new_parented_scope();
+
     try
     {
         if (interpreter->isNestedScript(v.svalue))

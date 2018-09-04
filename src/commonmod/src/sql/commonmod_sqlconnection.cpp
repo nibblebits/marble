@@ -38,6 +38,15 @@ Class* CommonModule_SqlConnection::registerClass(ModuleSystem* moduleSystem)
      * function escape(string value) : string
      */
     c->registerFunction("escape", {VarType::fromString("string")}, VarType::fromString("string"), CommonModule_SqlConnection::SQLConnection_Escape);
+
+    /**
+     * @class SQLDriver
+     * 
+     * Closes this connection to the database
+     * pure function close() : void
+     */
+    Function* close_function = c->registerFunction("close", {}, VarType::fromString("void"), Function::Blank);
+    close_function->is_pure = true;
 }
 
 

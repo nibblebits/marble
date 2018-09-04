@@ -87,9 +87,6 @@ Interpreter::~Interpreter()
     // Join the threads before we leave
     for (auto &t : this->active_threads)
         t.join();
-
-    std::cout << "INTERPRETER DESTRUCTED" << std::endl;
-
 }
 
 void Interpreter::addThread(std::thread t)
@@ -185,7 +182,6 @@ void Interpreter::setupModuleMarbleFunctions(ModuleSystem *moduleSystem)
         {
             throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(getClassSystem()->getClassByName("IOException"))));
         }
-
     });
 }
 
@@ -340,15 +336,38 @@ void Interpreter::createDefaultClassesAndFunctions()
     });
 }
 
-void Interpreter::setupValidator()
+void Interpreter::setupValidator(Scope **previous_scope, std::unique_ptr<Scope>& validators_new_scope)
 {
+    #warning This method is not so great and should be written better. TODO another time
+    *previous_scope = NULL;
     if (validator == NULL)
     {
         validator = std::unique_ptr<Validator>(new Validator(&logger, this));
+        // We must set the validators previous root scope to our interpreters scope so that native variables are recognised
+        validator->getRootScope()->prev = this->getCurrentScope();
+        return;
     }
 
-    // We must set the validators previous scope to our own so that native variables are recognised.
-    validator->getRootScope()->prev = this->getCurrentScope();
+    /* The validator has already been setup before so let's now create a new scope for the validator 
+     * this scope will be a fresh new scope whose previous node is to the interpreters current scope
+     * pointing to previous variables. This helps "include" statements work correctly */
+    *previous_scope = validator->getCurrentScope();
+    Scope* scope = new Scope(NULL);
+    scope->prev = this->getCurrentScope();
+    validator->setCurrentScope(scope);
+    validators_new_scope = std::unique_ptr<Scope>(scope);
+
+}
+
+void Interpreter::finishValidator(Scope *previous_scope)
+{
+    #warning This method is not so great and should be written better. TODO another time
+
+    // Ignore NULL scopes
+     if (previous_scope == NULL) return;
+    validator->setCurrentScope(previous_scope);
+
+
 }
 
 Validator *Interpreter::getValidator()
@@ -367,7 +386,10 @@ void Interpreter::run(const char *code, PosInfo posInfo, bool ignore_validation)
     }
 
     ready();
-    setupValidator();
+    Scope *validator_root_previous = NULL;
+    std::unique_ptr<Scope> validators_new_scope = NULL;
+    setupValidator(&validator_root_previous, validators_new_scope);
+
     Node *root_node = getAST(code, posInfo);
     InterpretableNode *current_node = (InterpretableNode *)root_node;
     try
@@ -377,13 +399,13 @@ void Interpreter::run(const char *code, PosInfo posInfo, bool ignore_validation)
         // Awesome now lets interpret!
         while (current_node != NULL)
         {
-            Debug::PrintValueForNode(current_node);
             current_node->interpret(this);
             current_node = (InterpretableNode *)current_node->next;
         }
     }
     catch (SystemException &ex)
     {
+        finishValidator(validator_root_previous);
         std::shared_ptr<ExceptionObject> rex = std::dynamic_pointer_cast<ExceptionObject>(ex.getObject());
         logger.error("System threw a " + rex->getClass()->name + ", message: " + rex->getMessage(), current_node->posInfo);
     }
@@ -393,13 +415,14 @@ void Interpreter::run(const char *code, PosInfo posInfo, bool ignore_validation)
         // We are done reset the execution time
         this->execution_started = 0;
     }
+
+    finishValidator(validator_root_previous);
 }
 
 void Interpreter::fail()
 {
     throw std::logic_error("Something has gone terribly wrong, semantic validation has clearly messed up. Please report this");
 }
-
 
 void Interpreter::setCallerPermissions(std::shared_ptr<PermissionsObject> perms_obj)
 {

@@ -12,7 +12,7 @@
 
 Object::Object(Class *c) : Object(c, NULL)
 {
-    Variable* this_var = createVariable();
+    Variable *this_var = createVariable();
     this_var->type = VARIABLE_TYPE_OBJECT;
     this_var->type_name = getClass()->name;
     this_var->name = "this";
@@ -76,7 +76,6 @@ std::shared_ptr<Object> Object::create(Interpreter *interpreter, Class *object_c
 
     // The caller scope will be the scope before invoking the constructor
     Scope *caller_scope = interpreter->getCurrentScope();
-    std::cout << "CLASS NAME: " << object_class->name << std::endl;
 
     // Before calling the function we must also setup the permissions for this object. The permissions will be inherited from the scope thats creating this object
     object->permissions = caller_scope->permissions;
@@ -200,18 +199,20 @@ void Object::runThis(std::function<void()> function, SystemHandler *sys_handler,
     finishRun();
 }
 
-void Object::onEnterScope()
+void Object::onEnterScope(bool tell_parents)
 {
+    Scope::onEnterScope(tell_parents);
     // Let's create the "this" and "super" variables when entering scope
-
     Variable *this_var = getVariable("this");
     Variable *super_var = getVariable("super");
     this_var->value.ovalue = shared_from_this();
     super_var->value.ovalue = shared_from_this();
 }
 
-void Object::onLeaveScope()
+void Object::onLeaveScope(bool tell_parents)
 {
+    Scope::onLeaveScope(tell_parents);
+
     /* To avoid memory leaks we need to remove the object references for this and super.
     */
     Variable *this_var = getVariable("this");

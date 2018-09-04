@@ -63,8 +63,8 @@ public:
     std::shared_ptr<Object> newInstance();
     virtual std::shared_ptr<Object> newInstance(Class* c);
     void runThis(std::function<void()> function, SystemHandler* handler, Class* c=NULL, OBJECT_ACCESS_TYPE access_type=OBJECT_ACCESS_TYPE_OBJECT_ACCESS, Scope* accessors_scope=NULL);
-    virtual void onEnterScope();
-    virtual void onLeaveScope();
+    virtual void onEnterScope(bool tell_parents);
+    virtual void onLeaveScope(bool tell_parents);
 private:
     void newRun();
     void finishRun();

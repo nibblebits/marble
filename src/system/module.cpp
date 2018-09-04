@@ -14,6 +14,11 @@ Module::~Module()
 
 }
 
+void Module::unload()
+{
+
+}
+
 std::string Module::getName()
 {
     return this->name;

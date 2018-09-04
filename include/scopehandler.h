@@ -34,6 +34,10 @@ private:
      */
     Scope* global_scope;
 
+    /**
+     * This is the parented scope we created on construction
+     */
+    Scope* parented_scope;
 
     /*
     * The action_scope holds the scope that any action is preformed on. For example

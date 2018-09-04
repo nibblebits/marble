@@ -26,3 +26,10 @@ void MysqlModule::newInterpreter(Interpreter* interpreter)
                         = std::dynamic_pointer_cast<MysqlDriver>(Object::create(interpreter->getClassSystem()->getClassByName("MysqlDriver")));
     interpreter->registerSQLDriver(mysql_driver);
 }
+
+
+void MysqlModule::unload()
+{
+    // Shutdown the mysql library
+    mysql_library_end();
+}

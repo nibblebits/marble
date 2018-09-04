@@ -218,6 +218,5 @@ Value VarNode::interpret(Interpreter *interpreter, struct extras extra)
     variable->type_name = type_str;
     variable->value.type_str = type_str;
     Value v = variable->value;
-    std::cout << "created variable: " << variable->name << std::endl;
     return v;
 }

@@ -44,6 +44,7 @@ void MysqlDriver::Init(ModuleSystem* moduleSystem)
      */
     Function* escape = c->registerFunction("escape", {VarType::fromString("SQLConnection"), VarType::fromString("string")}, VarType::fromString("string"), MysqlDriver::MysqlDriver_Escape);
     
+
 }
 
 std::shared_ptr<Object> MysqlDriver::newInstance(Class* c)
@@ -65,7 +66,7 @@ void MysqlDriver::MysqlDriver_Execute(Interpreter* interpreter, std::vector<Valu
 
     // If this MysqlConnection does not have a real Mysql connection then we cannot proceed.
     if (connection->mysql_connection == NULL)
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("SQLConnectionException"))));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("SQLConnectionException"))), "This connection was closed or was never opened");
 
     std::string finalized_query = values[2].svalue;
     // Let's execute the finalized query. mysql_query returns 0 for success
@@ -133,7 +134,6 @@ void MysqlDriver::MysqlDriver_Connect(Interpreter* interpreter, std::vector<Valu
     std::string username = values[1].svalue;
     std::string password = values[2].svalue;
     std::string database = values[3].svalue;
-
     if(!mysql_real_connect(mysql_conn, host.c_str(), username.c_str(), password.c_str(), database.c_str(), 0, NULL, 0))
     {
         throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("SQLConnectionException"))));
@@ -160,6 +160,10 @@ void MysqlDriver::MysqlDriver_Escape(Interpreter* interpreter, std::vector<Value
     std::string value_to_escape = values[1].svalue;
     char escaped[value_to_escape.size()];
     MYSQL* mysql = connection->mysql_connection;
+    if (!mysql)
+    {
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("SQLConnectionException"))), "This connection was closed or was never opened");
+    }
     // Now lets escape that string!
     if(mysql_real_escape_string(mysql, escaped, value_to_escape.c_str(), value_to_escape.size()) == -1)
     {

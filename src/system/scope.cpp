@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <iostream>
 
+
 Scope::Scope(std::shared_ptr<PermissionsObject> permissions)
 {
     this->prev = NULL;
@@ -129,15 +130,19 @@ void Scope::removeVariable(Variable* variable)
 }
 
 // Events
-void Scope::onEnterScope()
+void Scope::onEnterScope(bool tell_parents)
 {
+    if (tell_parents && this->prev != NULL)
+        this->prev->onEnterScope(tell_parents);
 
 }
 
-void Scope::onLeaveScope()
+void Scope::onLeaveScope(bool tell_parents)
 {
-
+    if (tell_parents && this->prev != NULL)
+        this->prev->onLeaveScope(tell_parents);
 }
+
 bool Scope::isNestedInScope(Scope* scope)
 {
     if (scope == NULL)

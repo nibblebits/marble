@@ -179,7 +179,6 @@ enum
     NODE_LISTENER_ACTION_LEAVE,
     NODE_LISTENER_ACTION_IGNORE_NODE
 };
-
 enum
 {
     // Use this state if you want to test only the function declaration

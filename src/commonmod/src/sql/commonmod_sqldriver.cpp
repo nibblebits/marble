@@ -34,7 +34,7 @@ Class* CommonModule_SqlDriver::registerClass(ModuleSystem* moduleSystem)
 
     // function __construct() : void
     c->registerFunction("__construct", {}, VarType::fromString("void"), CommonModule_SqlDriver::SQLDriver_Construct);
-    // function connect(string host, string username, string password, string database) : SQLConnection
+    // pure function connect(string host, string username, string password, string database) : SQLConnection
     Function* connect_function = c->registerFunction("connect", {VarType::fromString("string"),
                                     VarType::fromString("string"),
                                     VarType::fromString("string"),

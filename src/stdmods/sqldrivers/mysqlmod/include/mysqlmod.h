@@ -7,7 +7,8 @@ class MysqlModule : public Module
 public:
     MysqlModule();
     virtual ~MysqlModule();
-    void Init();
+    virtual void Init();
+    virtual void unload();
     void newInterpreter(Interpreter* interpreter);
 private:
   

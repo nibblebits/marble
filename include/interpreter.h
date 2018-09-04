@@ -207,7 +207,19 @@ private:
      * all other resources that do not affect weather the marble interpreter runs correctly or not should not be loaded in this function
      */
     void createDefaultClassesAndFunctions();
-    void setupValidator();
+    /**
+     * Sets up the validator and stores the validators root scope's previous scope into previous_scope.
+     * Also stores the validators new scope into the validators_new_scope variable where this unique pointer should be held
+     * until the validator session is over e.g finishValidator has finished calling
+     * 
+     * Both previous_scope and validators_new_scope are set to NULL on the first ever run and do not hold scopes
+     * this is because this information does not matter for the first run and should not be used
+     */
+    void setupValidator(Scope** previous_scope, std::unique_ptr<Scope>& validators_new_scope);
+    /**
+     * Finishes this validator session
+     */
+    void finishValidator(Scope* previous_scope);
     void setupModuleMarbleFunctions(ModuleSystem* moduleSystem);
     void fail();
     const char* filename;

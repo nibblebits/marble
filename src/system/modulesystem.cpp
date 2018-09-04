@@ -77,6 +77,7 @@ void ModuleSystem::unloadModules()
 {
     for (Module* module : this->modules)
     {
+        module->unload();
         delete module;
     }
 }

@@ -67,7 +67,6 @@ void Validator::validate(Node* root_node)
     {
         try
         {
-            Debug::PrintValueForNode(current_node);
             current_node->test(this);
         } catch(TestError& ex)
         {

@@ -29,6 +29,8 @@ void Debug::PrintVariablesForScope(Scope* scope)
         std::cout << "Variable: " << var->name << std::endl;
     }
     std::cout << "END SCOPE" << std::endl;
+    if (scope->prev != NULL)
+        Debug::PrintVariablesForScope(scope->prev);
 }
 
 void Debug::OutputTabbing(int amount)
