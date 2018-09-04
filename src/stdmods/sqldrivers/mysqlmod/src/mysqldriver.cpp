@@ -72,7 +72,7 @@ void MysqlDriver::MysqlDriver_Execute(Interpreter* interpreter, std::vector<Valu
     // Let's execute the finalized query. mysql_query returns 0 for success
     if (mysql_query(connection->mysql_connection, finalized_query.c_str()))
     {
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("SQLQueryException"))));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("SQLQueryException"))), "Error with query: " + finalized_query);
     } 
 
     // Let's get the result
