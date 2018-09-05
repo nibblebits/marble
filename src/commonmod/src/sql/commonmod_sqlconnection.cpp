@@ -38,7 +38,7 @@ Class* CommonModule_SqlConnection::registerClass(ModuleSystem* moduleSystem)
     c->registerFunction("getPreparedStatement", {}, VarType::fromString("PreparedStatement"), CommonModule_SqlConnection::SQLConnection_getPreparedStatement);
 
     /**
-     * @SQLConnection
+     * @class SQLConnection
      * Escapes the given value to protect against sql injection and returns the escaped value
      * 
      * function escape(string value) : string
@@ -46,7 +46,7 @@ Class* CommonModule_SqlConnection::registerClass(ModuleSystem* moduleSystem)
     c->registerFunction("escape", {VarType::fromString("string")}, VarType::fromString("string"), CommonModule_SqlConnection::SQLConnection_Escape);
 
     /**
-     * @SQLConnection
+     * @class SQLConnection
      * Returns the last insert id to the database for this SQLConnection.
      * This should be implemented by SQL Driver connections that handle insert ids
      * 

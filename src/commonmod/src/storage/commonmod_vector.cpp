@@ -35,6 +35,8 @@ Class *CommonModule_Vector::registerClass(ModuleSystem *moduleSystem)
     c->registerFunction("__construct", {}, VarType::fromString("void"), Function::Blank);
 
     /**
+     * @class Vector
+     * 
      * function push(Value v) : void
      * 
      * Pushes the Value to the Vector
@@ -42,6 +44,8 @@ Class *CommonModule_Vector::registerClass(ModuleSystem *moduleSystem)
     Function *push_function = c->registerFunction("push", {VarType::fromString("Value")}, VarType::fromString("void"), CommonModule_Vector::Vector_Push);
 
     /**
+     * @class Vector
+     * 
      * function pop() : Value
      * 
      * Pops the Value from this Vector and returns it
@@ -49,6 +53,7 @@ Class *CommonModule_Vector::registerClass(ModuleSystem *moduleSystem)
     Function *pop_function = c->registerFunction("pop", {}, VarType::fromString("Value"), CommonModule_Vector::Vector_Pop);
 
     /**
+     * @class Vector
      * function back() : Value
      * 
      * Returns the value at the back of this Vector
@@ -57,6 +62,7 @@ Class *CommonModule_Vector::registerClass(ModuleSystem *moduleSystem)
 
 
     /**
+     * @class Vector
      * function get(number index) : Value
      * 
      * Gets the Value with the provided index from the vector

@@ -140,6 +140,12 @@ public:
     std::vector<struct stack_log_part> getStackTraceLog();
 
     /**
+     * Returns the number of scripts that are running in this Interpreter instance
+     * Include statements in the marble language also cause this to increment for the duration of the include
+     */
+    int getTotalScriptsRunning();
+
+    /**
      * Gets the validator for this Interpreter
      */
     Validator* getValidator();

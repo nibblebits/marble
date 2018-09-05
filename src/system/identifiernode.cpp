@@ -53,7 +53,14 @@ void IdentifierNode::test(Validator* validator, struct extras extra)
     Variable* variable = current_scope->getVariableAnyScope(this->value);
     if (variable == NULL)
     {
-        throw TestError("variable \"" + this->value + "\" is not declared");
+        if (validator->isInClass() && validator->getInterpreter()->getTotalScriptsRunning() >= 2)
+        {
+            throw TestError("variable \"" + this->value + "\" is not declared if you are accessing this variable from within a class and this variable is out of a class this is a problem for files that are included with the \"include\" keyword as you are referencing to a variable that is not apart of the global scope. Therefore it disappears after your include statement has run. Try passing this variable to your object instead therefore maintaining a reference.");
+        }
+        else
+        {
+            throw TestError("variable \"" + this->value + "\" is not declared");
+        }
     }
 
     // We don't really care about variable access unless the variable is in a class. Thats why we check if the object is not NULL

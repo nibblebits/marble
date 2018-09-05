@@ -214,6 +214,11 @@ std::vector<struct stack_log_part> Interpreter::getStackTraceLog()
     return this->stack_log;
 }
 
+int Interpreter::getTotalScriptsRunning()
+{
+    return this->nested_scripts_run.size();
+}
+
 bool Interpreter::hasRunScript(std::string script_address)
 {
     std::string abs_address = getAbsolutePath(script_address);
@@ -525,6 +530,7 @@ void Interpreter::runScript(const char *filename)
     posInfo.line = 1;
     posInfo.col = 1;
 
+
     Splitter splitter = loadScript(filename);
     handleSplitterSplits(splitter, posInfo);
 
@@ -538,7 +544,7 @@ Splitter Interpreter::loadScript(const char *filename)
 {
     if (this->isNestedScript(std::string(filename)))
     {
-        //throw IOException("The script: " + std::string(filename) + " has already run once before in this run session. This script cannot run again as its possible this can result in an infinite loop");
+        throw IOException("The script: " + std::string(filename) + " has already run once before in this run session. This script cannot run again as its possible this can result in an infinite loop");
     }
     this->nested_scripts_run.push_back(getAbsolutePath(filename));
     this->filename = filename;
