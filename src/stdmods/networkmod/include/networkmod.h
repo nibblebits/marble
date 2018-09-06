@@ -13,6 +13,7 @@ public:
     virtual void Init();
     void newInterpreter(Interpreter* interpreter);
 
+    static size_t CurlReadCallback(void *contents, size_t size, size_t nmemb, void *userp);
     static size_t CurlWriteCallback(void *contents, size_t size, size_t nmemb, void *userp);
 private:
 
