@@ -34,6 +34,17 @@ Class *FileModule_Directory::registerClass(ModuleSystem *moduleSystem)
 
     c->registerFunction("create", {VarType::fromString("string")}, VarType::fromString("boolean"), FileModule_Directory::Directory_Create);
     c->registerFunction("list", {VarType::fromString("string")}, VarType::fromString("string[]"), FileModule_Directory::Directory_List);
+
+    /**
+     * @class Directory
+     * 
+     * Deletes the directory with the specified filename. If the directory does not exist, is not empty or is a file or can't be deleted an IOException is thrown.
+     * You require a FilePermission with write access to the directory you are trying to delete for this to succeed otherwise a PermissionException is thrown
+     *
+     * function delete(string filename) : void
+     */
+    c->registerFunction("delete", {VarType::fromString("string")}, VarType::fromString("void"), FileModule_Directory::Directory_Delete);
+
 }
 
 /**
@@ -93,4 +104,15 @@ void FileModule_Directory::Directory_List(Interpreter *interpreter, std::vector<
         }
         return_value->set(std::make_shared<Array>(interpreter->getClassSystem()->getClassByName("array"), variables, entries.size()));
     }
+}
+
+
+void FileModule_Directory::Directory_Delete(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+{
+    // Let's just make sure we have write access to this directory
+    std::string absolute_path = getAbsolutePath(values[0].svalue);
+    FilePermission::checkPermissionAllows(interpreter, caller_scope, absolute_path.c_str(), "w");
+    if(rmdir(absolute_path.c_str()) != 0)
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to delete the directory: " + absolute_path + " is it empty?");
+
 }
