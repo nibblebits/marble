@@ -95,7 +95,10 @@ void FileModule_File::File_Open(Interpreter *interpreter, std::vector<Value> val
     std::string mode = values[1].svalue;
 
     std::string absolute_filename_path = getAbsolutePath(filename);
-
+    if (mode != "r" && mode != "w" && mode != "a")
+    {
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Invalid mode provided: " + mode + " currently you can only read or write files for when you open a file you cannot do both together. Supported modes \"r\" = read, \"w\" = write (overwrite if it exists), \"a\" = append (create if not exists)");
+    }
     // We need to make sure the scope has access to this file
     FilePermission::checkPermissionAllows(interpreter, caller_scope, absolute_filename_path, mode);
 
