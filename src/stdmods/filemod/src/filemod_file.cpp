@@ -78,6 +78,16 @@ Class *FileModule_File::registerClass(ModuleSystem *moduleSystem)
     c->registerFunction("close", {}, VarType::fromString("void"), [&](Interpreter *interpreter, std::vector<Value> arguments, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope) {
         File_Close(interpreter, arguments, return_value, object);
     });
+
+    /**
+     * @class File
+     * 
+     * Deletes the file with the specified filename throws an IOException if it does not exist or the file could not be deleted
+     * 
+     * function delete(string filename) : void
+     */
+    c->registerFunction("delete", {VarType::fromString("string")}, VarType::fromString("void"), FileModule_File::File_Delete);
+
     return c;
 }
 
@@ -150,4 +160,15 @@ void FileModule_File::File_Move(Interpreter *interpreter, std::vector<Value> val
 void FileModule_File::File_IsFile(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
     return_value->set(isFile(values[0].svalue));
+}
+
+void FileModule_File::File_Delete(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+{
+    // Let's make sure we have write access so we can delete this file
+    std::string filename = values[0].svalue;
+    std::string abs_path = getAbsolutePath(filename);
+    FilePermission::checkPermissionAllows(interpreter, caller_scope, abs_path, "w");
+    if(remove(filename.c_str()) != 0)
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "The file: " + filename + " could not be deleted because it either does not exist or you lack the system permissions to do so. You do have marble permissiosn to delete this file");
+  
 }
