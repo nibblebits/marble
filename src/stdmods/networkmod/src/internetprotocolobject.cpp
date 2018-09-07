@@ -44,7 +44,7 @@ void InternetProtocolObject::registerClass(ModuleSystem *moduleSystem)
 void InternetProtocolObject::InternetProtocol_getAddressForHostname(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
     // Ensure that we have network permissions
-    NetworkPermission::ensurePermission(interpreter, caller_scope);
+    NetworkPermission::ensurePermission(interpreter, caller_scope, NETWORK_PERMISSION_LOOKUP_PERMISSION_REQUIRED);
     
     struct hostent *he;
     struct in_addr **addr_list;

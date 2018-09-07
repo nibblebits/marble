@@ -152,6 +152,9 @@ static size_t payload_source(void *ptr, size_t size, size_t nmemb, void *userp)
 
 void SmtpMailObject::SmtpMail_send(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
+    // Let's check we have permission to send emails
+    NetworkPermission::ensurePermission(interpreter, caller_scope, NETWORK_PERMISSION_EMAIL_PERMISSION_REQUIRED);
+    
     /*
      * We now need to tell curl to send our email
      */

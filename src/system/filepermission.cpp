@@ -256,7 +256,7 @@ void FilePermission::FilePermission_PermissionCheck(Interpreter* interpreter, st
 
 void FilePermission::FilePermission_PriorAdd(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
 {
-    std::shared_ptr<FilePermission> file_perm_obj = std::dynamic_pointer_cast<FilePermission>(object);
+    
 }
 
 

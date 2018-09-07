@@ -567,7 +567,7 @@ void CurlObject::Curl_setopt(Interpreter *interpreter, std::vector<Value> values
 void CurlObject::Curl_execute(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
     // Ensure we have permission
-    NetworkPermission::ensurePermission(interpreter, caller_scope);
+    NetworkPermission::ensurePermission(interpreter, caller_scope, NETWORK_PERMISSION_CURL_PERMISSION_REQUIRED);
     
     std::shared_ptr<CurlObject> curl_obj = std::dynamic_pointer_cast<CurlObject>(object);
     // Reset write_data
