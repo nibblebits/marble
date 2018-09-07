@@ -27,6 +27,11 @@ std::shared_ptr<Object> InternetProtocolObject::newInstance(Class *c)
 
 void InternetProtocolObject::registerClass(ModuleSystem *moduleSystem)
 {
+    /**
+     * class InternetProtocol
+     * 
+     * The InternetProtocol class is responsible for resolving hostnames to ip addresses
+     */
     Class *c = moduleSystem->getClassSystem()->registerClass("InternetProtocol");
     c->setDescriptorObject(std::make_shared<InternetProtocolObject>(c));
 
