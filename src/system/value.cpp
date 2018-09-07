@@ -261,6 +261,67 @@ Value Value::operator/(const Value &other)
     return value;
 }
 
+Value Value::operator%(const Value &other)
+{
+    ensure_valid_type(type, {VALUE_TYPE_NUMBER});
+    ensure_valid_type(other.type, {VALUE_TYPE_NUMBER});
+    Value value;
+    value.type = type;
+    value.dvalue = (int)dvalue % (int)other.dvalue;
+    return value;
+}
+
+Value Value::operator&(const Value &other)
+{
+    ensure_valid_type(type, {VALUE_TYPE_NUMBER});
+    ensure_valid_type(other.type, {VALUE_TYPE_NUMBER});
+    Value value;
+    value.type = type;
+    value.dvalue = (int)dvalue & (int)other.dvalue;
+    return value;
+}
+
+Value Value::operator|(const Value &other)
+{
+    ensure_valid_type(type, {VALUE_TYPE_NUMBER});
+    ensure_valid_type(other.type, {VALUE_TYPE_NUMBER});
+    Value value;
+    value.type = type;
+    value.dvalue = (int)dvalue | (int)other.dvalue;
+    return value;
+}
+
+Value Value::operator<<(const Value &other)
+{
+    ensure_valid_type(type, {VALUE_TYPE_NUMBER});
+    ensure_valid_type(other.type, {VALUE_TYPE_NUMBER});
+    Value value;
+    value.type = type;
+    value.dvalue = (int)dvalue << (int)other.dvalue;
+    return value;
+}
+
+Value Value::operator>>(const Value &other)
+{
+    ensure_valid_type(type, {VALUE_TYPE_NUMBER});
+    ensure_valid_type(other.type, {VALUE_TYPE_NUMBER});
+    Value value;
+    value.type = type;
+    value.dvalue = (int)dvalue >> (int)other.dvalue;
+    return value;
+}
+
+Value Value::operator^(const Value &other)
+{
+    ensure_valid_type(type, {VALUE_TYPE_NUMBER});
+    ensure_valid_type(other.type, {VALUE_TYPE_NUMBER});
+    Value value;
+    value.type = type;
+    value.dvalue = (int)dvalue ^ (int)other.dvalue;
+    return value;
+}
+
+
 Value Value::operator>(const Value &other)
 {
     ensure_valid_type(type, {VALUE_TYPE_NUMBER});

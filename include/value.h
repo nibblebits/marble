@@ -64,6 +64,13 @@ public:
     Value operator-(const Value& other);
     Value operator*(const Value& other);
     Value operator/(const Value& other);
+    Value operator%(const Value& other);
+    Value operator&(const Value& other);
+    Value operator|(const Value& other);
+    Value operator<<(const Value& other);
+    Value operator>>(const Value& other);
+    Value operator^(const Value& other);
+
     Value operator>(const Value& other);
     Value operator<(const Value& other);
     Value operator>=(const Value& other);

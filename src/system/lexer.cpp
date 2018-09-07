@@ -8,7 +8,7 @@
 #include "statics.h"
 #include "config.h"
 const char keywords[][MAX_KEYWORD_SIZE] = {"public", "private", "protected", "function", "number", "string", "int", "boolean", "true", "false", "class", "return", "continue", "break", "void", "new", "if", "else", "extends", "throw", "try", "catch", "finally", "do", "while", "break", "continue", "for", "include", "include_once", "pure", "final", "permission", "null", "require", "limit", "scope", "filter", "output", "operator"};
-const char valid_operators[][MAX_OPERATORS_SIZE] = {"+", "-", "*", "/", "++", "--", "+=", "-=", "/=", "*=", "-=", "=", ".", "&", "|", "!", "==", "!=", ">=", ">", "<=", "<", "&&", "||"};
+const char valid_operators[][MAX_OPERATORS_SIZE] = {"+", "-", "*", "/", "++", "--", "+=", "-=", "/=", "*=", "-=", "=", ".", "&", "|", "%", "^", "~", "!", "==", "!=", ">=", ">", "<=", "<", "&&", "||"};
 const char symbols[] = {';',',','(', ')', '{', '}','[',']', ':', '@'};
 Lexer::Lexer(Logger* logger)
 {
@@ -141,6 +141,9 @@ int Lexer::get_type_of_char(char c, PosInfo& posInfo)
     }
     else if(is_operator(c))
     {
+        if (c == '~')
+            error("The operator ~ has not yet been implemented in Marble as Marble is in beta testing there is a small lack of features that will exist in the stable. Please wait until the stable is released or if it is released upgrade to stable to use this operator", posInfo);
+            
         type = IS_OPERATOR;
     }
     else if(is_number(c))

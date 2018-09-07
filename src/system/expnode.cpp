@@ -130,6 +130,30 @@ Value ExpNode::mathify(Value &value1, Value &value2, std::string op, Interpreter
     {
         result = value1 / value2;
     }
+    else if(op == "%")
+    {
+        result = value1 % value2;
+    }
+    else if(op == "&")
+    {
+        result = value1 & value2;
+    }
+    else if(op == "|")
+    {
+        result = value1 | value2;
+    }
+    else if(op == "^")
+    {
+        result = value1 ^ value2;
+    }
+    else if(op == "<<")
+    {
+        result = value1 << value2;
+    }
+    else if(op == ">>")
+    {
+        result = value1 >> value2;
+    }
     else if (op == ">")
     {
         result = value1 > value2;
