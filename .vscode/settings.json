@@ -45,6 +45,7 @@
         "list": "cpp",
         "filesystem": "cpp",
         "cinttypes": "cpp",
-        "iomanip": "cpp"
+        "iomanip": "cpp",
+        "complex": "cpp"
     }
 }
