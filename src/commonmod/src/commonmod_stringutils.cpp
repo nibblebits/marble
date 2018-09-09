@@ -6,6 +6,7 @@
 #include "exceptions/systemexception.h"
 #include "exceptionobject.h"
 #include <iostream>
+#include <cmath>
 
 CommonModule_StringUtils::CommonModule_StringUtils(Class *c) : Object(c)
 {
@@ -166,8 +167,15 @@ Class *CommonModule_StringUtils::registerClass(ModuleSystem *moduleSystem)
      */
     c->registerFunction("number_format", {VarType::fromString("string"), VarType::fromString("number")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_number_format);
     moduleSystem->getFunctionSystem()->registerFunction("number_format", {VarType::fromString("string"), VarType::fromString("number")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_number_format);
-
-
+  /**
+     * @class StringUtils
+     * Returns the given number as a correctly formatted string. 
+     * Whole numbers are returned as whole number strings. Doubles may have to be formatted correctly with the number_format function
+     *
+     * function number_to_string(number val) : string
+     */
+    c->registerFunction("number_to_string", {VarType::fromString("number")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_number_to_string);
+    moduleSystem->getFunctionSystem()->registerFunction("number_to_string", {VarType::fromString("number")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_number_to_string);
 
 }
 
@@ -298,4 +306,16 @@ void CommonModule_StringUtils::StringUtils_number_format(Interpreter* interprete
     std::string target = values[0].svalue;
     int places = values[1].dvalue;
     return_value->set(number_format(target, places));
+}
+
+void CommonModule_StringUtils::StringUtils_number_to_string(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+{
+    if (std::fmod(values[0].dvalue, 1) == 0)
+    {
+        // Whole numbers should not look like doubles
+        return_value->set(std::to_string((int)values[0].dvalue));
+        return;
+    }
+
+    return_value->set(std::to_string(values[0].dvalue));
 }
