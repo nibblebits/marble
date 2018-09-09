@@ -152,10 +152,52 @@ Class *DateObject::registerClass(ModuleSystem *moduleSystem)
 
     /**
      * @class Date
-     * Sets the current year for this date. Minimum 1900
+     * Sets the current year for this date.
      * function setYear(number year) : void
      */
     c->registerFunction("setYear", {VarType::fromString("number")}, VarType::fromString("void"), Date_setYear);
+
+    /**
+     * @class Date
+     * Gets the current hour for this date
+     * function getHour() : number
+     */
+    c->registerFunction("getHour", {}, VarType::fromString("number"), Date_getHour);
+
+    /**
+     * @class Date
+     * Gets the current minute for this date
+     * function getMinute() : number
+     */
+    c->registerFunction("getMinute", {}, VarType::fromString("number"), Date_getMinute);
+
+    /**
+     * @class Date
+     * Gets the current second for this date
+     * function getSecond() : number
+     */
+    c->registerFunction("getSecond", {}, VarType::fromString("number"), Date_getSecond);
+
+    /**
+     * @class Date
+     * Gets the current day for this date
+     * function getDay() : number
+     */
+    c->registerFunction("getDay", {}, VarType::fromString("number"), Date_getDay);
+
+    /**
+     * @class Date
+     * Gets the current month for this date
+     * function getMonth() : number
+     */
+    c->registerFunction("getMonth", {}, VarType::fromString("number"), Date_getMonth);
+
+    /**
+     * @class Date
+     * Gets the current year for this date
+     * function getYear() : number
+     */
+    c->registerFunction("getYear", {}, VarType::fromString("number"), Date_getYear);
 }
 
 void DateObject::Date_ConstructWithTimestamp(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object)
@@ -284,6 +326,55 @@ void DateObject::Date_setYear(Interpreter *interpreter, std::vector<Value> value
 {
     std::shared_ptr<DateObject> date_obj = std::dynamic_pointer_cast<DateObject>(object);
     struct tm *timeinfo = gmtime(&date_obj->chosen_time);
-    timeinfo->tm_year = values[0].dvalue;
+    // Doc says we must start at 1900
+    timeinfo->tm_year = values[0].dvalue - 1900;
     date_obj->chosen_time = mktime(timeinfo);
 }
+
+void DateObject::Date_getHour(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
+{
+    std::shared_ptr<DateObject> date_obj = std::dynamic_pointer_cast<DateObject>(object);
+    struct tm *timeinfo = gmtime(&date_obj->chosen_time);
+    timeinfo->tm_hour += date_obj->utc_hours_offset;
+    timeinfo->tm_min += date_obj->utc_minutes_offset;
+    return_value->set(timeinfo->tm_hour);
+}
+
+void DateObject::Date_getMinute(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
+{
+    std::shared_ptr<DateObject> date_obj = std::dynamic_pointer_cast<DateObject>(object);
+    struct tm *timeinfo = gmtime(&date_obj->chosen_time);
+    timeinfo->tm_hour += date_obj->utc_hours_offset;
+    timeinfo->tm_min += date_obj->utc_minutes_offset;
+    return_value->set(timeinfo->tm_hour);
+}
+
+void DateObject::Date_getSecond(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
+{
+    std::shared_ptr<DateObject> date_obj = std::dynamic_pointer_cast<DateObject>(object);
+    struct tm *timeinfo = gmtime(&date_obj->chosen_time);
+    return_value->set(timeinfo->tm_sec);
+}
+
+void DateObject::Date_getDay(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
+{
+    std::shared_ptr<DateObject> date_obj = std::dynamic_pointer_cast<DateObject>(object);
+    struct tm *timeinfo = gmtime(&date_obj->chosen_time);
+    return_value->set(timeinfo->tm_mday);
+}
+
+void DateObject::Date_getMonth(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
+{
+    std::shared_ptr<DateObject> date_obj = std::dynamic_pointer_cast<DateObject>(object);
+    struct tm *timeinfo = gmtime(&date_obj->chosen_time);
+    return_value->set(timeinfo->tm_mon);
+}
+
+void DateObject::Date_getYear(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
+{
+    std::shared_ptr<DateObject> date_obj = std::dynamic_pointer_cast<DateObject>(object);
+    struct tm *timeinfo = gmtime(&date_obj->chosen_time);
+    // Doc says we must start at the year 1900
+    return_value->set(1900 + timeinfo->tm_year);
+}
+
