@@ -19,8 +19,19 @@ std::shared_ptr<Object> MysqlConnection::newInstance(Class *c)
 
 void MysqlConnection::Init(ModuleSystem *moduleSystem)
 {
+    /**
+     * class MysqlConnection extends SQLConnection
+     * 
+     * This represents a connection to a MysqlServer.
+     */ 
     Class *c = moduleSystem->getClassSystem()->registerClass("MysqlConnection", moduleSystem->getClassSystem()->getClassByName("SQLConnection"));
     c->setDescriptorObject(std::make_shared<MysqlConnection>(c));
+    /**
+     * @class MyswlConnection
+     * Constructs this MysqlConnection by providing the SQLDriver that handles it
+     *
+     * function __construct(SQLDriver driver) : void
+     */
     c->registerFunction("__construct", {VarType::fromString("SQLDriver")}, VarType::fromString("void"), MysqlConnection::MysqlConnection_Construct);
 
     /**

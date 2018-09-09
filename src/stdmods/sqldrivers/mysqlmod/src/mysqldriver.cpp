@@ -23,12 +23,28 @@ MysqlDriver::~MysqlDriver()
 
 void MysqlDriver::Init(ModuleSystem* moduleSystem)
 {
+    /**
+     * class MysqlDriver extends SQLDriver
+     * 
+     * This is the MysqlDriver it can be used to connect to a MysqlServer and execute statements
+     */
     Class* c = moduleSystem->getClassSystem()->registerClass("MysqlDriver", moduleSystem->getClassSystem()->getClassByName("SQLDriver"));
     c->setDescriptorObject(std::make_shared<MysqlDriver>(c));
-    // function __construct() : void
+    /**
+     * @class MysqlDriver
+     * 
+     * Constructs this MysqlDriver
+     * function __construct() : void
+     */
     c->registerFunction("__construct", {}, VarType::fromString("void"), Function::Blank);
 
-    // function connect(string host, string username, string password, string database) : SQLConnection
+    /*
+    * @class MysqlDriver
+    * Connects to the provided MysqlServer based on the host, username, password and database provided.
+    * Once connected to the database returns a SQLConnection representing the connection to this database
+    * 
+    * function connect(string host, string username, string password, string database) : SQLConnection
+    */
     Function* connect_function = c->registerFunction("connect", {
                                     VarType::fromString("string"),
                                     VarType::fromString("string"),
@@ -36,10 +52,21 @@ void MysqlDriver::Init(ModuleSystem* moduleSystem)
                                     VarType::fromString("string")},
                                     VarType::fromString("SQLConnection"), MysqlDriver::MysqlDriver_Connect);
 
+    /**
+     * @class MysqlDriver
+     * 
+     * Executes the given query for the connection and statement. The statement also holds the query.
+     * This function can be ignored if you are not implementing a SQLDriver the reason for this is because it is automatically called when
+     * executing a SQLStatement
+     * 
+     * function execute(SQLConnection connection, SQLStatement statement, string query) : SQLResult
+     */
     Function* execute = c->registerFunction("execute", {VarType::fromString("SQLConnection"), VarType::fromString("SQLStatement"), VarType::fromString("string")}, VarType::fromString("SQLResult"), MysqlDriver::MysqlDriver_Execute);
 
    /**
-     * Escapes the provided value and return the escaped string, securing against SQL Injection
+    * @class MysqlDriver
+     * Escapes the provided value and return the escaped string, securing against SQL Injection.
+     * Note this function is also accessible from SQLConnection and is easier to use. We recommend using the escape method within the SQLConnection class
      * function escape(SQLConnction connection, string value) : string
      */
     Function* escape = c->registerFunction("escape", {VarType::fromString("SQLConnection"), VarType::fromString("string")}, VarType::fromString("string"), MysqlDriver::MysqlDriver_Escape);
