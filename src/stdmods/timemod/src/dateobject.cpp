@@ -66,13 +66,96 @@ Class *DateObject::registerClass(ModuleSystem *moduleSystem)
 
     c->registerFunction("setTimezone", {VarType::fromString("string")}, VarType::fromString("void"), DateObject::Date_setTimezone);
 
+    /**
+     * @class Date
+     * 
+     * Sets the format for this date
+     * 
+     * %a 	Abbreviated weekday name 	Sun
+        %A 	Full weekday name 	Sunday
+        %b 	Abbreviated month name 	Mar
+        %B 	Full month name 	March
+        %c 	Date and time representation 	Sun Aug 19 02:56:02 2012
+        %d 	Day of the month (01-31) 	19
+        %H 	Hour in 24h format (00-23) 	14
+        %I 	Hour in 12h format (01-12) 	05
+        %j 	Day of the year (001-366) 	231
+        %m 	Month as a decimal number (01-12) 	08
+        %M 	Minute (00-59) 	55
+        %p 	AM or PM designation 	PM
+        %S 	Second (00-61) 	02
+        %U 	Week number with the first Sunday as the first day of week one (00-53) 	33
+        %w 	Weekday as a decimal number with Sunday as 0 (0-6) 	4
+        %W 	Week number with the first Monday as the first day of week one (00-53) 	34
+        %x 	Date representation 	08/19/12
+        %X 	Time representation 	02:50:06
+        %y 	Year, last two digits (00-99) 	01
+        %Y 	Year 	2012
+        %Z 	Timezone name or abbreviation 	CDT
+        %% 	A % sign 	%
+
+        Example: %d-%M-%Y may equal 01-01-2018 if the date points to this the time 01-01-2018.
+
+        Use getFormattedString() to get the date in the format you provided here
+     * function setFormat(string format) : void
+     */
     c->registerFunction("setFormat", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter *interpreter, std::vector<Value> arguments, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope) {
         Date_setFormat(interpreter, arguments, return_value, object);
     });
 
-    c->registerFunction("getFormattedString", {}, VarType::fromString("string"), [&](Interpreter *interpreter, std::vector<Value> arguments, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope) {
-        Date_getFormattedString(interpreter, arguments, return_value, object);
-    });
+    /**
+     * @class Date
+     * Returns this date as a formatted string based on the format you specified with setFormat
+     * function getFormattedString() : string
+     */
+    c->registerFunction("getFormattedString", {}, VarType::fromString("string"), DateObject::Date_getFormattedString);
+
+    /**
+     * @class Date
+     * Sets the current hour for this date
+     * Setting the hour over the amount of hours left of this day will cause the time to roll over to the next day
+     * function setHour(number hour) : void
+     */
+    c->registerFunction("setHour", {VarType::fromString("number")}, VarType::fromString("void"), Date_setHour);
+
+    /**
+     * @class Date
+     * Sets the current minute for this date
+     * Setting the minutes over the amount of minutes left of this hour will cause the time to roll over to the next hour
+     * function setMinute(number hour) : void
+     */
+    c->registerFunction("setMinute", {VarType::fromString("number")}, VarType::fromString("void"), Date_setMinute);
+
+    /**
+     * @class Date
+     * Sets the current second for this date
+     * Setting the seconds over the amount of seconds of this minute left will cause the time to roll over to the next minute
+     * function setSecond(number second) : void
+     */
+    c->registerFunction("setSecond", {VarType::fromString("number")}, VarType::fromString("void"), Date_setSecond);
+
+    /**
+     * @class Date
+     * Sets the current day for this date.
+     * Setting over the current amount of days for that month will cause the time to rollover to the following month
+     * function setDay(number day) : void
+     */
+    c->registerFunction("setDay", {VarType::fromString("number")}, VarType::fromString("void"), Date_setDay);
+
+    /**
+     * @class Date
+     * Sets the current month for this date
+     * Setting the current amount of months over the current year will cause the time to rollover to the following year
+     * function setMonth(number month) : void
+     */
+    c->registerFunction("setMonth", {VarType::fromString("number")}, VarType::fromString("void"), Date_setMonth);
+
+    /**
+     * @class Date
+     * Sets the current year for this date. Minimum 1900
+     * function setYear(number year) : void
+     */
+    c->registerFunction("setYear", {VarType::fromString("number")}, VarType::fromString("void"), Date_setYear);
 }
 
 void DateObject::Date_ConstructWithTimestamp(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object)
@@ -118,7 +201,7 @@ void DateObject::Date_setTimezone(Interpreter *interpreter, std::vector<Value> a
     }
     else
     {
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("DateFormatException"))), "Invalid syntax. Expecting UTC+0:00 hours and minutes"); 
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("DateFormatException"))), "Invalid syntax. Expecting UTC+0:00 hours and minutes");
     }
 }
 
@@ -128,7 +211,7 @@ void DateObject::Date_setFormat(Interpreter *interpreter, std::vector<Value> val
     date_obj->format = values[0].svalue;
 }
 
-void DateObject::Date_getFormattedString(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object)
+void DateObject::Date_getFormattedString(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
     // Let's get the time as a formatted date string
     std::shared_ptr<DateObject> date_obj = std::dynamic_pointer_cast<DateObject>(object);
@@ -150,4 +233,57 @@ void DateObject::Date_getFormattedString(Interpreter *interpreter, std::vector<V
     std::string formatted_str = buffer;
     return_value->type = VALUE_TYPE_STRING;
     return_value->svalue = formatted_str;
+}
+
+void DateObject::Date_setHour(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
+{
+    std::shared_ptr<DateObject> date_obj = std::dynamic_pointer_cast<DateObject>(object);
+    struct tm *timeinfo = gmtime(&date_obj->chosen_time);
+    timeinfo->tm_hour = values[0].dvalue;
+    date_obj->chosen_time = mktime(timeinfo);
+    // Disable the hours offset since we have changed the hour
+    date_obj->utc_hours_offset = 0;
+}
+
+void DateObject::Date_setMinute(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
+{
+    std::shared_ptr<DateObject> date_obj = std::dynamic_pointer_cast<DateObject>(object);
+    struct tm *timeinfo = gmtime(&date_obj->chosen_time);
+    timeinfo->tm_min = values[0].dvalue;
+    date_obj->chosen_time = mktime(timeinfo);
+    // Disable the minutes offset since we have changed the hour
+    date_obj->utc_minutes_offset = 0;
+}
+
+void DateObject::Date_setSecond(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
+{
+    std::shared_ptr<DateObject> date_obj = std::dynamic_pointer_cast<DateObject>(object);
+    struct tm *timeinfo = gmtime(&date_obj->chosen_time);
+    timeinfo->tm_sec = values[0].dvalue;
+    date_obj->chosen_time = mktime(timeinfo);
+}
+
+void DateObject::Date_setDay(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
+{
+    std::shared_ptr<DateObject> date_obj = std::dynamic_pointer_cast<DateObject>(object);
+    struct tm *timeinfo = gmtime(&date_obj->chosen_time);
+    timeinfo->tm_mday = values[0].dvalue;
+    date_obj->chosen_time = mktime(timeinfo);
+}
+
+void DateObject::Date_setMonth(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
+{
+    std::shared_ptr<DateObject> date_obj = std::dynamic_pointer_cast<DateObject>(object);
+    struct tm *timeinfo = gmtime(&date_obj->chosen_time);
+    // -1 as C documentation says January starts at zero
+    timeinfo->tm_mon = values[0].dvalue - 1;
+    date_obj->chosen_time = mktime(timeinfo);
+}
+
+void DateObject::Date_setYear(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
+{
+    std::shared_ptr<DateObject> date_obj = std::dynamic_pointer_cast<DateObject>(object);
+    struct tm *timeinfo = gmtime(&date_obj->chosen_time);
+    timeinfo->tm_year = values[0].dvalue;
+    date_obj->chosen_time = mktime(timeinfo);
 }
