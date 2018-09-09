@@ -505,6 +505,11 @@ void CurlObject::newInterpreter(Interpreter *interpreter)
 
 void CurlObject::registerClass(ModuleSystem *moduleSystem)
 {
+    /**
+     * class Curl
+     * 
+     * responsible for handling all curl operations. Creating a new instance of this class will create a new Curl object allowing you to talk with a http server
+     */
     Class *c = moduleSystem->getClassSystem()->registerClass("Curl");
     c->setDescriptorObject(std::make_shared<CurlObject>(c));
 
@@ -532,9 +537,21 @@ void CurlObject::registerClass(ModuleSystem *moduleSystem)
      * Seek here: https://curl.haxx.se/libcurl/c/easy_setopt_options.html for a list of valid options for Curl
      * Note: not all options are implemented within marble you will receive an UnimplementedException if this is the case
      * 
-     * function setopt(number _option, std::string value) : void
+     * function setopt(number _option, string value) : void
      */
     c->registerFunction("setopt", {VarType::fromString("number"), VarType::fromString("string")}, VarType::fromString("void"), CurlObject::Curl_setopt);
+    
+      /**
+     * @class Curl
+     * 
+     * Sets an option for this curl. The _option must be a valid curl option. The value provided must also be valid for the given option
+     * 
+     * Seek here: https://curl.haxx.se/libcurl/c/easy_setopt_options.html for a list of valid options for Curl
+     * Note: not all options are implemented within marble you will receive an UnimplementedException if this is the case
+     * 
+     * function setopt(number _option, number value) : void
+     */
+    c->registerFunction("setopt", {VarType::fromString("number"), VarType::fromString("number")}, VarType::fromString("void"), CurlObject::Curl_setopt);
 
     /**
      * @class Curl
@@ -561,7 +578,13 @@ void CurlObject::Curl_setopt(Interpreter *interpreter, std::vector<Value> values
     if (startsWith(values[1].svalue, "file://"))
         throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "File access is not allowed with the CURL module for now as we need to come up with a way for it to work well with the permission system");
 
-    curl_easy_setopt(curl_obj->curl, (CURLoption)values[0].dvalue, values[1].svalue.c_str());
+    std::string opt_value;
+    if (values[1].type == VALUE_TYPE_NUMBER)
+        opt_value = std::to_string(values[1].dvalue);
+    else
+        opt_value = values[1].svalue;
+
+    curl_easy_setopt(curl_obj->curl, (CURLoption)values[0].dvalue, opt_value);
 }
 
 void CurlObject::Curl_execute(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
