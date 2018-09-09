@@ -36,10 +36,21 @@ std::shared_ptr<Object> DateObject::newInstance(Class *c)
 Class *DateObject::registerClass(ModuleSystem *moduleSystem)
 {
     Class *c = moduleSystem->getClassSystem()->registerClass("DateFormatException", moduleSystem->getClassSystem()->getClassByName("Exception"));
+    /**
+     * class Date
+     * 
+     * Respresents a given date and time. Allows formatting and the ability to get a formatted string of the specified time
+     * based on the format provided.
+     * 
+     * Simply put this handles all Date related operations
+     */
     c = moduleSystem->getClassSystem()->registerClass("Date");
     c->setDescriptorObject(std::make_shared<DateObject>(c));
     /**
+     * @class Date
+     * 
      * The constructor accepts a number which represents a unix timestamp. This will be used by the date object
+     * function __construct(number unix_timestamp) : void
      */
     c->registerFunction("__construct", {VarType::fromString("number")}, VarType::fromString("void"), [&](Interpreter *interpreter, std::vector<Value> arguments, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope) {
         Date_ConstructWithTimestamp(interpreter, arguments, return_value, object);
@@ -48,8 +59,7 @@ Class *DateObject::registerClass(ModuleSystem *moduleSystem)
     /**
      * @class Date
      * 
-     * Sets the current timezone based on the timezone abbreviation that is used. For example "BST" for (British Summer Time)
-     * The timezone will only be used for this Date object
+     * Sets the current timezone based on the timezone abbreviation that is used. For example "UTC+0:00"
      * 
      * function setTimezone(string abbreviation) : void
      */
@@ -108,7 +118,7 @@ void DateObject::Date_setTimezone(Interpreter *interpreter, std::vector<Value> a
     }
     else
     {
-
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("DateFormatException"))), "Invalid syntax. Expecting UTC+0:00 hours and minutes"); 
     }
 }
 

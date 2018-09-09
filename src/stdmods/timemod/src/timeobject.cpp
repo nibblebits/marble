@@ -19,7 +19,18 @@ std::shared_ptr<Object> TimeObject::newInstance(Class* c)
 
 Class* TimeObject::registerClass(ModuleSystem* moduleSystem)
 {
+    /**
+     * class Time
+     * 
+     * Handles time operations
+     */
     Class* c = moduleSystem->getClassSystem()->registerClass("Time");
+    /**
+     * @class Time
+     * 
+     * Returns the current unix time
+     * function getTimeStamp() : number
+     */
     c->registerFunction("getTimeStamp", {}, VarType::fromString("number"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         Time_getTimeStamp(interpreter, arguments, return_value, object);
     });
