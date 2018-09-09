@@ -227,13 +227,35 @@ void MathObject::registerClass(ModuleSystem *moduleSystem)
      */
     c->registerFunction("scalbln", {VarType::fromString("number"), VarType::fromString("number")}, VarType::fromString("number"), MathObject::Math_scalbln);
 
-  /**
+    /**
      * @class Math
      * Returns base raised to the power exponent:
      * function pow(number base, number exponent) : number
      */
     c->registerFunction("pow", {VarType::fromString("number"), VarType::fromString("number")}, VarType::fromString("number"), MathObject::Math_pow);
-    
+
+    /**
+     * @class Math
+     *  Returns the square root of x.
+     * function sqrt(number x) : number
+     */
+    c->registerFunction("sqrt", {VarType::fromString("number")}, VarType::fromString("number"), MathObject::Math_sqrt);
+
+    /**
+     * @class Math
+     *  Returns the cubic root of x.
+     * function cbrt(number x) : number
+     */
+    c->registerFunction("cbrt", {VarType::fromString("number")}, VarType::fromString("number"), MathObject::Math_cbrt);
+
+      /**
+     * @class Math
+     * Returns the hypotenuse of a right-angled triangle whose legs are x and y.
+     * The function returns what would be the square root of the sum of the squares of x and y (as per the Pythagorean theorem), but without incurring in undue overflow or underflow of intermediate values.
+     * function hypot(number x, number y) : number
+     */
+    c->registerFunction("hypot", {VarType::fromString("number"), VarType::fromString("number")}, VarType::fromString("number"), MathObject::Math_hypot);
+
 }
 
 void MathObject::Math_cos(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
@@ -364,4 +386,19 @@ void MathObject::Math_scalbln(Interpreter *interpreter, std::vector<Value> value
 void MathObject::Math_pow(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
     return_value->set((double)pow(values[0].dvalue, values[1].dvalue));
+}
+
+void MathObject::Math_sqrt(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
+{
+    return_value->set((double)sqrt(values[0].dvalue));
+}
+
+void MathObject::Math_cbrt(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
+{
+    return_value->set((double)cbrt(values[0].dvalue));
+}
+
+void MathObject::Math_hypot(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
+{
+    return_value->set((double)hypot(values[0].dvalue, values[1].dvalue));
 }
