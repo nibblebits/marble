@@ -234,10 +234,23 @@ std::string trim(const std::string& str, std::string pattern)
 std::string number_format(std::string target, int places)
 {
 	std::vector<std::string> splits = str_split(target, ".");
-	if (splits.size() == 1)
-		return target;
+
+	if (places == 0)
+		return splits[0];
 	
-	return splits[0] + "." + splits[1].substr(0, places);
+	std::string second_split = (splits.size() > 1 ? splits[1] : "");
+	std::string to_add = "";
+	int total_to_add = places - second_split.size();
+	if (total_to_add > 0)
+	{
+		for (int i = 0; i < total_to_add; i++)
+			to_add += "0";
+	}
+	else
+	{
+		second_split = second_split.substr(0, places);
+	}
+	return splits[0] + "." + second_split + to_add;
 }
 
 std::string exec(std::string cmd, int& return_value) {
