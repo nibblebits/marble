@@ -7,6 +7,7 @@
 #include "networkmod.h"
 #include "networkpermission.h"
 #include "misc.h"
+#include "array.h"
 
 CurlObject::CurlObject(Class *c) : Object(c)
 {
@@ -18,6 +19,12 @@ CurlObject::~CurlObject()
     // Clean up if the programmer failed to
     if (this->curl != NULL)
         curl_easy_cleanup(this->curl);
+
+    if (!this->lists_to_free.empty())
+    {
+        for (struct curl_slist *slist : this->lists_to_free)
+            curl_slist_free_all(slist);
+    }
 }
 
 std::shared_ptr<Object> CurlObject::newInstance(Class *c)
@@ -540,8 +547,8 @@ void CurlObject::registerClass(ModuleSystem *moduleSystem)
      * function setopt(number _option, string value) : void
      */
     c->registerFunction("setopt", {VarType::fromString("number"), VarType::fromString("string")}, VarType::fromString("void"), CurlObject::Curl_setopt);
-    
-      /**
+
+    /**
      * @class Curl
      * 
      * Sets an option for this curl. The _option must be a valid curl option. The value provided must also be valid for the given option
@@ -555,10 +562,30 @@ void CurlObject::registerClass(ModuleSystem *moduleSystem)
 
     /**
      * @class Curl
+     * 
+     * Sets an option for this curl. The _option must be a valid curl option. The value provided must also be valid for the given option
+     * 
+     * Seek here: https://curl.haxx.se/libcurl/c/easy_setopt_options.html for a list of valid options for Curl
+     * Note: not all options are implemented within marble you will receive an UnimplementedException if this is the case
+     * 
+     * function setoptArray(number _option, string[] value) : void
+     */
+    c->registerFunction("setoptArray", {VarType::fromString("number"), VarType::fromString("string[]")}, VarType::fromString("void"), CurlObject::Curl_setopt);
+
+    /**
+     * @class Curl
      * Executes this Curl request and returns the response body
      * function execute() : void
      */
     c->registerFunction("execute", {}, VarType::fromString("string"), CurlObject::Curl_execute);
+
+    /**
+     * @class Curl
+     * Request internal information from the curl session with this function.
+     * The info passed is based on the curl doc. Seek available information: https://curl.haxx.se/libcurl/c/curl_easy_getinfo.html
+     * function getinfo(number info) : void
+     */
+    c->registerFunction("getinfo", {VarType::fromString("number")}, VarType::fromString("number"), CurlObject::Curl_getinfo);
 
     /**
      * @class Curl
@@ -578,27 +605,56 @@ void CurlObject::Curl_setopt(Interpreter *interpreter, std::vector<Value> values
     if (startsWith(values[1].svalue, "file://"))
         throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "File access is not allowed with the CURL module for now as we need to come up with a way for it to work well with the permission system");
 
-    std::string opt_value;
-    if (values[1].type == VALUE_TYPE_NUMBER)
-        opt_value = std::to_string(values[1].dvalue);
-    else
-        opt_value = values[1].svalue;
+    if (values[1].type == VALUE_TYPE_ARRAY)
+    {
+        struct curl_slist *slist = NULL;
+        if (values[1].avalue == NULL)
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("NullPointerException"))), "The provided array is null for use in curl");
 
-    curl_easy_setopt(curl_obj->curl, (CURLoption)values[0].dvalue, opt_value);
+        Variable *avars = values[1].avalue->variables;
+        for (int i = 0; i < values[1].avalue->count; i++)
+        {
+            Value aval = avars[i].value;
+            slist = curl_slist_append(slist, aval.svalue.c_str());
+        }
+
+        curl_obj->lists_to_free.push_back(slist);
+
+        curl_easy_setopt(curl_obj->curl, (CURLoption)values[0].dvalue, slist);
+    }
+    else
+    {
+        std::string opt_value;
+        if (values[1].type == VALUE_TYPE_NUMBER)
+            opt_value = std::to_string(values[1].dvalue);
+        else
+            opt_value = values[1].svalue;
+        
+        curl_easy_setopt(curl_obj->curl, (CURLoption)values[0].dvalue, opt_value.c_str());
+    }
 }
 
 void CurlObject::Curl_execute(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
     // Ensure we have permission
     NetworkPermission::ensurePermission(interpreter, caller_scope, NETWORK_PERMISSION_CURL_PERMISSION_REQUIRED);
-    
+
     std::shared_ptr<CurlObject> curl_obj = std::dynamic_pointer_cast<CurlObject>(object);
     // Reset write_data
     curl_obj->write_data = "";
 
     CURLcode res = curl_easy_perform(curl_obj->curl);
+
+    // Free the lists created for this execution
+    if (!curl_obj->lists_to_free.empty())
+    {
+        for (struct curl_slist *slist : curl_obj->lists_to_free)
+            curl_slist_free_all(slist);
+    }
+    curl_obj->lists_to_free.erase(curl_obj->lists_to_free.begin(), curl_obj->lists_to_free.end());
+
     if (res != CURLE_OK)
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Issue executing your CURL request: " + std::to_string(res));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Issue executing your CURL request. Curl error code: " + std::to_string(res));
 
     // Return the data that was written
     return_value->set(curl_obj->write_data);
@@ -608,5 +664,16 @@ void CurlObject::Curl_close(Interpreter *interpreter, std::vector<Value> values,
 {
     std::shared_ptr<CurlObject> curl_obj = std::dynamic_pointer_cast<CurlObject>(object);
     if (curl_obj->curl != NULL)
+    {
         curl_easy_cleanup(curl_obj->curl);
+        curl_obj->curl = NULL;
+    }
+}
+
+void CurlObject::Curl_getinfo(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+{
+    std::shared_ptr<CurlObject> curl_obj = std::dynamic_pointer_cast<CurlObject>(object);
+    long val;
+    curl_easy_getinfo(curl_obj->curl, (CURLINFO)values[0].dvalue, &val);
+    return_value->set(val);
 }

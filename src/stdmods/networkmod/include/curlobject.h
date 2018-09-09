@@ -18,13 +18,21 @@ public:
 
     CURL* curl;
 
-    // This is where data is written to after an execution
+    /**
+     *  These are curl lists created that need to be freed when we execute
+     */
+    std::vector<struct curl_slist*> lists_to_free;
+
+    /**
+     * This is where data is written to after an execution
+     */
     std::string write_data;
 
     // Native CurlObject methods
     static void Curl_setopt(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
     static void Curl_execute(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
     static void Curl_close(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
+    static void Curl_getinfo(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
 
 
 };
