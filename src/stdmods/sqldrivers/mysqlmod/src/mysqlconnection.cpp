@@ -27,7 +27,7 @@ void MysqlConnection::Init(ModuleSystem *moduleSystem)
     Class *c = moduleSystem->getClassSystem()->registerClass("MysqlConnection", moduleSystem->getClassSystem()->getClassByName("SQLConnection"));
     c->setDescriptorObject(std::make_shared<MysqlConnection>(c));
     /**
-     * @class MyswlConnection
+     * @class MysqlConnection
      * Constructs this MysqlConnection by providing the SQLDriver that handles it
      *
      * function __construct(SQLDriver driver) : void
@@ -42,7 +42,7 @@ void MysqlConnection::Init(ModuleSystem *moduleSystem)
     Function *close_function = c->registerFunction("close", {}, VarType::fromString("void"), MysqlConnection::MysqlConnection_Close);
 
     /**
-     * @MysqlConnection
+     * @class MysqlConnection
      * Returns the last insert id to the database for this SQLConnection.
      * 
      * function getInsertId() : number
