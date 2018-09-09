@@ -197,7 +197,7 @@ void MathObject::registerClass(ModuleSystem *moduleSystem)
      * Returns the binary (base-2) logarithm of x.
      * function log2(number x) : number
      */
-    c->registerFunction("log1p", {VarType::fromString("number")}, VarType::fromString("number"), MathObject::Math_log2);
+    c->registerFunction("log2", {VarType::fromString("number")}, VarType::fromString("number"), MathObject::Math_log2);
 
     /**
      * @class Math
@@ -226,6 +226,14 @@ void MathObject::registerClass(ModuleSystem *moduleSystem)
      * function scalbln(number x, number n) : number
      */
     c->registerFunction("scalbln", {VarType::fromString("number"), VarType::fromString("number")}, VarType::fromString("number"), MathObject::Math_scalbln);
+
+  /**
+     * @class Math
+     * Returns base raised to the power exponent:
+     * function pow(number base, number exponent) : number
+     */
+    c->registerFunction("pow", {VarType::fromString("number"), VarType::fromString("number")}, VarType::fromString("number"), MathObject::Math_pow);
+    
 }
 
 void MathObject::Math_cos(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
@@ -345,10 +353,15 @@ void MathObject::Math_logb(Interpreter *interpreter, std::vector<Value> values, 
 
 void MathObject::Math_scalbn(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
-    return_value->set((double)scalbn(values[0].dvalue, (int)values[0].dvalue));
+    return_value->set((double)scalbn(values[0].dvalue, (int)values[1].dvalue));
 }
 
 void MathObject::Math_scalbln(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
-    return_value->set((double)scalbln(values[0].dvalue, (int)values[0].dvalue));
+    return_value->set((double)scalbln(values[0].dvalue, (int)values[1].dvalue));
+}
+
+void MathObject::Math_pow(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
+{
+    return_value->set((double)pow(values[0].dvalue, values[1].dvalue));
 }
