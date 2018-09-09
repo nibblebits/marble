@@ -174,7 +174,7 @@ std::shared_ptr<Array> NewNode::new_array_array(Interpreter* interpreter, int to
 
 void NewNode::handle_array(Interpreter* interpreter, Value& v, std::vector<ExpressionInterpretableNode*>::iterator it)
 {
-    v.type = NODE_TYPE_ARRAY;
+    v.type = VALUE_TYPE_ARRAY;
     int total_elements = (*it)->interpret(interpreter).dvalue;
     if (it == array_values.end()-1)
     {
