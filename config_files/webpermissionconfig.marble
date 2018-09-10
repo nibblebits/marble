@@ -1,6 +1,6 @@
 <marble>
 
-Permissions allowed_permissions = getScopePermissions();
+allowed_permissions = getScopePermissions();
 
 Permission cookiePermission = new @CookiePermission();
 cookiePermission.setCanWrite(true);

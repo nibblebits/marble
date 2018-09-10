@@ -28,7 +28,11 @@ Class *CommonModule_StringUtils::registerClass(ModuleSystem *moduleSystem)
      * class StringUtils extends Object
      * 
      * The StringUtils class provides many methods to help manipulate strings within the marble language.
-     * These methods include the ability to split strings, get the length of strings, substr and more*/
+     * These methods include the ability to split strings, get the length of strings, substr and more.
+     * 
+     * <b>A StringUtils object is created during the interpreter bootup so you can access this object directly with StringUtils.methodName();</b>
+     * 
+     */
     Class *c = moduleSystem->getClassSystem()->registerClass("StringUtils");
     c->setDescriptorObject(std::make_shared<CommonModule_StringUtils>(c));
     /**

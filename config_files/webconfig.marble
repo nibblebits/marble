@@ -1,5 +1,4 @@
 <marble>
-require "/etc/marble/loaderconfig.marble";
 require "/etc/marble/permissionconfig.marble";
 require "/etc/marble/webpermissionconfig.marble";
 </marble>

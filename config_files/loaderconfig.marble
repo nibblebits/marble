@@ -1,5 +1,7 @@
 <marble>
 
+# WARNING APACHE REQUIRES THIS FILE SO IF YOU ARE RUNNING MARBLE ON APACHE DO NOT DELETE THIS FILE OR MARBLE WILL FAIL TO FUNCTION
+
 # LOAD MODULES
 LoadModule("/usr/lib/marble/marble_timemod.so");
 LoadModule("/usr/lib/marble/marble_iomod.so");
