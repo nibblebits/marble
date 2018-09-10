@@ -47,6 +47,12 @@ void SendMailObject::registerClass(ModuleSystem *moduleSystem)
     c->registerFunction("send", {}, VarType::fromString("void"), SendMailObject::SendMail_send);
 }
 
+
+void SendMailObject::SendMail_construct(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
+{
+}
+
+
 void SendMailObject::SendMail_send(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
     // Let's check we have permission to send emails
@@ -59,7 +65,7 @@ void SendMailObject::SendMail_send(Interpreter *interpreter, std::vector<Value> 
     if (mailpipe == NULL)
         throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to open sendmail /usr/lib/sendmail do you not have sendmail installed?");
 
-    fprintf(mailpipe, sm_obj->getTranscript().c_str());
+    fprintf(mailpipe, "%s", sm_obj->getTranscript().c_str());
     fwrite(".\n", 1, 2, mailpipe);
     pclose(mailpipe);
 }
