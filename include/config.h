@@ -1,6 +1,11 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+
+// Marble versioning information
+#define MARBLE_MAJOR_CODENAME "Clearies"
+#define MARBLE_VERSION "0.1.0"
+
 #define MAX_KEYWORD_SIZE 15
 #define MAX_OPERATORS_SIZE 3
 
@@ -10,9 +15,5 @@
 
 // Debug mode is enabled; To display comment the line below
 #define DEBUG_ENABLED
-
-// Marble versioing information
-#define MARBLE_MAJOR_CODENAME "Clearies"
-#define MARBLE_VERSION "0.1.0"
 
 #endif

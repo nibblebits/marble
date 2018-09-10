@@ -137,19 +137,6 @@ void SmtpMailObject::SmtpMail_setPassword(Interpreter *interpreter, std::vector<
     smtp_mail_obj->password = values[0].svalue;
 }
 
-static size_t payload_source(void *ptr, size_t size, size_t nmemb, void *userp)
-{
-    if ((size == 0) || (nmemb == 0) || ((size * nmemb) < 1))
-    {
-        return 0;
-    }
-
-    int total_b = (nmemb * size);
-    memcpy(ptr, (const char *)userp + total_b, size);
-    std::cout << "returning total bytes: " << total_b << std::endl;
-    return nmemb;
-}
-
 void SmtpMailObject::SmtpMail_send(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
     // Let's check we have permission to send emails
