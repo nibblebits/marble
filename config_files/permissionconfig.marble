@@ -1,0 +1,30 @@
+<marble>
+
+# PERMISSION SETUP; SETUP PERMISSIONS FOR AFTER CONFIGURATION HERE
+# your own scope permissions are the permissions that will be used after configuration
+Permissions allowed_permissions = getScopePermissions();
+Permission ioPermission = new @IOPermission();
+allowed_permissions.add(ioPermission);
+
+@Permission filePermission = new @FilePermission();
+filePermission.setLocation("/");
+filePermission.setCanRead(true);
+filePermission.setCanWrite(true);
+allowed_permissions.add(filePermission);
+
+Permission networkPermission = new @NetworkPermission();
+networkPermission.setCanSendEmail(true);
+networkPermission.setCanUseCurl(true);
+networkPermission.setCanLookup(true);
+allowed_permissions.add(networkPermission);
+
+Permission timeoutPermission = new @TimeoutPermission();
+allowed_permissions.add(timeoutPermission);
+
+Permission shellPermission = new @ShellPermission();
+allowed_permissions.add(shellPermission);
+
+
+# END OF PERMISSION SETUP
+
+</marble>

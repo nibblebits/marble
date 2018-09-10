@@ -1,0 +1,13 @@
+<marble>
+
+# LOAD MODULES
+LoadModule("/usr/lib/marble/marble_timemod.so");
+LoadModule("/usr/lib/marble/marble_iomod.so");
+LoadModule("/usr/lib/marble/marble_filemod.so");
+LoadModule("/usr/lib/marble/marble_mysqlmod.so");
+LoadModule("/usr/lib/marble/marble_sessionmod.so");
+LoadModule("/usr/lib/marble/marble_networkmod.so");
+LoadModule("/usr/lib/marble/marble_processmod.so");
+# END OF LOADING MODULES
+
+</marble>

@@ -1,0 +1,4 @@
+<marble>
+require "/etc/marble/loaderconfig.marble";
+require "/etc/marble/permissionconfig.marble";
+</marble>
