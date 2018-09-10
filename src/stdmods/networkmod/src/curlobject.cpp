@@ -575,7 +575,7 @@ void CurlObject::registerClass(ModuleSystem *moduleSystem)
     /**
      * @class Curl
      * Executes this Curl request and returns the response body
-     * function execute() : void
+     * function execute() : string
      */
     c->registerFunction("execute", {}, VarType::fromString("string"), CurlObject::Curl_execute);
 
@@ -583,7 +583,7 @@ void CurlObject::registerClass(ModuleSystem *moduleSystem)
      * @class Curl
      * Request internal information from the curl session with this function.
      * The info passed is based on the curl doc. Seek available information: https://curl.haxx.se/libcurl/c/curl_easy_getinfo.html
-     * function getinfo(number info) : void
+     * function getinfo(number info) : number
      */
     c->registerFunction("getinfo", {VarType::fromString("number")}, VarType::fromString("number"), CurlObject::Curl_getinfo);
 

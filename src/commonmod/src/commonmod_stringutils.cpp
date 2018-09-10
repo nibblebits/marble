@@ -35,6 +35,7 @@ Class *CommonModule_StringUtils::registerClass(ModuleSystem *moduleSystem)
      * @class StringUtils
      * 
      * Returns an ascii character from the Ascii table represented by the number provided
+     * 
      * function getASCIIString() : string
      */
     c->registerFunction("getASCIIString", {VarType::fromString("number")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_getASCIIString);
@@ -44,6 +45,7 @@ Class *CommonModule_StringUtils::registerClass(ModuleSystem *moduleSystem)
      * 
      * Returns a part of a string based on the position and total
      * 
+     * @works_without_class
      * function substr(string str, number pos, number size) : string
      */
     c->registerFunction("substr", {VarType::fromString("string"), VarType::fromString("number"), VarType::fromString("number")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_substr);
@@ -56,6 +58,7 @@ Class *CommonModule_StringUtils::registerClass(ModuleSystem *moduleSystem)
      * @class StringUtils
      * Returns the size of the provided string
      * 
+     * @works_without_class
      * function strlen(string str) : number
      */
     c->registerFunction("strlen", {VarType::fromString("string")}, VarType::fromString("number"), CommonModule_StringUtils::StringUtils_strlen);
@@ -65,6 +68,7 @@ Class *CommonModule_StringUtils::registerClass(ModuleSystem *moduleSystem)
      * @class StringUtils
      * Returns the position of the needle in the haystack
      * 
+     * @works_without_class
      * function strpos(string haystack, string needle, number pos) : number
      */
     c->registerFunction("strpos", {VarType::fromString("string"), VarType::fromString("string"), VarType::fromString("number")}, VarType::fromString("number"), CommonModule_StringUtils::StringUtils_strpos);
@@ -74,6 +78,7 @@ Class *CommonModule_StringUtils::registerClass(ModuleSystem *moduleSystem)
      * @class StringUtils
      * Splits the desired string and returns an array of strings
      * 
+     * @works_without_class
      * function split(string target, string delim) : string[]
      */
     c->registerFunction("split", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("string[]"), CommonModule_StringUtils::StringUtils_split);
@@ -83,6 +88,7 @@ Class *CommonModule_StringUtils::registerClass(ModuleSystem *moduleSystem)
      * @class StringUtils
      * Replaces all instances of to_replace from the target with the replace_with string
      *
+     * @works_without_class
      * function str_replace(string target, string to_replace, string replace_with) : string
      */
     c->registerFunction("str_replace", {VarType::fromString("string"), VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_str_replace);
@@ -92,6 +98,8 @@ Class *CommonModule_StringUtils::registerClass(ModuleSystem *moduleSystem)
      * @class StringUtils
      * Matches all occurences in the target based on the regex string provided.
      * Returns a string array of all the occurences found
+     * 
+     * @works_without_class
      * function preg_match_all(string target, string regex) : string[]
      */
     c->registerFunction("preg_match_all", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("string[]"), CommonModule_StringUtils::StringUtils_preg_match_all);
@@ -102,6 +110,7 @@ Class *CommonModule_StringUtils::registerClass(ModuleSystem *moduleSystem)
      * Trims whitespace from the left and right of the provided string target unless a pattern is provided
      * If a pattern is provided then the pattern is what is tripped from the string.
      *
+     * @works_without_class
      * function trim(string target, string pattern) : string
      */
     c->registerFunction("trim", {VarType::fromString("string")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_trim);
@@ -112,6 +121,7 @@ Class *CommonModule_StringUtils::registerClass(ModuleSystem *moduleSystem)
      * Trims whitespace from the left and right of the provided string target unless a pattern is provided
      * If a pattern is provided then the pattern is what is tripped from the string.
      *
+     * @works_without_class
      * function trim(string target, string pattern) : string
      */
     moduleSystem->getFunctionSystem()->registerFunction("trim", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_trim);
@@ -122,6 +132,7 @@ Class *CommonModule_StringUtils::registerClass(ModuleSystem *moduleSystem)
      * Trims whitespace from the left of the provided string target unless a pattern is provided
      * If a pattern is provided then the pattern is what is tripped from the string.
      *
+     * @works_without_class
      * function trim(string target, string pattern) : string
      */
     c->registerFunction("ltrim", {VarType::fromString("string")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_ltrim);
@@ -132,6 +143,7 @@ Class *CommonModule_StringUtils::registerClass(ModuleSystem *moduleSystem)
      * Trims whitespace from the left of the provided string target unless a pattern is provided
      * If a pattern is provided then the pattern is what is tripped from the string.
      *
+     * @works_without_class
      * function ltrim(string target, string pattern) : string
      */
     moduleSystem->getFunctionSystem()->registerFunction("ltrim", {VarType::fromString("string")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_ltrim);
@@ -142,6 +154,7 @@ Class *CommonModule_StringUtils::registerClass(ModuleSystem *moduleSystem)
      * Trims whitespace from the right of the provided string target unless a pattern is provided
      * If a pattern is provided then the pattern is what is tripped from the string.
      *
+     * @works_without_class
      * function rtrim(string target, string pattern) : string
      */
     c->registerFunction("rtrim", {VarType::fromString("string")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_rtrim);
@@ -152,6 +165,7 @@ Class *CommonModule_StringUtils::registerClass(ModuleSystem *moduleSystem)
      * Trims whitespace from the right of the provided string target unless a pattern is provided
      * If a pattern is provided then the pattern is what is tripped from the string.
      *
+     * @works_without_class
      * function rtrim(string target, string pattern) : string
      */
     moduleSystem->getFunctionSystem()->registerFunction("rtrim", {VarType::fromString("string")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_rtrim);
@@ -163,6 +177,7 @@ Class *CommonModule_StringUtils::registerClass(ModuleSystem *moduleSystem)
      * @class StringUtils
      * Preforms a number format on the given target 
      *
+     * @works_without_class
      * function number_format(string target, number places) : string
      */
     c->registerFunction("number_format", {VarType::fromString("string"), VarType::fromString("number")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_number_format);
@@ -172,6 +187,8 @@ Class *CommonModule_StringUtils::registerClass(ModuleSystem *moduleSystem)
      * Returns the given number as a correctly formatted string. 
      * Whole numbers are returned as whole number strings. Doubles may have to be formatted correctly with the number_format function
      *
+     * @works_without_class
+     * 
      * function number_to_string(number val) : string
      */
     c->registerFunction("number_to_string", {VarType::fromString("number")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_number_to_string);
