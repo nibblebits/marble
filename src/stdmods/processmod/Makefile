@@ -17,6 +17,6 @@ module: ${SYSTEM_OBJECT_FILES}
 	g++ ${INCLUDES} ./src/shellpermission.cpp -o ./build/shellpermission.o ${OBJECT_FILE_FLAGS}
 
 standalone: module
-	g++ -fPIC -shared -std=c++14  -unresolved-symbols=ignore-in-shared-libs ${INCLUDES} ${SYSTEM_OBJECT_FILES} -o ../bin/marble_shellmod.so
+	g++ -fPIC -shared -std=c++14  -unresolved-symbols=ignore-in-shared-libs ${INCLUDES} ${SYSTEM_OBJECT_FILES} -o ../bin/marble_processmod.so
 clean:
 	rm ${SYSTEM_OBJECT_FILES}
