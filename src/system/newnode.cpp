@@ -7,6 +7,8 @@
 #include "validator.h"
 #include "function.h"
 #include "exceptions/testerror.h"
+#include "exceptions/systemexception.h"
+#include "exceptionobject.h"
 #include <iostream>
 #include <memory>
 NewNode::NewNode() : ExpressionInterpretableNode(NODE_TYPE_NEW)
@@ -142,7 +144,15 @@ void NewNode::new_object_variable(Interpreter* interpreter, Value& v, FunctionCa
         argument_results.push_back(v);
     }
 
-    std::shared_ptr<Object> object = Object::create(interpreter, object_class, argument_results);
+    std::shared_ptr<Object> object = NULL;
+    try
+    {
+       object = Object::create(interpreter, object_class, argument_results);
+    }
+    catch(SystemException& ex)
+    {
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("Exception"), {})), ex.getObject()->getMessage() + " for class: " + fc_node->name->value);
+    }
     v.set(object);
 }
 

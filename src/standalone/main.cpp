@@ -21,7 +21,7 @@
 BaseSystemHandler *baseHandler = NULL;
 ModuleSystem *moduleSystem = NULL;
 std::shared_ptr<PermissionsObject> set_permissions;
-std::string configFileName = "./config.marble";
+std::string configFileName = "/etc/marble/config.marble";
 bool loadConfiguration()
 {
     Interpreter interpreter(moduleSystem->getClassSystem(), moduleSystem->getFunctionSystem());
