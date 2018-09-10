@@ -88,6 +88,18 @@ Class *FileModule_File::registerClass(ModuleSystem *moduleSystem)
      */
     c->registerFunction("delete", {VarType::fromString("string")}, VarType::fromString("void"), FileModule_File::File_Delete);
 
+
+   /**
+     * @class File
+     * 
+     * Reads the entire file into memory as a string and returns the file contents.
+     * 
+     * @works_without_class
+     * function file_get_contents(string filename) : string
+     */
+    c->registerFunction("file_get_contents", {VarType::fromString("string")}, VarType::fromString("string"), FileModule_File::File_file_get_contents);
+    moduleSystem->getFunctionSystem()->registerFunction("file_get_contents", {VarType::fromString("string")}, VarType::fromString("string"), FileModule_File::File_file_get_contents);
+
     return c;
 }
 
@@ -162,13 +174,44 @@ void FileModule_File::File_IsFile(Interpreter *interpreter, std::vector<Value> v
     return_value->set(isFile(values[0].svalue));
 }
 
-void FileModule_File::File_Delete(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+void FileModule_File::File_Delete(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
     // Let's make sure we have write access so we can delete this file
     std::string filename = values[0].svalue;
     std::string abs_path = getAbsolutePath(filename);
     FilePermission::checkPermissionAllows(interpreter, caller_scope, abs_path, "w");
-    if(remove(filename.c_str()) != 0)
+    if (remove(filename.c_str()) != 0)
         throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "The file: " + filename + " could not be deleted because it either does not exist or you lack the system permissions to do so. You do have marble permissiosn to delete this file");
-  
+}
+
+void FileModule_File::File_file_get_contents(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
+{
+    std::string absolute_filename_path = getAbsolutePath(values[0].svalue);
+    // We need to make sure the scope has access to this file
+    FilePermission::checkPermissionAllows(interpreter, caller_scope, absolute_filename_path, "r");
+    FILE *fp = fopen(absolute_filename_path.c_str(), "r");
+    if (!fp)
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to open the file: " + absolute_filename_path);
+
+    try
+    {
+        fseek(fp, 0, SEEK_END);
+        int size = ftell(fp);
+        fseek(fp, 0, SEEK_SET);
+
+        char buf[size+1];
+        if (!fread(buf, size, 1, fp))
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to read the file: " + absolute_filename_path + " but it opened succesfully");
+
+        // Add NULL terminator
+        buf[size] = 0;
+        return_value->set(std::string(buf));
+        fclose(fp);
+    }
+    catch (...)
+    {
+        fclose(fp);
+        throw;
+    }
+    
 }
