@@ -64,7 +64,7 @@ void interpret(std::string filename)
 
     interpreter.setInputFunction([]() -> std::string {
         std::string s;
-        std::cin >> s;
+        std::getline(std::cin, s);
         return s;
     });
 
