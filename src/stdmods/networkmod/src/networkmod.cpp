@@ -8,6 +8,7 @@
 #include "curlobject.h"
 #include "mailobject.h"
 #include "smtpmailobject.h"
+#include "sendmailobject.h"
 #include "networkpermission.h"
 #include <fstream>
 #include <sstream>
@@ -70,6 +71,10 @@ void NetworkModule::Init()
 
     // Regiser the SmtpMail class
     SmtpMailObject::registerClass(this->getModuleSystem());
+
+    // Register the SendMail class
+    SendMailObject::registerClass(this->getModuleSystem());
+
 }
 
 void NetworkModule::newInterpreter(Interpreter *interpreter)
