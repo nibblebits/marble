@@ -5,6 +5,7 @@ OBJECT_FILE_FLAGS = -c -g -fPIC -std=c++14 -g
 SYSTEM_LIB_LOCAL_FILENAME = libmarble.so
 SYSTEM_LIB_FILE_LOCATION = ./bin/${SYSTEM_LIB_LOCAL_FILENAME}
 INCLUDES = ./include -I ./src/commonmod/include
+
 common_mod:
 	cd ./src/commonmod && $(MAKE) standalone
 system: ${SYSTEM_OBJECT_FILES}
@@ -180,18 +181,33 @@ standalone: common_mod system
 	cd bin; \
 	g++ -g -I .${INCLUDES} ../src/standalone/main.cpp ./${SYSTEM_LIB_LOCAL_FILENAME}  -ldl -std=c++14 -o ./marble;
 
+standalone-install: common_mod system
+	cp ${SYSTEM_LIB_FILE_LOCATION} /usr/lib/${SYSTEM_LIB_LOCAL_FILENAME}
+	cd bin; \
+	g++ -g -I .${INCLUDES} ../src/standalone/main.cpp /usr/lib/${SYSTEM_LIB_LOCAL_FILENAME}  -ldl -std=c++14 -o ./marble;
+	cd bin; \
+	cp ./marble /usr/bin/marble
+
 standalone-modules: standalone modules
 	cp -a ./src/stdmods/bin/. ./bin/mods
 
+standalone-modules-install: standalone-install modules
+	cp -a ./src/stdmods/bin/. /usr/lib/marble
+
 apache2: common_mod system modules
-	sudo cp ${SYSTEM_LIB_FILE_LOCATION} /usr/lib/${SYSTEM_LIB_LOCAL_FILENAME}
+	cp ${SYSTEM_LIB_FILE_LOCATION} /usr/lib/${SYSTEM_LIB_LOCAL_FILENAME}
 	cd ./src/apache && $(MAKE) all
 	g++ -fPIC -shared -std=c++14 -I /usr/include/apache2 -I /usr/include/apr-1.0 -I ${INCLUDES} -I ./src/apache/include ./src/apache/src/mod_marble.cpp /usr/lib/${SYSTEM_LIB_LOCAL_FILENAME} -o ./bin/mod_marble.so ${APACHE_OBJECT_FILES}
 apache2-install: apache2
-	sudo apxs -i -a -n mod_marble ./bin/mod_marble.so
-	sudo cp -a ./src/stdmods/bin/. /usr/lib/marble
+	apxs -i -a -n mod_marble ./bin/mod_marble.so
+	cp -a ./src/stdmods/bin/. /usr/lib/marble
 clean:
 	rm ${SYSTEM_OBJECT_FILES}
 	cd ./src/stdmods && $(MAKE) clean
 	cd ./src/commonmod && $(MAKE) clean
 	cd ./src/apache && $(MAKE) clean
+
+uninstall:
+	rm -rf /usr/lib/marble
+	rm -f /usr/lib/apache2/modules/mod_marble.so
+	rm -f /usr/bin/marble
