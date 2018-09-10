@@ -208,7 +208,7 @@ clean:
 	cd ./src/apache && $(MAKE) clean
 
 config:
-	cp -a ./config_files. /etc/marble/
+	cp -a ./config_files/. /etc/marble/
 uninstall:
 	rm -rf /usr/lib/marble
 	rm -f /usr/lib/apache2/modules/mod_marble.so
