@@ -12,7 +12,7 @@
 #define DEBUG_ENABLED
 
 // Marble versioing information
-#define MARBLE_MAJOR_CODENAME "Blue"
+#define MARBLE_MAJOR_CODENAME "Clearies"
 #define MARBLE_VERSION "0.1.0"
 
 #endif

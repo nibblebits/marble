@@ -248,13 +248,42 @@ void MathObject::registerClass(ModuleSystem *moduleSystem)
      */
     c->registerFunction("cbrt", {VarType::fromString("number")}, VarType::fromString("number"), MathObject::Math_cbrt);
 
-      /**
+    /**
      * @class Math
      * Returns the hypotenuse of a right-angled triangle whose legs are x and y.
      * The function returns what would be the square root of the sum of the squares of x and y (as per the Pythagorean theorem), but without incurring in undue overflow or underflow of intermediate values.
      * function hypot(number x, number y) : number
      */
     c->registerFunction("hypot", {VarType::fromString("number"), VarType::fromString("number")}, VarType::fromString("number"), MathObject::Math_hypot);
+
+    /**
+     * @class Math
+     *  Rounds x upward, returning the smallest integral value that is not less than x.
+     * function ceil(number x) : number
+     */
+    c->registerFunction("ceil", {VarType::fromString("number")}, VarType::fromString("number"), MathObject::Math_ceil);
+
+    /**
+     * @class Math
+     * Rounds x downward, returning the largest integral value that is not greater than x.
+     * function floor(number x) : number
+     */
+    c->registerFunction("floor", {VarType::fromString("number")}, VarType::fromString("number"), MathObject::Math_floor);
+
+    /**
+     * @class Math
+     * Returns the integral value that is nearest to x, with halfway cases rounded away from zero.
+     * function round(number x) : number
+     */
+    c->registerFunction("round", {VarType::fromString("number")}, VarType::fromString("number"), MathObject::Math_round);
+
+
+    /**
+     * @class Math
+     *  Returns the absolute value of x: |x|.
+     * function abs(number x) : number
+     */
+    c->registerFunction("abs", {VarType::fromString("number")}, VarType::fromString("number"), MathObject::Math_abs);
 
 }
 
@@ -401,4 +430,19 @@ void MathObject::Math_cbrt(Interpreter *interpreter, std::vector<Value> values, 
 void MathObject::Math_hypot(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
     return_value->set((double)hypot(values[0].dvalue, values[1].dvalue));
+}
+
+void MathObject::Math_ceil(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
+{
+    return_value->set((double)ceil(values[0].dvalue));
+}
+
+void MathObject::Math_floor(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
+{
+    return_value->set((double)floor(values[0].dvalue));
+}
+
+void MathObject::Math_round(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
+{
+    return_value->set((double)round(values[0].dvalue));
 }
