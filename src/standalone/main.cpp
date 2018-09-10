@@ -110,20 +110,44 @@ void show_mod_information(int argc, char **argv)
     if (argc < 3)
         throw std::logic_error("You must provide the modules file path to get module information");
 }
+
+void show_help()
+{
+    std::cout << "Marble Codename: " << Interpreter::getCodename() << std::endl;
+    std::cout << "Marble version: " << Interpreter::getVersion() << std::endl;
+    std::cout << "-----------------------------" << std::endl;
+    std::cout << "Use \"marble /my/path/filename.marble\" if you wish to run a marble file with the default configuration" << std::endl;
+    std::cout << "Use -setconfig to change the configuration file for when running a marble script \"marble -setconfig /path/to/config.marble /file/to/run.marble\"" << std::endl;
+    std::cout << "Append the argument -v to see versioning information of this marble interpreter and its modules: \"marble -v\"" << std::endl;
+    std::cout << "---------------------" << std::endl;
+}
 int begin(int argc, char **argv)
 {
     if (argc < 2)
-        throw std::logic_error("You must provide a filename");
+    {
+        show_help();
+        return 0;
+    }
+
+    std::string fileToInterpret = argv[1];
 
     if (strcmp(argv[1], "-v") == 0)
     {
         show_version_information();
         return 0;
     }
-    else if (strcmp(argv[1], "-mod"))
+    else if(strcmp(argv[1], "-setconfig") == 0)
     {
-        show_mod_information(argc, argv);
+        if (argc < 3)
+            throw std::logic_error("You used -setconfig but you did not specify a path to the configuration file to use");
+        
+        if (argc < 4)
+            throw std::logic_error("You must provide a filename to use this new configuration with");
+
+        configFileName = argv[2];
+        fileToInterpret = argv[3];
     }
+    
 
     // Let's load the configuration and start interpreting
     baseHandler = new BaseSystemHandler();
@@ -132,7 +156,7 @@ int begin(int argc, char **argv)
     if (!loadConfiguration())
         return 1;
 
-    interpret(argv[1]);
+    interpret(fileToInterpret);
 
     delete baseHandler;
     delete moduleSystem;
