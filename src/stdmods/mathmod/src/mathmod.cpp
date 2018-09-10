@@ -8,7 +8,7 @@
 #include <sstream>
 #include <iostream>
 
-MathModule::MathModule() : Module("mathmod", "Math Module", MODULE_TYPE_MARBLE_LIBRARY)
+MathModule::MathModule() : Module("mathmod", "Math Module", MODULE_TYPE_MARBLE_LIBRARY, "1.0.0", "ADD_HELP_PATH_HERE")
 {
 
 }

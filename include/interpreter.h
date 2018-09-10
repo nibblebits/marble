@@ -49,6 +49,16 @@ public:
     static Class* getDefaultBaseClass();
 
     /**
+     * Returns the version of marble e.g 1.0.0
+     */
+    static std::string getVersion();
+
+    /**
+     * Returns this marble interpreters major codename which identifies the major version of marble with a word or two
+     */
+    static std::string getCodename();
+
+    /**
      * Adds the thread to the active threads vector. All threads are joined when the Interpreter destructs
      */
     void addThread(std::thread t);

@@ -11,12 +11,7 @@
 #include <stdio.h>
 
 
-std::shared_ptr<Object> FileModule_File::newInstance(Class* c)
-{
-    return std::make_shared<FileModule_File>(c);
-}
-
-FileModule::FileModule() : Module("filemod", "File Module", MODULE_TYPE_MARBLE_LIBRARY)
+FileModule::FileModule() : Module("filemod", "File Module", MODULE_TYPE_MARBLE_LIBRARY, "1.0.0", "ADD_HELP_PATH_HERE")
 {
 
 }

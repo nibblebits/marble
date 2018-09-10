@@ -7,7 +7,7 @@
 class Module
 {
 public:
-    Module(std::string name, std::string module_descriptor, MODULE_TYPE type);
+    Module(std::string name, std::string module_descriptor, MODULE_TYPE type, std::string version, std::string help_path);
     virtual ~Module();
     std::string getName();
     std::string getDescriptor();
@@ -16,6 +16,8 @@ public:
     void setModuleSystem(ModuleSystem* moduleSystem);
     void setFilename(std::string filename);
     std::string getFilename();
+    std::string getVersion();
+    std::string getHelpPath();
     void setModulePointer(void* module_ptr);
     void* getModulePointer();
     ModuleSystem* getModuleSystem();
@@ -31,6 +33,8 @@ private:
     std::string descriptor;
     std::string name;
     std::string filename;
+    std::string version;
+    std::string help_path;
     // The pointer to the library loaded with dlopen
     void* module_ptr;
     ModuleSystem* moduleSystem;

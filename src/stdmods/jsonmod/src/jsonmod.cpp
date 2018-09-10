@@ -9,7 +9,7 @@
 #include <sstream>
 #include <iostream>
 
-JsonModule::JsonModule() :  Module("jsonmod", "Json Module", MODULE_TYPE_MARBLE_LIBRARY)
+JsonModule::JsonModule() :  Module("jsonmod", "Json Module", MODULE_TYPE_MARBLE_LIBRARY, "1.0.0", "ADD_HELP_PATH_HERE")
 {
 
 }

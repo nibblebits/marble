@@ -8,7 +8,7 @@
 #include <sstream>
 #include <iostream>
 
-CryptoModule::CryptoModule() :  Module("cryptomod", "Cryptography Module", MODULE_TYPE_MARBLE_LIBRARY)
+CryptoModule::CryptoModule() :  Module("cryptomod", "Cryptography Module", MODULE_TYPE_MARBLE_LIBRARY, "1.0.0", "ADD_HELP_PATH_HERE")
 {
 
 }

@@ -10,7 +10,7 @@
 #include <sstream>
 #include <iostream>
 
-ProcessModule::ProcessModule() :  Module("processmod", "Process Module", MODULE_TYPE_MARBLE_LIBRARY)
+ProcessModule::ProcessModule() :  Module("processmod", "Process Module", MODULE_TYPE_MARBLE_LIBRARY, "1.0.0", "ADD_HELP_PATH_HERE")
 {
 
 }

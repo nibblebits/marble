@@ -10,4 +10,9 @@
 
 // Debug mode is enabled; To display comment the line below
 #define DEBUG_ENABLED
+
+// Marble versioing information
+#define MARBLE_MAJOR_CODENAME "Blue"
+#define MARBLE_VERSION "0.1.0"
+
 #endif

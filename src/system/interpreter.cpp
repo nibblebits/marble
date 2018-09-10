@@ -89,6 +89,16 @@ Interpreter::~Interpreter()
         t.join();
 }
 
+
+std::string Interpreter::getVersion()
+{
+    return MARBLE_VERSION;
+}
+
+std::string Interpreter::getCodename()
+{
+    return MARBLE_MAJOR_CODENAME;
+}
 void Interpreter::addThread(std::thread t)
 {
     this->active_threads.push_back(std::move(t));

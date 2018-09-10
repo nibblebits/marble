@@ -23,7 +23,7 @@ typedef std::function<void(Module*,std::string,LOG_TYPE)> LOG_HANDLER_FUNCTION;
 class ModuleSystem : public SystemHandler
 {
 public:
-    ModuleSystem(ClassSystem* classSystem, FunctionSystem* baseFunctionSystem);
+    ModuleSystem(ClassSystem* classSystem, FunctionSystem* baseFunctionSystem, LOG_HANDLER_FUNCTION log_function=NULL);
     virtual ~ModuleSystem();
     /**
      * Adds the module to this ModuleSystem. A module should only be added to one ModuleSystem to work correctly.
@@ -41,6 +41,11 @@ public:
      * Unloads the modules apart of this ModuleSystem. If the same module is in multiple ModuleSystems it won't be a good idea to call this
      */
     void unloadModules();
+
+    /**
+     * Returns the  modules loaded into this ModuleSystem
+     */
+    std::vector<Module*> getModules();
 private:
     std::vector<Module*> modules;
     LOG_HANDLER_FUNCTION log_handler;

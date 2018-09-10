@@ -2,7 +2,7 @@
 #include "mysqlconnection.h"
 #include "mysqldriver.h"
 
-MysqlModule::MysqlModule() : Module("Mysql Module", "MysqlModule", MODULE_TYPE_MARBLE_LIBRARY)
+MysqlModule::MysqlModule() : Module("mysqlmod", "Mysql Module", MODULE_TYPE_MARBLE_LIBRARY, "1.0.0", "HELP PATH HERE")
 {
 
 }

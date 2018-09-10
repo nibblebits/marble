@@ -36,9 +36,13 @@ void CoutLogHandler(Module* module, std::string message, LOG_TYPE log_type)
     std::cout << output_msg << std::endl;
 }
 
-ModuleSystem::ModuleSystem(ClassSystem* classSystem, FunctionSystem* baseFunctionSystem) : SystemHandler(SYSTEM_HANDLER_MODULE_SYSTEM, classSystem, baseFunctionSystem)
+ModuleSystem::ModuleSystem(ClassSystem* classSystem, FunctionSystem* baseFunctionSystem, LOG_HANDLER_FUNCTION log_function) : SystemHandler(SYSTEM_HANDLER_MODULE_SYSTEM, classSystem, baseFunctionSystem)
 {
-    this->setLogHandler(CoutLogHandler);
+    if (log_function == NULL)
+    {
+        log_function = CoutLogHandler;
+    }
+    this->setLogHandler(log_function);
     addModule(new CommonModule());
 }
 
@@ -98,4 +102,10 @@ void ModuleSystem::setLogHandler(LOG_HANDLER_FUNCTION handler_func)
 void ModuleSystem::log(Module* module, std::string message, LOG_TYPE log_type)
 {
     this->log_handler(module, message, log_type);
+}
+
+
+std::vector<Module*> ModuleSystem::getModules()
+{
+    return this->modules;
 }

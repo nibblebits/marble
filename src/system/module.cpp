@@ -1,10 +1,12 @@
 #include "module.h"
-Module::Module(std::string name, std::string module_descriptor, MODULE_TYPE type)
+Module::Module(std::string name, std::string module_descriptor, MODULE_TYPE type, std::string version, std::string help_path)
 {
     this->moduleSystem = NULL;
     this->descriptor = module_descriptor;
     this->name = name;
     this->type = type;
+    this->version = version;
+    this->help_path = help_path;
     this->filename = "";
     this->module_ptr = NULL;
 }
@@ -54,6 +56,15 @@ std::string Module::getFilename()
     return this->filename;
 }
 
+std::string Module::getVersion()
+{
+    return this->version;
+}
+
+std::string Module::getHelpPath()
+{
+    return this->help_path;
+}
 void Module::setModulePointer(void* module_ptr)
 {
     this->module_ptr = module_ptr;

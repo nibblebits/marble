@@ -23,6 +23,11 @@ FileModule_File::~FileModule_File()
         fclose(this->fp);
 }
 
+std::shared_ptr<Object> FileModule_File::newInstance(Class* c)
+{
+    return std::make_shared<FileModule_File>(c);
+}
+
 Class *FileModule_File::registerClass(ModuleSystem *moduleSystem)
 {
     Class *c = moduleSystem->getClassSystem()->registerClass("File");
