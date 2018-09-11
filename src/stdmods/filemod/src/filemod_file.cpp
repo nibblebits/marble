@@ -23,7 +23,7 @@ FileModule_File::~FileModule_File()
         fclose(this->fp);
 }
 
-std::shared_ptr<Object> FileModule_File::newInstance(Class* c)
+std::shared_ptr<Object> FileModule_File::newInstance(Class *c)
 {
     return std::make_shared<FileModule_File>(c);
 }
@@ -93,8 +93,7 @@ Class *FileModule_File::registerClass(ModuleSystem *moduleSystem)
      */
     c->registerFunction("delete", {VarType::fromString("string")}, VarType::fromString("void"), FileModule_File::File_Delete);
 
-
-   /**
+    /**
      * @class File
      * 
      * Reads the entire file into memory as a string and returns the file contents.
@@ -104,6 +103,18 @@ Class *FileModule_File::registerClass(ModuleSystem *moduleSystem)
      */
     c->registerFunction("file_get_contents", {VarType::fromString("string")}, VarType::fromString("string"), FileModule_File::File_file_get_contents);
     moduleSystem->getFunctionSystem()->registerFunction("file_get_contents", {VarType::fromString("string")}, VarType::fromString("string"), FileModule_File::File_file_get_contents);
+
+    /**
+     * @class File
+     * 
+     * Changes the mode of the given file
+     * 
+     * @works_without_class
+     * function chmod(string filename, number mode) : string
+     */
+    c->registerFunction("chmod", {VarType::fromString("string"), VarType::fromString("number")}, VarType::fromString("void"), FileModule_File::File_chmod);
+    moduleSystem->getFunctionSystem()->registerFunction("chmod", {VarType::fromString("string"), VarType::fromString("number")}, VarType::fromString("void"), FileModule_File::File_chmod);
+
 
     return c;
 }
@@ -204,7 +215,7 @@ void FileModule_File::File_file_get_contents(Interpreter *interpreter, std::vect
         int size = ftell(fp);
         fseek(fp, 0, SEEK_SET);
 
-        char buf[size+1];
+        char buf[size + 1];
         if (!fread(buf, size, 1, fp))
             throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to read the file: " + absolute_filename_path + " but it opened succesfully");
 
@@ -218,5 +229,16 @@ void FileModule_File::File_file_get_contents(Interpreter *interpreter, std::vect
         fclose(fp);
         throw;
     }
-    
+}
+
+void FileModule_File::File_chmod(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
+{
+    std::string absolute_filename_path = getAbsolutePath(values[0].svalue);
+    // We need to make sure the scope has access to this file
+    FilePermission::checkPermissionAllows(interpreter, caller_scope, absolute_filename_path, "r");
+
+    // Change the permissions
+    if(chmod(absolute_filename_path.c_str(), (int)values[1].dvalue) != 0)
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to change the mode of the file: " + absolute_filename_path);
+
 }
