@@ -189,7 +189,26 @@ std::string Lexer::get_operator(const char** ptr)
 
 std::string Lexer::get_number(const char** ptr, PosInfo& posInfo)
 {
-    std::string value = get_while(ptr, IS_NUMBER, posInfo);
+    int exiting_character = -1;
+    std::string value = get_while(ptr, IS_NUMBER, posInfo, &exiting_character);
+    if (exiting_character != -1 && value.size() == 1 && value[0] == '0')
+    {
+        // We may have a hexadecimal or binary number here as get_while terminated after 0 was found. Let's look ahead and see
+        if (exiting_character == 'x')
+        {
+            // It looks like we have hexadecimal let's forward the pointer twice to ignore "0x"
+            *ptr+=2;
+            posInfo.col += 1;
+            value = get_while(ptr, IS_NUMBER | IS_CHARACTER, posInfo);
+
+            // Let's get the hex value
+            int v;
+            std::istringstream(value) >> std::hex >> v;
+            // Finally set the value again to the decimal result of the hexadecimal
+            value = std::to_string(v);
+            return value;
+        }
+    }
 
     // If this number begins with zero and there is multiple numbers such as "02" or "0456" then it is octal and conversion should happen
     if (value.size() > 1)
@@ -270,7 +289,7 @@ std::string Lexer::get_string(const char** ptr, PosInfo& posInfo)
 }
 
 
-std::string Lexer::get_while(const char** ptr, int expected, PosInfo& posInfo)
+std::string Lexer::get_while(const char** ptr, int expected, PosInfo& posInfo, int* exiting_character)
 {
     std::string tokenValue = "";
     char c = **ptr;
@@ -293,7 +312,9 @@ std::string Lexer::get_while(const char** ptr, int expected, PosInfo& posInfo)
             }
             // Restore the pointer to previous state
             *ptr-=1;
-             posInfo.col-=1;
+            posInfo.col-=1;
+            if (exiting_character != NULL)
+                *exiting_character = c;
             break;
         }
 next:
@@ -307,7 +328,7 @@ next:
 
 void Lexer::ignore_line(const char** ptr)
 {
-    while(**ptr != 0x0a) *ptr+=1;
+    while(bounds_safe(*ptr) && **ptr != 0x0a) *ptr+=1;
 }
 
 /**

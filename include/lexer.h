@@ -39,7 +39,11 @@ private:
     std::string get_operator(const char** ptr);
     std::string get_number(const char** ptr, PosInfo& posInfo);
     std::string get_string(const char** ptr, PosInfo& posInfo);
-    std::string get_while(const char** ptr, int expected, PosInfo& posInfo);
+    /**
+     * Gets a string if the expected bit mask is valid for the given character read.
+     * If it is not a part of the bit mask then the exiting_character is set to the failing character
+     */
+    std::string get_while(const char** ptr, int expected, PosInfo& posInfo, int* exiting_character=NULL);
     void ignore_line(const char** ptr);
     /**
      * Returns a char based on the sequence for the given character
