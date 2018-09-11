@@ -3,7 +3,9 @@
 #include <iostream>
 #include <memory.h>
 #include <stdlib.h>
+#include <sstream>
 #include <memory>
+#include <iomanip>
 #include <ctype.h>
 #include "statics.h"
 #include "config.h"
@@ -185,21 +187,20 @@ std::string Lexer::get_operator(const char** ptr)
     return value;
 }
 
-std::string Lexer::get_number(const char** ptr)
+std::string Lexer::get_number(const char** ptr, PosInfo& posInfo)
 {
-    const char* our_ptr = *ptr;
-    char c = *our_ptr;
-    std::string value = "";
-    while(is_number(c))
-    {
-        value += c;
-        our_ptr++;
-        c = *our_ptr;
-    }
+    std::string value = get_while(ptr, IS_NUMBER, posInfo);
 
-    if (value != "")
+    // If this number begins with zero and there is multiple numbers such as "02" or "0456" then it is octal and conversion should happen
+    if (value.size() > 1)
     {
-        *ptr += value.length();
+        if (value[0] == '0')
+        {
+            // Let's convert from octal to decimal and then set the value to this
+            int v;
+            std::istringstream(value) >> std::oct >> v;
+            value = std::to_string(v);
+        }
     }
     return value;
 }
@@ -371,7 +372,7 @@ Token* Lexer::stage1(PosInfo posInfo)
                 break;
                 case IS_NUMBER:
                     token_type = TOKEN_TYPE_NUMBER;
-                    token_value = get_while(&ptr, IS_NUMBER, posInfo);
+                    token_value = get_number(&ptr, posInfo);
                 break;
                 case IS_SYMBOL:
                     token_type = TOKEN_TYPE_SYMBOL;

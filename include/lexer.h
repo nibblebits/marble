@@ -37,7 +37,7 @@ private:
     void error(std::string message, PosInfo posInfo);
     int get_type_of_char(char c, PosInfo& posInfo);
     std::string get_operator(const char** ptr);
-    std::string get_number(const char** ptr);
+    std::string get_number(const char** ptr, PosInfo& posInfo);
     std::string get_string(const char** ptr, PosInfo& posInfo);
     std::string get_while(const char** ptr, int expected, PosInfo& posInfo);
     void ignore_line(const char** ptr);
