@@ -41,7 +41,11 @@ private:
     std::string get_string(const char** ptr, PosInfo& posInfo);
     /**
      * Gets a string if the expected bit mask is valid for the given character read.
-     * If it is not a part of the bit mask then the exiting_character is set to the failing character
+     * If it is not a part of the bit mask then the exiting_character is set to the failing character.
+     * 
+     * When this function returns the ptr points to the last valid character for this get_while call.
+     * For example if you want to get a string of numbers "IS_NUMBER" and you have 53827+ then get_while will return
+     * 53827 and **ptr will equal 7 as 7 was the last valid character
      */
     std::string get_while(const char** ptr, int expected, PosInfo& posInfo, int* exiting_character=NULL);
     void ignore_line(const char** ptr);
