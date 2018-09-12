@@ -181,7 +181,7 @@ void SmtpMailObject::SmtpMail_send(Interpreter *interpreter, std::vector<Value> 
     /* Check for errors */
     if (res != CURLE_OK)
     {
-        std::cout << "failed here throw exception for future purposes: " << curl_easy_strerror(res) << std::endl;
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {})), "Failed to send email for SMTP");
     }
 
     /* Free the list of recipients */
