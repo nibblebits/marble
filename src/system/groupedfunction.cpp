@@ -23,8 +23,14 @@ void GroupedFunction::invoke_impl(Interpreter* interpreter, std::vector<Value> v
 {
     Function* function = getFunctionForValues(values, interpreter);
     if (function == NULL)
-        throw std::logic_error("No function found to invoke for the given values");
-    
+    {
+        std::string given_values = "";
+        for(Value v : values)
+        {
+            given_values += std::to_string(v.type) + ":" + v.type_str + ", ";
+        }
+        throw std::logic_error("Function name: " + this->name + ", No function found to invoke for the given values: "  + given_values);
+    }
     function->invoke(interpreter, values, return_value, object, caller_scope);
 }
 

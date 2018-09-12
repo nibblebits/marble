@@ -32,6 +32,7 @@ void SessionObject::registerClass(ModuleSystem* moduleSystem)
      * Constructs this Session object
      * 
      * function __construct() : void
+     */
     c->registerFunction("__construct", {}, VarType::fromString("void"), Function::Blank);
 
 
