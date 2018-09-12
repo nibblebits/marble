@@ -59,6 +59,7 @@ VALUE_TYPE Value::getValueTypeFromVariableType(VARIABLE_TYPE type)
     VALUE_TYPE value_type;
     switch (type)
     {
+    case VARIABLE_TYPE_BOOLEAN:      
     case VARIABLE_TYPE_NUMBER:
         value_type = VALUE_TYPE_NUMBER;
         break;
@@ -69,6 +70,10 @@ VALUE_TYPE Value::getValueTypeFromVariableType(VARIABLE_TYPE type)
 
     case VARIABLE_TYPE_OBJECT:
         value_type = VALUE_TYPE_OBJECT;
+        break;
+
+    case VARIABLE_TYPE_VOID:
+        value_type = VALUE_TYPE_VOID;
         break;
 
     default:

@@ -39,6 +39,7 @@ Value CastNode::interpret(Interpreter* interpreter, struct extras extra)
         else if(evaluation.datatype.value == "boolean")
         {
             // Let's just change the type string to boolean. As all booleans hold numbers nothing else needs to be changed
+            v.type = VALUE_TYPE_NUMBER;
             v.type_str = "boolean";
         }
         else if(evaluation.datatype.value == "string")

@@ -87,8 +87,8 @@ enum
     VALUE_TYPE_NUMBER,
     VALUE_TYPE_STRING,
     VALUE_TYPE_OBJECT,
-    VALUE_TYPE_ARRAY,
-    VALUE_TYPE_VOID
+    VALUE_TYPE_VOID,
+    VALUE_TYPE_ARRAY
 };
 
 // Class register rules

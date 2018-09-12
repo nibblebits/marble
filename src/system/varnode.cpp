@@ -216,6 +216,7 @@ Value VarNode::interpret(Interpreter *interpreter, struct extras extra)
     variable->dimensions = this->dimensions;
     variable->type = Variable::getVariableTypeForString(type_str);
     variable->type_name = type_str;
+    variable->value.type = Value::getValueTypeFromVariableType(variable->type);
     variable->value.type_str = type_str;
     Value v = variable->value;
     return v;
