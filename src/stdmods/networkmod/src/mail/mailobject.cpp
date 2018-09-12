@@ -46,6 +46,11 @@ std::string MailObject::getTranscript()
 
 void MailObject::registerClass(ModuleSystem *moduleSystem)
 {
+    /**
+     * pure class Mail
+     * 
+     * The Mail class is a pure abstract class that all mail senders should extend.
+     */
     Class *c = moduleSystem->getClassSystem()->registerClass("Mail");
     c->setDescriptorObject(std::make_shared<MailObject>(c));
     c->is_pure = true;

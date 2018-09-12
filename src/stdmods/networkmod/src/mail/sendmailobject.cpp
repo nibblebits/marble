@@ -28,6 +28,11 @@ void SendMailObject::newInterpreter(Interpreter *interpreter)
 
 void SendMailObject::registerClass(ModuleSystem *moduleSystem)
 {
+    /**
+     * class SendMail extends Main
+     * 
+     * Allows you to send emails through Sendmail on your linux system. Requires that you have the sendmail binaries installed "/usr/lib/sendmail"
+     */
     Class *c = moduleSystem->getClassSystem()->registerClass("SendMail", moduleSystem->getClassSystem()->getClassByName("Mail"));
     c->setDescriptorObject(std::make_shared<SendMailObject>(c));
 

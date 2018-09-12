@@ -31,6 +31,11 @@ void SmtpMailObject::newInterpreter(Interpreter *interpreter)
 
 void SmtpMailObject::registerClass(ModuleSystem *moduleSystem)
 {
+    /**
+     * class SmtpMail extends Mail
+     * 
+     * The SmtpMail class allows you to send emails through your SMTP account
+     */
     Class *c = moduleSystem->getClassSystem()->registerClass("SmtpMail", moduleSystem->getClassSystem()->getClassByName("Mail"));
     c->setDescriptorObject(std::make_shared<SmtpMailObject>(c));
 
