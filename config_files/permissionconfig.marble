@@ -25,6 +25,10 @@ Permission shellPermission = new @ShellPermission();
 allowed_permissions.add(shellPermission);
 
 
+Permission chdirPermission = new @ChdirPermission();
+allowed_permissions.add(chdirPermission);
+
+
 # END OF PERMISSION SETUP
 
 </marble>

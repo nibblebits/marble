@@ -5,6 +5,8 @@
 #include "permissionsobject.h"
 #include "exceptionobject.h"
 #include "function.h"
+#include <unistd.h>
+
 CommonModule_System::CommonModule_System(Class* c) : Object(c)
 {
 
@@ -49,8 +51,23 @@ Class* CommonModule_System::registerClass(ModuleSystem* moduleSystem)
      */
     c->registerFunction("setTimeout", {VarType::fromString("number")}, VarType::fromString("void"), CommonModule_System::System_SetTimeout);
 
+    /**
+     * @class System
+     * Changes the working directory.
+     * 
+     * You are required to hold a ChdirPermission to change the working directory
+     * 
+     * @works_without_class
+     * function chdir(string new_directory) : void
+     */
+    c->registerFunction("chdir", {VarType::fromString("string")}, VarType::fromString("void"), CommonModule_System::System_chdir);
+    moduleSystem->getFunctionSystem()->registerFunction("chdir", {VarType::fromString("string")}, VarType::fromString("void"), CommonModule_System::System_chdir);
+  
     // Register the timeout permission
     moduleSystem->getClassSystem()->registerClass("TimeoutPermission", moduleSystem->getClassSystem()->getClassByName("Permission"));
+
+    // Register a ChdirPermission
+    moduleSystem->getClassSystem()->registerClass("ChdirPermission", moduleSystem->getClassSystem()->getClassByName("Permission"));
 }
 
 void CommonModule_System::newInterpreter(Interpreter* interpreter)
@@ -70,4 +87,20 @@ void CommonModule_System::System_SetTimeout(Interpreter* interpreter, std::vecto
         }
     }
     interpreter->setTimeout(values[0].dvalue);
+}
+
+void CommonModule_System::System_chdir(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+{
+    if (!interpreter->hasNoPermissionRestrictions())
+    {
+        std::shared_ptr<PermissionObject> permission = caller_scope->getPermission("ChdirPermission");
+        if (permission == NULL)
+        {
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You do not have the ChdirPermission which is required for changing the working directory");
+        }
+    }
+ 
+    if(chdir(values[0].svalue.c_str()) != 0)
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to change working directory");
+
 }
