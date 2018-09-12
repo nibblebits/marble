@@ -26,12 +26,30 @@ std::shared_ptr<Object> FileModule_Directory::newInstance(Class *c)
 
 Class *FileModule_Directory::registerClass(ModuleSystem *moduleSystem)
 {
+    /**
+     * class Directory
+     * 
+     * Responsible for directory related actions
+     */
     Class *c = moduleSystem->getClassSystem()->registerClass("Directory");
     c->setDescriptorObject(std::make_shared<FileModule_Directory>(c));
+    /**
+     * @class Directory
+     * 
+     * function __construct() : void
+     * 
+     * Constructs this Directory
+     */
     c->registerFunction("__construct", {}, VarType::fromString("void"), [=](Interpreter *interpreter, std::vector<Value> arguments, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope) {
         // Blank constructor
     });
 
+    /**
+     * @class Directory
+     * 
+     * Creates the directoru with the given string and returns weather it was succesfull or not
+     * function create(string filename) : boolean
+     */
     c->registerFunction("create", {VarType::fromString("string")}, VarType::fromString("boolean"), FileModule_Directory::Directory_Create);
     c->registerFunction("list", {VarType::fromString("string")}, VarType::fromString("string[]"), FileModule_Directory::Directory_List);
 

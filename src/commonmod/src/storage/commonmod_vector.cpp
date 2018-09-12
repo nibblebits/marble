@@ -23,7 +23,7 @@ std::shared_ptr<Object> CommonModule_Vector::newInstance(Class *c)
 Class *CommonModule_Vector::registerClass(ModuleSystem *moduleSystem)
 {
     /**
-     * class Vector
+     * class Vector extends List
      * 
      * The Vector class is a class that provided List functionality. This allows one to push and pop the Value objects which hold values of any type.
      */
@@ -71,6 +71,7 @@ Class *CommonModule_Vector::registerClass(ModuleSystem *moduleSystem)
 
 
     /**
+     * @class Vector
      * function isEmpty() : boolean
      * 
      * Returns true if this Vector is empty otherwise false
@@ -78,6 +79,7 @@ Class *CommonModule_Vector::registerClass(ModuleSystem *moduleSystem)
     Function *isEmpty_function = c->registerFunction("isEmpty", {}, VarType::fromString("boolean"), CommonModule_Vector::Vector_isEmpty);
 
     /**
+     * @class Vector
      * function size() : number
      * 
      * Returns the size of this Vector

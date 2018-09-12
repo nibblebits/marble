@@ -30,6 +30,10 @@ std::shared_ptr<Object> FileModule_File::newInstance(Class *c)
 
 Class *FileModule_File::registerClass(ModuleSystem *moduleSystem)
 {
+    /**
+     * class File
+     * Responsible for File operations
+     */
     Class *c = moduleSystem->getClassSystem()->registerClass("File");
     c->setDescriptorObject(std::make_shared<FileModule_File>(c));
     c->registerFunction("__construct", {}, VarType::fromString("void"), [=](Interpreter *interpreter, std::vector<Value> arguments, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope) {
@@ -44,42 +48,84 @@ Class *FileModule_File::registerClass(ModuleSystem *moduleSystem)
     });
 
     /**
+     * @class File
      * Moves the filename to the destination
      * 
+     * @works_without_class
      * function move(string filename, string dst_filename) : void
      */
     c->registerFunction("move", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("void"), FileModule_File::File_Move);
 
     /**
+     * @class File
      * Returns true if the given path is a file, returns false if it is a directory or an error occured
      * 
-     * function isFile() : boolean
+     * @works_without_class
+     * function isFile(string filename) : boolean
      */
     c->registerFunction("isFile", {VarType::fromString("string")}, VarType::fromString("boolean"), FileModule_File::File_IsFile);
 
+    /**
+     * @class File
+     * Attempts to open the file with the given filename. Returns true if successful otherwise false.
+     * 
+     * The mode provided determines how you wish to open this file.
+     * Use "w" to open the file for writing this will overwrite the file if it exists
+     * Use "r" to open the file for reading
+     * Use "a" to open the file for appending this will create a new file if one does not exist
+     * 
+     * You are required a FilePermission that allows you access to the file you are trying to open along with the mode
+     * function open(string filename, string mode) : void
+     */
     c->registerFunction("open", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("boolean"), [&](Interpreter *interpreter, std::vector<Value> arguments, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope) {
         File_Open(interpreter, arguments, return_value, object, caller_scope);
     });
+
+    /**
+     * @class File
+     * Returns the output stream for this opened file allowing you to write to the file
+     * function getOutputStream() : FileOutputStream
+     */
     c->registerFunction("getOutputStream", {}, VarType::fromString("FileOutputStream"), [&](Interpreter *interpreter, std::vector<Value> arguments, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope) {
         std::shared_ptr<FileModule_File> file = std::dynamic_pointer_cast<FileModule_File>(object);
         return_value->type = VALUE_TYPE_OBJECT;
         return_value->ovalue = file->output;
     });
 
+    /**
+     * @class File
+     * Returns the input stream for this opened file allowing you to read the file
+     * function getInputStream() : FileInputStream
+     */
     c->registerFunction("getInputStream", {}, VarType::fromString("FileInputStream"), [&](Interpreter *interpreter, std::vector<Value> arguments, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope) {
         std::shared_ptr<FileModule_File> file = std::dynamic_pointer_cast<FileModule_File>(object);
         return_value->type = VALUE_TYPE_OBJECT;
         return_value->ovalue = file->input;
     });
 
+    /**
+     * @class File
+     * Sets the position in the file that you wish to access
+     * function setPosition(number pos) : void
+     */
     c->registerFunction("setPosition", {VarType::fromString("number")}, VarType::fromString("void"), [&](Interpreter *interpreter, std::vector<Value> arguments, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope) {
         File_setPosition(interpreter, arguments, return_value, object);
     });
 
+    /**
+     * @class File
+     * Gets the current size of this file (not of the input stream or output stream)
+     * function getSize() : number
+     */
     c->registerFunction("getSize", {}, VarType::fromString("number"), [&](Interpreter *interpreter, std::vector<Value> arguments, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope) {
         File_GetSize(interpreter, arguments, return_value, object);
     });
 
+    /**
+     * @class File
+     * Closes this current file
+     * function close() : void
+     */
     c->registerFunction("close", {}, VarType::fromString("void"), [&](Interpreter *interpreter, std::vector<Value> arguments, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope) {
         File_Close(interpreter, arguments, return_value, object);
     });

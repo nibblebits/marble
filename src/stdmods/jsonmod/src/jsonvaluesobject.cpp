@@ -15,6 +15,12 @@ JsonValuesObject::~JsonValuesObject()
 
 void JsonValuesObject::registerClass(ModuleSystem *moduleSystem)
 {
+    /**
+     * class JsonValues
+     * 
+     * The JsonValues is returned after parsing Json succesfully. Each JsonValues object acts as a map 
+     * where it can hold multiple parsed json values by name and value.
+     */
     Class *c = moduleSystem->getClassSystem()->registerClass("JsonValues");
     c->setDescriptorObject(std::make_shared<JsonValuesObject>(c));
 
@@ -23,7 +29,7 @@ void JsonValuesObject::registerClass(ModuleSystem *moduleSystem)
 
 
     /**
-     * 
+     * @class JsonValues
      * Returns true if an index with the given name exists
      * 
      *  function has(string index_name) : boolean
@@ -32,7 +38,7 @@ void JsonValuesObject::registerClass(ModuleSystem *moduleSystem)
 
 
     /**
-     * 
+     * @class JsonValues
      * Sets the number for the index provided
      * 
      *  function setNumber(string name, number value) : number
@@ -40,7 +46,7 @@ void JsonValuesObject::registerClass(ModuleSystem *moduleSystem)
     Function *setNumber_func = c->registerFunction("setNumber", {VarType::fromString("string"), VarType::fromString("number")}, VarType::fromString("void"), JsonValuesObject::JsonValues_SetNumber);
 
     /**
-     * 
+     * @class JsonValues
      * Sets the string for the index provided
      * 
      *  function setString(string name, number value) : number
@@ -48,7 +54,7 @@ void JsonValuesObject::registerClass(ModuleSystem *moduleSystem)
     Function *setString_func = c->registerFunction("setString", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("void"), JsonValuesObject::JsonValues_SetString);
 
   /**
-     * 
+     * @class JsonValues
      * Sets the object for the index provided
      * 
      *  function setObject(string name, SessionValues value) : number
@@ -56,7 +62,7 @@ void JsonValuesObject::registerClass(ModuleSystem *moduleSystem)
     Function *setObject_func = c->registerFunction("setObject", {VarType::fromString("string"), VarType::fromString("JsonValues")}, VarType::fromString("void"), JsonValuesObject::JsonValues_SetObject);
 
     /**
-     * 
+     * @class JsonValues
      * Gets the number for the index provided
      * 
      *  function getNumber(string name) : number
@@ -64,7 +70,7 @@ void JsonValuesObject::registerClass(ModuleSystem *moduleSystem)
     Function *getNumber_func = c->registerFunction("getNumber", {VarType::fromString("string")}, VarType::fromString("number"), JsonValuesObject::JsonValues_GetNumber);
 
     /**
-     * 
+     * @class JsonValues
      * Gets the string for the index provided
      * 
      *  function getString(string name) : string
@@ -72,7 +78,7 @@ void JsonValuesObject::registerClass(ModuleSystem *moduleSystem)
     Function *getString_func = c->registerFunction("getString", {VarType::fromString("string")}, VarType::fromString("string"), JsonValuesObject::JsonValues_GetString);
 
     /**
-     * 
+     * @class JsonValues
      * Gets the object for the index provided
      * 
      *  function getObject(string name) : SessionValues
@@ -80,7 +86,7 @@ void JsonValuesObject::registerClass(ModuleSystem *moduleSystem)
     Function *getObject_func = c->registerFunction("getObject", {VarType::fromString("string")}, VarType::fromString("JsonValues"), JsonValuesObject::JsonValues_GetObject);
 
     /**
-     * 
+     * @class JsonValues
      * Gets the array for the index provided
      * 
      *  function getArray(string name) : array

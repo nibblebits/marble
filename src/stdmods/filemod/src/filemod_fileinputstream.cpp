@@ -22,8 +22,19 @@ std::shared_ptr<Object> FileModule_FileInputStream::newInstance(Class* c)
 Class* FileModule_FileInputStream::registerClass(ModuleSystem* moduleSystem)
 {
     ClassSystem* c_system = moduleSystem->getClassSystem();
+    /**
+     * class FileInputStream extends InputStream
+     * 
+     * Responsible for reading from files. Input streams can be retrieved when opening files
+     */
     Class* c = c_system->registerClass("FileInputStream", c_system->getClassByName("InputStream"));
     c->setDescriptorObject(std::make_shared<FileModule_FileInputStream>(c));
+    /**
+     * @class FileInputStream
+     * 
+     * Fills the input stream buffer with the provided number of bytes or until the file reaches the end
+     * function fill(number amount) : void
+     */
     Function* f = c->registerFunction("fill", {VarType::fromString("number")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         FileInputStream_Fill(interpreter, arguments, return_value, object);
     });

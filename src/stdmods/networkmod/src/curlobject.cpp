@@ -515,7 +515,7 @@ void CurlObject::registerClass(ModuleSystem *moduleSystem)
     /**
      * class Curl
      * 
-     * responsible for handling all curl operations. Creating a new instance of this class will create a new Curl object allowing you to talk with a http server
+     * Responsible for handling all curl operations. Creating a new instance of this class will create a new Curl object allowing you to talk with a http server or use other services related to Curl
      */
     Class *c = moduleSystem->getClassSystem()->registerClass("Curl");
     c->setDescriptorObject(std::make_shared<CurlObject>(c));

@@ -62,6 +62,7 @@ Class* CommonModule_Value::registerClass(ModuleSystem* moduleSystem)
 
 
     /**
+     * @class Value
      * function set(string value) : void
      * 
      * Set's this Value object to have a string value
@@ -69,6 +70,7 @@ Class* CommonModule_Value::registerClass(ModuleSystem* moduleSystem)
     Function* set_function = c->registerFunction("set", {VarType::fromString("string")}, VarType::fromString("void"), Value_Set);
     
     /**
+     * @class Value
      * function set(number value) : void
      * 
      * Set's this Value object to have a number value
@@ -76,6 +78,7 @@ Class* CommonModule_Value::registerClass(ModuleSystem* moduleSystem)
     set_function = c->registerFunction("set", {VarType::fromString("number")}, VarType::fromString("void"), Value_Set);
 
     /**
+     * @class Value
      * function set(Object value) : void
      * 
      * Set's this Value object to have an Object value
@@ -83,6 +86,7 @@ Class* CommonModule_Value::registerClass(ModuleSystem* moduleSystem)
     set_function = c->registerFunction("set", {VarType::fromString("Object")}, VarType::fromString("void"), Value_Set);
 
     /**
+     * @class Value
      * function operator:=(string value) : Value
      * 
      * Allows string assignments to this Value object
@@ -92,6 +96,7 @@ Class* CommonModule_Value::registerClass(ModuleSystem* moduleSystem)
     equal_operator_func->overloaded_operator = "=";
 
     /**
+     * @class Value
      * function operator:=(number value) : Value
      * 
      * Allows number assignments to this Value object
@@ -101,6 +106,7 @@ Class* CommonModule_Value::registerClass(ModuleSystem* moduleSystem)
     equal_operator_func->overloaded_operator = "=";
 
     /**
+     * @class Value
      * function operator:=(Object value) : Value
      * 
      * Allows Object assignments to this Value object
@@ -111,6 +117,7 @@ Class* CommonModule_Value::registerClass(ModuleSystem* moduleSystem)
 
 
     /**
+     * @class Value
      * function getString() : string
      * 
      * Get's this values string value alias of toString()
@@ -118,6 +125,7 @@ Class* CommonModule_Value::registerClass(ModuleSystem* moduleSystem)
     Function* getString_function = c->registerFunction("getString", {}, VarType::fromString("string"), Value_GetString);
 
     /**
+     * @class Value
      * function toString() : string
      * 
      * Get's this values string value alias of getString()
@@ -127,6 +135,7 @@ Class* CommonModule_Value::registerClass(ModuleSystem* moduleSystem)
 
 
     /**
+     * @class Value
      * function getNumber() : string
      * 
      * Get's this values number value alias of toNumber()
@@ -135,6 +144,7 @@ Class* CommonModule_Value::registerClass(ModuleSystem* moduleSystem)
 
 
     /**
+     * @class Value
      * function toNumber() : number
      * 
      * Get's this values number value alias of getNumber()
@@ -144,6 +154,7 @@ Class* CommonModule_Value::registerClass(ModuleSystem* moduleSystem)
 
 
     /**
+     * @class Value
      * function getObject() : Object
      * 
      * Get's this values Object value

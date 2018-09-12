@@ -77,6 +77,12 @@ void NetworkPermission::ensurePermission(Interpreter *interpreter, Scope *caller
 
 void NetworkPermission::registerClass(ModuleSystem *moduleSystem)
 {
+    /**
+     * class NetworkPermission extends Permission
+     * 
+     * The NetworkPermission must be held by all those who wish to preform network operations.
+     * The type of operation determines what attributes must be set within this NetworkPermission
+     */
     Class *c = moduleSystem->getClassSystem()->registerClass("NetworkPermission", moduleSystem->getClassSystem()->getClassByName("Permission"));
     c->setDescriptorObject(std::make_shared<NetworkPermission>(c));
 

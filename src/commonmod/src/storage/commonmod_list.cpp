@@ -34,6 +34,7 @@ Class* CommonModule_List::registerClass(ModuleSystem* moduleSystem)
     c->is_pure = true;
 
     /**
+     * @class List
      * function push(Value v) : void
      * 
      * Pushes the Value to the List
@@ -42,6 +43,7 @@ Class* CommonModule_List::registerClass(ModuleSystem* moduleSystem)
     push_function->is_pure = true;
 
     /**
+     * @class List
      * function pop() : Value
      * 
      * Pops the Value from this list and returns it
@@ -51,6 +53,7 @@ Class* CommonModule_List::registerClass(ModuleSystem* moduleSystem)
 
 
     /**
+     * @class List
      * function get(number index) : Value
      * 
      * Gets the Value with the provided index from the list
@@ -59,6 +62,7 @@ Class* CommonModule_List::registerClass(ModuleSystem* moduleSystem)
     get_function->is_pure = true;
 
     /**
+     * @class List
      * function isEmpty() : boolean
      * 
      * Returns true if this List is empty otherwise false
@@ -67,6 +71,7 @@ Class* CommonModule_List::registerClass(ModuleSystem* moduleSystem)
     isEmpty_function->is_pure = true;
 
     /**
+     * @class List
      * function size() : number
      * 
      * Returns the size of this List

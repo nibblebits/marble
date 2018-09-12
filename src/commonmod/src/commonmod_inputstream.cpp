@@ -22,19 +22,38 @@ std::shared_ptr<Object> CommonModule_InputStream::newInstance(Class* c)
 
 Class* CommonModule_InputStream::registerClass(ModuleSystem* moduleSystem)
 {
+    /**
+     * pure class InputStream
+     * 
+     * To be extended by all those wishing to implement their own InputStream functionality
+     */
     Class* c = moduleSystem->getClassSystem()->registerClass("InputStream");
     c->setDescriptorObject(std::make_shared<CommonModule_InputStream>(c));
     c->is_pure = true;
-
-    c->setDescriptorObject(std::make_shared<CommonModule_InputStream>(c));
+    /**
+     * @class InputStream
+     * Reads one byte from this InputStream's buffer
+     * function read() : number
+     */
     Function* f = c->registerFunction("read", {}, VarType::fromString("number"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         InputStream_Read(interpreter, arguments, return_value, object, caller_scope);
     });
 
+    /**
+     * @class InputStream
+     * Writes one byte to this InputStream's buffer so that it can be read at a later time
+     * function put(number n) : void
+     */
     f = c->registerFunction("put", {VarType::fromString("number")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         InputStream_Put(interpreter, arguments, return_value, object, caller_scope);
     });
 
+    /**
+     * @class InputStream
+     * To be implemented by input streams. The input streams should load the provided amount of bytes from their service into this input stream.
+     * In short this method should fill the input stream with the given amount of bytes
+     * pure function fill(number amount) : void
+     */
     f = c->registerFunction("fill", {VarType::fromString("number")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         InputStream_Fill(interpreter, arguments, return_value, object, caller_scope);
     });

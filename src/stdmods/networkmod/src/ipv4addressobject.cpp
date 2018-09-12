@@ -20,6 +20,11 @@ std::shared_ptr<Object> Ipv4AddressObject::newInstance(Class *c)
 
 void Ipv4AddressObject::registerClass(ModuleSystem *moduleSystem)
 {
+    /**
+     * class Ipv4Address
+     * 
+     * The Ipv4Address holds an Ipv4 IP address that you can access
+     */
     Class *c = moduleSystem->getClassSystem()->registerClass("Ipv4Address");
     c->setDescriptorObject(std::make_shared<Ipv4AddressObject>(c));
 

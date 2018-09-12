@@ -22,30 +22,69 @@ std::shared_ptr<Object> CommonModule_OutputStream::newInstance(Class* c)
 
 Class* CommonModule_OutputStream::registerClass(ModuleSystem* moduleSystem)
 {
+    /**
+     * pure class OutputStream
+     * 
+     * The OutputStream is a pure class that represents an output stream. This class provides functionality to write, get, empty and print to a output stream
+     * You must extend this class if you are creating your own implementation of OutputStream. All output streams extend this class
+     */
     Class* c = moduleSystem->getClassSystem()->registerClass("OutputStream");
     c->setDescriptorObject(std::make_shared<CommonModule_OutputStream>(c));
+    c->is_pure = true;
+    /**
+     * @class OutputStream
+     * Writes one byte to the output stream buffer
+     * 
+     * function write(number n) : void
+     */
     Function* f = c->registerFunction("write", {VarType::fromString("number")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         OutputStream_Write(interpreter, arguments, return_value, object, caller_scope);
     });
 
+    /**
+     * Flushes this output stream writing all data from the output stream buffer to the service this output stream is for.
+     * This is a pure method and must be implemented by output streams
+     * pure function flush() : void
+     */
     f = c->registerFunction("flush", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         OutputStream_Flush(interpreter, arguments, return_value, object, caller_scope);
     });
     // The flush function is pure
     f->is_pure = true;
 
+    /**
+     * @class OutputStream
+     * Gets the byte at the given index in the output stream buffe
+     * 
+     * function get(number index) : number
+     */
     f = c->registerFunction("get", {VarType::fromString("number")}, VarType::fromString("number"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         OutputStream_Get(interpreter, arguments, return_value, object, caller_scope);
     });
 
+    /**
+     * @class OutputStream
+     * Clears the OutputStreams output stream buffer essentially making it as if no writes have happend before the last flush
+     * function empty() : void
+     */
     f = c->registerFunction("empty", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         OutputStream_Empty(interpreter, arguments, return_value, object, caller_scope);
     });
 
+    /**
+     * @class OutputStream
+     * Returns the size of the OutputStream's output stream buffer since the last flush
+     * function size() : number
+     */
     f = c->registerFunction("size", {}, VarType::fromString("number"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         OutputStream_Size(interpreter, arguments, return_value, object, caller_scope);
     });
 
+    /**
+     * @class OutputStream
+     * Writes the given string to the OutputStream's output stream buffer
+     * function print(string message) : void
+     */
     f = c->registerFunction("print", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         OutputStream_Print(interpreter, arguments, return_value, object, caller_scope);
     });

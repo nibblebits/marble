@@ -20,14 +20,8 @@ IOModule::~IOModule()
 
 void IOModule::Init()
 {
-    log("IO Module Initialising...", LOG_LEVEL_NOTICE);
-    log("--- Registering functions and classes", LOG_LEVEL_NOTICE);
+
     
-
-    this->getModuleSystem()->getFunctionSystem()->registerFunction("setDefaultIO", {VarType::fromString("IO")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
-        setDefaultIO(interpreter, arguments, return_value, object, caller_scope);
-    });
-
     this->getModuleSystem()->getFunctionSystem()->registerFunction("print", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         IO_print(interpreter, arguments, return_value, object, caller_scope);
     });
@@ -46,32 +40,68 @@ void IOModule::Init()
      */
     this->getModuleSystem()->getFunctionSystem()->registerFunction("writeFile", {VarType::fromString("string")}, VarType::fromString("void"), IOModule::IO_WriteFile);
 
+    /**
+     * class IO
+     * 
+     * Responsible for I/O operations within the system
+     */
+
     Class* c = this->getModuleSystem()->getClassSystem()->registerClass("IO");
+    /**
+     * @class IO
+     * Prints data to the default Marble output stream allowing you to provide information back to your users
+     * @works_without_class
+     * function print(string message) : void
+     */
     c->registerFunction("print", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         IO_print(interpreter, arguments, return_value, object, caller_scope);
     });
 
+
+    /**
+     * @class IO
+     * Writes one byte to the default Marble output stream allowing you to output one byte back to your users.
+     * Number is converted to byte ((int)b & 0xff); 
+     * @works_without_class
+     * function write(number b) : void
+     */
     c->registerFunction("write", {VarType::fromString("number")}, VarType::fromString("void"), IOModule::IO_Write);
 
+    /**
+     * @class IO
+     * Reads a line from the default Marble input stream. This works best for applications designed to run in the terminal
+     * @works_without_class
+     * function input() : string
+     */
     c->registerFunction("input", {}, VarType::fromString("string"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         IO_input(interpreter, arguments, return_value, object, caller_scope);
     });
 
 
+    /**
+     * class IOPermission extends Permission
+     * The IOPermission is required for accessing the Marble default input and output streams
+     */
     c = this->getModuleSystem()->getClassSystem()->registerClass("IOPermission", this->getModuleSystem()->getClassSystem()->getClassByName("Permission"));
     c->setDescriptorObject(std::make_shared<IOPermission>(c));
+    /**
+     * @class IOPermission
+     * 
+     * Constructs this IOPermission
+     * function __construct() : void
+     */
     c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
             
     });
 
     // We need to override this pure function but we don't plan to do anything with it..
+    /**
+     * @class IOPermission
+     * 
+     * Checks that the PermissionProperty's are valid. This does nothing for the IOPermission as the IOPermission has no permission properties
+     */
     c->registerFunction("__permission_check", {VarType::fromString("PermissionProperty"), VarType::fromString("PermissionProperty")}, VarType::fromString("void"), Function::Blank);
 
-    log("IOPermission class created succesfully", LOG_LEVEL_NOTICE);
-
-
-    
-    log("IO Module Initialised.", LOG_LEVEL_NOTICE);
 }
 
 void IOModule::newInterpreter(Interpreter* interpreter)
@@ -84,13 +114,7 @@ void IOModule::newInterpreter(Interpreter* interpreter)
 
 }
 
-// Native IO functions/methods
-void IOModule::setDefaultIO(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
-{
-    Scope* root_scope = interpreter->getCurrentScope();
-    Variable* variable = root_scope->getVariable("IO");
-    variable->setValue(values[0].ovalue);
-}
+
 
 void IOModule::IO_print(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
 {
