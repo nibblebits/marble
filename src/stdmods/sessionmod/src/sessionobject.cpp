@@ -18,23 +18,32 @@ SessionObject::~SessionObject()
 
 void SessionObject::registerClass(ModuleSystem* moduleSystem)
 {
+    /**
+     * class Session extends SessionValues
+     * 
+     * The Session class is responsible for creating, accessing and maintaining sessions
+     */
     Class* c = moduleSystem->getClassSystem()->registerClass("Session", moduleSystem->getClassSystem()->getClassByName("SessionValues"));
     c->is_pure = true;
     c->setDescriptorObject(std::make_shared<SessionObject>(c));
 
-    // Create an empty constructor for the Session class
+    /**
+     * @class Session
+     * Constructs this Session object
+     * 
+     * function __construct() : void
     c->registerFunction("__construct", {}, VarType::fromString("void"), Function::Blank);
 
 
     /**
-     * 
+     * @class Session
      * Creates or loads the session with the provided key.
      * pure function create(string session_key) : void
      */
     Function* create_func = c->registerFunction("create", {VarType::fromString("string")}, VarType::fromString("void"), SessionObject::Session_Create);
 
     /**
-     * 
+     * @class Session
      * Saves the current session.
      * This method is called before destruction of a Session object
      * pure function save() : void

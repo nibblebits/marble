@@ -21,21 +21,31 @@ FileSessionObject::~FileSessionObject()
 
 void FileSessionObject::registerClass(ModuleSystem* moduleSystem)
 {
+    /**
+     * class FileSession extends Session
+     * 
+     * The FileSession class provides Session functionality where the session is stored on the hard disk of the server
+     */
     Class* c = moduleSystem->getClassSystem()->registerClass("FileSession", moduleSystem->getClassSystem()->getClassByName("Session"));
     c->setDescriptorObject(std::make_shared<FileSessionObject>(c));
 
-    // Create an empty constructor for the FileSession class
+    /**
+     * @class FileSession
+     * 
+     * Constructs this FileSession object
+     * function __construct() : void
+     */
     c->registerFunction("__construct", {}, VarType::fromString("void"), Function::Blank);
 
     /**
-     * 
+     * @class FileSession
      * Creates or loads the session with the provided key.
      * function create(string session_key) : void
      */
     Function *create_func = c->registerFunction("create", {VarType::fromString("string")}, VarType::fromString("void"), FileSessionObject::FileSession_Create);
 
     /**
-     * 
+     * @class FileSession
      * Saves the current session.
      * This method is called before destruction of a Session object
      * function save() : void

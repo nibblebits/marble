@@ -27,6 +27,11 @@ std::shared_ptr<Object> ShellObject::newInstance(Class* c)
 
 void ShellObject::registerClass(ModuleSystem* moduleSystem)
 {
+    /**
+     * class Shell
+     * 
+     * Responsible for executing shell commands
+     */
     Class *c = moduleSystem->getClassSystem()->registerClass("Shell");
     c->setDescriptorObject(std::make_shared<ShellObject>(c));
 
@@ -41,6 +46,8 @@ void ShellObject::registerClass(ModuleSystem* moduleSystem)
      * @class ShellObject
      * 
      * Executes the provided command and returns a ShellExecution object that holds execution state and responses.
+     * 
+     * You are required to hold a ShellPermision permission in order to execute shell commands
      * 
      * function execute(string command) : ShellExecution
      */

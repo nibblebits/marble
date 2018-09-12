@@ -25,6 +25,12 @@ std::shared_ptr<Object> ShellExecutionObject::newInstance(Class* c)
 
 void ShellExecutionObject::registerClass(ModuleSystem* moduleSystem)
 {
+    /**
+     * class ShellExecution
+     * 
+     * An instance of this class is returned when you have created a shell execution. This class holds
+     * the response code from the shell you executed along with the response body
+     */
     Class *c = moduleSystem->getClassSystem()->registerClass("ShellExecution");
     c->setDescriptorObject(std::make_shared<ShellExecutionObject>(c));
 

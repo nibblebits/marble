@@ -34,6 +34,11 @@ void ShellPermission::ensurePermission(Interpreter* interpreter, Scope* caller_s
 }
 void ShellPermission::registerClass(ModuleSystem* moduleSystem)
 {
+    /**
+     * class ShellPermission
+     * 
+     * If you hold this permission you can execute shell commands
+     */ 
     Class* c = moduleSystem->getClassSystem()->registerClass("ShellPermission", moduleSystem->getClassSystem()->getClassByName("Permission"));
     c->setDescriptorObject(std::make_shared<ShellPermission>(c));
 

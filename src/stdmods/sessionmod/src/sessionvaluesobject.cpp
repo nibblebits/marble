@@ -14,6 +14,11 @@ SessionValuesObject::~SessionValuesObject()
 
 void SessionValuesObject::registerClass(ModuleSystem *moduleSystem)
 {
+    /**
+     * class SessionValues
+     * 
+     * The SessionValues acts as a map and allows you to access session values by index.
+     */
     Class *c = moduleSystem->getClassSystem()->registerClass("SessionValues");
     c->setDescriptorObject(std::make_shared<SessionValuesObject>(c));
 
@@ -23,6 +28,7 @@ void SessionValuesObject::registerClass(ModuleSystem *moduleSystem)
 
     /**
      * 
+     * @class SessionValues
      * Returns true if an index with the given name exists
      * 
      *  function has(string index_name) : boolean
@@ -31,7 +37,7 @@ void SessionValuesObject::registerClass(ModuleSystem *moduleSystem)
 
 
     /**
-     * 
+     * @class SessionValues
      * Sets the number for the index provided
      * 
      *  function setNumber(string name, number value) : number
@@ -39,7 +45,7 @@ void SessionValuesObject::registerClass(ModuleSystem *moduleSystem)
     Function *setNumber_func = c->registerFunction("setNumber", {VarType::fromString("string"), VarType::fromString("number")}, VarType::fromString("void"), SessionValuesObject::SessionValues_SetNumber);
 
     /**
-     * 
+     * @class SessionValues
      * Sets the string for the index provided
      * 
      *  function setString(string name, number value) : number
@@ -47,7 +53,7 @@ void SessionValuesObject::registerClass(ModuleSystem *moduleSystem)
     Function *setString_func = c->registerFunction("setString", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("void"), SessionValuesObject::SessionValues_SetString);
 
   /**
-     * 
+     * @class SessionValues
      * Sets the object for the index provided
      * 
      *  function setObject(string name, SessionValues value) : number
@@ -56,6 +62,7 @@ void SessionValuesObject::registerClass(ModuleSystem *moduleSystem)
 
     /**
      * 
+     * @class SessionValues
      * Gets the number for the index provided
      * 
      *  function getNumber(string name) : number
@@ -64,6 +71,7 @@ void SessionValuesObject::registerClass(ModuleSystem *moduleSystem)
 
     /**
      * 
+     * @class SessionValues
      * Gets the string for the index provided
      * 
      *  function getString(string name) : string
@@ -71,7 +79,7 @@ void SessionValuesObject::registerClass(ModuleSystem *moduleSystem)
     Function *getString_func = c->registerFunction("getString", {VarType::fromString("string")}, VarType::fromString("string"), SessionValuesObject::SessionValues_GetString);
 
     /**
-     * 
+     * @class SessionValues
      * Gets the object for the index provided
      * 
      *  function getObject(string name) : SessionValues
@@ -80,7 +88,7 @@ void SessionValuesObject::registerClass(ModuleSystem *moduleSystem)
 
 
      /**
-     * 
+     * @class SessionValues
      * Gets the array for the index provided
      * 
      *  function getArray(string name) : array
