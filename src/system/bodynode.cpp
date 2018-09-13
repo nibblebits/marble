@@ -166,8 +166,11 @@ void BodyNode::interpret_body(BodyNode *node, SCOPE_PROPERTIES properties)
 
     // Let's create a new parented scope for this but only if we should not keep the scope
     if (!(properties & KEEP_SCOPE))
+    {
         interpreter->new_parented_scope();
+    }
 
+    Scope* my_scope = interpreter->getCurrentScope();
     // Get the root of the body. The first child.
     Node *current_node = node->getRootNode();
 
@@ -185,6 +188,8 @@ void BodyNode::interpret_body(BodyNode *node, SCOPE_PROPERTIES properties)
     }
     catch (...)
     {
+        if (my_scope != interpreter->getCurrentScope())
+            std::cout << "SCOPE NO MATCH" << std::endl; 
         finish_body(node, properties);
         throw;
     }

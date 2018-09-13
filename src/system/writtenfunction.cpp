@@ -61,6 +61,7 @@ void WrittenFunction::invoke_impl(Interpreter *interpreter, std::vector<Value> v
     {
         // Finish the parented scope for the arguments
         interpreter->finish_parented_scope();
+        throw;
     }
 
     // Bodys also need a scope of there own

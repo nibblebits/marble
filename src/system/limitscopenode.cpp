@@ -54,7 +54,16 @@ Value LimitScopeNode::interpret(Interpreter *interpreter, struct extras extra)
         this->limit_to->interpret(interpreter, KEEP_SCOPE);
         // Now we don't want the scope to limit to have access to variables it shouldn't so set the limit_to_scope's previous scope to the interpreters root scope
         limit_to_scope->prev = interpreter->getRootScope();
-        this->scope->interpret(interpreter);
+        try
+        {
+            this->scope->interpret(interpreter);
+        }
+        catch (...)
+        {
+            // Restore the old previous scope and finish up
+            limit_to_scope->prev = old_previous_scope;
+            throw;
+        }
         // Restore the old previous scope and finish up
         limit_to_scope->prev = old_previous_scope;
     }
