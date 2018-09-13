@@ -157,7 +157,6 @@ std::string FileSessionObject::parseValueToJson(Value &value)
             }
             json_string = trim_right(json_string, ",");
             json_string += "]";
-            std::cout << json_string << std::endl;
         }
         else
         {

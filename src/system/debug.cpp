@@ -1,5 +1,7 @@
 #include "debug.h"
 #include "nodes.h"
+#include "permissionsobject.h"
+#include "permissionobject.h"
 #include <iostream>
 #include <exception>
 
@@ -32,7 +34,14 @@ void Debug::PrintVariablesForScope(Scope* scope)
     if (scope->prev != NULL)
         Debug::PrintVariablesForScope(scope->prev);
 }
-
+void Debug::PrintPermissions(std::shared_ptr<PermissionsObject> permissions)
+{
+    std::cout << "PERMISSIONS: " << permissions << std::endl;
+    for(std::shared_ptr<PermissionObject> perm : permissions->objects)
+    {
+        std::cout << perm->getClass()->name << std::endl;
+    }
+}
 void Debug::OutputTabbing(int amount)
 {
     for (int i = 0; i < amount; i++)

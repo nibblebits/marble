@@ -269,6 +269,7 @@ Value ExpNode::interpret(Interpreter *interpreter, struct extras extra)
                 c = obj->getClass()->parent;
         }
 
+    
         Scope *accessors_scope = (extra.accessors_scope != NULL ? extra.accessors_scope : interpreter->getCurrentScope());
         // Interpret the right node on the object scope and return the result.
         obj->runThis([&] {
@@ -278,7 +279,7 @@ Value ExpNode::interpret(Interpreter *interpreter, struct extras extra)
             extra.current_object = obj;
             result = this->right->interpret(interpreter, extra);
         },
-                     interpreter, c);
+                     interpreter, c, -1);
         return result;
     }
 

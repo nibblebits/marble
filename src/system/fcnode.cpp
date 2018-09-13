@@ -167,7 +167,10 @@ Value FunctionCallNode::interpret(Interpreter *interpreter, struct extras extra)
     */
     if (extra.accessors_scope == NULL)
     {
+        if (extra.is_object_exp)
+            throw std::logic_error("Problem accessors scope is NULL but this is an object expression");
         extra.accessors_scope = interpreter->getCurrentScope();
+        
     }
 
     /* If accessing an object the current scope
@@ -177,6 +180,7 @@ Value FunctionCallNode::interpret(Interpreter *interpreter, struct extras extra)
     },
                           extra.accessors_scope);
 
+    
     interpreter->setLastFunctionCallNode(this);
     FunctionSystem *functionSystem = interpreter->getFunctionSystem();
     Function *function = NULL;
@@ -200,6 +204,7 @@ Value FunctionCallNode::interpret(Interpreter *interpreter, struct extras extra)
     {
         throw ex;
     }
+
 
     return value;
 }

@@ -53,11 +53,15 @@ void Function::invoke(Interpreter *interpreter, std::vector<Value> values, Value
     try
     {
         /**
-         * Before invoking the function we must tell the interpreter the current caller permissions
+         * Before invoking the function we must tell the interpreter the current caller permissions.
+         * However if they are calling "getCallerPermissions" we should not set the permissions 
+         * as this will result in it only ever bringing back its own permissions
          */
-        interpreter->setCallerPermissions(caller_scope->permissions);
+        if (this->name != "getCallerPermissions")
+            interpreter->setCallerPermissions(caller_scope->permissions);
         this->invoke_impl(interpreter, values, return_value, object, caller_scope);
-        interpreter->finishCallerPermissions();
+        if (this->name != "getCallerPermissions")
+            interpreter->finishCallerPermissions();
     }
     catch (SystemException &ex)
     {
@@ -71,7 +75,8 @@ void Function::invoke(Interpreter *interpreter, std::vector<Value> values, Value
         interpreter->finish_parented_scope();
 
         // Finish the caller permissions
-        interpreter->finishCallerPermissions();
+        if (this->name != "getCallerPermissions")
+            interpreter->finishCallerPermissions();
 
         throw ex;
     }
