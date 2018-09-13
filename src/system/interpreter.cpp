@@ -178,20 +178,20 @@ void Interpreter::setupModuleMarbleFunctions(ModuleSystem *moduleSystem)
         {
             if (permission == NULL)
             {
-                throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))));
+                throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("PermissionException"), {})), "You require to have the ModuleHandlingPermission to load modules");
             }
         }
         std::string filename = arguments[0].svalue;
-        //try
-        //{
+        try
+        {
             Module *module = moduleSystem->loadModule(filename.c_str());
             // Tell the module about us.
             module->newInterpreter(this);
-        //}
-       // catch (...)
-        //{
-          //  throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(getClassSystem()->getClassByName("IOException"))));
-        //}
+        }
+        catch (...)
+        {
+           throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(getClassSystem()->getClassByName("IOException"))));
+        }
     });
 }
 

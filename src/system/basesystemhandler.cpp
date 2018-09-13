@@ -107,6 +107,7 @@ BaseSystemHandler::BaseSystemHandler() : SystemHandler(SYSTEM_HANDLER_BASE_SYSTE
      * function __construct(string message) : void
      */   
     c->registerFunction("__construct", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
+         object->getClass()->invokeObjectParentConstructor(arguments, object, interpreter);
     });
 
 
