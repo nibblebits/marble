@@ -19,21 +19,37 @@ PermissionObject::~PermissionObject()
 
 Class* PermissionObject::registerClass(SystemHandler* systemHandler)
 {
+    /**
+     * class Permission
+     * 
+     * The base class of all permissions. Extend this class if you yourself are creating a marble permission of your own
+     */
     Class* permission_class = systemHandler->getClassSystem()->registerClass("Permission");
     permission_class->setDescriptorObject(std::make_shared<PermissionObject>(permission_class));
     permission_class->is_pure = true;
+    /**
+     * @class Permission
+     * Constructs this Permission object
+     * function __construct() : void
+     */
     permission_class->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
     });
     /*
+     * @class Permission
      * This function __permission_check is pure and called when the system cannot ensure weather a permission is legal or not.
      * Simply put when adding new permissions your own permissions are checked to see if you are allowed to do it.
      * However permission variables must also be ensured and if your permission variables are not equal to the permission you are trying to add
      * then this pure function will be called so that the permission can decide weather or not to allow this action.
-     * The first PermissionProperty argument is the PermissionProperty you are trying to set and the second is the PermissionProperty of the permission you do not yet hold.*/ 
+     * The first PermissionProperty argument is the PermissionProperty you are trying to set and the second is the PermissionProperty of the permission you do not yet hold.
+     * 
+     * pure function __permission_check(PermissionProperty p1, PermissionProperty p2) : void
+     * */ 
     Function* p_check_func = permission_class->registerFunction("__permission_check", {VarType::fromString("PermissionProperty"), VarType::fromString("PermissionProperty")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
     });
+    p_check_func->is_pure = true;
 
     /**
+     * @class Permission
      * This function __prior_add is a function that is called just before this PermissionObject is about to be added to a PermissionsObject.
      * In this method you should ensure that the user has set all the required attributes and that they are locked so that
      * they cannot be changed. This is not a pure method so you must override it to use its functionality.
@@ -42,9 +58,7 @@ Class* PermissionObject::registerClass(SystemHandler* systemHandler)
      * 
      * function __prior_add() : void
      */
-
     Function* prior_add_func = permission_class->registerFunction("__prior_add", {}, VarType::fromString("void"), Function::Blank);
-    p_check_func->is_pure = true;
     return permission_class;
 }
 

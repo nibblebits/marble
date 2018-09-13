@@ -77,19 +77,53 @@ void PermissionsObject::removePermission(std::string name)
 
 Class* PermissionsObject::registerClass(SystemHandler* systemHandler)
 {
+    /**
+     * class Permissions
+     * 
+     * Holds many Permission object's. Each scope is bound to a Permissions and whilst they are bounded to it
+     * they are restricted to what this object allows them to do.
+     * 
+     * For example without a Permissions object in your scope with an IOPermission you will not be able to print or read input from the terminal
+     * or web client
+     */
     Class* permissions_class = systemHandler->getClassSystem()->registerClass("Permissions");
     permissions_class->setDescriptorObject(std::make_shared<PermissionsObject>(permissions_class));
+
+    /**
+     * @class Permissions
+     * 
+     * Constructs this Permissions object
+     * function __construct() : void
+     */
     permissions_class->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
     });
 
+    /**
+     * @class Permissions
+     * 
+     * Adds the given Permission object to this Permissions object.
+     * If the scope that this method was called in does not hold the Permission it is trying to add then a PermissionException is thrown
+     * function add(Permission perm) : void
+     */
     permissions_class->registerFunction("add", {VarType::fromString("Permission")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         PermissionsObject_Add(interpreter, arguments, return_value, object, caller_scope);
     });
 
+    /**
+     * @class Permissions
+     * 
+     * Returns the Permission with the given name. If no permission is found null is returned
+     * function get(string permission_name) : Permission
+     */
     permissions_class->registerFunction("get", {VarType::fromString("string")}, VarType::fromString("Permission"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         PermissionsObject_Get(interpreter, arguments, return_value, object, caller_scope);
     });
     
+    /**
+     * @class Permission
+     * Removes the permission with the given name from the Permissions object lowering the privileges of the scope binded to this Permission
+     * function remove(string permission_name) : void
+     */
     permissions_class->registerFunction("remove", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         PermissionsObject_Remove(interpreter, arguments, return_value, object, caller_scope);
     });
@@ -141,3 +175,4 @@ void PermissionsObject::PermissionsObject_Remove(Interpreter* interpreter, std::
     std::shared_ptr<PermissionsObject> p_obj = std::dynamic_pointer_cast<PermissionsObject>(object);
     p_obj->removePermission(arguments[0].svalue);
 }
+
