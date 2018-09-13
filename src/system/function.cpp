@@ -70,6 +70,9 @@ void Function::invoke(Interpreter *interpreter, std::vector<Value> values, Value
         // Let's finish the parented scope that we created
         interpreter->finish_parented_scope();
 
+        // Finish the caller permissions
+        interpreter->finishCallerPermissions();
+
         throw ex;
     }
 

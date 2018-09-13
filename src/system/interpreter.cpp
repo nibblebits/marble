@@ -362,14 +362,14 @@ void Interpreter::setupValidator(Scope **previous_scope, std::unique_ptr<Scope>&
         validator->getRootScope()->prev = this->getCurrentScope();
         return;
     }
-
+    
     /* The validator has already been setup before so let's now create a new scope for the validator 
      * this scope will be a fresh new scope whose previous node is to the interpreters current scope
      * pointing to previous variables. This helps "include" statements work correctly */
     *previous_scope = validator->getCurrentScope();
     Scope* scope = new Scope(NULL);
     scope->prev = this->getCurrentScope();
-    validator->setCurrentScope(scope);
+    validator->setCurrentScope(scope, false);
     validators_new_scope = std::unique_ptr<Scope>(scope);
 
 }
@@ -380,8 +380,7 @@ void Interpreter::finishValidator(Scope *previous_scope)
 
     // Ignore NULL scopes
      if (previous_scope == NULL) return;
-    validator->setCurrentScope(previous_scope);
-
+    validator->setCurrentScope(previous_scope, false);
 
 }
 

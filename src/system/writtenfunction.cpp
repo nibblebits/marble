@@ -36,6 +36,7 @@ void WrittenFunction::invoke(Interpreter *interpreter, std::vector<Value> values
 
 void WrittenFunction::invoke_impl(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
+    
     // Function arguments require there own scope
     interpreter->new_parented_scope();
     int count = 0;

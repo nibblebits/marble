@@ -38,15 +38,16 @@ Scope *ScopeHandler::getGlobalScope()
     return this->global_scope;
 }
 
-void ScopeHandler::setCurrentScope(Scope *scope)
+void ScopeHandler::setCurrentScope(Scope *scope, bool invoke_handlers)
 {
     if (scope == NULL)
         throw std::logic_error("Was not expecting a NULL scope");
 
-    if (this->current_scope != NULL)
+    if (this->current_scope != NULL && invoke_handlers)
         this->current_scope->onLeaveScope(true);
     this->current_scope = scope;
-    this->current_scope->onEnterScope(true);
+    if (invoke_handlers)
+        this->current_scope->onEnterScope(true);
 }
 
 void ScopeHandler::new_parented_scope()

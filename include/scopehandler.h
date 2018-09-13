@@ -13,7 +13,7 @@ public:
     Scope* getCurrentScope();
     Scope* getRootScope();
     Scope* getGlobalScope();
-    void setCurrentScope(Scope* scope);
+    void setCurrentScope(Scope* scope, bool invoke_handlers=true);
     void new_parented_scope();
     void finish_parented_scope();
     Variable* getVariableByName(std::string name);
