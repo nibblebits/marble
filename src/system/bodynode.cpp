@@ -188,8 +188,6 @@ void BodyNode::interpret_body(BodyNode *node, SCOPE_PROPERTIES properties)
     }
     catch (...)
     {
-        if (my_scope != interpreter->getCurrentScope())
-            std::cout << "SCOPE NO MATCH" << std::endl; 
         finish_body(node, properties);
         throw;
     }
