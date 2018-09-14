@@ -31,7 +31,7 @@ void HeaderPermission::ensureHeaderWriteAccess(Interpreter *interpreter, Scope *
 
         std::shared_ptr<PermissionObject> permission_obj = caller_scope->getPermission("HeaderPermission");
         if (!permission_obj)
-            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You require a HeaderPermission to set HTTP headers", interpreter->getStackTraceLog());
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You require a HeaderPermission to set HTTP headers and set response codes.", interpreter->getStackTraceLog());
     }
 }
 

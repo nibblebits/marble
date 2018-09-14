@@ -36,7 +36,11 @@ Class *WebModule_ResponseObject::registerClass(ModuleSystem *moduleSystem)
      * @class Response
      * 
      * Sets the cookie with the given name to the given value.
-     * The clients web client is alerted of this request and will create the cookie on the local machine
+     * The clients web client is alerted of this request and will create the cookie on the local machine.
+     * 
+     * You require a CookiePermission with write access to set cookies
+     * 
+     * function setCookie(string name, string value) : void
      */
     c->registerFunction("setCookie", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("void"), WebModule_ResponseObject::Response_setCookie);
 
@@ -47,6 +51,15 @@ Class *WebModule_ResponseObject::registerClass(ModuleSystem *moduleSystem)
      * function setHeader(string name, string value) : void
      */
     c->registerFunction("setHeader", {VarType::fromString("string"), VarType::fromString("string")}, {VarType::fromString("void")}, WebModule_ResponseObject::Response_setHeader);
+
+    /**
+     * @class Response
+     * 
+     * Sets the response code for example 200 OK or 404 Not found
+     * 
+     * function setResponseCode(number code) : void
+     */
+    c->registerFunction("setResponseCode", {VarType::fromString("number")}, VarType::fromString("void"), WebModule_ResponseObject::Response_setResponseCode);
 }
 
 void WebModule_ResponseObject::errorCheck(std::shared_ptr<WebModule_ResponseObject> obj)
@@ -88,4 +101,16 @@ void WebModule_ResponseObject::Response_setHeader(Interpreter *interpreter, std:
       
     request_rec *req = wms_obj->req;
     apr_table_set(req->headers_out, values[0].svalue.c_str(), values[1].svalue.c_str());
+}
+
+void WebModule_ResponseObject::Response_setResponseCode(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+{
+    std::shared_ptr<WebModule_ResponseObject> wms_obj = std::dynamic_pointer_cast<WebModule_ResponseObject>(object);
+    WebModule_ResponseObject::errorCheck(wms_obj);
+
+    // Ensure we have permission to set headers for response codes
+    HeaderPermission::ensureHeaderWriteAccess(interpreter, caller_scope);
+
+    interpreter->properties["response_code"] = std::to_string(values[0].dvalue);
+
 }
