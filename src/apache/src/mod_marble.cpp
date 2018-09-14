@@ -214,13 +214,20 @@ static int marble_handler(request_rec *req)
     
     int rc, exists;
     apr_finfo_t finfo;
-    
-    if (!req->handler || strcmp(req->handler, "marble")) 
+
+    if (!req->handler) 
         return DECLINED;
        
-    if(!valid_filename(std::string(req->filename)))
-        return DECLINED;
 
+    std::string filename = req->filename;
+    if (req->handler && strcmp(req->handler, "marble/") && !isFile(filename))
+    {
+        // This appears to be a directory so lets append index.marble to the end
+        filename += "index.marble";
+    }
+
+    if(!valid_filename(filename))
+        return DECLINED;
 
     req->content_type = "";
     
@@ -229,7 +236,7 @@ static int marble_handler(request_rec *req)
     apr_table_set(req->headers_out, "Content-Type", "text/html");
 
     // Let's check that the file actually exists.
-    rc = apr_stat(&finfo, req->filename, APR_FINFO_MIN, req->pool);
+    rc = apr_stat(&finfo, filename.c_str(), APR_FINFO_MIN, req->pool);
     if (rc == APR_SUCCESS)
     {
         exists = ((finfo.filetype != APR_NOFILE) 
@@ -278,7 +285,7 @@ static int marble_handler(request_rec *req)
         Logger* logger = interpreter.getLogger();
 
         // We must change our working directory so let's get the directory we are accessing
-        std::string filename_str = std::string(req->filename);
+        std::string filename_str = filename;
         std::string working_directory = getDirectoryForFilename(filename_str);
         if(chdir(working_directory.c_str()) != 0)
             logger->warn("Failed to change the working directory. You may need to provide absolute paths");
@@ -290,7 +297,7 @@ static int marble_handler(request_rec *req)
         {
             try
             {
-                interpreter.runScript(req->filename);
+                interpreter.runScript(filename.c_str());
             }
             catch(TimeoutException& ex)
             {
