@@ -153,6 +153,19 @@ Class *FileModule_File::registerClass(ModuleSystem *moduleSystem)
     /**
      * @class File
      * 
+     * Writes the given string to the file specified by the filename.
+     * If the file does not exist it creates it, if it does exist it overwrites it
+     * 
+     * @works_without_class
+     * function file_put_contents(string filename, string data) : void
+     */
+    c->registerFunction("file_put_contents", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("string"), FileModule_File::File_file_put_contents);
+    moduleSystem->getFunctionSystem()->registerFunction("file_put_contents", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("string"), FileModule_File::File_file_put_contents);
+
+
+    /**
+     * @class File
+     * 
      * Changes the mode of the given file
      * 
      * @works_without_class
@@ -160,7 +173,6 @@ Class *FileModule_File::registerClass(ModuleSystem *moduleSystem)
      */
     c->registerFunction("chmod", {VarType::fromString("string"), VarType::fromString("number")}, VarType::fromString("void"), FileModule_File::File_chmod);
     moduleSystem->getFunctionSystem()->registerFunction("chmod", {VarType::fromString("string"), VarType::fromString("number")}, VarType::fromString("void"), FileModule_File::File_chmod);
-
 
     return c;
 }
@@ -277,6 +289,29 @@ void FileModule_File::File_file_get_contents(Interpreter *interpreter, std::vect
     }
 }
 
+void FileModule_File::File_file_put_contents(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
+{
+    std::string absolute_filename_path = getAbsolutePath(values[0].svalue);
+    // We need to make sure the scope has access to this file
+    FilePermission::checkPermissionAllows(interpreter, caller_scope, absolute_filename_path, "w");
+    FILE *fp = fopen(absolute_filename_path.c_str(), "w");
+    if (!fp)
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to open the file: " + absolute_filename_path);
+
+    try
+    {
+        if (!fwrite(values[1].svalue.c_str(), values[0].svalue.size(), 1, fp))
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to write the file: " + absolute_filename_path + " but it opened succesfully");
+
+        fclose(fp);
+    }
+    catch (...)
+    {
+        fclose(fp);
+        throw;
+    }
+}
+
 void FileModule_File::File_chmod(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
     std::string absolute_filename_path = getAbsolutePath(values[0].svalue);
@@ -284,7 +319,6 @@ void FileModule_File::File_chmod(Interpreter *interpreter, std::vector<Value> va
     FilePermission::checkPermissionAllows(interpreter, caller_scope, absolute_filename_path, "r");
 
     // Change the permissions
-    if(chmod(absolute_filename_path.c_str(), (int)values[1].dvalue) != 0)
+    if (chmod(absolute_filename_path.c_str(), (int)values[1].dvalue) != 0)
         throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to change the mode of the file: " + absolute_filename_path);
-
 }

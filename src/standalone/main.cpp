@@ -91,13 +91,13 @@ void show_version_information()
     // Load the configuration and return on failure
     if (!loadConfiguration())
         throw std::logic_error("Failed to load configuration file" + configFileName + " which is required to get module information");
-    
+
     std::cout << std::endl;
     std::cout << "Loaded marble modules based on the configuration file: " + configFileName << std::endl;
     std::cout << "----------------------" << std::endl;
-    for (Module* module : moduleSystem->getModules())
+    for (Module *module : moduleSystem->getModules())
     {
-        std::cout << "Module: " << module->getDescriptor() <<  ":" << module->getName() << ", Version: " << module->getVersion() << " path:" << module->getFilename() << " help url: " << module->getHelpPath() << std::endl;
+        std::cout << "Module: " << module->getDescriptor() << ":" << module->getName() << ", Version: " << module->getVersion() << " path:" << module->getFilename() << " help url: " << module->getHelpPath() << std::endl;
     }
     std::cout << "----------------------" << std::endl;
 
@@ -136,18 +136,17 @@ int begin(int argc, char **argv)
         show_version_information();
         return 0;
     }
-    else if(strcmp(argv[1], "-setconfig") == 0)
+    else if (strcmp(argv[1], "-setconfig") == 0)
     {
         if (argc < 3)
             throw std::logic_error("You used -setconfig but you did not specify a path to the configuration file to use");
-        
+
         if (argc < 4)
             throw std::logic_error("You must provide a filename to use this new configuration with");
 
         configFileName = argv[2];
         fileToInterpret = argv[3];
     }
-    
 
     // Let's load the configuration and start interpreting
     baseHandler = new BaseSystemHandler();
@@ -166,14 +165,12 @@ int begin(int argc, char **argv)
 
 int main(int argc, char **argv)
 {
-
-
-//    try
-    //{
+    try
+    {
         return begin(argc, argv);
-    //}
-    //catch (std::logic_error &ex)
-   // {
-    //    std::cout << ex.what() << std::endl;
-    //}
+    }
+    catch (std::logic_error& ex)
+    {
+        std::cout << ex.what() << std::endl;
+    }
 }
