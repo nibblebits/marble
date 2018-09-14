@@ -14,6 +14,11 @@ public:
  
    static Class* registerClass(ModuleSystem* moduleSystem);
 
+    /**
+     * Ensures the given scope has a cookie write access permission
+     */
+   static void ensureCookieWriteAccess(Interpreter* interpreter, Scope* caller_scope);
+   
    // If true the holder of this permission can read cookies
    Variable* can_read;
 

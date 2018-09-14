@@ -1,4 +1,4 @@
-SYSTEM_OBJECT_FILES = ./build/webmod.o ./build/responseobject.o ./build/cookiepermission.o ./build/requestargumentsobject.o ./build/multipartfileobject.o
+SYSTEM_OBJECT_FILES = ./build/webmod.o ./build/responseobject.o ./build/cookiepermission.o ./build/headerpermission.o ./build/requestargumentsobject.o ./build/multipartfileobject.o
 INCLUDES = -I ../../include -I ./include -I /usr/include/apr-1.0 -I /usr/include/apache2
 OBJECT_FILE_FLAGS = -c -g -fPIC -std=c++14 -g
 SYSTEM_LIB_LOCAL_FILENAME = libmarble.so
@@ -15,6 +15,8 @@ all: ${SYSTEM_OBJECT_FILES}
 ./build/cookiepermission.o: ./src/cookiepermission.cpp
 	g++ ${INCLUDES} ./src/cookiepermission.cpp -o ./build/cookiepermission.o ${OBJECT_FILE_FLAGS}
 
+./build/headerpermission.o: ./src/headerpermission.cpp
+	g++ ${INCLUDES} ./src/headerpermission.cpp -o ./build/headerpermission.o ${OBJECT_FILE_FLAGS}
 
 ./build/requestargumentsobject.o: ./src/requestargumentsobject.cpp
 	g++ ${INCLUDES} ./src/requestargumentsobject.cpp -o ./build/requestargumentsobject.o ${OBJECT_FILE_FLAGS}

@@ -44,12 +44,12 @@ void PermissionNode::test(Validator* validator, struct extras extra)
 {
     struct Evaluation evaluation = exp_node->evaluate(validator, EVALUATION_TYPE_DATATYPE | EVALUATION_FROM_VARIABLE);
     if (evaluation.datatype.type != VARIABLE_TYPE_OBJECT)
-        throw TestError("Permission scopes must take a valid PermissionsObject for their expression but a " + evaluation.datatype.value + " was provided");
+        throw TestError("Permission scopes must take a valid Permissions object for their expression but a " + evaluation.datatype.value + " was provided");
 
     Class* c = validator->getClassSystem()->getClassByName(evaluation.datatype.value);
     if (!c->instanceOf("Permissions"))
     {
-        throw TestError("Permission scopes must take a valid PermissionsObject for their expression but the object provided is of type " + evaluation.datatype.value + " and it is not an instance of PermissionsObject");
+        throw TestError("Permission scopes must take a valid Permissions object for their expression but the object provided is of type " + evaluation.datatype.value + " and it is not an instance of PermissionsObject");
     }
 
     // Test the body node

@@ -9,7 +9,7 @@
 #include "variable.h"
 #include <string>
 
-CookiePermission::CookiePermission(Class* c) : PermissionObject(c)
+CookiePermission::CookiePermission(Class *c) : PermissionObject(c)
 {
     this->can_read = NULL;
     this->can_write = NULL;
@@ -17,21 +17,19 @@ CookiePermission::CookiePermission(Class* c) : PermissionObject(c)
 
 CookiePermission::~CookiePermission()
 {
-
 }
 
-std::shared_ptr<Object> CookiePermission::newInstance(Class* c)
+std::shared_ptr<Object> CookiePermission::newInstance(Class *c)
 {
-    std::shared_ptr<CookiePermission> cookie_permission =  std::make_shared<CookiePermission>(c);
+    std::shared_ptr<CookiePermission> cookie_permission = std::make_shared<CookiePermission>(c);
     cookie_permission->can_read = cookie_permission->getVariableAnyScope("can_read");
     cookie_permission->can_write = cookie_permission->getVariableAnyScope("can_write");
     return cookie_permission;
 }
 
-
-Class* CookiePermission::registerClass(ModuleSystem* moduleSystem)
+Class *CookiePermission::registerClass(ModuleSystem *moduleSystem)
 {
-    Class* c = moduleSystem->getClassSystem()->registerClass("CookiePermission", moduleSystem->getClassSystem()->getClassByName("Permission"));
+    Class *c = moduleSystem->getClassSystem()->registerClass("CookiePermission", moduleSystem->getClassSystem()->getClassByName("Permission"));
     c->setDescriptorObject(std::make_shared<CookiePermission>(c));
 
     // Setup the can_read variable
@@ -52,8 +50,8 @@ Class* CookiePermission::registerClass(ModuleSystem* moduleSystem)
     c->addVariable(can_read);
     c->addVariable(can_write);
 
-    c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
-            
+    c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter *interpreter, std::vector<Value> arguments, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope) {
+
     });
 
     /**
@@ -72,31 +70,56 @@ Class* CookiePermission::registerClass(ModuleSystem* moduleSystem)
      */
     c->registerFunction("setCanWrite", {VarType::fromString("boolean")}, VarType::fromString("void"), CookiePermission::CookiePermission_setCanWrite);
 
-
-
     // We need to override this pure function but we don't plan to do anything with it..
     c->registerFunction("__permission_check", {VarType::fromString("PermissionProperty"), VarType::fromString("PermissionProperty")}, VarType::fromString("void"), CookiePermission::CookiePermission__permission_check);
-
 }
 
-void CookiePermission::CookiePermission_setCanWrite(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+void CookiePermission::ensureCookieWriteAccess(Interpreter *interpreter, Scope *caller_scope)
+{
+    if (!interpreter->hasNoPermissionRestrictions())
+    {
+
+        std::vector<std::shared_ptr<PermissionObject>> permission_list = caller_scope->getPermissionList("CookiePermission");
+        // If the permission list is empty then we don't have permission to write cookies
+        if (permission_list.empty())
+        {
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You do not have the CookiePermission which is required for reading and writing cookies", interpreter->getStackTraceLog());
+        }
+
+        bool has_access = false;
+        for (std::shared_ptr<PermissionObject> permission_obj : permission_list)
+        {
+            std::shared_ptr<CookiePermission> permission = std::dynamic_pointer_cast<CookiePermission>(permission_obj);
+
+            if (permission->can_write->value.dvalue)
+            {
+                has_access = true;
+                break;
+            }
+        }
+
+        if (!has_access)
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You do not have the CookiePermission write access which is required for writing cookies", interpreter->getStackTraceLog());
+    }
+}
+
+void CookiePermission::CookiePermission_setCanWrite(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
     std::shared_ptr<CookiePermission> cookie_permission_obj = std::dynamic_pointer_cast<CookiePermission>(object);
     cookie_permission_obj->can_write->setValue(values[0].dvalue);
 }
 
-
-void CookiePermission::CookiePermission_setCanRead(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+void CookiePermission::CookiePermission_setCanRead(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
     std::shared_ptr<CookiePermission> cookie_permission_obj = std::dynamic_pointer_cast<CookiePermission>(object);
     cookie_permission_obj->can_read->setValue(values[0].dvalue);
 }
 
-void CookiePermission::CookiePermission__permission_check(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+void CookiePermission::CookiePermission__permission_check(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
     std::shared_ptr<PermissionPropertyObject> our_property = std::dynamic_pointer_cast<PermissionPropertyObject>(values[0].ovalue);
     std::shared_ptr<PermissionPropertyObject> their_property = std::dynamic_pointer_cast<PermissionPropertyObject>(values[1].ovalue);
-    
+
     if (our_property->name == "can_write")
     {
         bool ours_val = std::stoi(our_property->value);

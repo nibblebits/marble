@@ -242,10 +242,10 @@ static int marble_handler(request_rec *req)
         exists = ((finfo.filetype != APR_NOFILE) 
                     && !(finfo.filetype & APR_DIR));
         if (!exists)
-            return HTTP_NOT_FOUND;
+            return DECLINED;
     }
     else 
-        return HTTP_NOT_FOUND;
+        return DECLINED;
 
     int statusCode = 200;
     if (!req->header_only) {

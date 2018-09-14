@@ -4,4 +4,8 @@ allowed_permissions = getScopePermissions();
 
 Permission cookiePermission = new @CookiePermission();
 cookiePermission.setCanWrite(true);
+allowed_permissions.add(cookiePermission);
+
+Permission headerPermission = new @HeaderPermission();
+allowed_permissions.add(headerPermission);
 </marble>

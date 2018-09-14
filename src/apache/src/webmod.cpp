@@ -7,6 +7,7 @@
 #include "multipartfileobject.h"
 #include "modulesystem.h"
 #include "cookiepermission.h"
+#include "headerpermission.h"
 
 #include "misc.h"
 #include "array.h"
@@ -67,6 +68,9 @@ void WebModule::Init()
 
     // Register the CookiePermission class
     CookiePermission::registerClass(this->getModuleSystem());
+
+    // Register the HeaderPermission class
+    HeaderPermission::registerClass(this->getModuleSystem());
 
     // Register the Response class
     WebModule_ResponseObject::registerClass(this->getModuleSystem());
@@ -153,9 +157,6 @@ void WebModule::Init()
         return_value->svalue = web_mod_obj->requester_ip;
     });
 
-
-    // Used to set response headers for the given HTTP request
-    c->registerFunction("setResponseHeader", {VarType::fromString("string"), VarType::fromString("string")}, {VarType::fromString("void")}, WebModule::Request_setResponseHeader);
 
     /* End of Request class */
 
@@ -530,19 +531,6 @@ std::map<std::string, std::string> WebModule::parseCookies(request_rec* req)
     }
 
     return result;
-}
-
-void WebModule::Request_setResponseHeader(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
-{
-    std::shared_ptr<WebModuleObject> wm_obj = std::dynamic_pointer_cast<WebModuleObject>(object);
-    request_rec* req = wm_obj->req;
-    apr_table_set(req->headers_out, values[0].svalue.c_str(), values[1].svalue.c_str());
-
-    if (to_lower(values[0].svalue) == "location")
-    {
-        // We need a 302 response code
-        interpreter->properties["response_code"] = std::to_string(302);
-    }
 }
 
 void WebModule::Request_getFileContent(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
