@@ -166,12 +166,14 @@ int begin(int argc, char **argv)
 
 int main(int argc, char **argv)
 {
-    try
-    {
+
+
+//    try
+    //{
         return begin(argc, argv);
-    }
-    catch (std::logic_error &ex)
-    {
-        std::cout << ex.what() << std::endl;
-    }
+    //}
+    //catch (std::logic_error &ex)
+   // {
+    //    std::cout << ex.what() << std::endl;
+    //}
 }
