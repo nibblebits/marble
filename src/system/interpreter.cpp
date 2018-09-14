@@ -365,9 +365,8 @@ void Interpreter::createDefaultClassesAndFunctions()
     });
 
     c = getClassSystem()->registerClass("EntityNotRegisteredException", exception_class);
-    c->registerFunction("__construct", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter *interpreter, std::vector<Value> arguments, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope) {
-        Function *parent_constructor = object->getClass()->parent->getFunctionByNameAndArguments("__construct", {VarType::fromString("string")});
-        parent_constructor->invoke(interpreter, arguments, return_value, object, caller_scope);
+    c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter *interpreter, std::vector<Value> arguments, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope) {
+       
     });
 
     // We must now create a permission object for our root scope

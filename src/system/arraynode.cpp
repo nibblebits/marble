@@ -54,7 +54,7 @@ Value ArrayNode::interpret(Interpreter *interpreter, struct extras extra)
     Value index_exp = this->index_node->interpret(interpreter);
 
     // If this array node is being interpreted then the next_element is guaranteed to be an expression interpretable node.
-    Value next_elem_value = this->next_element->interpret(interpreter);
+    Value next_elem_value = this->next_element->interpret(interpreter, extra);
     if (index_exp.dvalue > 0xffffffff || index_exp.dvalue < 0)
     {
         throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("InvalidIndexException"))), "", interpreter->getStackTraceLog());

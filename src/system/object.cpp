@@ -64,9 +64,7 @@ std::shared_ptr<Object> Object::create(Interpreter *interpreter, Class *object_c
 {
     if (object_class == NULL)
     {
-        Value except_value;
-        except_value.set("The class provided has not been registered");
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("EntityNotRegisteredException"), {except_value})), "", interpreter->getStackTraceLog());
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("EntityNotRegisteredException"), {})), "The class provided has not been registered", interpreter->getStackTraceLog());
     }
 
     std::shared_ptr<Object> object = object_class->getDescriptorObject()->newInstance();

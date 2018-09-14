@@ -109,8 +109,15 @@ void Debug::PrintValueForNode(Node* value_node, int tabbing)
 	        ArrayNode* array_node = (ArrayNode*)(value_node);
 	        OutputTabbing(tabbing);
 	        std::cout << "ARRAY NODE" << std::endl;
-	        PrintValueForNode(array_node->index_node, tabbing+1);
-	        PrintValueForNode(array_node->next_element, tabbing+1);
+            std::cout << "Index node: ";
+            PrintValueForNode(array_node->index_node, tabbing+1);
+            std::cout << std::endl;
+            OutputTabbing(tabbing);
+            std::cout << "next node: ";
+            PrintValueForNode(array_node->next_element, tabbing+1);
+            std::cout << std::endl;
+            OutputTabbing(tabbing);
+
 	    }
 	    else if(value_node->type == NODE_TYPE_NEW)
 	    {
