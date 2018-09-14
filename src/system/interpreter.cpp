@@ -89,7 +89,6 @@ Interpreter::~Interpreter()
         t.join();
 }
 
-
 std::string Interpreter::getVersion()
 {
     return MARBLE_VERSION;
@@ -148,6 +147,41 @@ void Interpreter::finishOutputFunction()
     }
 }
 
+void Interpreter::setArgv(int total, char **argv)
+{
+    std::vector<std::string> strs;
+    for (int i = 0; i < total; i++)
+    {
+        strs.push_back(argv[i]);
+    }
+
+    setArgv(strs);
+}
+
+void Interpreter::setArgv(std::vector<std::string> argv)
+{
+    this->argv = argv;
+}
+
+std::shared_ptr<Array> Interpreter::getArgs()
+{
+    // No arguments? Return an empty array
+    if (this->argv.empty())
+        return  std::make_shared<Array>(this->getClassSystem()->getClassByName("array"));
+
+    Variable *variables = new Variable[this->argv.size()];
+    for (int i = 0; i < this->argv.size(); i++)
+    {
+        Variable *var = &variables[i];
+        var->type = VARIABLE_TYPE_STRING;
+        var->value.type = VALUE_TYPE_STRING;
+        var->value.holder = var;
+        var->value.svalue = this->argv[i];
+    }
+
+    return std::make_shared<Array>(this->getClassSystem()->getClassByName("array"), variables, this->argv.size());
+}
+
 void Interpreter::setModuleSystem(ModuleSystem *moduleSystem)
 {
     if (this->moduleSystem != NULL)
@@ -190,7 +224,7 @@ void Interpreter::setupModuleMarbleFunctions(ModuleSystem *moduleSystem)
         }
         catch (...)
         {
-           throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(getClassSystem()->getClassByName("IOException"))), "", interpreter->getStackTraceLog());
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(getClassSystem()->getClassByName("IOException"))), "", interpreter->getStackTraceLog());
         }
     });
 }
@@ -351,9 +385,9 @@ void Interpreter::createDefaultClassesAndFunctions()
     });
 }
 
-void Interpreter::setupValidator(Scope **previous_scope, std::unique_ptr<Scope>& validators_new_scope)
+void Interpreter::setupValidator(Scope **previous_scope, std::unique_ptr<Scope> &validators_new_scope)
 {
-    #warning This method is not so great and should be written better. TODO another time
+#warning This method is not so great and should be written better. TODO another time
     *previous_scope = NULL;
     if (validator == NULL)
     {
@@ -362,26 +396,25 @@ void Interpreter::setupValidator(Scope **previous_scope, std::unique_ptr<Scope>&
         validator->getRootScope()->prev = this->getCurrentScope();
         return;
     }
-    
+
     /* The validator has already been setup before so let's now create a new scope for the validator 
      * this scope will be a fresh new scope whose previous node is to the interpreters current scope
      * pointing to previous variables. This helps "include" statements work correctly */
     *previous_scope = validator->getCurrentScope();
-    Scope* scope = new Scope(NULL);
+    Scope *scope = new Scope(NULL);
     scope->prev = this->getCurrentScope();
     validator->setCurrentScope(scope, false);
     validators_new_scope = std::unique_ptr<Scope>(scope);
-
 }
 
 void Interpreter::finishValidator(Scope *previous_scope)
 {
-    #warning This method is not so great and should be written better. TODO another time
+#warning This method is not so great and should be written better. TODO another time
 
     // Ignore NULL scopes
-     if (previous_scope == NULL) return;
+    if (previous_scope == NULL)
+        return;
     validator->setCurrentScope(previous_scope, false);
-
 }
 
 Validator *Interpreter::getValidator()
@@ -538,7 +571,6 @@ void Interpreter::runScript(const char *filename)
     posInfo.filename = filename;
     posInfo.line = 1;
     posInfo.col = 1;
-
 
     Splitter splitter = loadScript(filename);
     handleSplitterSplits(splitter, posInfo);

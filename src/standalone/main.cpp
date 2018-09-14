@@ -51,7 +51,7 @@ void ModuleLogHandler(Module *module, std::string message, LOG_TYPE log_type)
         std::cout << message << std::endl;
 }
 
-void interpret(std::string filename)
+void interpret(std::string filename, int argc, char** argv)
 {
     Interpreter interpreter(moduleSystem->getClassSystem(), moduleSystem->getFunctionSystem());
     interpreter.setTimeout(0);
@@ -67,6 +67,9 @@ void interpret(std::string filename)
         std::getline(std::cin, s);
         return s;
     });
+
+    // Set our argv in the Interpreter so it can be resolved.
+    interpreter.setArgv(argc, argv);
 
     Logger *logger = interpreter.getLogger();
     interpreter.setModuleSystem(moduleSystem);
@@ -155,7 +158,7 @@ int begin(int argc, char **argv)
     if (!loadConfiguration())
         return 1;
 
-    interpret(fileToInterpret);
+    interpret(fileToInterpret, argc, argv);
 
     delete baseHandler;
     delete moduleSystem;

@@ -96,6 +96,19 @@ public:
     void finishOutputFunction();
 
     /**
+     * Use this method to tell the interpreter about the argc and argv passed to the program
+     * when it first loaded
+     */
+    void setArgv(int total, char** argv);
+    void setArgv(std::vector<std::string> argv);
+
+    /**
+     * Returns the provided arguments that were set with setArgv.
+     * The arguments are returned as a Marble Array
+     */
+    std::shared_ptr<Array> getArgs();
+    
+    /**
      * Sets the ModuleSystem for this interpreter. You should load your modules before calling this method to ensure modules are told about this interpreter.
      * Upon calling this method special module functions are also created allowing for loading of modules from within the interpreter its self.
      * The interpreter will tell the modules it loads about it's self.
@@ -255,6 +268,9 @@ private:
     std::vector<std::string> nested_scripts_run;
     std::vector<std::string> scripts_run;
     std::vector<struct stack_log_part> stack_log;
+
+    // A bunch of argv strings provided to us
+    std::vector<std::string> argv;
 
     // Function call permissions stack
     std::vector<std::shared_ptr<PermissionsObject>> caller_permissions;

@@ -5,6 +5,7 @@
 #include "permissionsobject.h"
 #include "exceptionobject.h"
 #include "function.h"
+#include "array.h"
 #include <unistd.h>
 
 CommonModule_System::CommonModule_System(Class* c) : Object(c)
@@ -68,6 +69,16 @@ Class* CommonModule_System::registerClass(ModuleSystem* moduleSystem)
 
     // Register a ChdirPermission
     moduleSystem->getClassSystem()->registerClass("ChdirPermission", moduleSystem->getClassSystem()->getClassByName("Permission"));
+
+    /**
+     * @class System
+     *
+     * Gets a string array that holds the arguments passed to your application
+     * 
+     * function getArguments() : string[]
+     */
+    c->registerFunction("getArguments", {}, VarType::fromString("string[]"), CommonModule_System::System_getArguments);
+  
 }
 
 void CommonModule_System::newInterpreter(Interpreter* interpreter)
@@ -103,4 +114,10 @@ void CommonModule_System::System_chdir(Interpreter* interpreter, std::vector<Val
     if(chdir(values[0].svalue.c_str()) != 0)
         throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to change working directory", interpreter->getStackTraceLog());
 
+}
+
+void CommonModule_System::System_getArguments(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+{
+    // Let's return the arguments
+    return_value->set(interpreter->getArgs());
 }

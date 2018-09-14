@@ -3,6 +3,12 @@
 #include "interpreter.h"
 #include <iostream>
 
+Array::Array(Class* c) : Object(c)
+{
+    this->variables = NULL;
+    this->count = 0;
+}
+
 Array::Array(Class* c, Variable* variables, int count) : Object(c)
 {
     this->variables = variables;
@@ -12,7 +18,8 @@ Array::Array(Class* c, Variable* variables, int count) : Object(c)
 
 Array::~Array()
 {
-   delete[] variables;
+   if (this->variables != NULL)
+      delete[] variables;
 }
 
 void Array::setup()

@@ -5,6 +5,7 @@ class Variable;
 class Array : public Object
 {
 public:
+    Array(Class* c);
     Array(Class* c, Variable* variables, int count);
     virtual ~Array();
     virtual void setup();
