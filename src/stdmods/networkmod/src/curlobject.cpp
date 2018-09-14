@@ -530,7 +530,7 @@ void CurlObject::registerClass(ModuleSystem *moduleSystem)
         std::shared_ptr<CurlObject> curl_obj = std::dynamic_pointer_cast<CurlObject>(object);
         curl_obj->curl = curl_easy_init();
         if (!curl_obj->curl)
-            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Issue initialising curl internally");
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Issue initialising curl internally", interpreter->getStackTraceLog());
 
         curl_easy_setopt(curl_obj->curl, CURLOPT_WRITEFUNCTION, NetworkModule::CurlWriteCallback);
         curl_easy_setopt(curl_obj->curl, CURLOPT_WRITEDATA, &curl_obj->write_data);
@@ -600,16 +600,16 @@ void CurlObject::Curl_setopt(Interpreter *interpreter, std::vector<Value> values
 {
     std::shared_ptr<CurlObject> curl_obj = std::dynamic_pointer_cast<CurlObject>(object);
     if (values[0].dvalue == CURLOPT_UPLOAD)
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Uploading files with CURL has been disabled for now while we come up with a way for it to work well with the permission system");
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Uploading files with CURL has been disabled for now while we come up with a way for it to work well with the permission system", interpreter->getStackTraceLog());
 
     if (startsWith(values[1].svalue, "file://"))
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "File access is not allowed with the CURL module for now as we need to come up with a way for it to work well with the permission system");
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "File access is not allowed with the CURL module for now as we need to come up with a way for it to work well with the permission system", interpreter->getStackTraceLog());
 
     if (values[1].type == VALUE_TYPE_ARRAY)
     {
         struct curl_slist *slist = NULL;
         if (values[1].avalue == NULL)
-            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("NullPointerException"))), "The provided array is null for use in curl");
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("NullPointerException"))), "The provided array is null for use in curl", interpreter->getStackTraceLog());
 
         Variable *avars = values[1].avalue->variables;
         for (int i = 0; i < values[1].avalue->count; i++)
@@ -654,7 +654,7 @@ void CurlObject::Curl_execute(Interpreter *interpreter, std::vector<Value> value
     curl_obj->lists_to_free.erase(curl_obj->lists_to_free.begin(), curl_obj->lists_to_free.end());
 
     if (res != CURLE_OK)
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Issue executing your CURL request. Curl error code: " + std::to_string(res));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Issue executing your CURL request. Curl error code: " + std::to_string(res), interpreter->getStackTraceLog());
 
     // Return the data that was written
     return_value->set(curl_obj->write_data);

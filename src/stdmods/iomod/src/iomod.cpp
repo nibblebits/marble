@@ -123,7 +123,7 @@ void IOModule::IO_print(Interpreter* interpreter, std::vector<Value> values, Val
         std::shared_ptr<IOPermission> permission = std::dynamic_pointer_cast<IOPermission>(caller_scope->getPermission("IOPermission"));
         if (permission == NULL)
         {
-            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You do not have the IOPermission which is required for printing");
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You do not have the IOPermission which is required for printing", interpreter->getStackTraceLog());
         }
     }
     std::stringstream ss;
@@ -162,7 +162,7 @@ void IOModule::IO_WriteFile(Interpreter* interpreter, std::vector<Value> values,
     fs.open (values[0].svalue, std::fstream::in | std::fstream::binary);
     if (!fs.is_open())
     {
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to open the file " + values[0].svalue + "for reading");
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to open the file " + values[0].svalue + "for reading", interpreter->getStackTraceLog());
     }
 
 
@@ -176,7 +176,7 @@ void IOModule::IO_WriteFile(Interpreter* interpreter, std::vector<Value> values,
         interpreter->output(buf, fs.gcount());
         if (fs.rdstate() & std::ifstream::failbit)
         {
-            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to write all bytes to the file " + values[0].svalue);
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to write all bytes to the file " + values[0].svalue, interpreter->getStackTraceLog());
         }
     }
 

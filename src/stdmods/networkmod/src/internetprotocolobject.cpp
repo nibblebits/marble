@@ -57,7 +57,7 @@ void InternetProtocolObject::InternetProtocol_getAddressForHostname(Interpreter 
 
     if ((he = gethostbyname(hostname.c_str())) == NULL)
     {
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Issue resolving hostname");
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Issue resolving hostname", interpreter->getStackTraceLog());
     }
 
     std::string resulting_ip = "";
@@ -67,7 +67,7 @@ void InternetProtocolObject::InternetProtocol_getAddressForHostname(Interpreter 
         std::string resulting_ip = inet_ntoa(*addr_list[0]);
         if (resulting_ip == "")
         {
-            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Domain name could not be resolved");
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Domain name could not be resolved", interpreter->getStackTraceLog());
         }
         
         // Let's now create an Ipv4Address object to store this IP address in

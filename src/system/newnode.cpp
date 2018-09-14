@@ -151,7 +151,7 @@ void NewNode::new_object_variable(Interpreter* interpreter, Value& v, FunctionCa
     }
     catch(SystemException& ex)
     {
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("Exception"), {})), ex.getObject()->getMessage() + " for class: " + fc_node->name->value);
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("Exception"), {})), ex.getObject()->getMessage() + " for class: " + fc_node->name->value, interpreter->getStackTraceLog());
     }
     v.set(object);
 }

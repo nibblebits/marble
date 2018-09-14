@@ -51,7 +51,7 @@ void WebModule_ResponseObject::Response_setCookie(Interpreter* interpreter, std:
         // If the permission list is empty then we don't have permission to write cookies
         if (permission_list.empty())
         {
-            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You do not have the CookiePermission which is required for reading and writing cookies");
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You do not have the CookiePermission which is required for reading and writing cookies", interpreter->getStackTraceLog());
         }
 
         bool has_access = false;
@@ -67,7 +67,7 @@ void WebModule_ResponseObject::Response_setCookie(Interpreter* interpreter, std:
         }
 
         if (!has_access)
-            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You do not have the CookiePermission write access which is required for writing cookies");
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You do not have the CookiePermission write access which is required for writing cookies", interpreter->getStackTraceLog());
     }
 
     std::string cookie_full = values[0].svalue + "=" + values[1].svalue;

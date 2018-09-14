@@ -113,7 +113,7 @@ void CommonModule_OutputStream::OutputStream_Get(Interpreter* interpreter, std::
     }
     catch(...)
     {
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("InvalidIndexException"))));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("InvalidIndexException"))),"", interpreter->getStackTraceLog());
     }
 }
 

@@ -69,7 +69,7 @@ void SessionObject::Session_Create(Interpreter* interpreter, std::vector<Value> 
     std::cmatch m;
     if (!regex_match(sess_password, reg))
     {
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {})), "Your session password must be alphanumeric characters a-z, A-Z and 0-9");
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {})), "Your session password must be alphanumeric characters a-z, A-Z and 0-9", interpreter->getStackTraceLog());
     }
 
 }

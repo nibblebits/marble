@@ -178,7 +178,7 @@ void Interpreter::setupModuleMarbleFunctions(ModuleSystem *moduleSystem)
         {
             if (permission == NULL)
             {
-                throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("PermissionException"), {})), "You require to have the ModuleHandlingPermission to load modules");
+                throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("PermissionException"), {})), "You require to have the ModuleHandlingPermission to load modules", interpreter->getStackTraceLog());
             }
         }
         std::string filename = arguments[0].svalue;
@@ -190,7 +190,7 @@ void Interpreter::setupModuleMarbleFunctions(ModuleSystem *moduleSystem)
         }
         catch (...)
         {
-           throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(getClassSystem()->getClassByName("IOException"))));
+           throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(getClassSystem()->getClassByName("IOException"))), "", interpreter->getStackTraceLog());
         }
     });
 }
@@ -421,7 +421,7 @@ void Interpreter::run(const char *code, PosInfo posInfo, bool ignore_validation)
     {
         finishValidator(validator_root_previous);
         std::shared_ptr<ExceptionObject> rex = std::dynamic_pointer_cast<ExceptionObject>(ex.getObject());
-        logger.error("System threw a " + rex->getClass()->name + ", message: " + rex->getMessage(), current_node->posInfo);
+        logger.error("System threw a " + rex->getClass()->name + ", message: " + rex->getMessage() + "\n\nSTACK TRACE\n" + rex->getStackTrace(), current_node->posInfo);
     }
 
     if (this_run_started_execution)

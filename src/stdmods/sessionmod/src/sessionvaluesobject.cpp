@@ -105,7 +105,7 @@ std::shared_ptr<Object> SessionValuesObject::newInstance(Class *c)
 void SessionValuesObject::ensureIndexExists(Interpreter* interpreter, std::string index_name)
 {
     if (this->values.find(index_name) == this->values.end())
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {})), "The index with the name \"" + index_name + "\" does not exist");
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {})), "The index with the name \"" + index_name + "\" does not exist", interpreter->getStackTraceLog());
 }
 
 // Native SessionValues functions/methods
@@ -148,7 +148,7 @@ void SessionValuesObject::SessionValues_GetNumber(Interpreter *interpreter, std:
 
     Value &v = sv_obj->values[index_name];
     if (v.type != VALUE_TYPE_NUMBER)
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {})), "The index with the name \"" + index_name + "\" is not a number");
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {})), "The index with the name \"" + index_name + "\" is not a number", interpreter->getStackTraceLog());
 
     return_value->set(sv_obj->values[index_name].dvalue);
 }
@@ -161,7 +161,7 @@ void SessionValuesObject::SessionValues_GetString(Interpreter *interpreter, std:
 
     Value &v = sv_obj->values[index_name];
     if (v.type != VALUE_TYPE_STRING)
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {})), "The index with the name \"" + index_name + "\" is not a string");
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {})), "The index with the name \"" + index_name + "\" is not a string", interpreter->getStackTraceLog());
 
     return_value->set(sv_obj->values[index_name].svalue);
 }
@@ -174,7 +174,7 @@ void SessionValuesObject::SessionValues_GetObject(Interpreter *interpreter, std:
 
     Value &v = sv_obj->values[index_name];
     if (v.type != VALUE_TYPE_OBJECT)
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {})), "The index with the name \"" + index_name + "\" is not a object");
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {})), "The index with the name \"" + index_name + "\" is not a object", interpreter->getStackTraceLog());
 
     return_value->set(sv_obj->values[index_name].ovalue);
 }
@@ -188,7 +188,7 @@ void SessionValuesObject::SessionValues_GetArray(Interpreter *interpreter, std::
 
     Value &v = sv_obj->values[index_name];
     if (v.type != VALUE_TYPE_OBJECT || v.type_str != "array")
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {})), "The index with the name \"" + index_name + "\" is not an array");
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {})), "The index with the name \"" + index_name + "\" is not an array", interpreter->getStackTraceLog());
 
     return_value->set(sv_obj->values[index_name].ovalue);
 }

@@ -77,7 +77,7 @@ void CommonModule_InputStream::InputStream_Read(Interpreter* interpreter, std::v
     if (stream->buffer.empty())
     {
         // We are still empty so lets throw an exception
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("EndOfStreamException"))));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("EndOfStreamException"))),"", interpreter->getStackTraceLog());
     }
 
     // Let's now attempt to read from the input stream

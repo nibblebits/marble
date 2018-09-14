@@ -34,13 +34,13 @@ void ArrayNode::test(Validator *validator, struct extras extra)
         {
             if (evaluation.datatype.type != VARIABLE_TYPE_STRING)
             {
-                throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(validator->getClassSystem()->getClassByName("InvalidIndexException"))), "Attempting to access an invalid array dimension");
+                throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(validator->getClassSystem()->getClassByName("InvalidIndexException"))), "Attempting to access an invalid array dimension", {});
             }
 
             // We allow you to access characters of strings so one more index is allowed
             if (extra.current_array_index > evaluation.datatype.dimensions + 1)
             {
-                throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(validator->getClassSystem()->getClassByName("InvalidIndexException"))), "Attempting to access an invalid array dimension for string");
+                throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(validator->getClassSystem()->getClassByName("InvalidIndexException"))), "Attempting to access an invalid array dimension for string", {});
             }
         }
     }
@@ -57,7 +57,7 @@ Value ArrayNode::interpret(Interpreter *interpreter, struct extras extra)
     Value next_elem_value = this->next_element->interpret(interpreter);
     if (index_exp.dvalue > 0xffffffff || index_exp.dvalue < 0)
     {
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("InvalidIndexException"))));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("InvalidIndexException"))), "", interpreter->getStackTraceLog());
     }
 
     if (next_elem_value.type == VALUE_TYPE_STRING)
@@ -65,7 +65,7 @@ Value ArrayNode::interpret(Interpreter *interpreter, struct extras extra)
         // This is a string lets get the character
         if (index_exp.dvalue >= next_elem_value.svalue.size())
         {
-            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("InvalidIndexException"))), "Index out of bounds for string");
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("InvalidIndexException"))), "Index out of bounds for string", interpreter->getStackTraceLog());
         }
 
         char c = next_elem_value.svalue.at(index_exp.dvalue);
@@ -75,11 +75,11 @@ Value ArrayNode::interpret(Interpreter *interpreter, struct extras extra)
     {
         if (next_elem_value.avalue == NULL)
         {
-            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("NullPointerException"))));
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("NullPointerException"))), "", interpreter->getStackTraceLog());
         }
         else if (index_exp.dvalue >= next_elem_value.avalue->count)
         {
-            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("InvalidIndexException"))));
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("InvalidIndexException"))), "", interpreter->getStackTraceLog());
         }
 
         return next_elem_value.avalue->variables[(int)index_exp.dvalue].value;

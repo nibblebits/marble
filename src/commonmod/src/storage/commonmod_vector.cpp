@@ -101,7 +101,7 @@ void CommonModule_Vector::Vector_Pop(Interpreter *interpreter, std::vector<Value
 {
     std::shared_ptr<CommonModule_Vector> vector_obj = std::dynamic_pointer_cast<CommonModule_Vector>(object);
     if (vector_obj->vec_values.empty())
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("InvalidIndexException"), {})), "This Vector is empty");
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("InvalidIndexException"), {})), "This Vector is empty", interpreter->getStackTraceLog());
 
     return_value->set(&vector_obj->vec_values.back());
     vector_obj->vec_values.pop_back();
@@ -111,7 +111,7 @@ void CommonModule_Vector::Vector_Back(Interpreter *interpreter, std::vector<Valu
 {
     std::shared_ptr<CommonModule_Vector> vector_obj = std::dynamic_pointer_cast<CommonModule_Vector>(object);
     if (vector_obj->vec_values.empty())
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("InvalidIndexException"), {})), "This Vector is empty");
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("InvalidIndexException"), {})), "This Vector is empty", interpreter->getStackTraceLog());
 
     return_value->set(&vector_obj->vec_values.back());
 }
@@ -121,7 +121,7 @@ void CommonModule_Vector::Vector_Get(Interpreter* interpreter, std::vector<Value
    std::shared_ptr<CommonModule_Vector> vector_obj = std::dynamic_pointer_cast<CommonModule_Vector>(object);
    if (vector_obj->vec_values.size() < values[0].dvalue)
    {
-       throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("InvalidIndexException"), {})), "The index: " + std::to_string(values[0].dvalue) + " could not be found in Vector");
+       throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("InvalidIndexException"), {})), "The index: " + std::to_string(values[0].dvalue) + " could not be found in Vector", interpreter->getStackTraceLog());
    }
    return_value->set(&vector_obj->vec_values[values[0].dvalue]);
 }

@@ -58,7 +58,7 @@ void CommonModule_Map::Map_Get(Interpreter* interpreter, std::vector<Value> valu
 {
     std::shared_ptr<CommonModule_Map> map_obj = std::dynamic_pointer_cast<CommonModule_Map>(object);
     if (map_obj->value_map.find(values[0].svalue) == map_obj->value_map.end())
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("InvalidIndexException"), {})), "This map does not contain the key \"" + values[0].svalue + "\"");
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("InvalidIndexException"), {})), "This map does not contain the key \"" + values[0].svalue + "\"", interpreter->getStackTraceLog());
 
     Value* value_map_value = map_obj->value_map[values[0].svalue].get();
     Value return_val = Value(value_map_value);

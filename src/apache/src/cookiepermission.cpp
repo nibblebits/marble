@@ -104,7 +104,7 @@ void CookiePermission::CookiePermission__permission_check(Interpreter* interpret
 
         if (!ours_val && new_val)
         {
-            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You cannot escalate the permissions of a CookiePermission past your own permissions");
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You cannot escalate the permissions of a CookiePermission past your own permissions", interpreter->getStackTraceLog());
         }
     }
     else if (our_property->name == "can_read")
@@ -114,7 +114,7 @@ void CookiePermission::CookiePermission__permission_check(Interpreter* interpret
 
         if (!ours_val && new_val)
         {
-            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You cannot escalate the permissions of a CookiePermission past your own permissions");
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You cannot escalate the permissions of a CookiePermission past your own permissions", interpreter->getStackTraceLog());
         }
     }
 }

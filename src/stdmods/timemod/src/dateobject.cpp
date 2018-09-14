@@ -237,13 +237,13 @@ void DateObject::Date_setTimezone(Interpreter *interpreter, std::vector<Value> a
             }
             catch (...)
             {
-                throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("DateFormatException"))), "Invalid syntax. Expecting UTC+0:00 hours and minutes");
+                throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("DateFormatException"))), "Invalid syntax. Expecting UTC+0:00 hours and minutes", interpreter->getStackTraceLog());
             }
         }
     }
     else
     {
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("DateFormatException"))), "Invalid syntax. Expecting UTC+0:00 hours and minutes");
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("DateFormatException"))), "Invalid syntax. Expecting UTC+0:00 hours and minutes", interpreter->getStackTraceLog());
     }
 }
 
@@ -269,7 +269,7 @@ void DateObject::Date_getFormattedString(Interpreter *interpreter, std::vector<V
     if (strftime(buffer, sizeof(buffer), date_obj->format.c_str(), timeinfo) == 0)
     {
         // Error
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("DateFormatException"))));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("DateFormatException"))), "", interpreter->getStackTraceLog());
     }
 
     std::string formatted_str = buffer;

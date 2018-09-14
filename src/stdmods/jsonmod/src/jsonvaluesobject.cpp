@@ -103,7 +103,7 @@ std::shared_ptr<Object> JsonValuesObject::newInstance(Class *c)
 void JsonValuesObject::ensureIndexExists(Interpreter* interpreter, std::string index_name)
 {
     if (this->values.find(index_name) == this->values.end())
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {})), "The index with the name \"" + index_name + "\" does not exist");
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {})), "The index with the name \"" + index_name + "\" does not exist", interpreter->getStackTraceLog());
 }
 
 
@@ -145,7 +145,7 @@ void JsonValuesObject::JsonValues_GetNumber(Interpreter *interpreter, std::vecto
 
     Value &v = sv_obj->values[index_name];
     if (v.type != VALUE_TYPE_NUMBER)
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {})), "The index with the name \"" + index_name + "\" is not a number");
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {})), "The index with the name \"" + index_name + "\" is not a number", interpreter->getStackTraceLog());
 
     return_value->set(sv_obj->values[index_name].dvalue);
 }
@@ -158,7 +158,7 @@ void JsonValuesObject::JsonValues_GetString(Interpreter *interpreter, std::vecto
 
     Value &v = sv_obj->values[index_name];
     if (v.type != VALUE_TYPE_STRING)
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {})), "The index with the name \"" + index_name + "\" is not a string");
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {})), "The index with the name \"" + index_name + "\" is not a string", interpreter->getStackTraceLog());
 
     return_value->set(sv_obj->values[index_name].svalue);
 }
@@ -171,7 +171,7 @@ void JsonValuesObject::JsonValues_GetObject(Interpreter *interpreter, std::vecto
 
     Value &v = sv_obj->values[index_name];
     if (v.type != VALUE_TYPE_OBJECT || v.type_str == "array")
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {})), "The index with the name \"" + index_name + "\" is not a object");
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {})), "The index with the name \"" + index_name + "\" is not a object", interpreter->getStackTraceLog());
 
     return_value->set(sv_obj->values[index_name].ovalue);
 }
@@ -184,7 +184,7 @@ void JsonValuesObject::JsonValues_GetArray(Interpreter *interpreter, std::vector
 
     Value &v = sv_obj->values[index_name];
     if (v.type != VALUE_TYPE_OBJECT || v.type_str != "array")
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {})), "The index with the name \"" + index_name + "\" is not an array");
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {})), "The index with the name \"" + index_name + "\" is not an array", interpreter->getStackTraceLog());
 
     return_value->set(sv_obj->values[index_name].ovalue);
 }

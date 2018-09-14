@@ -83,7 +83,7 @@ void CommonModule_System::System_SetTimeout(Interpreter* interpreter, std::vecto
         std::shared_ptr<PermissionObject> permission = caller_scope->getPermission("TimeoutPermission");
         if (permission == NULL)
         {
-            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You do not have the TimeoutPermission which is required for handling timeouts");
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You do not have the TimeoutPermission which is required for handling timeouts", interpreter->getStackTraceLog());
         }
     }
     interpreter->setTimeout(values[0].dvalue);
@@ -96,11 +96,11 @@ void CommonModule_System::System_chdir(Interpreter* interpreter, std::vector<Val
         std::shared_ptr<PermissionObject> permission = caller_scope->getPermission("ChdirPermission");
         if (permission == NULL)
         {
-            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You do not have the ChdirPermission which is required for changing the working directory");
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You do not have the ChdirPermission which is required for changing the working directory", interpreter->getStackTraceLog());
         }
     }
  
     if(chdir(values[0].svalue.c_str()) != 0)
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to change working directory");
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to change working directory", interpreter->getStackTraceLog());
 
 }

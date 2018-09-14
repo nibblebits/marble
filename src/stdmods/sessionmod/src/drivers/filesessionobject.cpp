@@ -200,7 +200,7 @@ void FileSessionObject::FileSession_Create(Interpreter* interpreter, std::vector
 
     if (interpreter->properties.find("session_key") == interpreter->properties.end())
     {
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {})), "Cannot create Session as no session key has been setup for this client");
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {})), "Cannot create Session as no session key has been setup for this client", interpreter->getStackTraceLog());
     }
 
     std::string session_key = interpreter->properties["session_key"];
@@ -220,7 +220,7 @@ void FileSessionObject::FileSession_Create(Interpreter* interpreter, std::vector
         }
         catch(...)
         {
-            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {})), "Failed to load or create session");
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {})), "Failed to load or create session", interpreter->getStackTraceLog());
         }
     }
     else
@@ -239,7 +239,7 @@ void FileSessionObject::FileSession_Save(Interpreter* interpreter, std::vector<V
     std::string new_session_json = FileSessionObject::parseMapToJson(fs_obj->values);
 
     if (!fs_obj->file.is_open())
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {})), "Failed to save session as you never created it. Call create(string session_password)");
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {})), "Failed to save session as you never created it. Call create(string session_password)", interpreter->getStackTraceLog());
 
     // Reset to the start of the stream
     fs_obj->file.clear();

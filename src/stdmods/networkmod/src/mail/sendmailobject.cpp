@@ -68,7 +68,7 @@ void SendMailObject::SendMail_send(Interpreter *interpreter, std::vector<Value> 
     // Let's open sendmail to send the mail
     FILE *mailpipe = popen("/usr/lib/sendmail -t", "w");
     if (mailpipe == NULL)
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to open sendmail /usr/lib/sendmail do you not have sendmail installed?");
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to open sendmail /usr/lib/sendmail do you not have sendmail installed?", interpreter->getStackTraceLog());
 
     fprintf(mailpipe, "%s", sm_obj->getTranscript().c_str());
     fwrite(".\n", 1, 2, mailpipe);

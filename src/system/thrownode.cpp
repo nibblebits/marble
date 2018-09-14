@@ -39,6 +39,7 @@ Value ThrowNode::interpret(Interpreter* interpreter, struct extras extra)
     
     exception_obj->setStackLog(interpreter->getStackTraceLog());
     exception_obj->setThrowNode(this);
+
     // Lets throw this system exception
     throw SystemException(exception_obj);
     return v;

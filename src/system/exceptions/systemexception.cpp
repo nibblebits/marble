@@ -1,5 +1,6 @@
 #include "exceptions/systemexception.h"
 #include "exceptionobject.h"
+#include "interpreter.h"
 #include <stdexcept>
 #include <iostream>
 SystemException::SystemException(std::shared_ptr<ExceptionObject> object)
@@ -9,10 +10,12 @@ SystemException::SystemException(std::shared_ptr<ExceptionObject> object)
     this->object = object;
 }
 
-SystemException::SystemException(std::shared_ptr<ExceptionObject> object, std::string message) : SystemException(object)
+SystemException::SystemException(std::shared_ptr<ExceptionObject> object, std::string message, std::vector<struct stack_log_part> log_parts) : SystemException(object)
 {
     this->object->setMessage(message);
+    this->object->setStackLog(log_parts);
 }
+
 SystemException::~SystemException()
 {
 

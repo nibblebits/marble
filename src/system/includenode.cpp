@@ -44,7 +44,7 @@ Value IncludeNode::interpret(Interpreter* interpreter, struct extras extra)
     {
         if (interpreter->isNestedScript(v.svalue))
         {
-            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("InfiniteLoopException"), {})));
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("InfiniteLoopException"), {})), "", interpreter->getStackTraceLog());
         }
         interpreter->runScript(v.svalue.c_str());
     }

@@ -193,7 +193,7 @@ void FileModule_File::File_Open(Interpreter *interpreter, std::vector<Value> val
     std::string absolute_filename_path = getAbsolutePath(filename);
     if (mode != "r" && mode != "w" && mode != "a")
     {
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Invalid mode provided: " + mode + " currently you can only read or write files for when you open a file you cannot do both together. Supported modes \"r\" = read, \"w\" = write (overwrite if it exists), \"a\" = append (create if not exists)");
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Invalid mode provided: " + mode + " currently you can only read or write files for when you open a file you cannot do both together. Supported modes \"r\" = read, \"w\" = write (overwrite if it exists), \"a\" = append (create if not exists)", interpreter->getStackTraceLog());
     }
     // We need to make sure the scope has access to this file
     FilePermission::checkPermissionAllows(interpreter, caller_scope, absolute_filename_path, mode);
@@ -214,7 +214,7 @@ void FileModule_File::File_Close(Interpreter *interpreter, std::vector<Value> va
     file_obj->output->file = NULL;
     int response = (file_obj->fp == NULL ? 1 : fclose(file_obj->fp));
     if (response != 0)
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to close file");
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to close file", interpreter->getStackTraceLog());
     file_obj->fp = NULL;
 }
 
@@ -223,7 +223,7 @@ void FileModule_File::File_setPosition(Interpreter *interpreter, std::vector<Val
     std::shared_ptr<FileModule_File> file_obj = std::dynamic_pointer_cast<FileModule_File>(object);
     int response = (file_obj->fp == NULL ? 1 : fseek(file_obj->fp, values[0].dvalue, SEEK_SET));
     if (response != 0)
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to set file position");
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to set file position", interpreter->getStackTraceLog());
 }
 
 void FileModule_File::File_GetSize(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object)
@@ -240,7 +240,7 @@ void FileModule_File::File_Move(Interpreter *interpreter, std::vector<Value> val
     std::string filename = values[0].svalue;
     std::string dst_filename = values[1].svalue;
     if (rename(filename.c_str(), dst_filename.c_str()) != 0)
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to rename " + filename + " to " + dst_filename);
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to rename " + filename + " to " + dst_filename, interpreter->getStackTraceLog());
 }
 
 void FileModule_File::File_IsFile(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
@@ -255,7 +255,7 @@ void FileModule_File::File_Delete(Interpreter *interpreter, std::vector<Value> v
     std::string abs_path = getAbsolutePath(filename);
     FilePermission::checkPermissionAllows(interpreter, caller_scope, abs_path, "w");
     if (remove(filename.c_str()) != 0)
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "The file: " + filename + " could not be deleted because it either does not exist or you lack the system permissions to do so. You do have marble permissiosn to delete this file");
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "The file: " + filename + " could not be deleted because it either does not exist or you lack the system permissions to do so. You do have marble permissiosn to delete this file", interpreter->getStackTraceLog());
 }
 
 void FileModule_File::File_file_get_contents(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
@@ -265,7 +265,7 @@ void FileModule_File::File_file_get_contents(Interpreter *interpreter, std::vect
     FilePermission::checkPermissionAllows(interpreter, caller_scope, absolute_filename_path, "r");
     FILE *fp = fopen(absolute_filename_path.c_str(), "r");
     if (!fp)
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to open the file: " + absolute_filename_path);
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to open the file: " + absolute_filename_path, interpreter->getStackTraceLog());
 
     try
     {
@@ -275,7 +275,7 @@ void FileModule_File::File_file_get_contents(Interpreter *interpreter, std::vect
 
         char buf[size + 1];
         if (!fread(buf, size, 1, fp))
-            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to read the file: " + absolute_filename_path + " but it opened succesfully");
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to read the file: " + absolute_filename_path + " but it opened succesfully", interpreter->getStackTraceLog());
 
         // Add NULL terminator
         buf[size] = 0;
@@ -296,12 +296,12 @@ void FileModule_File::File_file_put_contents(Interpreter *interpreter, std::vect
     FilePermission::checkPermissionAllows(interpreter, caller_scope, absolute_filename_path, "w");
     FILE *fp = fopen(absolute_filename_path.c_str(), "w");
     if (!fp)
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to open the file: " + absolute_filename_path);
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to open the file: " + absolute_filename_path, interpreter->getStackTraceLog());
 
     try
     {
         if (!fwrite(values[1].svalue.c_str(), values[0].svalue.size(), 1, fp))
-            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to write the file: " + absolute_filename_path + " but it opened succesfully");
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to write the file: " + absolute_filename_path + " but it opened succesfully", interpreter->getStackTraceLog());
 
         fclose(fp);
     }
@@ -320,5 +320,5 @@ void FileModule_File::File_chmod(Interpreter *interpreter, std::vector<Value> va
 
     // Change the permissions
     if (chmod(absolute_filename_path.c_str(), (int)values[1].dvalue) != 0)
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to change the mode of the file: " + absolute_filename_path);
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to change the mode of the file: " + absolute_filename_path, interpreter->getStackTraceLog());
 }

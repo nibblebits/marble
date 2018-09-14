@@ -27,7 +27,7 @@ void ShellPermission::ensurePermission(Interpreter* interpreter, Scope* caller_s
         std::shared_ptr<ShellPermission> permission = std::dynamic_pointer_cast<ShellPermission>(caller_scope->getPermission("ShellPermission"));
         if (permission == NULL)
         {
-            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You do not have the ShellPermission which is required for Shell operations");
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You do not have the ShellPermission which is required for Shell operations", interpreter->getStackTraceLog());
         }
     }
 

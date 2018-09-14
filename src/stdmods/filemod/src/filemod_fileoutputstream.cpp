@@ -50,21 +50,21 @@ void FileModule_FileOutputStream::FileOutputStream_Flush(Interpreter* interprete
     /* If this output stream does not belong to a file then there is nothing we can do so throw an exception. 
      * This will happen when a programmer creates a FileOutputStream manually within marble code*/
     if (stream->file == NULL)
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "", interpreter->getStackTraceLog());
     
     // Let's get the FILE* and write this buffer
     FILE* file = stream->file;
 
     // If the file is not open then lets throw an exception
     if (!file)
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "", interpreter->getStackTraceLog());
 
     const char* buf = &stream->buffer[0];
     size_t amount = fwrite(buf, 1, stream->buffer.size(), file);
 
     // Did we write all bytes succesfully?
     if (amount != stream->buffer.size())
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "", interpreter->getStackTraceLog());
     
     // Now we must clear the output stream buffer
     stream->buffer.clear();

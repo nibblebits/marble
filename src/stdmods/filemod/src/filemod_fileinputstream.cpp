@@ -49,7 +49,7 @@ void FileModule_FileInputStream::FileInputStream_Fill(Interpreter* interpreter, 
     /* If this input stream does not belong to a file then there is nothing we can do so throw an exception. 
      * This will happen when a programmer creates a FileOutputStream manually within marble code*/
     if (stream->file == NULL)
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Stream not bounded to file");
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Stream not bounded to file", interpreter->getStackTraceLog());
     
     // Let's get the native FILE* and write this buffer
     FILE* file = stream->file;
@@ -61,7 +61,7 @@ void FileModule_FileInputStream::FileInputStream_Fill(Interpreter* interpreter, 
     {
         // A read error has occured if we are not at the end of the file
         if (!feof(file))
-            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to read from file");
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to read from file", interpreter->getStackTraceLog());
     }
     for (int i = 0; i < amount_read; i++)
     {

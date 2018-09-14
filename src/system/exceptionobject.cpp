@@ -6,7 +6,7 @@
 
 ExceptionObject::ExceptionObject(Class* c) : Object(c)
 {
-
+    this->throwNode = NULL;
 }
 
 ExceptionObject::~ExceptionObject()
@@ -42,7 +42,12 @@ std::string ExceptionObject::getMessage()
 
 std::string ExceptionObject::getStackTrace()
 {
-    std::string trace = "Thrown " + getClass()->name + "@" + this->throwNode->posInfo.filename + ": " + std::to_string(this->throwNode->posInfo.line) + "\n";
+    std::string throw_information = "No throw node must be native";
+    if (this->throwNode != NULL)
+    {
+        throw_information = this->throwNode->posInfo.filename + ": " + std::to_string(this->throwNode->posInfo.line);
+    }
+    std::string trace = "Thrown " + getClass()->name + "@" + throw_information + "\n";
     for (int i = this->stack_log.size()-1; i >= 0; i--)
     {
         struct stack_log_part part = this->stack_log[i];

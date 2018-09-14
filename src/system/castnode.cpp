@@ -59,7 +59,7 @@ Value CastNode::interpret(Interpreter* interpreter, struct extras extra)
     }
     catch(...)
     {
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("InvalidCastException"), {})));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("InvalidCastException"), {})), "", interpreter->getStackTraceLog());
     }
 
 

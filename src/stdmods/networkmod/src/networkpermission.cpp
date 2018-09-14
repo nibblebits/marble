@@ -36,7 +36,7 @@ void NetworkPermission::ensurePermission(Interpreter *interpreter, Scope *caller
         // If the permission list is empty then we don't have permission to open this file
         if (permission_list.empty())
         {
-            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You do not have the NetworkPermission which is required for network operations");
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You do not have the NetworkPermission which is required for network operations", interpreter->getStackTraceLog());
         }
 
         bool hasPermission = false;
@@ -70,7 +70,7 @@ void NetworkPermission::ensurePermission(Interpreter *interpreter, Scope *caller
 
         if (!hasPermission)
         {
-            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), fail_msg);
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), fail_msg, interpreter->getStackTraceLog());
         }
     }
 }
@@ -190,7 +190,7 @@ void NetworkPermission::NetworkPermission_PermissionCheck(Interpreter *interpret
             if (!ours_val && new_val)
             {
                 // Attempting to create a permission with a true property while our own permission is false. This is illegal
-                throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You cannot escalate the permissions past your own permissions. For the NetworkPermission");
+                throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You cannot escalate the permissions past your own permissions. For the NetworkPermission", interpreter->getStackTraceLog());
             }
         }
     }
@@ -203,7 +203,7 @@ void NetworkPermission::NetworkPermission_PermissionCheck(Interpreter *interpret
             if (!ours_val && new_val)
             {
                 // Attempting to create a permission with a true property while our own permission is false. This is illegal
-                throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You cannot escalate the permissions past your own permissions. For the NetworkPermission");
+                throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You cannot escalate the permissions past your own permissions. For the NetworkPermission", interpreter->getStackTraceLog());
             }
         }
     }
@@ -216,7 +216,7 @@ void NetworkPermission::NetworkPermission_PermissionCheck(Interpreter *interpret
             if (!ours_val && new_val)
             {
                 // Attempting to create a permission with a true property while our own permission is false. This is illegal
-                throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You cannot escalate the permissions past your own permissions. For the NetworkPermission");
+                throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You cannot escalate the permissions past your own permissions. For the NetworkPermission", interpreter->getStackTraceLog());
             }
         }
     }

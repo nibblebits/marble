@@ -192,7 +192,7 @@ void JsonObject::Json_decode(Interpreter *interpreter, std::vector<Value> values
     bool parsingSuccessful = reader.parse(values[0].svalue.c_str(), root);
     if (!parsingSuccessful)
     {
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {})), "Failed to parse JSON string");
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {})), "Failed to parse JSON string", interpreter->getStackTraceLog());
     }
     jv_obj->values = JsonObject::getSystemValuesForJSONValue(interpreter, root);
     return_value->set(jv_obj);
@@ -202,7 +202,7 @@ void JsonObject::Json_encode(Interpreter *interpreter, std::vector<Value> values
 {
     std::shared_ptr<JsonValuesObject> jv_obj = std::dynamic_pointer_cast<JsonValuesObject>(values[0].ovalue);
     if (jv_obj == NULL)
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("NullPointerException"), {})), "The provided JsonValues object is NULL");
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("NullPointerException"), {})), "The provided JsonValues object is NULL", interpreter->getStackTraceLog());
 
     return_value->set(JsonObject::parseMapToJson(jv_obj->values));
 }

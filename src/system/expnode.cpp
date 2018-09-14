@@ -227,7 +227,7 @@ Value ExpNode::interpret(Interpreter *interpreter, struct extras extra)
         if (var_to_assign->is_locked)
         {
             // The variable we want to assign is locked so we just have to throw an exception and refuse this
-            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("VariableLockedException"))), "The variable " + var_to_assign->name + " is locked and cannot be modified");
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("VariableLockedException"))), "The variable " + var_to_assign->name + " is locked and cannot be modified", interpreter->getStackTraceLog());
         }
         var_to_assign->setValue(result, interpreter);
         return result;
@@ -258,7 +258,7 @@ Value ExpNode::interpret(Interpreter *interpreter, struct extras extra)
         if (obj == NULL)
         {
             // Throw a NULL pointer exception here. This will be a SystemException so it may be caught from within marble.
-            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("NullPointerException"), {})));
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("NullPointerException"), {})), "", interpreter->getStackTraceLog());
         }
 
         Class *c = NULL;

@@ -47,7 +47,7 @@ Value IncludeOnceNode::interpret(Interpreter* interpreter, struct extras extra)
     }
     catch(IOException& e)
     {
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {})));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {})), "", interpreter->getStackTraceLog());
     }
     return v;
 }

@@ -94,7 +94,7 @@ void WebModule::Init()
 
         if (post_obj->content.find(arguments[0].svalue) == post_obj->content.end())
         {
-            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("InvalidIndexException"), {})));
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("InvalidIndexException"), {})), "", interpreter->getStackTraceLog());
         }
 
         return_value->svalue = post_obj->content[arguments[0].svalue];
@@ -580,7 +580,7 @@ void WebModule::FileContent_get(Interpreter* interpreter, std::vector<Value> val
     std::shared_ptr<WebModulePOSTFileContentObject> file_content_obj = std::dynamic_pointer_cast<WebModulePOSTFileContentObject>(object);
     if(file_content_obj->content.find(values[0].svalue) == file_content_obj->content.end())
     {
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("InvalidIndexException"), {})));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("InvalidIndexException"), {})), "", interpreter->getStackTraceLog());
     }
 
     return_value->set(file_content_obj->content[values[0].svalue]);
@@ -591,7 +591,7 @@ void WebModule::FileContent_getArray(Interpreter* interpreter, std::vector<Value
     std::shared_ptr<WebModulePOSTFileContentObject> file_content_obj = std::dynamic_pointer_cast<WebModulePOSTFileContentObject>(object);
     if(file_content_obj->content_array.find(values[0].svalue) == file_content_obj->content_array.end())
     {
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("InvalidIndexException"), {})));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("InvalidIndexException"), {})), "", interpreter->getStackTraceLog());
     }
 
     std::vector<std::shared_ptr<MultipartFileObject>> file_array_list = file_content_obj->content_array[values[0].svalue];

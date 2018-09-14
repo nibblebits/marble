@@ -105,7 +105,7 @@ void FileModule_Directory::Directory_List(Interpreter *interpreter, std::vector<
     }
     else
     {
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to list directories in location: \"" + values[0].svalue + "\"");
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to list directories in location: \"" + values[0].svalue + "\"", interpreter->getStackTraceLog());
     }
 
     if (entries.size() > 0)
@@ -131,6 +131,6 @@ void FileModule_Directory::Directory_Delete(Interpreter* interpreter, std::vecto
     std::string absolute_path = getAbsolutePath(values[0].svalue);
     FilePermission::checkPermissionAllows(interpreter, caller_scope, absolute_path.c_str(), "w");
     if(rmdir(absolute_path.c_str()) != 0)
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to delete the directory: " + absolute_path + " is it empty?");
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to delete the directory: " + absolute_path + " is it empty?", interpreter->getStackTraceLog());
 
 }

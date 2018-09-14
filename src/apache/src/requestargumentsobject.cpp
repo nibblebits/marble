@@ -39,7 +39,7 @@ void WebModuleRequestArgumentsObject::RequestArguments_get(Interpreter* interpre
 
     if (args_obj->arguments.find(values[0].svalue) == args_obj->arguments.end())
     {
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("InvalidIndexException"), {})));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("InvalidIndexException"), {})), "", interpreter->getStackTraceLog());
     }
 
     return_value->svalue = args_obj->arguments[values[0].svalue];

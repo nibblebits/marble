@@ -61,7 +61,7 @@ void CommonModule_SqlRecord::SQLRecord_getValue(Interpreter* interpreter, std::v
     }
     catch(...)
     {
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("Exception"))));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("Exception"))), "", interpreter->getStackTraceLog());
     }
  
 }

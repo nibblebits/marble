@@ -114,7 +114,7 @@ void FilePermission::checkPermissionAllows(Interpreter* interpreter, Scope* call
         // If the permission list is empty then we don't have permission to open this file
         if (permission_list.empty())
         {
-            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You don't have permission to open the file: " + absolute_filename_path);
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You don't have permission to open the file: " + absolute_filename_path, interpreter->getStackTraceLog());
         }
         for (std::shared_ptr<PermissionObject> perm : permission_list)
         {
@@ -145,7 +145,7 @@ void FilePermission::checkPermissionAllows(Interpreter* interpreter, Scope* call
 
         if (!has_access)
         {
-            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You don't have the permission to access the path: " + absolute_filename_path + " for mode: " + mode);
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You don't have the permission to access the path: " + absolute_filename_path + " for mode: " + mode, interpreter->getStackTraceLog());
         }
     }
 }
@@ -159,7 +159,7 @@ void FilePermission::FilePermission_SetLocation(Interpreter* interpreter, std::v
     std::shared_ptr<FilePermission> file_perm_obj = std::dynamic_pointer_cast<FilePermission>(object);
     if (file_perm_obj->location->is_locked)
     {
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("VariableLockedException"))));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("VariableLockedException"))), "", interpreter->getStackTraceLog());
     }
     file_perm_obj->location->setValue(getAbsolutePath(values[0].svalue));
     // Lock the variable so it cannot be changed again
@@ -177,7 +177,7 @@ void FilePermission::FilePermission_SetCanRead(Interpreter* interpreter, std::ve
     std::shared_ptr<FilePermission> file_perm_obj = std::dynamic_pointer_cast<FilePermission>(object);
     if (file_perm_obj->can_read->is_locked)
     {
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("VariableLockedException"))));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("VariableLockedException"))), "", interpreter->getStackTraceLog());
     }
     file_perm_obj->can_read->setValue((bool)values[0].dvalue);
     // Lock the variable so it cannot be changed again
@@ -189,7 +189,7 @@ void FilePermission::FilePermission_SetCanWrite(Interpreter* interpreter, std::v
     std::shared_ptr<FilePermission> file_perm_obj = std::dynamic_pointer_cast<FilePermission>(object);
     if (file_perm_obj->can_write->is_locked)
     {
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("VariableLockedException"))));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("VariableLockedException"))), "", interpreter->getStackTraceLog());
     }
     file_perm_obj->can_write->setValue((bool)values[0].dvalue);
     // Lock the variable so it cannot be changed again
@@ -221,7 +221,7 @@ void FilePermission::FilePermission_PermissionCheck(Interpreter* interpreter, st
 
         if (!startsWith(_new_absolute_path, our_absolute_path))
         {
-            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))));
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "", interpreter->getStackTraceLog());
         }
     }
     else if("can_read")
@@ -233,7 +233,7 @@ void FilePermission::FilePermission_PermissionCheck(Interpreter* interpreter, st
             if (!ours_val && new_val)
             {
                 // Attempting to create a permission with a true property while our own permission is false. This is illegal
-                throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You cannot escalate the permissions past your own permissions");
+                throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You cannot escalate the permissions past your own permissions", interpreter->getStackTraceLog());
             }
         }
     }
@@ -246,7 +246,7 @@ void FilePermission::FilePermission_PermissionCheck(Interpreter* interpreter, st
             if (!ours_val && new_val)
             {
                 // Attempting to create a permission with a true property while our own permission is false. This is illegal
-                throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You cannot escalate the permissions past your own permissions");
+                throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You cannot escalate the permissions past your own permissions", interpreter->getStackTraceLog());
             }
         }
     }

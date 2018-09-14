@@ -21,7 +21,7 @@ public:
     
     * Used to set the throw node that threw this exception object. */
     void setThrowNode(ThrowNode* throwNode);
-    
+
     virtual std::shared_ptr<Object> newInstance(Class* c);
     
     /**
@@ -42,6 +42,7 @@ private:
     std::vector<struct stack_log_part> stack_log;
     ThrowNode* throwNode;
     std::string message;
+    std::string trace;
 };
 
 #endif

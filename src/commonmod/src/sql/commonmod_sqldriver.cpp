@@ -140,7 +140,7 @@ void CommonModule_SqlDriver::SQLDriver_getDriver(Interpreter* interpreter, std::
 {
     std::shared_ptr<CommonModule_SqlDriver> selected_driver = interpreter->getSQLDriver(values[0].svalue);
     if (selected_driver == NULL)
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("DriverNotFoundException"))));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("DriverNotFoundException"))), "", interpreter->getStackTraceLog());
 
     // We have a driver, lets now return it to the user
     return_value->set(selected_driver);

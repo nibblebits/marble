@@ -215,7 +215,7 @@ void CommonModule_StringUtils::StringUtils_substr(Interpreter *interpreter, std:
     int end = values.size() > 2 ? values[2].dvalue : 0xffffffff;
 
     if (start >= str.size())
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("OutOfBoundsException"), {})));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("OutOfBoundsException"), {})), "", interpreter->getStackTraceLog());
     return_value->set(str.substr(start, end));
 }
 
@@ -231,7 +231,7 @@ void CommonModule_StringUtils::StringUtils_strpos(Interpreter *interpreter, std:
     std::string needle = values[1].svalue;
     int offset = values[2].dvalue;
     if (offset >= haystack.size())
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("OutOfBoundsException"), {})));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("OutOfBoundsException"), {})), "", interpreter->getStackTraceLog());
 
     return_value->set(haystack.find(needle, offset));
 }
@@ -284,7 +284,7 @@ void CommonModule_StringUtils::StringUtils_preg_match_all(Interpreter *interpret
     }
     catch (...)
     {
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("LogicException"), {})));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("LogicException"), {})), "", interpreter->getStackTraceLog());
     }
 }
 

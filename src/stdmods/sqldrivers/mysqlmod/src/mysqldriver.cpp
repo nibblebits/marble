@@ -89,17 +89,17 @@ void MysqlDriver::MysqlDriver_Execute(Interpreter* interpreter, std::vector<Valu
     std::shared_ptr<MysqlConnection> connection = std::dynamic_pointer_cast<MysqlConnection>(values[0].ovalue);
     // If we fail to cast the connection to a MysqlConnection then we must throw a SQLConnectionException as they have passed an invalid connection to us
     if (connection == NULL)
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("SQLConnectionException"))));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("SQLConnectionException"))), "", interpreter->getStackTraceLog());
 
     // If this MysqlConnection does not have a real Mysql connection then we cannot proceed.
     if (connection->mysql_connection == NULL)
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("SQLConnectionException"))), "This connection was closed or was never opened");
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("SQLConnectionException"))), "This connection was closed or was never opened", interpreter->getStackTraceLog());
 
     std::string finalized_query = values[2].svalue;
     // Let's execute the finalized query. mysql_query returns 0 for success
     if (mysql_query(connection->mysql_connection, finalized_query.c_str()))
     {
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("SQLQueryException"))), "Error with query: " + finalized_query);
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("SQLQueryException"))), "Error with query: " + finalized_query, interpreter->getStackTraceLog());
     } 
 
     // Let's get the result
@@ -163,7 +163,7 @@ void MysqlDriver::MysqlDriver_Connect(Interpreter* interpreter, std::vector<Valu
     std::string database = values[3].svalue;
     if(!mysql_real_connect(mysql_conn, host.c_str(), username.c_str(), password.c_str(), database.c_str(), 0, NULL, 0))
     {
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("SQLConnectionException"))));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("SQLConnectionException"))), "", interpreter->getStackTraceLog());
     }
 
     // Now that we have connected to MYSQL lets now create a MysqlConnection and store this MYSQL connection object in there
@@ -182,20 +182,20 @@ void MysqlDriver::MysqlDriver_Escape(Interpreter* interpreter, std::vector<Value
     std::shared_ptr<MysqlConnection> connection = std::dynamic_pointer_cast<MysqlConnection>(values[0].ovalue);
     // If we could not cast this connection to a MysqlConnection it means an invalid connection has been passed to this function.
     if (connection == NULL)
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("InvalidEntityException"))));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("InvalidEntityException"))), "", interpreter->getStackTraceLog());
     
     std::string value_to_escape = values[1].svalue;
     char escaped[value_to_escape.size()];
     MYSQL* mysql = connection->mysql_connection;
     if (!mysql)
     {
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("SQLConnectionException"))), "This connection was closed or was never opened");
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("SQLConnectionException"))), "This connection was closed or was never opened", interpreter->getStackTraceLog());
     }
     // Now lets escape that string!
     if(mysql_real_escape_string(mysql, escaped, value_to_escape.c_str(), value_to_escape.size()) == -1)
     {
         // Tmp exception should be changed
-        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("Exception"))));
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("Exception"))), "", interpreter->getStackTraceLog());
     }
 
     return_value->set(std::string(escaped));
