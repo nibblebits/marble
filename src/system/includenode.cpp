@@ -48,6 +48,11 @@ Value IncludeNode::interpret(Interpreter* interpreter, struct extras extra)
         }
         interpreter->runScript(v.svalue.c_str());
     }
+    catch(IOException& ex)
+    {
+        interpreter->finish_parented_scope();
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {})), ex.what(), interpreter->getStackTraceLog());
+    }
     catch(...)
     {
         interpreter->finish_parented_scope();

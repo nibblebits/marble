@@ -37,7 +37,7 @@ Value IncludeOnceNode::interpret(Interpreter* interpreter, struct extras extra)
     std::string absolute_path = getAbsolutePath(v.svalue);
     // Before we do anything let's make sure we have permission to load this file
     FilePermission::checkPermissionAllows(interpreter, interpreter->getCurrentScope(), absolute_path.c_str(), "r");
-
+    interpreter->new_parented_scope();
     try
     {
         std::string script_address = v.svalue;
@@ -47,8 +47,16 @@ Value IncludeOnceNode::interpret(Interpreter* interpreter, struct extras extra)
     }
     catch(IOException& e)
     {
+        interpreter->finish_parented_scope();
         throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("IOException"), {})), "", interpreter->getStackTraceLog());
     }
+    catch(...)
+    {
+        interpreter->finish_parented_scope();
+        throw;
+    }
+
+    interpreter->finish_parented_scope();
     return v;
 }
 
