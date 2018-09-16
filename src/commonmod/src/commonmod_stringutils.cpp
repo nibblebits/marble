@@ -23,7 +23,7 @@ std::shared_ptr<Object> CommonModule_StringUtils::newInstance(Class *c)
 
 Class *CommonModule_StringUtils::registerClass(ModuleSystem *moduleSystem)
 {
-    
+
     /**
      * class StringUtils extends Object
      * 
@@ -131,7 +131,7 @@ Class *CommonModule_StringUtils::registerClass(ModuleSystem *moduleSystem)
     moduleSystem->getFunctionSystem()->registerFunction("trim", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_trim);
     moduleSystem->getFunctionSystem()->registerFunction("trim", {VarType::fromString("string")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_trim);
 
-     /**
+    /**
      * @class StringUtils
      * Trims whitespace from the left of the provided string target unless a pattern is provided
      * If a pattern is provided then the pattern is what is tripped from the string.
@@ -175,8 +175,6 @@ Class *CommonModule_StringUtils::registerClass(ModuleSystem *moduleSystem)
     moduleSystem->getFunctionSystem()->registerFunction("rtrim", {VarType::fromString("string")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_rtrim);
     moduleSystem->getFunctionSystem()->registerFunction("rtrim", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_rtrim);
 
-
-
     /**
      * @class StringUtils
      * Preforms a number format on the given target 
@@ -186,7 +184,7 @@ Class *CommonModule_StringUtils::registerClass(ModuleSystem *moduleSystem)
      */
     c->registerFunction("number_format", {VarType::fromString("string"), VarType::fromString("number")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_number_format);
     moduleSystem->getFunctionSystem()->registerFunction("number_format", {VarType::fromString("string"), VarType::fromString("number")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_number_format);
-  /**
+    /**
      * @class StringUtils
      * Returns the given number as a correctly formatted string. 
      * Whole numbers are returned as whole number strings. Doubles may have to be formatted correctly with the number_format function
@@ -198,6 +196,19 @@ Class *CommonModule_StringUtils::registerClass(ModuleSystem *moduleSystem)
     c->registerFunction("number_to_string", {VarType::fromString("number")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_number_to_string);
     moduleSystem->getFunctionSystem()->registerFunction("number_to_string", {VarType::fromString("number")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_number_to_string);
 
+    /**
+     * @class StringUtils
+     * 
+     * Makes the given value string html tag safe. Preventing XSS attacks
+     * 
+     *  
+     *  str_replace(val, "<", "&lt;");
+     *  str_replace(val, ">", "&gt;");
+     * @works_without_class
+     * function safe_tags(string val) : string
+     */
+    c->registerFunction("safe_tags", {VarType::fromString("string")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_safe_tags);
+    moduleSystem->getFunctionSystem()->registerFunction("safe_tags", {VarType::fromString("string")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_safe_tags);
 }
 
 void CommonModule_StringUtils::StringUtils_getASCIIString(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
@@ -288,7 +299,7 @@ void CommonModule_StringUtils::StringUtils_preg_match_all(Interpreter *interpret
     }
 }
 
-void CommonModule_StringUtils::StringUtils_trim(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+void CommonModule_StringUtils::StringUtils_trim(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
     std::string target = values[0].svalue;
     std::string pattern = "\f\n\r\t\v";
@@ -299,7 +310,7 @@ void CommonModule_StringUtils::StringUtils_trim(Interpreter* interpreter, std::v
     return_value->set(trim(target, pattern));
 }
 
-void CommonModule_StringUtils::StringUtils_ltrim(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+void CommonModule_StringUtils::StringUtils_ltrim(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
     std::string target = values[0].svalue;
     std::string pattern = "\f\n\r\t\v";
@@ -310,7 +321,7 @@ void CommonModule_StringUtils::StringUtils_ltrim(Interpreter* interpreter, std::
     return_value->set(trim_left(target, pattern));
 }
 
-void CommonModule_StringUtils::StringUtils_rtrim(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+void CommonModule_StringUtils::StringUtils_rtrim(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
     std::string target = values[0].svalue;
     std::string pattern = "\f\n\r\t\v";
@@ -321,15 +332,14 @@ void CommonModule_StringUtils::StringUtils_rtrim(Interpreter* interpreter, std::
     return_value->set(trim_right(target, pattern));
 }
 
-
-void CommonModule_StringUtils::StringUtils_number_format(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+void CommonModule_StringUtils::StringUtils_number_format(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
     std::string target = values[0].svalue;
     int places = values[1].dvalue;
     return_value->set(number_format(target, places));
 }
 
-void CommonModule_StringUtils::StringUtils_number_to_string(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+void CommonModule_StringUtils::StringUtils_number_to_string(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
     if (std::fmod(values[0].dvalue, 1) == 0)
     {
@@ -339,4 +349,12 @@ void CommonModule_StringUtils::StringUtils_number_to_string(Interpreter* interpr
     }
 
     return_value->set(std::to_string(values[0].dvalue));
+}
+
+void CommonModule_StringUtils::StringUtils_safe_tags(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
+{
+    std::string result = values[0].svalue;
+    result = str_replace(result, "<", "&lt;");
+    result = str_replace(result, ">", "&gt;");
+    return_value->set(result);
 }

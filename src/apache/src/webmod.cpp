@@ -111,26 +111,58 @@ void WebModule::Init()
     });
     /* End of POSTContent class */
 
-    /* Request class */
+    /**
+     * class Request
+     * 
+     * This is the Request class it is responsible for getting http request information from the web client
+     * when running a marble script in apache2.
+     * 
+     * <b>You can access the object directly in a static way. For example Request.getMethod()</b>
+     */
     c = this->getModuleSystem()->getClassSystem()->registerClass("Request");
+    /**
+     * @class Request
+     * 
+     * Returns the URI for this HTTP request
+     * function getUri() : string
+     */
     c->registerFunction("getUri", {}, VarType::fromString("string"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         std::shared_ptr<WebModuleObject> web_mod_obj = std::dynamic_pointer_cast<WebModuleObject>(object);
         return_value->type = VALUE_TYPE_STRING;
         return_value->svalue = web_mod_obj->request_uri;
     });
 
+    /**
+     * @class Request
+     * 
+     * Returns the HTTP request method for this HTTP request
+     * function getMethod() : string
+     */
     c->registerFunction("getMethod", {}, VarType::fromString("string"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         std::shared_ptr<WebModuleObject> web_mod_obj = std::dynamic_pointer_cast<WebModuleObject>(object);
         return_value->type = VALUE_TYPE_STRING;
         return_value->svalue = web_mod_obj->request_method;
     });
 
+    /**
+     * @class Request
+     * 
+     * Returns the "GET" request arguments for this HTTP request
+     * fucntion getArguments() : RequestArguments
+     */
     c->registerFunction("getArguments", {}, VarType::fromString("RequestArguments"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         std::shared_ptr<WebModuleObject> web_mod_obj = std::dynamic_pointer_cast<WebModuleObject>(object);
         return_value->type = VALUE_TYPE_OBJECT;
         return_value->ovalue = web_mod_obj->request_arguments;
     });
 
+    /**
+     * @class Request
+     * 
+     * Returns the "POST" content for this HTTP request
+     * 
+     * function getContent() : PostContent
+     */
     c->registerFunction("getContent", {}, VarType::fromString("PostContent"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         std::shared_ptr<WebModuleObject> web_mod_obj = std::dynamic_pointer_cast<WebModuleObject>(object);
         return_value->type = VALUE_TYPE_OBJECT;
@@ -138,19 +170,34 @@ void WebModule::Init()
     });
 
     /**
+     * @class Request
      * Returns the cookie with the given name. Empty string is returned if no cookie was found.
      * function getCookie(string cookieName) : string
      */
     c->registerFunction("getCookie", {VarType::fromString("string")}, VarType::fromString("string"), WebModule::Request_getCookie);
     
     /**
+     * @class Request
      * Returns the protocol such as HTTP or HTTPS
      * function getProtocol() : string
      */
     c->registerFunction("getProtocol", {}, VarType::fromString("string"), WebModule::Request_getProtocol);
 
+    /**
+     * @class Request
+     * 
+     * Returns the file upload content for this HTTP request
+     * 
+     * function getFileContent() : FileContent
+     */
     c->registerFunction("getFileContent", {}, VarType::fromString("FileContent"), WebModule::Request_getFileContent);
 
+    /**
+     * @class Request
+     * 
+     * Returns the IP address of the person who is connected to your apache server issueing a request on this script
+     * function getRequesterIP() : string
+     */
     c->registerFunction("getRequesterIP", {}, VarType::fromString("string"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         std::shared_ptr<WebModuleObject> web_mod_obj = std::dynamic_pointer_cast<WebModuleObject>(object);
         return_value->type = VALUE_TYPE_STRING;
