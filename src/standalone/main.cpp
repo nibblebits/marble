@@ -96,10 +96,26 @@ void interpret(std::string filename, std::vector<std::string> arguments)
     // Let's setup the session key
     interpreter.properties["session_key"] = "simpleclientsessionkey";
 
-    interpreter.runScript(filename.c_str());
-    for (LogEntry entry : logger->entries)
+    try
     {
-        std::cout << entry.message << " on line: " << entry.posInfo.line << ", col: " << entry.posInfo.col << std::endl;
+        interpreter.runScript(filename.c_str());
+    }
+    catch (std::logic_error &ex)
+    {
+        std::string error_msg = "";
+        if (logger->hasErrors())
+        {
+            for (LogEntry entry : logger->entries)
+            {
+                error_msg +=  entry.message + " on line: " + std::to_string(entry.posInfo.line) + ", col: " + std::to_string(entry.posInfo.col) + "\n";
+            }
+        }
+        else
+        {
+            error_msg = ex.what();
+        }
+
+        throw std::logic_error(error_msg);
     }
 }
 
@@ -197,7 +213,7 @@ int main(int argc, char **argv)
     {
         return begin(argc, argv);
     }
-    catch (std::logic_error& ex)
+    catch (std::logic_error &ex)
     {
         std::cout << ex.what() << std::endl;
     }
