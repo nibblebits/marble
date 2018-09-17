@@ -51,6 +51,9 @@ Class *FileModule_File::registerClass(ModuleSystem *moduleSystem)
      * @class File
      * Moves the filename to the destination
      * 
+     * E.g
+     * move("./test.txt", "./test2.txt");
+     * 
      * @works_without_class
      * function move(string filename, string dst_filename) : void
      */

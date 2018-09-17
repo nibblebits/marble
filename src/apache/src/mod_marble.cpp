@@ -259,7 +259,7 @@ static int marble_handler(request_rec *req)
         });
 
         // Set the argv to the filename
-        interpreter.setArgv({"apache2", filename});
+        interpreter.setArgv({filename});
 
         // Inject the permissions loaded from the configuration into our root scope granting access
         interpreter.getGlobalScope()->permissions = conf->set_permissions;

@@ -51,7 +51,7 @@ void ModuleLogHandler(Module *module, std::string message, LOG_TYPE log_type)
         std::cout << message << std::endl;
 }
 
-void interpret(std::string filename, int argc, char** argv)
+void interpret(std::string filename, std::vector<std::string> arguments)
 {
     Interpreter interpreter(moduleSystem->getClassSystem(), moduleSystem->getFunctionSystem());
     interpreter.setTimeout(0);
@@ -69,7 +69,7 @@ void interpret(std::string filename, int argc, char** argv)
     });
 
     // Set our argv in the Interpreter so it can be resolved.
-    interpreter.setArgv(argc, argv);
+    interpreter.setArgv(arguments);
 
     Logger *logger = interpreter.getLogger();
     interpreter.setModuleSystem(moduleSystem);
@@ -133,7 +133,7 @@ int begin(int argc, char **argv)
     }
 
     std::string fileToInterpret = argv[1];
-
+    int start_of_marble_args = 1;
     if (strcmp(argv[1], "-v") == 0)
     {
         show_version_information();
@@ -149,8 +149,14 @@ int begin(int argc, char **argv)
 
         configFileName = argv[2];
         fileToInterpret = argv[3];
+        start_of_marble_args = 3;
     }
 
+    std::vector<std::string> arguments;
+    for (int i = start_of_marble_args; i < argc; i++)
+    {
+        arguments.push_back(argv[i]);
+    }
     // Let's load the configuration and start interpreting
     baseHandler = new BaseSystemHandler();
     moduleSystem = new ModuleSystem(baseHandler->getClassSystem(), baseHandler->getFunctionSystem(), ModuleLogHandler);
@@ -158,7 +164,7 @@ int begin(int argc, char **argv)
     if (!loadConfiguration())
         return 1;
 
-    interpret(fileToInterpret, argc, argv);
+    interpret(fileToInterpret, arguments);
 
     delete baseHandler;
     delete moduleSystem;
