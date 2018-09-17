@@ -6,6 +6,8 @@ SYSTEM_LIB_LOCAL_FILENAME = libmarble.so
 SYSTEM_LIB_FILE_LOCATION = ./bin/${SYSTEM_LIB_LOCAL_FILENAME}
 INCLUDES = ./include -I ./src/commonmod/include
 
+marble-core: system common_mod modules
+
 common_mod:
 	cd ./src/commonmod && $(MAKE) standalone
 system: ${SYSTEM_OBJECT_FILES}
@@ -202,7 +204,7 @@ apache2-install: apache2
 	apxs -i -a -n mod_marble ./bin/mod_marble.so
 	cp -a ./src/stdmods/bin/. /usr/lib/marble
 clean:
-	rm ${SYSTEM_OBJECT_FILES}
+	rm -f ${SYSTEM_OBJECT_FILES}
 	cd ./src/stdmods && $(MAKE) clean
 	cd ./src/commonmod && $(MAKE) clean
 	cd ./src/apache && $(MAKE) clean

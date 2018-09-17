@@ -16,4 +16,4 @@ module: ${SYSTEM_OBJECT_FILES}
 standalone: module
 	g++ -fPIC -shared -std=c++14 -unresolved-symbols=ignore-in-shared-libs ${INCLUDES} ${SYSTEM_OBJECT_FILES} -o ../../bin/marble_mysqlmod.so `mysql_config --cflags --libs`
 clean:
-	rm ${SYSTEM_OBJECT_FILES}
+	rm -f ${SYSTEM_OBJECT_FILES}

@@ -26,4 +26,4 @@ all: ${SYSTEM_OBJECT_FILES}
 	g++ ${INCLUDES} ./src/multipartfileobject.cpp -o ./build/multipartfileobject.o ${OBJECT_FILE_FLAGS}
 
 clean:
-	rm ${SYSTEM_OBJECT_FILES}
+	rm -f ${SYSTEM_OBJECT_FILES}

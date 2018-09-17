@@ -40,4 +40,5 @@ module: ${SYSTEM_OBJECT_FILES}
 standalone: module
 	ld -r ${SYSTEM_OBJECT_FILES} -o ./bin/marble_commonmod.o
 clean:
-	rm ${SYSTEM_OBJECT_FILES}
+	rm -f ${SYSTEM_OBJECT_FILES}
+	rm ./bin/marble_commonmod.o
