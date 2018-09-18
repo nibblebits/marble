@@ -10,8 +10,6 @@ marble-core: common_mod modules system
 
 marble-cli: 
 	g++ -g -I ${INCLUDES} ./src/standalone/main.cpp /usr/lib/${SYSTEM_LIB_LOCAL_FILENAME}  -ldl -std=c++14 -o ./bin/marble;
-	cp ./bin/marble /usr/bin/marble
-
 common_mod:
 	cd ./src/commonmod && $(MAKE) standalone
 system: ${SYSTEM_OBJECT_FILES}
