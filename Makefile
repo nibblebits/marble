@@ -6,7 +6,11 @@ SYSTEM_LIB_LOCAL_FILENAME = libmarble.so
 SYSTEM_LIB_FILE_LOCATION = ./bin/${SYSTEM_LIB_LOCAL_FILENAME}
 INCLUDES = ./include -I ./src/commonmod/include
 
-marble-core: system common_mod modules
+marble-core: common_mod modules system
+
+marble-cli: 
+	g++ -g -I ${INCLUDES} ./src/standalone/main.cpp /usr/lib/${SYSTEM_LIB_LOCAL_FILENAME}  -ldl -std=c++14 -o ./bin/marble;
+	cp ./bin/marble /usr/bin/marble
 
 common_mod:
 	cd ./src/commonmod && $(MAKE) standalone
