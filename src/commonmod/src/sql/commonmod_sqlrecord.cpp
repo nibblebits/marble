@@ -45,12 +45,14 @@ Class* CommonModule_SqlRecord::registerClass(ModuleSystem* moduleSystem)
     c->registerFunction("__construct", {}, VarType::fromString("void"), CommonModule_SqlRecord::SQLRecord_Construct);
 
     /**
+     * @class SQLRecord
      * Sets the given column to the given value for this record.
      * function setColumn(string columnName, String recordValue) : void
      */
     c->registerFunction("setColumn", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("void"), CommonModule_SqlRecord::SQLRecord_setColumn);
     
     /**
+     * @class SQLRecord
      * Gets the value for the given column name for this record
      * function getValue(string columnName) : string
      */

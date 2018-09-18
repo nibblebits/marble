@@ -23,7 +23,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "permissionsobject.h"
 #include "iopermission.h"
 #include "exceptionobject.h"
+#include "filepermission.h"
 #include "function.h"
+#include "misc.h"
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -51,13 +53,6 @@ void IOModule::Init()
 
     this->getModuleSystem()->getFunctionSystem()->registerFunction("write", {VarType::fromString("number")}, VarType::fromString("void"), IOModule::IO_Write);
 
-    /**
-     * 
-     *  Writes a file to the system output such as the web client or terminal what ever is setup
-     *  throws an IOException if a problem occurs
-     *  function writeFile(string filename) : void
-     */
-    this->getModuleSystem()->getFunctionSystem()->registerFunction("writeFile", {VarType::fromString("string")}, VarType::fromString("void"), IOModule::IO_WriteFile);
 
     /**
      * class IO
@@ -95,6 +90,17 @@ void IOModule::Init()
     c->registerFunction("input", {}, VarType::fromString("string"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         IO_input(interpreter, arguments, return_value, object, caller_scope);
     });
+
+    /**
+     *  @class IO
+     *  Writes a file to the system output such as the web client or terminal what ever is setup
+     *  throws an IOException if a problem occurs
+     *  @works_without_class
+     *  function writeFile(string filename) : void
+     */
+    this->getModuleSystem()->getFunctionSystem()->registerFunction("writeFile", {VarType::fromString("string")}, VarType::fromString("void"), IOModule::IO_WriteFile);
+    c->registerFunction("writeFile", {VarType::fromString("string")}, VarType::fromString("void"), IOModule::IO_WriteFile);
+
 
 
     /**
@@ -177,6 +183,9 @@ void IOModule::IO_Write(Interpreter* interpreter, std::vector<Value> values, Val
 
 void IOModule::IO_WriteFile(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
 {
+    // Check we have permission
+    std::string absolute_path = getAbsolutePath(values[0].svalue);
+    FilePermission::checkPermissionAllows(interpreter, caller_scope, absolute_path, "w");
     std::ifstream fs;
     fs.open (values[0].svalue, std::fstream::in | std::fstream::binary);
     if (!fs.is_open())

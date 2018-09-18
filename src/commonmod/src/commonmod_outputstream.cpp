@@ -61,6 +61,7 @@ Class* CommonModule_OutputStream::registerClass(ModuleSystem* moduleSystem)
     });
 
     /**
+     * @class OutputStream
      * Flushes this output stream writing all data from the output stream buffer to the service this output stream is for.
      * This is a pure method and must be implemented by output streams
      * pure function flush() : void

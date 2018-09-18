@@ -84,12 +84,14 @@ void FilePermission::registerClass(SystemHandler* systemHandler)
     file_permission_cls->registerFunction("__prior_add", {}, VarType::fromString("void"), FilePermission::FilePermission_PriorAdd);
 
     /*
+    * @class FilePermission
     * Sets the location this FilePermission should be bound to
     * function setLocation(string location) : void;
     */
     file_permission_cls->registerFunction("setLocation", {VarType::fromString("string")}, VarType::fromString("void"), FilePermission::FilePermission_SetLocation);
 
     /*
+    * @class FilePermission
     * Gets the location that this FilePermission is bound to
     * function getLocation() : string;
     */
@@ -97,12 +99,14 @@ void FilePermission::registerClass(SystemHandler* systemHandler)
 
 
     /*
+     * @class FilePermission
      * Sets weather this FilePermission should allow reading from the location that this FilePermission is bound to
      * function setCanRead(boolean can_read) : void;
      */
 
     file_permission_cls->registerFunction("setCanRead", {VarType::fromString("boolean")}, VarType::fromString("void"), FilePermission::FilePermission_SetCanRead); 
     /*
+    * @class FilePermission
     * Sets weather this FilePermission should allow writing to the location that this FilePermission is bound to
     * function setCanWrite(boolean can_write) : void;
     */

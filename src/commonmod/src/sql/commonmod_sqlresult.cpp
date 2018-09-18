@@ -43,12 +43,14 @@ Class* CommonModule_SqlResult::registerClass(ModuleSystem* moduleSystem)
     c->registerFunction("__construct", {}, VarType::fromString("void"), CommonModule_SqlResult::SQLResult_Construct);
     
     /**
+     * @class SQLResult
      * Adds a SQLRecord to this SQLResult object
      * function addRecord(SQLRecord record) : void
      */
     c->registerFunction("addRecord", {VarType::fromString("SQLRecord")}, VarType::fromString("void"), CommonModule_SqlResult::SQLResult_addRecord);
 
     /**
+     * @class SQLResult
      * Returns the next record available otherwise returns NULL
      * 
        function getNextRecord() : SQLRecord
@@ -56,6 +58,7 @@ Class* CommonModule_SqlResult::registerClass(ModuleSystem* moduleSystem)
     c->registerFunction("getNextRecord", {}, VarType::fromString("SQLRecord"), CommonModule_SqlResult::SQLResult_getNextRecord);
 
     /**
+     * @class SQLResult
      * Returns the total number of records available
      */
     c->registerFunction("count", {}, VarType::fromString("number"), CommonModule_SqlResult::SQLResult_Count);

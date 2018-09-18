@@ -92,6 +92,7 @@ Class* CommonModule_SqlDriver::registerClass(ModuleSystem* moduleSystem)
     connect_function->is_pure = true;
 
     /**
+     * @class SQLDriver
      * Registers a SQLDriver into the system
      * 
      * Example usage: <code>SQLDriver.registerDriver(driver_here);</code>
@@ -100,7 +101,7 @@ Class* CommonModule_SqlDriver::registerClass(ModuleSystem* moduleSystem)
     c->registerFunction("registerDriver", {VarType::fromString("SQLDriver")}, VarType::fromString("void"), CommonModule_SqlDriver::SQLDriver_registerDriver);
 
     /**
-     * 
+     * @class SQLDriver
      * Returns the SQL driver with the given name
      * 
      * Example usage: <code>SQLDriver.getDriver(driver_name);</code>
@@ -109,6 +110,7 @@ Class* CommonModule_SqlDriver::registerClass(ModuleSystem* moduleSystem)
     c->registerFunction("getDriver", {VarType::fromString("string")}, VarType::fromString("SQLDriver"), CommonModule_SqlDriver::SQLDriver_getDriver);
 
     /**
+     * @class SQLDriver
      * Returns true if the driver with the given name is registered to the system
      * 
      * Example usage: <code>SQLDriver.hasDriver(driver_name);</code>
@@ -117,6 +119,7 @@ Class* CommonModule_SqlDriver::registerClass(ModuleSystem* moduleSystem)
     c->registerFunction("hasDriver", {VarType::fromString("string")}, VarType::fromString("boolean"), CommonModule_SqlDriver::SQLDriver_hasDriver);
 
     /**
+     * @class SQLDriver
      * Executes the given SQL statement by providing a connection, statement and finialized query to this execute function.
      * You should not call this directly instead call <i>execute()</i> within the Statement and PreparedStatement classes
      * 
@@ -128,6 +131,7 @@ Class* CommonModule_SqlDriver::registerClass(ModuleSystem* moduleSystem)
     execute->is_pure = true;
 
     /**
+     * @class SQLDriver
      * Escapes a given string preventing SQL injection
      * 
      * Should be overrided by drivers and sql escape the provided value and return the escaped string
