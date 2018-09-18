@@ -210,7 +210,8 @@ bool Class::instanceOf(std::string class_name)
 bool Class::instanceOf(Class *c)
 {
     if (c == NULL)
-        throw std::logic_error("NULL class provided");
+        return false;
+        
     Class *current = this;
     while (current != NULL && current != c)
     {
