@@ -6,6 +6,10 @@ SYSTEM_LIB_LOCAL_FILENAME = libmarble.so
 SYSTEM_LIB_FILE_LOCATION = ./bin/${SYSTEM_LIB_LOCAL_FILENAME}
 INCLUDES = ./include -I ./src/commonmod/include
 
+marble-apache2:
+	cd ./src/apache && $(MAKE) all
+	g++ -fPIC -shared -std=c++14 -I /usr/include/apache2 -I /usr/include/apr-1.0 -I ${INCLUDES} -I ./src/apache/include ./src/apache/src/mod_marble.cpp /usr/lib/${SYSTEM_LIB_LOCAL_FILENAME} -o ./bin/mod_marble.so ${APACHE_OBJECT_FILES}
+	
 marble-core: common_mod modules system
 
 marble-cli: 
