@@ -48,7 +48,7 @@ void SendMailObject::newInterpreter(Interpreter *interpreter)
 void SendMailObject::registerClass(ModuleSystem *moduleSystem)
 {
     /**
-     * class SendMail extends Main
+     * class SendMail extends Object
      * 
      * Allows you to send emails through Sendmail on your linux system. Requires that you have the sendmail binaries installed "/usr/lib/sendmail"
      */

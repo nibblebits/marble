@@ -329,12 +329,24 @@ Node *Interpreter::getAST(const char *code, PosInfo posInfo)
 
 void Interpreter::createDefaultClassesAndFunctions()
 {
+    /**
+     * class array
+     * 
+     * An instance of this class is automatically created when creating new array variables.
+     * For example "new string[10]"
+     */
     Class *c = getClassSystem()->registerClass("array");
+    /**
+     * @class array
+     * Returns the size of this array
+     * function size() : number
+     */
     c->registerFunction("size", {}, VarType::fromString("number"), [&](Interpreter *interpreter, std::vector<Value> arguments, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope) {
         std::shared_ptr<Array> array = std::dynamic_pointer_cast<Array>(object);
         return_value->type = VALUE_TYPE_NUMBER;
         return_value->dvalue = array->count;
     });
+
 
     Class *exception_class = getClassSystem()->getClassByName("Exception");
     if (exception_class == NULL)
@@ -343,6 +355,11 @@ void Interpreter::createDefaultClassesAndFunctions()
     if (std::dynamic_pointer_cast<ExceptionObject>(exception_class->getDescriptorObject()) == NULL)
         throw std::logic_error("The Exception class registered in a parent class system has a descriptor object that does not extend the ExceptionObject native class");
 
+    /**
+     * class OutOfBoundsException extends Exception
+     * 
+     * Thrown when you go out of bounds with a string
+     */
     c = getClassSystem()->registerClass("OutOfBoundsException", exception_class);
     c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter *interpreter, std::vector<Value> arguments, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope) {
     });
@@ -351,6 +368,11 @@ void Interpreter::createDefaultClassesAndFunctions()
     c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter *interpreter, std::vector<Value> arguments, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope) {
     });
 
+    /**
+     * class InvalidIndexException extends Exception
+     * 
+     * Thrown if you access an invalid index in an array
+     */
     c = getClassSystem()->registerClass("InvalidIndexException", exception_class);
     c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter *interpreter, std::vector<Value> arguments, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope) {
     });
@@ -359,30 +381,66 @@ void Interpreter::createDefaultClassesAndFunctions()
     c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter *interpreter, std::vector<Value> arguments, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope) {
     });
 
+    /**
+     * class NullPointerException extends Exception
+     * 
+     * Thrown if you access an object that has a NULL reference
+     */
     c = getClassSystem()->registerClass("NullPointerException", exception_class);
     c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter *interpreter, std::vector<Value> arguments, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope) {
     });
 
+    /**
+     * class InvalidCastException extends Exception
+     * 
+     * Thrown if your cast is illegal
+     */
     c = getClassSystem()->registerClass("InvalidCastException", exception_class);
     c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter *interpreter, std::vector<Value> arguments, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope) {
     });
 
+  /**
+     * class IOException extends Exception
+     * 
+     * Thrown in many cases where input/output has failed
+     */
     c = getClassSystem()->registerClass("IOException", exception_class);
     c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter *interpreter, std::vector<Value> arguments, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope) {
     });
 
+  /**
+     * class InfiniteLoopException extends Exception
+     * 
+     * Throw if the action you are taking would result in a never ending loop that would cause the program
+     * to crash if it was not caught
+     */
     c = getClassSystem()->registerClass("InfiniteLoopException", exception_class);
     c->registerFunction("__construct", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter *interpreter, std::vector<Value> arguments, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope) {
     });
 
+  /**
+     * class InvalidEntityException extends Exception
+     *
+     * Thrown if the particular entity is invalid 
+     */
     c = getClassSystem()->registerClass("InvalidEntityException", exception_class);
     c->registerFunction("__construct", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter *interpreter, std::vector<Value> arguments, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope) {
     });
 
+  /**
+     * class VariableLockedException extends Exception
+     * 
+     * Thrown if the variable you are trying to change has been locked and cannot be modified
+     */
     c = getClassSystem()->registerClass("VariableLockedException", exception_class);
     c->registerFunction("__construct", {VarType::fromString("string")}, VarType::fromString("void"), [&](Interpreter *interpreter, std::vector<Value> arguments, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope) {
     });
 
+  /**
+     * class EntityNotRegisteredException extends Exception
+     * 
+     * Thrown if the function or class you are referencing does not exist. This is only applicable if you have ignored validation using the "@" operator. If validation is not ignored it will be caught by the validator automatically
+     */
     c = getClassSystem()->registerClass("EntityNotRegisteredException", exception_class);
     c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter *interpreter, std::vector<Value> arguments, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope) {
        
@@ -391,12 +449,21 @@ void Interpreter::createDefaultClassesAndFunctions()
     // We must now create a permission object for our root scope
     getGlobalScope()->permissions = std::dynamic_pointer_cast<PermissionsObject>(Object::create(getClassSystem()->getClassByName("Permissions")));
 
-    // It is also wise to create a method for getting the current permissions
+    /**
+     * Returns the current scope's permissions
+     * function getScopePermissions() : Permissions
+     */
     getFunctionSystem()->registerFunction("getScopePermissions", {}, VarType::fromString("Permissions"), [&](Interpreter *interpreter, std::vector<Value> arguments, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope) {
         return_value->type = VALUE_TYPE_OBJECT;
         return_value->ovalue = interpreter->getCurrentScope()->permissions;
     });
 
+    /**
+     * Returns the current function caller's permissions.
+     * This function should be called when you are implementing your own permissions and want to ensure
+     * the function caller has the permissions required to call your function
+     * function getCallerPermissions() : Permissions
+     */
     getFunctionSystem()->registerFunction("getCallerPermissions", {}, VarType::fromString("Permissions"), [&](Interpreter *interpreter, std::vector<Value> arguments, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope) {
         return_value->type = VALUE_TYPE_OBJECT;
         return_value->ovalue = interpreter->getCallerPermissions();

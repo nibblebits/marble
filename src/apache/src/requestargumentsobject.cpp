@@ -21,37 +21,53 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "exceptionobject.h"
 #include "exceptions/systemexception.h"
 
-WebModuleRequestArgumentsObject::WebModuleRequestArgumentsObject(Class* c) : Object(c)
+WebModuleRequestArgumentsObject::WebModuleRequestArgumentsObject(Class *c) : Object(c)
 {
-
 }
 
 WebModuleRequestArgumentsObject::~WebModuleRequestArgumentsObject()
 {
-
 }
 
-std::shared_ptr<Object> WebModuleRequestArgumentsObject::newInstance(Class* c)
+std::shared_ptr<Object> WebModuleRequestArgumentsObject::newInstance(Class *c)
 {
     return std::make_shared<WebModuleRequestArgumentsObject>(c);
 }
 
-Class* WebModuleRequestArgumentsObject::registerClass(ModuleSystem* moduleSystem)
+Class *WebModuleRequestArgumentsObject::registerClass(ModuleSystem *moduleSystem)
 {
-    Class* c = moduleSystem->getClassSystem()->registerClass("RequestArguments");
+    /**
+     * class RequestArguments
+     * 
+     * Holds request arguments sent to the web server. This is basically "GET" arguments
+     */
+    Class *c = moduleSystem->getClassSystem()->registerClass("RequestArguments");
     c->setDescriptorObject(std::make_shared<WebModuleRequestArgumentsObject>(c));
+    /**
+     * @class RequestArguments
+     * 
+     * Returns true if we have the request argument with the given name
+     * function has(string name) : string
+     */
     c->registerFunction("has", {VarType::fromString("string")}, VarType::fromString("boolean"), WebModuleRequestArgumentsObject::RequestArguments_has);
+    /**
+     * @class RequestArguments
+     * 
+     * Returns the string value of the RequestArgument with the given name.
+     * Throws an InvalidIndexException if it was not found
+     * function get(string name) : string
+     */
     c->registerFunction("get", {VarType::fromString("string")}, VarType::fromString("string"), WebModuleRequestArgumentsObject::RequestArguments_get);
 }
 
-void WebModuleRequestArgumentsObject::RequestArguments_has(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+void WebModuleRequestArgumentsObject::RequestArguments_has(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
     std::shared_ptr<WebModuleRequestArgumentsObject> args_obj = std::dynamic_pointer_cast<WebModuleRequestArgumentsObject>(object);
     return_value->type = VALUE_TYPE_NUMBER;
     return_value->dvalue = (args_obj->arguments.find(values[0].svalue) != args_obj->arguments.end());
 }
 
-void WebModuleRequestArgumentsObject::RequestArguments_get(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+void WebModuleRequestArgumentsObject::RequestArguments_get(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
     std::shared_ptr<WebModuleRequestArgumentsObject> args_obj = std::dynamic_pointer_cast<WebModuleRequestArgumentsObject>(object);
     return_value->type = VALUE_TYPE_STRING;

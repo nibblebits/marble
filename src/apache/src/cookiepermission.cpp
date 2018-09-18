@@ -48,6 +48,11 @@ std::shared_ptr<Object> CookiePermission::newInstance(Class *c)
 
 Class *CookiePermission::registerClass(ModuleSystem *moduleSystem)
 {
+    /**
+     * class CookiePermission extends Permission
+     * 
+     * This class must be held by all those creating or reading cookies
+     */
     Class *c = moduleSystem->getClassSystem()->registerClass("CookiePermission", moduleSystem->getClassSystem()->getClassByName("Permission"));
     c->setDescriptorObject(std::make_shared<CookiePermission>(c));
 
@@ -69,12 +74,18 @@ Class *CookiePermission::registerClass(ModuleSystem *moduleSystem)
     c->addVariable(can_read);
     c->addVariable(can_write);
 
+    /**
+     * @class CookiePermission
+     * 
+     * Constructs this CookiePermission class
+     */
     c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter *interpreter, std::vector<Value> arguments, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope) {
 
     });
 
     /**
      * 
+     * @class CookiePermission
      * Sets this permission's read access
      * 
      * function setCanRead(boolean can_read) : void
@@ -82,7 +93,7 @@ Class *CookiePermission::registerClass(ModuleSystem *moduleSystem)
     c->registerFunction("setCanRead", {VarType::fromString("boolean")}, VarType::fromString("void"), CookiePermission::CookiePermission_setCanRead);
 
     /**
-     * 
+     * @class CookiePermission
      * Sets this permission's write access
      * 
      * function setCanWrite(boolean can_write) : void
@@ -90,6 +101,12 @@ Class *CookiePermission::registerClass(ModuleSystem *moduleSystem)
     c->registerFunction("setCanWrite", {VarType::fromString("boolean")}, VarType::fromString("void"), CookiePermission::CookiePermission_setCanWrite);
 
     // We need to override this pure function but we don't plan to do anything with it..
+    /**
+     * @class CookiePermission
+     * 
+     * Ensures the scope permissions have a valid CookiePermission when adding a CookiePermission to a Permissions object
+     * function __permission_check(PermissionProperty p1, PermissionProperty p2) : void
+     */
     c->registerFunction("__permission_check", {VarType::fromString("PermissionProperty"), VarType::fromString("PermissionProperty")}, VarType::fromString("void"), CookiePermission::CookiePermission__permission_check);
 }
 

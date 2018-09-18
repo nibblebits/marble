@@ -175,18 +175,24 @@ std::string JsonObject::parseMapToJson(std::map<std::string, Value> map)
 
 void JsonObject::registerClass(ModuleSystem *moduleSystem)
 {
+
+    /**
+     * class Json
+     * 
+     * Responsible for encoding and decoding json values
+     */
     Class *c = moduleSystem->getClassSystem()->registerClass("Json");
     c->setDescriptorObject(std::make_shared<JsonObject>(c));
 
     /**
-     * @class JsonObject
+     * @class Json
      * 
-     * Constructs this JsonObject object. 
+     * Constructs this Json object. 
      */
     c->registerFunction("__construct", {}, VarType::fromString("void"), Function::Blank);
 
     /**
-     * @class JsonObject
+     * @class Json
      * 
      * Decodes the provided JSON string into a JsonValues object
      * function decode(string json_str) : JsonValues
@@ -194,7 +200,7 @@ void JsonObject::registerClass(ModuleSystem *moduleSystem)
     c->registerFunction("decode", {VarType::fromString("string")}, VarType::fromString("JsonValues"), JsonObject::Json_decode);
 
     /**
-     * @class JsonObject
+     * @class Json
      * 
      * Encodes the provided JsonValues object into a JSON string
      * function encode(JsonValues json_values) : string
