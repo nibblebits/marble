@@ -296,14 +296,6 @@ void MathObject::registerClass(ModuleSystem *moduleSystem)
      */
     c->registerFunction("round", {VarType::fromString("number")}, VarType::fromString("number"), MathObject::Math_round);
 
-
-    /**
-     * @class Math
-     *  Returns the absolute value of x: |x|.
-     * function abs(number x) : number
-     */
-    c->registerFunction("abs", {VarType::fromString("number")}, VarType::fromString("number"), MathObject::Math_abs);
-
 }
 
 void MathObject::Math_cos(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
