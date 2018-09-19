@@ -5,21 +5,23 @@ To install visit: https://marble.wiki
 
 # Building Dependencies
 Marble requires the following libaries to be installed to compile
-apache2-dev
-    Holds dependencies for building apache2 modules
-libjsoncpp-dev
-    Used for file sessions
-    
-libcurl4-openssl-dev
-    Used for the network module
 
-libmysqlclient-dev
-    Used for mysql communications
+apache2-dev: Holds dependencies for building apache2 modules
+    
+libjsoncpp-dev: Used for file sessions
+    
+libcurl4-openssl-dev: Used for the network module
+
+libmysqlclient-dev: Used for mysql communications
 
 Debain:
+
 sudo apt-get install apache2-dev
+
 sudo apt-get install libjsoncpp-dev
+
 sudo apt-get install libcurl4-openssl-dev
+
 sudo apt-get install libmysqlclient-dev
 
 # Building for Standalone
