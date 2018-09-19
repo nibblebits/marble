@@ -26,6 +26,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "exceptionobject.h"
 #include <iostream>
 #include <cmath>
+#include <algorithm>
 
 CommonModule_StringUtils::CommonModule_StringUtils(Class *c) : Object(c)
 {
@@ -228,6 +229,32 @@ Class *CommonModule_StringUtils::registerClass(ModuleSystem *moduleSystem)
      */
     c->registerFunction("safe_tags", {VarType::fromString("string")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_safe_tags);
     moduleSystem->getFunctionSystem()->registerFunction("safe_tags", {VarType::fromString("string")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_safe_tags);
+
+    /**
+     * @class StringUtils
+     *
+     * Converts the given string to upper case and returns it.
+     * 
+     * Since: V0.2.0
+     * @works_without_class
+     * 
+     * function strtoupper(string val) : string
+     */
+    c->registerFunction("strtoupper", {VarType::fromString("string")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_strtoupper);
+    moduleSystem->getFunctionSystem()->registerFunction("strtoupper", {VarType::fromString("string")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_strtoupper);
+
+
+    /**
+     * @class StringUtils
+     *
+     * Converts the given string to lower case and returns it
+     * Since: V0.2.0
+     * @works_without_class
+     * 
+     * function strtolower(string val) : string
+     */
+    c->registerFunction("strtolower", {VarType::fromString("string")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_strtolower);
+    moduleSystem->getFunctionSystem()->registerFunction("strtolower", {VarType::fromString("string")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_strtolower);
 }
 
 void CommonModule_StringUtils::StringUtils_getASCIIString(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
@@ -376,4 +403,18 @@ void CommonModule_StringUtils::StringUtils_safe_tags(Interpreter *interpreter, s
     result = str_replace(result, "<", "&lt;");
     result = str_replace(result, ">", "&gt;");
     return_value->set(result);
+}
+
+void CommonModule_StringUtils::StringUtils_strtoupper(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+{
+    std::string s = values[0].svalue;
+    std::transform(s.begin(), s.end(), s.begin(), ::toupper);
+    return_value->set(s);
+}
+
+void CommonModule_StringUtils::StringUtils_strtolower(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+{
+    std::string s = values[0].svalue;
+    std::transform(s.begin(), s.end(), s.begin(), ::tolower);
+    return_value->set(s);
 }
