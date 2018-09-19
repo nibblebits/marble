@@ -25,43 +25,65 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "module.h"
 #include "object.h"
 #include <iostream>
-CommonModule_PreparedStatement::CommonModule_PreparedStatement(Class* c) : CommonModule_SqlStatement(c)
+CommonModule_PreparedStatement::CommonModule_PreparedStatement(Class *c) : CommonModule_SqlStatement(c)
 {
-
 }
 CommonModule_PreparedStatement::~CommonModule_PreparedStatement()
 {
-
 }
-std::shared_ptr<Object> CommonModule_PreparedStatement::newInstance(Class* c)
+std::shared_ptr<Object> CommonModule_PreparedStatement::newInstance(Class *c)
 {
     return std::make_shared<CommonModule_PreparedStatement>(c);
 }
-    
-Class* CommonModule_PreparedStatement::registerClass(ModuleSystem* moduleSystem)
+
+Class *CommonModule_PreparedStatement::registerClass(ModuleSystem *moduleSystem)
 {
-    ClassSystem* class_system = moduleSystem->getClassSystem();
-    Class* c = class_system->registerClass("PreparedStatement", class_system->getClassByName("SQLStatement"));
+    ClassSystem *class_system = moduleSystem->getClassSystem();
+    /**
+     * class PreparedStatement extends SQLStatement
+     * 
+     * The PreparedStatement is used with databases
+     */
+    Class *c = class_system->registerClass("PreparedStatement", class_system->getClassByName("SQLStatement"));
     c->setDescriptorObject(std::make_shared<CommonModule_PreparedStatement>(c));
 
+    /**
+     * @class PreparedStatement
+     * 
+     * Constructs this PreparedStatement
+     * function __construct(SQLConnection connection) : void
+     */
     c->registerFunction("__construct", {VarType::fromString("SQLConnection")}, VarType::fromString("void"), PreparedStatement_Construct);
+    /**
+     * @class PreparedStatement
+     * 
+     * Fianlizes the query of this PreparedStatement escaping all parameters provided and returning a
+     * query string thats ready to be sent to the database server
+     * function finalizeQuery() : string
+     */
     c->registerFunction("finalizeQuery", {}, VarType::fromString("string"), CommonModule_PreparedStatement::PreparedStatement_finalizeQuery);
+    /**
+     * @class PreparedStatement
+     * 
+     * Add's the given parameter for this prepared statement.
+     * You should call this function in order of your prepared statement values '?'
+     * function addParameter(string value) : void
+     */
     c->registerFunction("addParameter", {VarType::fromString("string")}, VarType::fromString("void"), CommonModule_PreparedStatement::PreparedStatement_addParameter);
 }
 
-
 // Native PreparedStatement functions
-void CommonModule_PreparedStatement::PreparedStatement_Construct(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+void CommonModule_PreparedStatement::PreparedStatement_Construct(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
-   // Invoke the parent constructor
-   object->getClass("PreparedStatement")->invokeObjectParentConstructor(values, object, interpreter);
+    // Invoke the parent constructor
+    object->getClass("PreparedStatement")->invokeObjectParentConstructor(values, object, interpreter);
 }
 
-void CommonModule_PreparedStatement::PreparedStatement_finalizeQuery(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+void CommonModule_PreparedStatement::PreparedStatement_finalizeQuery(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
     std::shared_ptr<CommonModule_PreparedStatement> statement = std::dynamic_pointer_cast<CommonModule_PreparedStatement>(object);
     // We need to execute the escape function in the connection class to escape our strings in our prepared query
-    Function* escape_function = statement->connection->getClass()->getFunctionByNameAndArguments("escape", {VarType::fromString("string")});
+    Function *escape_function = statement->connection->getClass()->getFunctionByNameAndArguments("escape", {VarType::fromString("string")});
     std::string query = statement->query;
     std::string new_query = "";
     int valueIndex = 0;
@@ -87,10 +109,9 @@ void CommonModule_PreparedStatement::PreparedStatement_finalizeQuery(Interpreter
 
     // Return our finalized query
     return_value->set(new_query);
-   
 }
 
-void CommonModule_PreparedStatement::PreparedStatement_addParameter(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+void CommonModule_PreparedStatement::PreparedStatement_addParameter(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
     std::shared_ptr<CommonModule_PreparedStatement> statement = std::dynamic_pointer_cast<CommonModule_PreparedStatement>(object);
     statement->values.push_back(values[0].svalue);

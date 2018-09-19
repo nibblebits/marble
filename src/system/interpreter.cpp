@@ -241,9 +241,9 @@ void Interpreter::setupModuleMarbleFunctions(ModuleSystem *moduleSystem)
             // Tell the module about us.
             module->newInterpreter(this);
         }
-        catch (...)
+        catch (std::logic_error& ex)
         {
-            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(getClassSystem()->getClassByName("IOException"))), "", interpreter->getStackTraceLog());
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(getClassSystem()->getClassByName("IOException"))), "Failed to load module: " + filename + ", " + ex.what(), interpreter->getStackTraceLog());
         }
     });
 }
