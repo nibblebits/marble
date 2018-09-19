@@ -154,7 +154,7 @@ std::string JsonObject::parseValueToJson(Value &value)
 std::string JsonObject::parseMapToJson(std::map<std::string, Value> map)
 {
     std::string json_string = "{";
-    for (auto it = map.begin(); it != map.end(); it++)
+    for (auto it = map.rbegin(); it != map.rend(); it++)
     {
         std::string key = it->first;
         Value &value = it->second;
@@ -162,7 +162,7 @@ std::string JsonObject::parseMapToJson(std::map<std::string, Value> map)
         
         json_string += JsonObject::parseValueToJson(value);
 
-        if (it != std::prev(map.end()))
+        if (it != std::prev(map.rend()))
         {
             json_string += ",";
         }
