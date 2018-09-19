@@ -44,6 +44,10 @@ CurlObject::~CurlObject()
         for (struct curl_slist *slist : this->lists_to_free)
             curl_slist_free_all(slist);
     }
+
+    // Delete stored strings
+    for (const char* ptr : this->strings_to_delete)
+        delete[] ptr;
 }
 
 std::shared_ptr<Object> CurlObject::newInstance(Class *c)
@@ -544,6 +548,8 @@ void CurlObject::registerClass(ModuleSystem *moduleSystem)
      * 
      * Constructs this Curl object and initialises curl internally.
      * Throws an IOException on failure to setup curl
+     * 
+     * function __construct() : void
      */
     c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope) {
         std::shared_ptr<CurlObject> curl_obj = std::dynamic_pointer_cast<CurlObject>(object);
@@ -621,6 +627,12 @@ void CurlObject::Curl_setopt(Interpreter *interpreter, std::vector<Value> values
     if (values[0].dvalue == CURLOPT_UPLOAD)
         throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Uploading files with CURL has been disabled for now while we come up with a way for it to work well with the permission system", interpreter->getStackTraceLog());
 
+    if (values[0].dvalue == CURLOPT_POSTFIELDS)
+    {
+        // User has provided a POSTFIELDS so let's also tell Curl about the size of these fields
+        curl_easy_setopt(curl_obj->curl, CURLOPT_POSTFIELDSIZE, values[1].svalue.size());
+    }
+
     if (startsWith(values[1].svalue, "file://"))
         throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "File access is not allowed with the CURL module for now as we need to come up with a way for it to work well with the permission system", interpreter->getStackTraceLog());
 
@@ -649,7 +661,12 @@ void CurlObject::Curl_setopt(Interpreter *interpreter, std::vector<Value> values
         else
             opt_value = values[1].svalue;
         
-        curl_easy_setopt(curl_obj->curl, (CURLoption)values[0].dvalue, opt_value.c_str());
+        // We must clone the value as its going to need to be available for the entire curl object's life time
+        char* v = new char[opt_value.size()+1];
+        strcpy(v, opt_value.c_str());
+        // Store the pointer so we can delete it later
+        curl_obj->strings_to_delete.push_back((const char*) v);
+        curl_easy_setopt(curl_obj->curl, (CURLoption)values[0].dvalue, v);
     }
 }
 

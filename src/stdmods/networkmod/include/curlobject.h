@@ -47,6 +47,15 @@ public:
      */
     std::string write_data;
 
+
+    /**
+     * Unfortunetly due to Curl being a C library we cannot use std::string.
+     * The way std::string works is that it frees the memory when it leaves scope and because of this
+     * the byte data of std::string needs to be copied so that it is still available when we execute Curl.
+     * We will store the pointers in here to delete later
+     */
+    std::vector<const char*> strings_to_delete;
+
     // Native CurlObject methods
     static void Curl_setopt(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
     static void Curl_execute(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
