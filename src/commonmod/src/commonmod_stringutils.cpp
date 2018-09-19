@@ -59,7 +59,7 @@ Class *CommonModule_StringUtils::registerClass(ModuleSystem *moduleSystem)
      * 
      * Returns an ascii character from the Ascii table represented by the number provided
      * 
-     * function getASCIIString() : string
+     * function getASCIIString(number n) : string
      */
     c->registerFunction("getASCIIString", {VarType::fromString("number")}, VarType::fromString("string"), CommonModule_StringUtils::StringUtils_getASCIIString);
 
@@ -263,7 +263,7 @@ void CommonModule_StringUtils::StringUtils_strpos(Interpreter *interpreter, std:
     if (offset >= haystack.size())
         throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("OutOfBoundsException"), {})), "", interpreter->getStackTraceLog());
 
-    return_value->set(haystack.find(needle, offset));
+    return_value->set((int)haystack.find(needle, offset));
 }
 
 void CommonModule_StringUtils::StringUtils_split(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)

@@ -66,10 +66,16 @@ Class *FileModule_Directory::registerClass(ModuleSystem *moduleSystem)
     /**
      * @class Directory
      * 
-     * Creates the directoru with the given string and returns weather it was succesfull or not
+     * Creates the directory with the given string and returns weather it was succesfull or not
      * function create(string filename) : boolean
      */
     c->registerFunction("create", {VarType::fromString("string")}, VarType::fromString("boolean"), FileModule_Directory::Directory_Create);
+    /**
+     * @class Directory
+     * 
+     * Lists all files in the directory and returns them as a string array
+     * function list(string path) : string[]
+     */
     c->registerFunction("list", {VarType::fromString("string")}, VarType::fromString("string[]"), FileModule_Directory::Directory_List);
 
     /**
