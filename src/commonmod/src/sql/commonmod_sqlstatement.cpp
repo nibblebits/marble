@@ -41,20 +41,49 @@ std::shared_ptr<Object> CommonModule_SqlStatement::newInstance(Class* c)
     
 Class* CommonModule_SqlStatement::registerClass(ModuleSystem* moduleSystem)
 {
+    /**
+     * class SQLQueryException extends Exception
+     * 
+     * An instance of this class is thrown if their is an issue with your sql query
+     */
     moduleSystem->getClassSystem()->registerClass("SQLQueryException", moduleSystem->getClassSystem()->getClassByName("Exception"));
+    /**
+     * pure class SQLStatement
+     * 
+     * The base class for all SQLStatements
+     */
     Class* c = moduleSystem->getClassSystem()->registerClass("SQLStatement");
     c->setDescriptorObject(std::make_shared<CommonModule_SqlStatement>(c));
     c->is_pure = true;
 
     // function __construct(SQLConnection connection) : void
+    /**
+     * @class SQLStatement
+     * 
+     * Constructs this sql statement
+     * function __construct(SQLConnection connection) : void
+     */
     c->registerFunction("__construct", {VarType::fromString("SQLConnection")}, VarType::fromString("void"), CommonModule_SqlStatement::SQLStatement_Construct);
     // function setQuery(string query) : void
+    /**
+     * @class SQLStatement
+     * 
+     * Sets the query for this SQLStatement
+     * function setQuery(string query) : void
+     */
     c->registerFunction("setQuery", {VarType::fromString("string")}, VarType::fromString("void"), CommonModule_SqlStatement::SQLStatement_setQuery);
-    /* function finalizeQuery() : string
+    /* @class SQLStatement
      * Finalizes the query that was provided with setQuery and returns the finalized query as a string.
+     * function finalizeQuery() : string
      */
     c->registerFunction("finalizeQuery", {}, VarType::fromString("string"), CommonModule_SqlStatement::SQLStatement_finalizeQuery);
-    // function execute() : void
+    /**
+     * @class SQLStatement
+     * 
+     * Executes this given sql query
+     *
+     * function execute() : void
+     */
     c->registerFunction("execute", {}, VarType::fromString("SQLResult"), CommonModule_SqlStatement::SQLStatement_Execute);
 }
 

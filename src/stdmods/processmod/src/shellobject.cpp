@@ -55,14 +55,14 @@ void ShellObject::registerClass(ModuleSystem* moduleSystem)
     c->setDescriptorObject(std::make_shared<ShellObject>(c));
 
     /**
-     * @class ShellObject
+     * @class Shell
      * 
      * Constructs this ShellObject object. 
      */
     c->registerFunction("__construct", {}, VarType::fromString("void"), Function::Blank);
 
     /**
-     * @class ShellObject
+     * @class Shell
      * 
      * Executes the provided command and returns a ShellExecution object that holds execution state and responses.
      * 

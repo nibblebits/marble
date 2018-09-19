@@ -322,7 +322,7 @@ void FileModule_File::File_file_put_contents(Interpreter *interpreter, std::vect
 
     try
     {
-        if (!fwrite(values[1].svalue.c_str(), values[0].svalue.size(), 1, fp))
+        if (!fwrite(values[1].svalue.c_str(), values[1].svalue.size(), 1, fp))
             throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to write the file: " + absolute_filename_path + " but it opened succesfully", interpreter->getStackTraceLog());
 
         fclose(fp);

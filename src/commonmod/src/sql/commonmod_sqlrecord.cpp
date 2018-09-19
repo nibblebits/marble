@@ -40,6 +40,11 @@ std::shared_ptr<Object> CommonModule_SqlRecord::newInstance(Class* c)
     
 Class* CommonModule_SqlRecord::registerClass(ModuleSystem* moduleSystem)
 {
+    /**
+     * class SQLRecord
+     * 
+     * Holds a single record extracted from a database
+     */
     Class* c = moduleSystem->getClassSystem()->registerClass("SQLRecord");
     c->setDescriptorObject(std::make_shared<CommonModule_SqlRecord>(c));
     c->registerFunction("__construct", {}, VarType::fromString("void"), CommonModule_SqlRecord::SQLRecord_Construct);

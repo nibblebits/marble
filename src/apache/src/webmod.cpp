@@ -101,16 +101,51 @@ void WebModule::Init()
     MultipartFileObject::registerClass(this->getModuleSystem());
 
     /* FileContent class */
+    /**
+     * class FileContent
+     * 
+     * Holds MultipartFile's that were uploaded to your apache2 web server
+     */
     Class* c = this->getModuleSystem()->getClassSystem()->registerClass("FileContent");
+    /**
+     * @class FileContent
+     * Returns true if we have a MultipartFile with the index name provided
+     * function has(string index_name) : boolean
+     */
     c->registerFunction("has", {VarType::fromString("string")}, VarType::fromString("boolean"), WebModule::FileContent_has);
+    /**
+     * @class FileContent
+     * Returns the MultipartFile with the given index name
+     * function get(string index_name) : MultipartFile
+     */
     c->registerFunction("get", {VarType::fromString("string")}, VarType::fromString("MultipartFile"), WebModule::FileContent_get);
+     /**
+     * @class FileContent
+     * Returns true if we have a MultipartFile array with the given index name
+     * function hasArray(string index_name) : boolean
+     */
     c->registerFunction("hasArray", {VarType::fromString("string")}, VarType::fromString("boolean"), WebModule::FileContent_hasArray);
+      /**
+     * @class FileContent
+     * Returns the MultipartFile array with the given index name
+     * function getArray(string index_name) : MultipartFile[]
+     */
     c->registerFunction("getArray", {VarType::fromString("string")}, VarType::fromString("MultipartFile[]"), WebModule::FileContent_getArray);
     
     /* End of FileContent class */
 
     /* PostContent class */
+    /**
+     * class PostContent
+     * 
+     * Holds POST content posted from a web client to your apache2 server
+     */
     c = this->getModuleSystem()->getClassSystem()->registerClass("PostContent");
+    /**
+     * @class PostContent
+     * Gets the POST content as a string for the POST field with the given name
+     * function get(string index_name) : string
+     */
     c->registerFunction("get", {VarType::fromString("string")}, VarType::fromString("string"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         std::shared_ptr<WebModulePOSTContentObject> post_obj = std::dynamic_pointer_cast<WebModulePOSTContentObject>(object);
         return_value->type = VALUE_TYPE_STRING;
@@ -122,7 +157,11 @@ void WebModule::Init()
 
         return_value->svalue = post_obj->content[arguments[0].svalue];
     });
-
+    /**
+     * @class PostContent
+     * Returns true if the PostContent has the POST field with the given name
+     * function has(string index_name) : boolean
+     */
     c->registerFunction("has", {VarType::fromString("string")}, VarType::fromString("number"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
         std::shared_ptr<WebModulePOSTContentObject> post_obj = std::dynamic_pointer_cast<WebModulePOSTContentObject>(object);
         return_value->type = VALUE_TYPE_NUMBER;
