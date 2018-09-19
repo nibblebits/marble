@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 #include "commonmod_vector.h"
+#include "commonmod_value.h"
 #include "function.h"
 #include "variable.h"
 #include "array.h"
@@ -61,6 +62,25 @@ Class *CommonModule_Vector::registerClass(ModuleSystem *moduleSystem)
      * Pushes the Value to the Vector
      */
     Function *push_function = c->registerFunction("push", {VarType::fromString("Value")}, VarType::fromString("void"), CommonModule_Vector::Vector_Push);
+
+    /**
+     * @class Vector
+     * 
+     * Pushes the number "v" to this Vector
+     * 
+     * function push(number v) : void
+     */
+    push_function = c->registerFunction("push", {VarType::fromString("number")}, VarType::fromString("void"), CommonModule_Vector::Vector_Push);
+
+    /**
+     * @class Vector
+     * 
+     * Pushes the string "v" to this Vector
+     * 
+     * function push(string v) : void
+     */
+    push_function = c->registerFunction("push", {VarType::fromString("string")}, VarType::fromString("void"), CommonModule_Vector::Vector_Push);
+
 
     /**
      * @class Vector
@@ -112,6 +132,15 @@ Class *CommonModule_Vector::registerClass(ModuleSystem *moduleSystem)
 void CommonModule_Vector::Vector_Push(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
     std::shared_ptr<CommonModule_Vector> vector_obj = std::dynamic_pointer_cast<CommonModule_Vector>(object);
+    // If our value type is a string or number then we are going to have to create a Value object for it
+    // and set the Value's value to this string or number
+    if (values[0].type == VALUE_TYPE_STRING || values[0].type == VALUE_TYPE_NUMBER)
+    {
+        std::shared_ptr<CommonModule_Value> new_value = 
+                    std::dynamic_pointer_cast<CommonModule_Value>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("Value"), {values[0]}));
+        // Overwrite our value passed with the new object Value
+        values[0] = Value(new_value);
+    }
     values[0].holder = NULL;
     vector_obj->vec_values.push_back(Value(&values[0]));
 }

@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 #include "commonmod_map.h"
+#include "commonmod_value.h"
 #include "function.h"
 #include "variable.h"
 #include "array.h"
@@ -60,6 +61,24 @@ Class* CommonModule_Map::registerClass(ModuleSystem* moduleSystem)
 
     /**
      * @class Map
+     * function set(string index, number value) : void
+     * 
+     * Sets the index value represented by the index to the new provided value
+     */
+    c->registerFunction("set", {VarType::fromString("string"), VarType::fromString("number")}, VarType::fromString("void"), CommonModule_Map::Map_Set);
+
+    /**
+     * @class Map
+     * function set(string index, string value) : void
+     * 
+     * Sets the index value represented by the index to the new provided value
+     */
+    c->registerFunction("set", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("void"), CommonModule_Map::Map_Set);
+
+
+
+    /**
+     * @class Map
      * function get(string index) : Value
      * 
      * Gets the Value from this map that has the index name that is equal to the index provided
@@ -69,6 +88,16 @@ Class* CommonModule_Map::registerClass(ModuleSystem* moduleSystem)
 
 void CommonModule_Map::Map_Set(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
 {
+    // If our value type is a string or number then we are going to have to create a Value object for it
+    // and set the Value's value to this string or number
+    if (values[1].type == VALUE_TYPE_STRING || values[0].type == VALUE_TYPE_NUMBER)
+    {
+        std::shared_ptr<CommonModule_Value> new_value = 
+                    std::dynamic_pointer_cast<CommonModule_Value>(Object::create(interpreter, interpreter->getClassSystem()->getClassByName("Value"), {values[0]}));
+        // Overwrite our value passed with the new object Value
+        values[1] = Value(new_value);
+    }
+
     std::shared_ptr<CommonModule_Map> map_obj = std::dynamic_pointer_cast<CommonModule_Map>(object);
     map_obj->value_map[values[0].svalue] = std::make_unique<Value>(&values[1]);
 }
