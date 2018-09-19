@@ -1364,20 +1364,25 @@ void Parser::parse_class_body_next()
 
 void Parser::parse_body()
 {
-    if (!next()->isSymbol("{"))
-    {
-        parse_error("Expecting a left bracket \"{\" for given body");
-    }
-    
     BodyNode* body_node = (BodyNode*) factory.createNode(NODE_TYPE_BODY);
-    while(!peek()->isSymbol("}"))
+    if (peek()->isSymbol("{"))
     {
+        // Remove the "{" symbol
+        next();
+        while(!peek()->isSymbol("}"))
+        {
+            parse_body_next();
+            body_node->addNode((InterpretableNode*) pop_node());
+        }
+         // Lets remove the "}" symbol
+        next();
+    }
+    else
+    {
+        // No "{" bracket provided therefore we will just parse the next body node
         parse_body_next();
         body_node->addNode((InterpretableNode*) pop_node());
     }
-    
-    // Lets remove the "}" symbol
-    next();
     
     push_node(body_node);
 }
