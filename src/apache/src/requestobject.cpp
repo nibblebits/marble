@@ -95,6 +95,8 @@ Class* RequestObject::registerClass(ModuleSystem *moduleSystem)
      /**
      * @class Request
      * Returns the header value with the given name for the header sent from the web client to the web server.
+     * 
+     * Available since v0.3.0
      * function getHeader(string header_name) : string
      */
     c->registerFunction("getHeader", {VarType::fromString("string")}, VarType::fromString("string"), RequestObject::Request_getHeader);
