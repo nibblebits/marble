@@ -669,6 +669,11 @@ void WebModule::Request_getFileContent(Interpreter* interpreter, std::vector<Val
 
 void WebModule::Request_getCookie(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
 {
+    /*
+     * Ensure the calling scope has read access for cookies
+     */
+    CookiePermission::ensureCookieReadAccess(interpreter, caller_scope);
+    
     std::shared_ptr<WebModuleObject> wm_obj = std::dynamic_pointer_cast<WebModuleObject>(object);
     if(wm_obj->cookies.find(values[0].svalue) != wm_obj->cookies.end())
     {

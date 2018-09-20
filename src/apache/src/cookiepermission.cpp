@@ -139,6 +139,36 @@ void CookiePermission::ensureCookieWriteAccess(Interpreter *interpreter, Scope *
     }
 }
 
+
+void CookiePermission::ensureCookieReadAccess(Interpreter* interpreter, Scope* caller_scope)
+{
+  if (!interpreter->hasNoPermissionRestrictions())
+    {
+
+        std::vector<std::shared_ptr<PermissionObject>> permission_list = caller_scope->getPermissionList("CookiePermission");
+        // If the permission list is empty then we don't have permission to write cookies
+        if (permission_list.empty())
+        {
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You do not have the CookiePermission which is required for reading and writing cookies", interpreter->getStackTraceLog());
+        }
+
+        bool has_access = false;
+        for (std::shared_ptr<PermissionObject> permission_obj : permission_list)
+        {
+            std::shared_ptr<CookiePermission> permission = std::dynamic_pointer_cast<CookiePermission>(permission_obj);
+
+            if (permission->can_read->value.dvalue)
+            {
+                has_access = true;
+                break;
+            }
+        }
+
+        if (!has_access)
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You do not have the CookiePermission read access which is required for reading cookies", interpreter->getStackTraceLog());
+    }
+}
+
 void CookiePermission::CookiePermission_setCanWrite(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
     std::shared_ptr<CookiePermission> cookie_permission_obj = std::dynamic_pointer_cast<CookiePermission>(object);

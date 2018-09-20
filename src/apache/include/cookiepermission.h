@@ -38,6 +38,12 @@ public:
      */
    static void ensureCookieWriteAccess(Interpreter* interpreter, Scope* caller_scope);
    
+   /**
+    * Ensures the given scope has a cookie read access permission
+    */
+   static void ensureCookieReadAccess(Interpreter* interpreter, Scope* caller_scope);
+   
+
    // If true the holder of this permission can read cookies
    Variable* can_read;
 
