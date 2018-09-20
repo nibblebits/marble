@@ -24,6 +24,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "responseobject.h"
 #include "requestargumentsobject.h"
 #include "multipartfileobject.h"
+#include "requestobject.h"
 #include "modulesystem.h"
 #include "cookiepermission.h"
 #include "headerpermission.h"
@@ -59,17 +60,6 @@ WebModulePOSTFileContentObject::~WebModulePOSTFileContentObject()
 }
 
 
-WebModuleObject::WebModuleObject(Class* c) : Object(c)
-{
-    this->req = NULL;
-}
-
-WebModuleObject::~WebModuleObject()
-{
-
-}
-
-
 
 WebModule::WebModule() : Module("webmod", "Web Module", MODULE_TYPE_MARBLE_LIBRARY, "1.0.0", "ADD_HELP_PATH_HERE")
 {
@@ -99,6 +89,9 @@ void WebModule::Init()
 
     // Register the MultipartFile class
     MultipartFileObject::registerClass(this->getModuleSystem());
+
+    // Register the Request class
+    RequestObject::registerClass(this->getModuleSystem());
 
     /* FileContent class */
     /**
@@ -169,109 +162,6 @@ void WebModule::Init()
     });
     /* End of POSTContent class */
 
-    /**
-     * class Request
-     * 
-     * This is the Request class it is responsible for getting http request information from the web client
-     * when running a marble script in apache2.
-     * 
-     * <b>You can access the object directly in a static way. For example Request.getMethod()</b>
-     */
-    c = this->getModuleSystem()->getClassSystem()->registerClass("Request");
-    /**
-     * @class Request
-     * 
-     * Returns the URI for this HTTP request
-     * function getUri() : string
-     */
-    c->registerFunction("getUri", {}, VarType::fromString("string"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
-        std::shared_ptr<WebModuleObject> web_mod_obj = std::dynamic_pointer_cast<WebModuleObject>(object);
-        return_value->type = VALUE_TYPE_STRING;
-        return_value->svalue = web_mod_obj->request_uri;
-    });
-
-    /**
-     * @class Request
-     * 
-     * Returns the HTTP request method for this HTTP request
-     * function getMethod() : string
-     */
-    c->registerFunction("getMethod", {}, VarType::fromString("string"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
-        std::shared_ptr<WebModuleObject> web_mod_obj = std::dynamic_pointer_cast<WebModuleObject>(object);
-        return_value->type = VALUE_TYPE_STRING;
-        return_value->svalue = web_mod_obj->request_method;
-    });
-
-    /**
-     * @class Request
-     * 
-     * Returns the "GET" request arguments for this HTTP request
-     * fucntion getArguments() : RequestArguments
-     */
-    c->registerFunction("getArguments", {}, VarType::fromString("RequestArguments"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
-        std::shared_ptr<WebModuleObject> web_mod_obj = std::dynamic_pointer_cast<WebModuleObject>(object);
-        return_value->type = VALUE_TYPE_OBJECT;
-        return_value->ovalue = web_mod_obj->request_arguments;
-    });
-
-    /**
-     * @class Request
-     * 
-     * Returns the "POST" content for this HTTP request
-     * 
-     * function getContent() : PostContent
-     */
-    c->registerFunction("getContent", {}, VarType::fromString("PostContent"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
-        std::shared_ptr<WebModuleObject> web_mod_obj = std::dynamic_pointer_cast<WebModuleObject>(object);
-        return_value->type = VALUE_TYPE_OBJECT;
-        return_value->ovalue = web_mod_obj->content;
-    });
-
-    /**
-     * @class Request
-     * Returns the cookie with the given name. Empty string is returned if no cookie was found.
-     * function getCookie(string cookieName) : string
-     */
-    c->registerFunction("getCookie", {VarType::fromString("string")}, VarType::fromString("string"), WebModule::Request_getCookie);
-    
-     /**
-     * @class Request
-     * Returns the header value with the given name for the header sent from the web client to the web server.
-     * function getHeader(string header_name) : string
-     */
-    c->registerFunction("getHeader", {VarType::fromString("string")}, VarType::fromString("string"), WebModule::Request_getHeader);
-    
-    
-    /**
-     * @class Request
-     * Returns the protocol such as HTTP or HTTPS
-     * function getProtocol() : string
-     */
-    c->registerFunction("getProtocol", {}, VarType::fromString("string"), WebModule::Request_getProtocol);
-
-    /**
-     * @class Request
-     * 
-     * Returns the file upload content for this HTTP request
-     * 
-     * function getFileContent() : FileContent
-     */
-    c->registerFunction("getFileContent", {}, VarType::fromString("FileContent"), WebModule::Request_getFileContent);
-
-    /**
-     * @class Request
-     * 
-     * Returns the IP address of the person who is connected to your apache server issueing a request on this script
-     * function getRequesterIP() : string
-     */
-    c->registerFunction("getRequesterIP", {}, VarType::fromString("string"), [&](Interpreter* interpreter, std::vector<Value> arguments, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope) {
-        std::shared_ptr<WebModuleObject> web_mod_obj = std::dynamic_pointer_cast<WebModuleObject>(object);
-        return_value->type = VALUE_TYPE_STRING;
-        return_value->svalue = web_mod_obj->requester_ip;
-    });
-
-
-    /* End of Request class */
 
 }
 
@@ -279,7 +169,7 @@ void WebModule::newInterpreter(Interpreter* interpreter)
 {
     // Ok we have a new Interpreter that may use this module so we must create a global variable pointing to Request. 
     Scope* root_scope = interpreter->getRootScope();
-    std::shared_ptr<WebModuleObject> object = std::make_shared<WebModuleObject>(this->getModuleSystem()->getClassSystem()->getClassByName("Request"));
+    std::shared_ptr<RequestObject> object = std::make_shared<RequestObject>(this->getModuleSystem()->getClassSystem()->getClassByName("Request"));
     object->request_arguments = std::make_shared<WebModuleRequestArgumentsObject>(this->getModuleSystem()->getClassSystem()->getClassByName("RequestArguments"));
     object->content = std::make_shared<WebModulePOSTContentObject>(this->getModuleSystem()->getClassSystem()->getClassByName("PostContent"));
     object->file_content = std::make_shared<WebModulePOSTFileContentObject>(this->getModuleSystem()->getClassSystem()->getClassByName("FileContent"));
@@ -296,7 +186,7 @@ void WebModule::parseForRequestObject(Scope* root_scope, Interpreter* interprete
 {
     Variable* request_variable = root_scope->getVariableAnyScope("Request");
   
-    std::shared_ptr<WebModuleObject> object = std::dynamic_pointer_cast<WebModuleObject>(request_variable->value.ovalue);
+    std::shared_ptr<RequestObject> object = std::dynamic_pointer_cast<RequestObject>(request_variable->value.ovalue);
     object->req = (struct request_rec*) req;
     object->request_uri = req->unparsed_uri;
     object->requester_ip = req->useragent_ip;
@@ -658,52 +548,6 @@ std::map<std::string, std::string> WebModule::parseHeaders(request_rec* req)
     }
 
     return result;
-}
-
-
-void WebModule::Request_getFileContent(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
-{
-    std::shared_ptr<WebModuleObject> wm_obj = std::dynamic_pointer_cast<WebModuleObject>(object);
-    return_value->set(wm_obj->file_content);
-}
-
-void WebModule::Request_getCookie(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
-{
-    /*
-     * Ensure the calling scope has read access for cookies
-     */
-    CookiePermission::ensureCookieReadAccess(interpreter, caller_scope);
-    
-    std::shared_ptr<WebModuleObject> wm_obj = std::dynamic_pointer_cast<WebModuleObject>(object);
-    if(wm_obj->cookies.find(values[0].svalue) != wm_obj->cookies.end())
-    {
-        return_value->set(wm_obj->cookies[values[0].svalue]);
-        return;
-    }
-
-    return_value->set("");
-}
-
-void WebModule::Request_getHeader(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
-{
-    /*
-     * Ensure the calling scope has header read access or do not allow them to get headers sent to this web server
-     */ 
-    HeaderPermission::ensureHeaderReadAccess(interpreter, caller_scope);
-    std::shared_ptr<WebModuleObject> wm_obj = std::dynamic_pointer_cast<WebModuleObject>(object);
-    if(wm_obj->headers.find(values[0].svalue) != wm_obj->headers.end())
-    {
-        return_value->set(wm_obj->headers[values[0].svalue]);
-        return;
-    }
-
-    return_value->set("");
-}
-
-void WebModule::Request_getProtocol(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
-{
-    std::shared_ptr<WebModuleObject> wm_obj = std::dynamic_pointer_cast<WebModuleObject>(object);
-    return_value->set(wm_obj->protocol);
 }
 
 void WebModule::FileContent_has(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
