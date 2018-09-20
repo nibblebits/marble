@@ -234,6 +234,14 @@ void WebModule::Init()
      */
     c->registerFunction("getCookie", {VarType::fromString("string")}, VarType::fromString("string"), WebModule::Request_getCookie);
     
+     /**
+     * @class Request
+     * Returns the header value with the given name for the header sent from the web client to the web server.
+     * function getHeader(string header_name) : string
+     */
+    c->registerFunction("getHeader", {VarType::fromString("string")}, VarType::fromString("string"), WebModule::Request_getHeader);
+    
+    
     /**
      * @class Request
      * Returns the protocol such as HTTP or HTTPS
@@ -295,6 +303,7 @@ void WebModule::parseForRequestObject(Scope* root_scope, Interpreter* interprete
     object->request_method = req->method;
     object->request_arguments->arguments = parseGet(req);
     object->cookies = parseCookies(req);
+    object->headers = parseHeaders(req);
     object->protocol = req->protocol;
 
     const char* contentType_cstr = apr_table_get(req->headers_in, "content-type");
@@ -638,6 +647,20 @@ std::map<std::string, std::string> WebModule::parseCookies(request_rec* req)
     return result;
 }
 
+std::map<std::string, std::string> WebModule::parseHeaders(request_rec* req)
+{
+    std::map<std::string, std::string> result;
+    const apr_array_header_t *tarr = apr_table_elts(req->headers_in);
+    const apr_table_entry_t *telts = (const apr_table_entry_t*)tarr->elts;
+
+    for (int i = 0; i < tarr->nelts; i++) {
+        result[telts[i].key] = std::string(telts[i].val);
+    }
+
+    return result;
+}
+
+
 void WebModule::Request_getFileContent(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
 {
     std::shared_ptr<WebModuleObject> wm_obj = std::dynamic_pointer_cast<WebModuleObject>(object);
@@ -656,6 +679,22 @@ void WebModule::Request_getCookie(Interpreter* interpreter, std::vector<Value> v
     return_value->set("");
 }
 
+void WebModule::Request_getHeader(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+{
+    /*
+     * Ensure the calling scope has header read access or do not allow them to get headers sent to this web server
+     */ 
+    HeaderPermission::ensureHeaderReadAccess(interpreter, caller_scope);
+    std::shared_ptr<WebModuleObject> wm_obj = std::dynamic_pointer_cast<WebModuleObject>(object);
+    if(wm_obj->headers.find(values[0].svalue) != wm_obj->headers.end())
+    {
+        return_value->set(wm_obj->headers[values[0].svalue]);
+        return;
+    }
+
+    return_value->set("");
+}
+
 void WebModule::Request_getProtocol(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
 {
     std::shared_ptr<WebModuleObject> wm_obj = std::dynamic_pointer_cast<WebModuleObject>(object);
@@ -667,6 +706,7 @@ void WebModule::FileContent_has(Interpreter* interpreter, std::vector<Value> val
      std::shared_ptr<WebModulePOSTFileContentObject> file_content_obj = std::dynamic_pointer_cast<WebModulePOSTFileContentObject>(object);
      return_value->set(file_content_obj->content.find(values[0].svalue) != file_content_obj->content.end());
 }
+
 
 void WebModule::FileContent_get(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
 {
