@@ -4,6 +4,7 @@ allowed_permissions = getScopePermissions();
 
 Permission cookiePermission = new @CookiePermission();
 cookiePermission.setCanWrite(true);
+cookiePermission.setCanRead(true);
 allowed_permissions.add(cookiePermission);
 
 Permission headerPermission = new @HeaderPermission();

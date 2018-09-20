@@ -37,7 +37,7 @@ HeaderPermission::~HeaderPermission()
 {
 }
 
-std::shared_ptr<Object> HeaderPermission::newInstance(Class* c)
+std::shared_ptr<Object> HeaderPermission::newInstance(Class *c)
 {
     std::shared_ptr<HeaderPermission> header_permission = std::make_shared<HeaderPermission>(c);
     return header_permission;
@@ -47,21 +47,30 @@ void HeaderPermission::ensureHeaderWriteAccess(Interpreter *interpreter, Scope *
 {
     if (!interpreter->hasNoPermissionRestrictions())
     {
-
         std::shared_ptr<PermissionObject> permission_obj = caller_scope->getPermission("HeaderPermission");
         if (!permission_obj)
             throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You require a HeaderPermission to set HTTP headers and set response codes.", interpreter->getStackTraceLog());
     }
 }
 
-Class* HeaderPermission::registerClass(ModuleSystem *moduleSystem)
+void HeaderPermission::ensureHeaderReadAccess(Interpreter *interpreter, Scope *caller_scope)
+{
+    if (!interpreter->hasNoPermissionRestrictions())
+    {
+        std::shared_ptr<PermissionObject> permission_obj = caller_scope->getPermission("HeaderPermission");
+        if (!permission_obj)
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You require a HeaderPermission to read HTTP headers", interpreter->getStackTraceLog());
+    }
+}
+
+Class *HeaderPermission::registerClass(ModuleSystem *moduleSystem)
 {
     /**
      * class HeaderPermission extends Permission
      * 
      * This permission must be held if you wish to create system headers
      */
-    Class* c = moduleSystem->getClassSystem()->registerClass("HeaderPermission", moduleSystem->getClassSystem()->getClassByName("Permission"));
+    Class *c = moduleSystem->getClassSystem()->registerClass("HeaderPermission", moduleSystem->getClassSystem()->getClassByName("Permission"));
     c->setDescriptorObject(std::make_shared<HeaderPermission>(c));
 
     /**

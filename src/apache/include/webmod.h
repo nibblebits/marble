@@ -70,26 +70,6 @@ public:
 
 
 class WebModuleRequestArgumentsObject;
-
-class WebModuleObject : public Object
-{
-public:
-    WebModuleObject(Class* c);
-    virtual ~WebModuleObject();
-
-    // The given apache request object
-    request_rec* req;
-    
-    std::string request_uri;
-    std::string requester_ip;
-    std::string request_method;
-    std::string protocol;
-    std::shared_ptr<WebModulePOSTContentObject> content;
-    std::shared_ptr<WebModulePOSTFileContentObject> file_content;
-    std::shared_ptr<WebModuleRequestArgumentsObject> request_arguments;
-    std::map<std::string, std::string> cookies;
-};
-
 class WebModule : public Module
 {
 public:
@@ -152,12 +132,9 @@ public:
     std::map<std::string, std::string> parsePost(request_rec* req);
     std::map<std::string, std::string> parseGet(request_rec* req);
     std::map<std::string, std::string> parseCookies(request_rec* req);
+    std::map<std::string, std::string> parseHeaders(request_rec* req);
 
     // Static methods to be called in the marble language
-    static void Request_getFileContent(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
-    static void Request_getCookie(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
-    static void Request_getProtocol(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
-
     static void FileContent_has(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
     static void FileContent_get(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
     static void FileContent_hasArray(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);

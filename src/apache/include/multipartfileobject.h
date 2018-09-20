@@ -40,7 +40,7 @@ public:
 
     /**
      *
-     * Registers the RequestArguments class
+     * Registers the MultipartFile class
      */
     static Class* registerClass(ModuleSystem* moduleSystem);
 

@@ -35,9 +35,15 @@ class HeaderPermission : public PermissionObject
     virtual std::shared_ptr<Object> newInstance(Class *c);
 
     /**
-     * Ensures we have cookie write access
+     * Ensures we have header write access
      */
     static void ensureHeaderWriteAccess(Interpreter *interpreter, Scope *caller_scope);
+
+    /**
+     * Ensures we have header write access
+     */
+    static void ensureHeaderReadAccess(Interpreter *interpreter, Scope *caller_scope);
+
     static Class *registerClass(ModuleSystem *moduleSystem);
 };
 
