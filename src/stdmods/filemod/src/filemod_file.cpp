@@ -168,6 +168,7 @@ Class *FileModule_File::registerClass(ModuleSystem *moduleSystem)
      * 
      * Reads the entire file into memory as a string and returns the file contents.
      * Important to note that this returns only valid ASCII string data. Please use file_get_binary_contents for binary files
+     * 
      * @works_without_class
      * function file_get_contents(string filename) : string
      */
@@ -179,6 +180,8 @@ Class *FileModule_File::registerClass(ModuleSystem *moduleSystem)
      * 
      * Reads the entire file into memory, returns the file contents as a number array that holds 8 bit characters in each index.
      * Use this function for reading binary files
+     * 
+     * Available Since v0.4.0
      * @works_without_class
      * function file_get_binary_contents(string filename) : number[]
      */
@@ -192,7 +195,6 @@ Class *FileModule_File::registerClass(ModuleSystem *moduleSystem)
      * Writes the given string to the file specified by the filename.
      * If the file does not exist it creates it, if it does exist it overwrites it
      * 
-     * Available Since v0.4.0
      * @works_without_class
      * function file_put_contents(string filename, string data) : void
      */
