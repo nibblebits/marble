@@ -192,6 +192,7 @@ Class *FileModule_File::registerClass(ModuleSystem *moduleSystem)
      * Writes the given string to the file specified by the filename.
      * If the file does not exist it creates it, if it does exist it overwrites it
      * 
+     * Available Since v0.4.0
      * @works_without_class
      * function file_put_contents(string filename, string data) : void
      */
@@ -205,6 +206,7 @@ Class *FileModule_File::registerClass(ModuleSystem *moduleSystem)
      * will be treated as a single 8 bit character all other bits of the number are ignored. For example if you have a number with the value 0xffff. Only 0xff will be used
      * If the file does not exist it creates it, if it does exist it overwrites it
      * 
+     * Available Since v0.4.0
      * @works_without_class
      * function file_put_binary_contents(string filename, number[] data) : void
      */
