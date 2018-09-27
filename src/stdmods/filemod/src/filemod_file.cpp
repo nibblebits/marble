@@ -23,6 +23,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "exceptionobject.h"
 #include "exceptions/systemexception.h"
 #include "misc.h"
+#include "array.h"
+#include "variable.h"
 #include <iostream>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -165,12 +167,24 @@ Class *FileModule_File::registerClass(ModuleSystem *moduleSystem)
      * @class File
      * 
      * Reads the entire file into memory as a string and returns the file contents.
-     * 
+     * Important to note that this returns only valid ASCII string data. Please use file_get_binary_contents for binary files
      * @works_without_class
      * function file_get_contents(string filename) : string
      */
     c->registerFunction("file_get_contents", {VarType::fromString("string")}, VarType::fromString("string"), FileModule_File::File_file_get_contents);
     moduleSystem->getFunctionSystem()->registerFunction("file_get_contents", {VarType::fromString("string")}, VarType::fromString("string"), FileModule_File::File_file_get_contents);
+
+    /**
+     * @class File
+     * 
+     * Reads the entire file into memory, returns the file contents as a number array that holds 8 bit characters in each index.
+     * Use this function for reading binary files
+     * @works_without_class
+     * function file_get_binary_contents(string filename) : number[]
+     */
+    c->registerFunction("file_get_binary_contents", {VarType::fromString("string")}, VarType::fromString("number[]"), FileModule_File::File_file_get_binary_contents);
+    moduleSystem->getFunctionSystem()->registerFunction("file_get_binary_contents", {VarType::fromString("string")}, VarType::fromString("number[]"), FileModule_File::File_file_get_binary_contents);
+
 
     /**
      * @class File
@@ -181,9 +195,21 @@ Class *FileModule_File::registerClass(ModuleSystem *moduleSystem)
      * @works_without_class
      * function file_put_contents(string filename, string data) : void
      */
-    c->registerFunction("file_put_contents", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("string"), FileModule_File::File_file_put_contents);
-    moduleSystem->getFunctionSystem()->registerFunction("file_put_contents", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("string"), FileModule_File::File_file_put_contents);
+    c->registerFunction("file_put_contents", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("void"), FileModule_File::File_file_put_contents);
+    moduleSystem->getFunctionSystem()->registerFunction("file_put_contents", {VarType::fromString("string"), VarType::fromString("string")}, VarType::fromString("void"), FileModule_File::File_file_put_contents);
 
+  /**
+     * @class File
+     * 
+     * Writes the given number array to the file specified by the filename. Each number in your number array
+     * will be treated as a single 8 bit character all other bits of the number are ignored. For example if you have a number with the value 0xffff. Only 0xff will be used
+     * If the file does not exist it creates it, if it does exist it overwrites it
+     * 
+     * @works_without_class
+     * function file_put_binary_contents(string filename, number[] data) : void
+     */
+    c->registerFunction("file_put_binary_contents", {VarType::fromString("string"), VarType::fromString("number[]")}, VarType::fromString("void"), FileModule_File::File_file_put_binary_contents);
+    moduleSystem->getFunctionSystem()->registerFunction("file_put_binary_contents", {VarType::fromString("string"), VarType::fromString("number[]")}, VarType::fromString("void"), FileModule_File::File_file_put_binary_contents);
 
     /**
      * @class File
@@ -311,6 +337,45 @@ void FileModule_File::File_file_get_contents(Interpreter *interpreter, std::vect
     }
 }
 
+void FileModule_File::File_file_get_binary_contents(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+{
+    std::string absolute_filename_path = getAbsolutePath(values[0].svalue);
+    // We need to make sure the scope has access to this file
+    FilePermission::checkPermissionAllows(interpreter, caller_scope, absolute_filename_path, "r");
+    FILE *fp = fopen(absolute_filename_path.c_str(), "r");
+    if (!fp)
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to open the file: " + absolute_filename_path, interpreter->getStackTraceLog());
+
+    try
+    {
+        fseek(fp, 0, SEEK_END);
+        int size = ftell(fp);
+        fseek(fp, 0, SEEK_SET);
+
+        unsigned char buf[size];
+        if (!fread(buf, size, 1, fp))
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to read the file: " + absolute_filename_path + " but it opened succesfully", interpreter->getStackTraceLog());
+
+        // Ok let's create a number array to store these file contents in
+        Variable* variables = new Variable[size];
+        for (int i = 0; i < size; i++)
+        {
+            Variable *var = &variables[i];
+            var->type = VARIABLE_TYPE_NUMBER;
+            var->value.type = VARIABLE_TYPE_NUMBER;
+            var->value.holder = var;
+            var->value.dvalue = buf[i];
+        }
+        return_value->set(std::make_shared<Array>(interpreter->getClassSystem()->getClassByName("array"), variables, size));
+        fclose(fp);
+    }
+    catch (...)
+    {
+        fclose(fp);
+        throw;
+    }
+}
+
 void FileModule_File::File_file_put_contents(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
     std::string absolute_filename_path = getAbsolutePath(values[0].svalue);
@@ -323,6 +388,35 @@ void FileModule_File::File_file_put_contents(Interpreter *interpreter, std::vect
     try
     {
         if (!fwrite(values[1].svalue.c_str(), values[1].svalue.size(), 1, fp))
+            throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to write the file: " + absolute_filename_path + " but it opened succesfully", interpreter->getStackTraceLog());
+
+        fclose(fp);
+    }
+    catch (...)
+    {
+        fclose(fp);
+        throw;
+    }
+}
+
+void FileModule_File::File_file_put_binary_contents(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+{
+    std::string absolute_filename_path = getAbsolutePath(values[0].svalue);
+    // We need to make sure the scope has access to this file
+    FilePermission::checkPermissionAllows(interpreter, caller_scope, absolute_filename_path, "w");
+    FILE *fp = fopen(absolute_filename_path.c_str(), "w");
+    if (!fp)
+        throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to open the file: " + absolute_filename_path, interpreter->getStackTraceLog());
+
+    try
+    {
+        std::shared_ptr<Array> array = std::dynamic_pointer_cast<Array>(values[1].ovalue);
+        std::unique_ptr<unsigned char[]> data = std::make_unique<unsigned char[]>(array->count);
+        for (int i = 0; i < array->count; i++)
+        {
+            data[i] = (unsigned char) array->variables[i].value.dvalue;
+        }
+        if (!fwrite(data.get(), array->count, 1, fp))
             throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to write the file: " + absolute_filename_path + " but it opened succesfully", interpreter->getStackTraceLog());
 
         fclose(fp);
