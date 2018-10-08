@@ -622,7 +622,7 @@ std::string Interpreter::mergeCodeAndDataForSplit(split *split)
     if (split->has_data)
     {
         output_data = handleRawDataForSplit(split);
-        result += "\"" + str_replace(output_data, "\"", "\\\"") + "\";\n";
+        result += ":\"" + str_replace(output_data, "\"", "\\\"") + "\";\n";
     }
 
     // Run the code
