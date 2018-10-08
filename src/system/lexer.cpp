@@ -36,6 +36,7 @@ Lexer::Lexer(Logger *logger)
 {
     this->logger = logger;
     this->root = NULL;
+    this->ignore_char_sequence = false;
 }
 Lexer::~Lexer()
 {
@@ -288,7 +289,7 @@ std::string Lexer::get_string(const char **ptr, PosInfo &posInfo)
     // Lets loop until we find an ending string seperator.
     while (bounds_safe(our_ptr) && !is_string_seperator(c))
     {
-        if (c == '\\')
+        if (c == '\\' && !ignore_char_sequence)
         {
             /* Some characters are valid in strings such as carriage returns and new lines \r\n
              * Let's handle it here*/
@@ -303,6 +304,9 @@ std::string Lexer::get_string(const char **ptr, PosInfo &posInfo)
 
     // Adjust the main pointer to point to the new position
     *ptr += (our_ptr - *ptr);
+
+    // We no longer want to ignore a char sequence. This may or may not be set to true buts its more computation power to check
+    ignore_char_sequence = false;
     return value;
 }
 
@@ -376,6 +380,18 @@ Token *Lexer::stage1(PosInfo posInfo)
                 posInfo.col += 1;
             }
             ptr += 1;
+            continue;
+        }
+
+        /*
+        * Strings prepended with ":" should have their char sequence ignored
+        * For example :"Hello\nworld" will be exactly "Hello\nworld" it will not create a new line
+        */
+        if (c == ':' && bounds_safe(ptr+1) && is_string_seperator(*(ptr+1)))
+        {
+            ignore_char_sequence = true;
+            ptr += 1;
+            posInfo.col += 1;
             continue;
         }
 

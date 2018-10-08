@@ -78,5 +78,8 @@ private:
     TokenFactory tokenFactory;
     Logger* logger;
     const char* filename;
+    /* Char sequences such as "/n" will be treated as "\n" and not a new line if this is set to true. This is for all char sequences
+     * this is set to true automatically when prepending ":" before any string, for example :"Hello\nworld" */
+    bool ignore_char_sequence;
 };
 #endif
