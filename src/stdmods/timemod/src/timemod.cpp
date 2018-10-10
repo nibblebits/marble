@@ -46,7 +46,7 @@ void TimeModule::Init()
 
 void TimeModule::newInterpreter(Interpreter* interpreter)
 {
-    // Ok we have a new Interpreter that may use this module so we must create a global variable pointing to IO. 
+    // Ok we have a new Interpreter that may use this module so we must create a global variable pointing to Time. 
     Scope* root_scope = interpreter->getRootScope();
     root_scope->createVariable("Time", "Time", Object::create(interpreter, this->getModuleSystem()->getClassSystem()->getClassByName("Time"), {}));
 }
