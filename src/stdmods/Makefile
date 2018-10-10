@@ -9,6 +9,7 @@ all:
 	cd ./processmod && $(MAKE) standalone
 	cd ./jsonmod && $(MAKE) standalone
 	cd ./cryptomod && $(MAKE) standalone
+	cd ./encodermod && $(MAKE) standalone
 
 clean:
 	cd ./iomod && $(MAKE) clean
@@ -21,5 +22,6 @@ clean:
 	cd ./processmod && $(MAKE) clean
 	cd ./jsonmod && $(MAKE) clean
 	cd ./cryptomod && $(MAKE) clean
+	cd ./encodermod && $(MAKE) clean
 
 

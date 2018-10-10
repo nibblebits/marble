@@ -13,6 +13,7 @@ LoadModule("/usr/lib/marble/marble_processmod.so");
 LoadModule("/usr/lib/marble/marble_cryptomod.so");
 LoadModule("/usr/lib/marble/marble_jsonmod.so");
 LoadModule("/usr/lib/marble/marble_mathmod.so");
+LoadModule("/usr/lib/marble/marble_encodermod.so");
 
 # END OF LOADING MODULES
 
