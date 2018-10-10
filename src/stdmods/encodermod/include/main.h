@@ -17,22 +17,26 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-#ifndef CONFIG_H
-#define CONFIG_H
 
+#ifndef MAIN_H
+#define MAIN_H
+#include "module.h"
 
-// Marble versioning information
-#define MARBLE_MAJOR_CODENAME "Clearies"
-#define MARBLE_VERSION "0.6.0"
-
-#define MAX_KEYWORD_SIZE 15
-#define MAX_OPERATORS_SIZE 3
-
-#define MAX_OUTPUTSTREAM_SIZE_UNTIL_AUTO_FLUSH 1024
-
-#define TMP_DIRECTORY "/tmp"
-
-// Debug mode is enabled; To display comment the line below
-#define DEBUG_ENABLED
-
+#if defined(_MSC_VER)
+    //  Microsoft 
+    #define EXPORT __declspec(dllexport)
+    #define IMPORT __declspec(dllimport)
+#elif defined(__GNUC__)
+    //  GCC
+    #define EXPORT __attribute__((visibility("default")))
+    #define IMPORT
+#else
+    //  do nothing and hope for the best?
+    #define EXPORT
+    #define IMPORT
+    #pragma warning Unknown dynamic link import/export semantics.
+#endif
+extern "C" {
+    EXPORT Module* marble_mod_init();
+}
 #endif

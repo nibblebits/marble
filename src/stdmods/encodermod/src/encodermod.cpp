@@ -17,36 +17,30 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-#include "timemod.h"
+#include "encodermod.h"
 #include "object.h"
-#include "timeobject.h"
-#include "dateobject.h"
+#include "encoderobject.h"
 #include <sstream>
 #include <time.h>
-TimeModule::TimeModule() : Module("timemod", "Time Module", MODULE_TYPE_MARBLE_LIBRARY, "1.0.0", "https://marble.wiki/api/module/timemod")
+EncoderModule::EncoderModule() : Module("encodermod", "Encoder Module", MODULE_TYPE_MARBLE_LIBRARY, "1.0.0", "https://marble.wiki/api/module/encodermod")
 {
 
 }
 
-TimeModule::~TimeModule()
+EncoderModule::~EncoderModule()
 {
 
 }
 
-void TimeModule::Init()
+void EncoderModule::Init()
 {
-    log("Time Module Initialising...", LOG_LEVEL_NOTICE);
-    log("--- Registering functions and classes", LOG_LEVEL_NOTICE);
-    
-    TimeObject::registerClass(getModuleSystem());
-    DateObject::registerClass(getModuleSystem());
-
-    log("Time Module Initialised.", LOG_LEVEL_NOTICE);
+    // Register the Encoder class
+    EncoderObject::registerClass(getModuleSystem());
 }
 
-void TimeModule::newInterpreter(Interpreter* interpreter)
+void EncoderModule::newInterpreter(Interpreter* interpreter)
 {
-    // Ok we have a new Interpreter that may use this module so we must create a global variable pointing to Time. 
+    // Ok we have a new Interpreter that may use this module so we must create a global variable pointing to Encoder. 
     Scope* root_scope = interpreter->getRootScope();
-    root_scope->createVariable("Time", "Time", Object::create(interpreter, this->getModuleSystem()->getClassSystem()->getClassByName("Time"), {}));
+    root_scope->createVariable("Encoder", "Encoder", Object::create(interpreter, this->getModuleSystem()->getClassSystem()->getClassByName("Encoder"), {}));
 }

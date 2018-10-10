@@ -17,22 +17,26 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-#ifndef CONFIG_H
-#define CONFIG_H
+#ifndef ENCODEROBJECT_H
+#define ENCODEROBJECT_H
+
+#include "object.h"
+#include <ctime>
+#include <string>
+class ModuleSystem;
+class EncoderObject : public Object
+{
+public:
+    EncoderObject(Class* c);
+    virtual ~EncoderObject();
+    virtual std::shared_ptr<Object> newInstance(Class* c);
+    static Class* registerClass(ModuleSystem* moduleSystem);
+private:
+    // Native Encoder functions/methods
+    static void Encoder_base64_encode(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
+    static void Encoder_base64_decode(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
 
 
-// Marble versioning information
-#define MARBLE_MAJOR_CODENAME "Clearies"
-#define MARBLE_VERSION "0.6.0"
-
-#define MAX_KEYWORD_SIZE 15
-#define MAX_OPERATORS_SIZE 3
-
-#define MAX_OUTPUTSTREAM_SIZE_UNTIL_AUTO_FLUSH 1024
-
-#define TMP_DIRECTORY "/tmp"
-
-// Debug mode is enabled; To display comment the line below
-#define DEBUG_ENABLED
+};
 
 #endif
