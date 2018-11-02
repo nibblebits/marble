@@ -676,6 +676,7 @@ Splitter Interpreter::loadScript(const char *filename)
     this->filename = filename;
     if (!hasRunScript(filename))
         this->scripts_run.push_back(getAbsolutePath(std::string(filename)));
+
     // Lets load this script
     FILE *file = fopen(filename, "r");
     if (!file)
@@ -687,6 +688,12 @@ Splitter Interpreter::loadScript(const char *filename)
     if (fseek(file, 0, SEEK_END) != 0)
     {
         throw IOException("Failed to seek to the end of the file: " + std::string(filename));
+    }
+
+    std::string filename_str = std::string(filename);
+    if (!isFile(filename_str))
+    {
+        throw IOException("The provided file: " + filename_str + " is a directory");
     }
 
     long data_len = ftell(file);
