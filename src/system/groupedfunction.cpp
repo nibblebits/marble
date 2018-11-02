@@ -70,6 +70,18 @@ bool GroupedFunction::sort_comparator(SystemHandler* calling_handler, SingleFunc
     return true;
 }
 
+std::string GroupedFunction::toString()
+{
+    std::string result = "";
+    for (int i = 0; i < this->functions.size(); i++)
+    {
+        Function* function = this->functions.at(i).get();
+        result += function->toString() + "\n";
+    }
+
+    return result;
+}
+
 Function* GroupedFunction::getFunctionForValues(std::vector<Value> values, SystemHandler* calling_handler)
 {
   std::vector<SingleFunction*> possible_functions;
