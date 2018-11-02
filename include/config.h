@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 // Marble versioning information
 #define MARBLE_MAJOR_CODENAME "Clearies"
-#define MARBLE_VERSION "0.6.1"
+#define MARBLE_VERSION "0.6.2"
 
 #define MAX_KEYWORD_SIZE 15
 #define MAX_OPERATORS_SIZE 3

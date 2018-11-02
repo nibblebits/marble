@@ -289,12 +289,13 @@ std::string Lexer::get_string(const char **ptr, PosInfo &posInfo)
     // Lets loop until we find an ending string seperator.
     while (bounds_safe(our_ptr) && !is_string_seperator(c))
     {
-        if (c == '\\' && !ignore_char_sequence)
+        int next_byte = bounds_safe(our_ptr+1) ? *(our_ptr+1) : -1;
+        if (c == '\\' && (!ignore_char_sequence || next_byte == '"'))
         {
             /* Some characters are valid in strings such as carriage returns and new lines \r\n
              * Let's handle it here*/
             our_ptr += 1;
-            c = *our_ptr;
+            c = next_byte;
             c = get_char_for_sequence(c);
         }
         value += c;
