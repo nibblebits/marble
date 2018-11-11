@@ -80,6 +80,9 @@ public:
     // Assists in sorting functions based on type. This had to be done as otherwise std::sort requires a static function we need access to this instance
     bool sort_comparator(SystemHandler* calling_handler, SingleFunction* f1, SingleFunction* f2);
 
+    virtual std::string toString();
+
+
     /** The SystemHandler related to this function */
     SystemHandler* sys_handler;
     

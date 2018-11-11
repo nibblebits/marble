@@ -55,6 +55,11 @@ class Function
         // Is this a private, protected or public variable?
         MODIFIER_ACCESS access;
 
+        /**
+         * Returns this function in a string format.
+         * E.g function print(string) : void
+         */
+        virtual std::string toString() = 0;
 
         // An empty static function used for when a native programmer wants to create a function that points to nothing.
         static void Blank(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);

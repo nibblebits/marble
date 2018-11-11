@@ -19,7 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 #include "singlefunction.h"
-
+#include "misc.h"
 SingleFunction::SingleFunction(FUNCTION_TYPE type, std::string name, std::vector<VarType> argument_types, VarType return_type) : Function(type, name)
 {
     this->argument_types = argument_types;
@@ -30,3 +30,14 @@ SingleFunction::~SingleFunction()
 {
 }
 
+std::string SingleFunction::toString()
+{
+    std::string result = "function " + this->name + "(";
+    for(VarType vtype : this->argument_types)
+    {
+        result += vtype.value + ",";
+    }
+    result = trim_right(result, ",");
+    result += ") : " + this->return_type.value + ";";
+    return result;
+}
