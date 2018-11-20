@@ -62,7 +62,7 @@ Now you can use the command "marble"
  
  }
  ```
- 2. When creating libraries ensure you follow a simular pattern as is shown in existing libraries. All native Marble classes you develop for your Marble native library must have a "registerClass" static method that is responsible for registering the Marble class in your library. This static method should be inside the "c++" file that is representing the Marble native class you are creating
+ 2. When creating libraries ensure you follow a similar pattern as is shown in existing libraries. All native Marble classes you develop for your Marble native library must have a "registerClass" static method that is responsible for registering the Marble class in your library. This static method should be inside the "c++" file that is representing the Marble native class you are creating
  3. You must use Makefiles. Pull request's that build without the use of Makefiles may be rejected
  4. In each class and function you register into the Marble interpreter you must provide comments stating the function prototype, class prototype, what class a function uses, weather or not it can also work alone without the class. You can see how this should be structured in pretty much every Marble library in the system. Ensure you stay to this structure as we have programs that automatically generate the marble documentation for the web.
  ## Legal rules
