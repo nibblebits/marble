@@ -3,7 +3,7 @@ Marble the Web Programming Language
 
 To install visit: https://marble.wiki
 
-# Building Dependencies
+# Installing Dependencies
 Marble requires the following libaries to be installed to compile
 
 apache2-dev: Holds dependencies for building apache2 modules
