@@ -23,6 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "modulesystem.h"
 #include "interpreter.h"
 #include "function.h"
+#include "shellpermission.h"
 #include "networkmod.h"
 #include "networkpermission.h"
 #include "misc.h"
@@ -30,6 +31,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 SendMailObject::SendMailObject(Class *c) : MailObject(c)
 {
+    // Default mail command is set to linux sendmail
+    this->mail_command = "/usr/lib/sendmail -t";
 }
 
 SendMailObject::~SendMailObject()
@@ -43,6 +46,12 @@ std::shared_ptr<Object> SendMailObject::newInstance(Class *c)
 
 void SendMailObject::newInterpreter(Interpreter *interpreter)
 {
+}
+
+void SendMailObject::SendMail_setMailCommand(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+{
+    std::shared_ptr<SendMailObject> sm_obj = std::dynamic_pointer_cast<SendMailObject>(object);
+    sm_obj->mail_command = values[0].svalue;
 }
 
 void SendMailObject::registerClass(ModuleSystem *moduleSystem)
@@ -69,6 +78,16 @@ void SendMailObject::registerClass(ModuleSystem *moduleSystem)
      * function send() : void
      */
     c->registerFunction("send", {}, VarType::fromString("void"), SendMailObject::SendMail_send);
+
+    /**
+     * @class SendMail
+     * 
+     * Sets the mail command this SendMail instance should use
+     *
+     * function setMailCommand(string command) : void
+     */
+    c->registerFunction("setMailCommand", {VarType::fromString("string")}, VarType::fromString("void"), SendMailObject::SendMail_setMailCommand);
+
 }
 
 
@@ -81,11 +100,14 @@ void SendMailObject::SendMail_send(Interpreter *interpreter, std::vector<Value> 
 {
     // Let's check we have permission to send emails
     NetworkPermission::ensurePermission(interpreter, caller_scope, NETWORK_PERMISSION_EMAIL_PERMISSION_REQUIRED);
-
     std::shared_ptr<SendMailObject> sm_obj = std::dynamic_pointer_cast<SendMailObject>(object);
+    if (sm_obj->mail_command != "/usr/lib/sendmail -t")
+    {
+        ShellPermission::ensurePermission(interpreter, caller_scope);
+    }
 
     // Let's open sendmail to send the mail
-    FILE *mailpipe = popen("/usr/lib/sendmail -t", "w");
+    FILE *mailpipe = popen(sm_obj->mail_command.c_str(), "w");
     if (mailpipe == NULL)
         throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("IOException"))), "Failed to open sendmail /usr/lib/sendmail do you not have sendmail installed?", interpreter->getStackTraceLog());
 
