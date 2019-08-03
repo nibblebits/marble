@@ -32,6 +32,7 @@ Value::Value()
     this->ovalue = NULL;
     this->avalue = NULL;
     this->dvalue = 0;
+    this->svalue = "";
 }
 
 Value::Value(Value *value)
@@ -42,6 +43,7 @@ Value::Value(Value *value)
     this->ovalue = value->ovalue;
     this->avalue = value->avalue;
     this->dvalue = value->dvalue;
+    this->svalue = value->svalue;
 }
 
 Value::Value(std::shared_ptr<Object> object) : Value()
@@ -53,6 +55,8 @@ Value::Value(std::string str) : Value()
 {
     set(str);
 }
+
+
 
 Value::Value(double number) : Value()
 {

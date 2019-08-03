@@ -1,0 +1,11 @@
+<marble>
+Socket socket = new Socket(2, 2);
+number[] buf = new number[50];
+for (number i = 0; i < 50; i +=1)
+{
+    buf[i] = i;
+}
+
+
+socket.send(new Ipv4Address("127.0.0.1"), 5873, buf.toString()); 
+</marble>

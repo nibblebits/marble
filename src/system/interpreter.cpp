@@ -42,6 +42,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "scope.h"
 #include "variable.h"
 #include "object.h"
+#include "array.h"
 #include "function.h"
 #include "class.h"
 #include "array.h"
@@ -329,24 +330,9 @@ Node *Interpreter::getAST(const char *code, PosInfo posInfo)
 
 void Interpreter::createDefaultClassesAndFunctions()
 {
-    /**
-     * class array
-     * 
-     * An instance of this class is automatically created when creating new array variables.
-     * For example "new string[10]"
-     */
-    Class *c = getClassSystem()->registerClass("array");
-    /**
-     * @class array
-     * Returns the size of this array
-     * function size() : number
-     */
-    c->registerFunction("size", {}, VarType::fromString("number"), [&](Interpreter *interpreter, std::vector<Value> arguments, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope) {
-        std::shared_ptr<Array> array = std::dynamic_pointer_cast<Array>(object);
-        return_value->type = VALUE_TYPE_NUMBER;
-        return_value->dvalue = array->count;
-    });
 
+    // Register the generic array class
+    Array::registerClass(this);
 
     Class *exception_class = getClassSystem()->getClassByName("Exception");
     if (exception_class == NULL)
@@ -360,7 +346,7 @@ void Interpreter::createDefaultClassesAndFunctions()
      * 
      * Thrown when you go out of bounds with a string
      */
-    c = getClassSystem()->registerClass("OutOfBoundsException", exception_class);
+    Class* c = getClassSystem()->registerClass("OutOfBoundsException", exception_class);
     c->registerFunction("__construct", {}, VarType::fromString("void"), [&](Interpreter *interpreter, std::vector<Value> arguments, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope) {
     });
 

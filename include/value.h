@@ -44,7 +44,7 @@ public:
     void set(std::string s);
     void set(double v);
     void set(std::shared_ptr<Object> o);
-
+ 
     /**
      * Gets a string for the Value provided regardless of type
      * \param from The Value to get the string from 
@@ -72,6 +72,8 @@ public:
     {
         double dvalue;
         char bvalue;
+        // Used when value represents a position in a reference or pointer
+        int pos;
     };
     
     std::shared_ptr<Object> ovalue;
@@ -102,6 +104,7 @@ public:
 private:
     void ensure_same_type(int type1, int type2);
     void ensure_valid_type(int type, std::vector<int> valid_types);
+    
 };
 
 #endif

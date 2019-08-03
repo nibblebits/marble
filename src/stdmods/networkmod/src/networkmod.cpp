@@ -28,6 +28,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "mailobject.h"
 #include "smtpmailobject.h"
 #include "sendmailobject.h"
+#include "socketobject.h"
+#include "udpsocketobject.h"
+#include "tcpsocketserverobject.h"
 #include "networkpermission.h"
 #include <fstream>
 #include <sstream>
@@ -56,7 +59,7 @@ size_t NetworkModule::CurlReadCallback(void *contents, size_t size, size_t nmemb
 
     memcpy(contents, data_ptr->c_str(), amount_to_read);
     // Let's erase the part of the string we have read
-    data_ptr->erase(data_ptr->begin(), data_ptr->begin()+amount_to_read);
+    data_ptr->erase(data_ptr->begin(), data_ptr->begin() + amount_to_read);
 
     return amount_to_read;
 }
@@ -94,6 +97,14 @@ void NetworkModule::Init()
     // Register the SendMail class
     SendMailObject::registerClass(this->getModuleSystem());
 
+    // Register the Socket class
+    SocketObject::registerClass(this->getModuleSystem());
+
+    // Register the UdpSocket class
+    UdpSocketObject::registerClass(this->getModuleSystem());
+
+    // Register the TcpSocketServer class
+    TcpSocketServerObject::registerClass(this->getModuleSystem());
 }
 
 void NetworkModule::newInterpreter(Interpreter *interpreter)
@@ -103,4 +114,10 @@ void NetworkModule::newInterpreter(Interpreter *interpreter)
 
     // Tell the CurlObject about this new interpreter
     CurlObject::newInterpreter(interpreter);
+    // Tell the socket about this new interpreter
+    SocketObject::newInterpreter(interpreter);
+    // Tell the socket about this new interpreter
+    UdpSocketObject::newInterpreter(interpreter);
+    // Tell the socket server about this new interpreter
+    TcpSocketServerObject::newInterpreter(interpreter);
 }

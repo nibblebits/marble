@@ -50,6 +50,14 @@ void Scope::registerVariable(Variable* variable)
     this->variables.push_back(variable);
 }
 
+ReferenceVariable* Scope::createReferenceVariable(Variable* variable, int index_to_ref)
+{
+    ReferenceVariable* ref_variable = new ReferenceVariable(variable, index_to_ref);
+    this->unique_variables.push_back(std::unique_ptr<ReferenceVariable>(ref_variable));
+    registerVariable(ref_variable);
+    return ref_variable;
+}
+
 Variable* Scope::createVariable()
 {
     Variable* variable = new Variable();

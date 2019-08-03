@@ -1,0 +1,10 @@
+<marble>
+string abc = "hello world";
+
+TcpSocketServer socket_server = new TcpSocketServer();
+socket_server.listen(48726);
+
+# Test accept
+
+socket_server.accept();
+</marble>

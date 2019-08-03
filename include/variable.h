@@ -54,7 +54,7 @@ public:
      */
     bool is_locked;
     
-    void setValue(Value value, Interpreter* interpreter=NULL);
+    virtual void setValue(Value value, Interpreter* interpreter=NULL);
     void setValue(double value, Interpreter* interpreter=NULL);
     void setValue(std::string value, Interpreter* interpreter=NULL);
     void setValue(std::shared_ptr<Object> value);

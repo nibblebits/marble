@@ -108,15 +108,15 @@ void SystemHandler::useFunctionSystem(FunctionSystem* f_system, std::function<vo
 {
     FunctionSystem* old_fc_sys = getFunctionSystem();
     this->setFunctionSystem(f_system);
-    try
-    {
+    //try
+    //{
         call();
-    }
-    catch(...)
-    {
+    //}
+ //   catch(...)
+   // {
         this->setFunctionSystem(old_fc_sys);
-        throw;
-    }
+      //  throw;
+    //}
     this->setFunctionSystem(old_fc_sys);
 
 }

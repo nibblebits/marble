@@ -25,6 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <string>
 #include <memory>
 #include "variable.h"
+#include "referencevariable.h"
 #include "statics.h"
 class Object;
 class PermissionsObject;
@@ -38,6 +39,13 @@ public:
     Scope(std::shared_ptr<PermissionsObject> permissions);
     virtual ~Scope();
     virtual void registerVariable(Variable* variable);
+    /**
+     * Warning you must ensure that the reference variable scope is compatible with the variable scope provided
+     * otherwise this can result in the memory being freed and it referencing deleted memory
+     *
+     * if a -1 index is provided then this reference will not be binded to an array or string index
+     */
+    ReferenceVariable* createReferenceVariable(Variable* variable, int index_to_ref=-1);
     Variable* createVariable();
     Variable* createVariable(std::string name, double value, MODIFIER_ACCESS modifier_access = MODIFIER_ACCESS_PUBLIC);
     Variable* createVariable(std::string name, std::string type, std::shared_ptr<Object> value, MODIFIER_ACCESS modifier_access = MODIFIER_ACCESS_PUBLIC);

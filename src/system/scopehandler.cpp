@@ -104,14 +104,14 @@ void ScopeHandler::useScope(std::function<void()> function, Scope *scope)
 
     Scope *old_scope = getCurrentScope();
     setCurrentScope(scope);
-    try
-    {
+    //try
+    //{
         function();
-    }
-    catch (...)
-    {
-        setCurrentScope(old_scope);
-        throw;
-    }
+    //}
+  //  catch (...)
+    //{
+      //  setCurrentScope(old_scope);
+        //throw;
+    //}
     setCurrentScope(old_scope);
 }

@@ -27,6 +27,11 @@ public:
     Array(Class* c);
     Array(Class* c, Variable* variables, int count);
     virtual ~Array();
+
+    static Class* registerClass(SystemHandler* systemHandler);
+    static void Array_toString(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
+    static void Array_size(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
+
     virtual void setup();
     Variable* variables;
     int count;
