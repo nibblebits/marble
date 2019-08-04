@@ -42,7 +42,6 @@ public:
     // Native Socket methods
     static void Socket__construct(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
 
-protected:
     int sockfd;
     int family;
     int type;

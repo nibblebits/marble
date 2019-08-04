@@ -31,6 +31,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "socketobject.h"
 #include "udpsocketobject.h"
 #include "tcpsocketserverobject.h"
+#include "tcpsocketobject.h"
+#include "socketaddressobject.h"
 #include "networkpermission.h"
 #include <fstream>
 #include <sstream>
@@ -97,6 +99,9 @@ void NetworkModule::Init()
     // Register the SendMail class
     SendMailObject::registerClass(this->getModuleSystem());
 
+    // Register the SocketAddress class
+    SocketAddressObject::registerClass(this->getModuleSystem());
+
     // Register the Socket class
     SocketObject::registerClass(this->getModuleSystem());
 
@@ -105,6 +110,10 @@ void NetworkModule::Init()
 
     // Register the TcpSocketServer class
     TcpSocketServerObject::registerClass(this->getModuleSystem());
+
+    // Register the TcpSocket class
+    TcpSocketObject::registerClass(this->getModuleSystem());
+
 }
 
 void NetworkModule::newInterpreter(Interpreter *interpreter)

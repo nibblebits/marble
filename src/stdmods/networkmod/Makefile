@@ -1,4 +1,4 @@
-SYSTEM_OBJECT_FILES = ./build/main.o ./build/networkmod.o ./build/socketobject.o ./build/udpsocketobject.o ./build/tcpsocketserverobject.o ./build/internetprotocolobject.o ./build/ipv4addressobject.o ./build/curlobject.o ./build/networkpermission.o ./build/mailobject.o ./build/smtpmailobject.o ./build/sendmailobject.o
+SYSTEM_OBJECT_FILES = ./build/main.o ./build/networkmod.o ./build/socketobject.o ./build/udpsocketobject.o ./build/tcpsocketserverobject.o ./build/socketaddressobject.o ./build/tcpsocketobject.o ./build/internetprotocolobject.o ./build/ipv4addressobject.o ./build/curlobject.o ./build/networkpermission.o ./build/mailobject.o ./build/smtpmailobject.o ./build/sendmailobject.o
 INCLUDES = -I ../../../include -I ./include
 OBJECT_FILE_FLAGS = -c -g -fPIC -std=c++14
 SYSTEM_LIB_LOCAL_FILENAME = libmarble.so
@@ -16,6 +16,11 @@ module: ${SYSTEM_OBJECT_FILES}
 	g++ ${INCLUDES} ./src/udpsocketobject.cpp -o ./build/udpsocketobject.o ${OBJECT_FILE_FLAGS}
 ./build/tcpsocketserverobject.o: ./src/tcpsocketserverobject.cpp
 	g++ ${INCLUDES} ./src/tcpsocketserverobject.cpp -o ./build/tcpsocketserverobject.o ${OBJECT_FILE_FLAGS}
+./build/tcpsocketobject.o: ./src/tcpsocketobject.cpp
+	g++ ${INCLUDES} ./src/tcpsocketobject.cpp -o ./build/tcpsocketobject.o ${OBJECT_FILE_FLAGS}
+./build/socketaddressobject.o: ./src/socketaddressobject.cpp
+	g++ ${INCLUDES} ./src/socketaddressobject.cpp -o ./build/socketaddressobject.o ${OBJECT_FILE_FLAGS}
+
 ./build/internetprotocolobject.o: ./src/internetprotocolobject.cpp
 	g++ ${INCLUDES} ./src/internetprotocolobject.cpp -o ./build/internetprotocolobject.o ${OBJECT_FILE_FLAGS}
 ./build/ipv4addressobject.o: ./src/ipv4addressobject.cpp

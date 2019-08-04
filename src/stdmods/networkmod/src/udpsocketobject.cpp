@@ -28,6 +28,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "exceptions/systemexception.h"
 #include "exceptionobject.h"
 #include "interpreter.h"
+#include "networkpermission.h"
 UdpSocketObject::UdpSocketObject(Class *c) : SocketObject(c)
 {
 
@@ -47,19 +48,44 @@ void UdpSocketObject::newInterpreter(Interpreter *interpreter)
 void UdpSocketObject::registerClass(ModuleSystem *moduleSystem)
 {
 
+    /*
+    * class UdpSocket extends Socket
+    * 
+    * Represents a udp socket 
+    */
     Class *c = moduleSystem->getClassSystem()->registerClass("UdpSocket", moduleSystem->getClassSystem()->getClassByName("Socket"));
     c->setDescriptorObject(std::make_shared<UdpSocketObject>(c));
 
+    /**
+     * @class UdpSocket
+     * 
+     * Constructor for Udp sockets
+     * function __construct() : void
+     */
     c->registerFunction("__construct", {}, VarType::fromString("void"), UdpSocketObject::UdpSocket__construct);
 
     /**
-     * @class Socket
+     * @class UdpSocket
      * 
      * Binds the socket to the given port
      * function bind(number port) : void
      */
     c->registerFunction("bind", {VarType::fromString("number")}, VarType::fromString("void"), UdpSocketObject::UdpSocket_bind);
+
+    /**
+     * @class UdpSocket
+     * 
+     * Recieves a single UDP packet, data is returned a string
+     * function recv(number amount) : string
+     */
     c->registerFunction("recv", {VarType::fromString("number")}, VarType::fromString("string"), UdpSocketObject::UdpSocket_recv);
+
+    /**
+     * @class UdpSocket
+     * 
+     * Sends a single UDP packet
+     * function send(Ipv4Address address_to_send, number amount) : void
+     */
     c->registerFunction("send", {VarType::fromString("Ipv4Address"), VarType::fromString("number"), VarType::fromString("string")}, VarType::fromString("void"), UdpSocketObject::UdpSocket_send);
 }
 
@@ -78,6 +104,9 @@ std::shared_ptr<Object> UdpSocketObject::newInstance(Class *c)
 
 void UdpSocketObject::UdpSocket_bind(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
+    // Ensure we have permission
+    NetworkPermission::ensurePermission(interpreter, caller_scope, NETWORK_PERMISSION_SOCKET_PERMISSION_REQUIRED);
+    
     std::shared_ptr<UdpSocketObject> s_object = std::dynamic_pointer_cast<UdpSocketObject>(object);
     struct sockaddr_in servaddr;
     servaddr.sin_family = SOCK_DGRAM; // IPv4
@@ -92,6 +121,9 @@ void UdpSocketObject::UdpSocket_bind(Interpreter *interpreter, std::vector<Value
 
 void UdpSocketObject::UdpSocket_send(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
+    // Ensure we have permission
+    NetworkPermission::ensurePermission(interpreter, caller_scope, NETWORK_PERMISSION_SOCKET_PERMISSION_REQUIRED);
+    
     std::shared_ptr<UdpSocketObject> s_object = std::dynamic_pointer_cast<UdpSocketObject>(object);
     std::shared_ptr<Object> ipv4_obj = values[0].ovalue;
     Value tmp_val;
@@ -114,6 +146,9 @@ void UdpSocketObject::UdpSocket_send(Interpreter *interpreter, std::vector<Value
 
 void UdpSocketObject::UdpSocket_recv(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
+    // Ensure we have permission
+    NetworkPermission::ensurePermission(interpreter, caller_scope, NETWORK_PERMISSION_SOCKET_PERMISSION_REQUIRED);
+    
     std::shared_ptr<UdpSocketObject> s_object = std::dynamic_pointer_cast<UdpSocketObject>(object);
     socklen_t total_to_read = values[0].dvalue;
     socklen_t sockaddr_len = sizeof(struct sockaddr_in);

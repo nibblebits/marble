@@ -1,8 +1,0 @@
-<marble>
-
-
-# We need to fix this bug!
-string test_str = "Hello World!";
-test_str[0] = "A";
-print(test_str);
-</marble>
