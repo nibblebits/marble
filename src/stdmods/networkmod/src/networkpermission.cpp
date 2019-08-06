@@ -32,6 +32,8 @@ NetworkPermission::NetworkPermission(Class *c) : PermissionObject(c)
     this->can_send_email = NULL;
     this->can_use_curl = NULL;
     this->can_lookup = NULL;
+    this->can_socket = NULL;
+    this->can_socket_server = NULL;
 }
 
 NetworkPermission::~NetworkPermission()
@@ -44,6 +46,8 @@ std::shared_ptr<Object> NetworkPermission::newInstance(Class *c)
     nperms->can_send_email = nperms->getVariableAnyScope("can_send_email");
     nperms->can_use_curl = nperms->getVariableAnyScope("can_send_email");
     nperms->can_lookup = nperms->getVariableAnyScope("can_lookup");
+    nperms->can_socket = nperms->getVariableAnyScope("can_socket");
+    nperms->can_socket_server = nperms->getVariableAnyScope("can_socket_server");
     return nperms;
 }
 
@@ -66,6 +70,10 @@ void NetworkPermission::ensurePermission(Interpreter *interpreter, Scope *caller
             fail_msg = "You do not have the curl permission for the NetworkPermission to use curl. Seek setCanUseCurl()";
         else if (perm_type == NETWORK_PERMISSION_LOOKUP_PERMISSION_REQUIRED)
             fail_msg = "You must have the lookup permission for the NetworkPermission for you to do lookups of any kind such as hostname lookups. Seek setCanLookup()";
+        else if(perm_type == NETWORK_PERMISSION_SOCKET_PERMISSION_REQUIRED)
+            fail_msg = "You must have the socket permission for the NetworkPermission for you to perform socket operations";
+        else if(perm_type == NETWORK_PERMISSION_SOCKET_SERVER_PERMISSION_REQUIRED)
+            fail_msg = "You must have the socket server permission for the NetworkPermission for you to perform socket server operations";
 
         for (std::shared_ptr<PermissionObject> perm : permission_list)
         {
@@ -81,6 +89,16 @@ void NetworkPermission::ensurePermission(Interpreter *interpreter, Scope *caller
                 break;
             }
             else if (perm_type == NETWORK_PERMISSION_LOOKUP_PERMISSION_REQUIRED && permission->can_lookup->value.dvalue)
+            {
+                hasPermission = true;
+                break;
+            }
+            else if(perm_type == NETWORK_PERMISSION_SOCKET_PERMISSION_REQUIRED && permission->can_socket->value.dvalue)
+            {
+                hasPermission = true;
+                break;
+            }
+            else if(perm_type == NETWORK_PERMISSION_SOCKET_SERVER_PERMISSION_REQUIRED && permission->can_socket_server->value.dvalue)
             {
                 hasPermission = true;
                 break;
@@ -129,6 +147,23 @@ void NetworkPermission::registerClass(ModuleSystem *moduleSystem)
     can_lookup.setValue(false);
     c->addVariable(can_lookup);
 
+    // Create can_socket variable
+    Variable can_socket;
+    can_socket.type = VARIABLE_TYPE_BOOLEAN;
+    can_socket.access = MODIFIER_ACCESS_PRIVATE;
+    can_socket.name = "can_socket";
+    can_socket.setValue(false);
+    c->addVariable(can_socket);
+
+    // Create can_socket_server variable
+    Variable can_socket_server;
+    can_socket_server.type = VARIABLE_TYPE_BOOLEAN;
+    can_socket_server.access = MODIFIER_ACCESS_PRIVATE;
+    can_socket_server.name = "can_socket_server";
+    can_socket_server.setValue(false);
+    c->addVariable(can_socket_server);
+
+
     /**
      * @class NetworkPermission
      * 
@@ -160,6 +195,7 @@ void NetworkPermission::registerClass(ModuleSystem *moduleSystem)
      */
     c->registerFunction("setCanUseCurl", {VarType::fromString("boolean")}, VarType::fromString("void"), NetworkPermission::NetworkPermission_setCanUseCurl);
 
+
  /**
      * @class NetworkPermission
      * 
@@ -167,6 +203,24 @@ void NetworkPermission::registerClass(ModuleSystem *moduleSystem)
      * function setCanLookup(boolean can_lookup) : void
      */
     c->registerFunction("setCanLookup", {VarType::fromString("boolean")}, VarType::fromString("void"), NetworkPermission::NetworkPermission_setCanLookup);
+
+
+    /**
+     * @class NetworkPermission
+     * 
+     * This function sets this Network Permission's setCanUseSocket property allowing the holder of this NetworkPermission to use sockets
+     * function setCanSocket(boolean can_use_socket) : void
+     */
+    c->registerFunction("setCanSocket", {VarType::fromString("boolean")}, VarType::fromString("void"), NetworkPermission::NetworkPermission_setCanSocket);
+
+    /**
+     * @class NetworkPermission
+     * 
+     * This function sets this Network Permission's setCanSocketServer property allowing the holder of this NetworkPermission to use server sockets
+     * function setCanSocketServer(boolean can_use_server_socket) : void
+     */
+    c->registerFunction("setCanSocketServer", {VarType::fromString("boolean")}, VarType::fromString("void"), NetworkPermission::NetworkPermission_setCanSocketServer);
+
 
     /**
      * @class NetworkPermission
@@ -191,6 +245,25 @@ void NetworkPermission::registerClass(ModuleSystem *moduleSystem)
      * function getCanLookup() : boolean
      */
     c->registerFunction("getCanLookup", {}, VarType::fromString("boolean"), NetworkPermission::NetworkPermission_getCanLookup);
+
+     /**
+     * @class NetworkPermission
+     * 
+     * This function returns true if this NetworkPermission allows us to create and use sockets
+     * function getCanSocket() : boolean
+     */
+    c->registerFunction("getCanSocket", {}, VarType::fromString("boolean"), NetworkPermission::NetworkPermission_getCanSocket);
+
+
+    /**
+     * @class NetworkPermission
+     * 
+     * This function returns true if this NetworkPermission allows us to create and use server sockets
+     * function getCanSocketServer() : boolean
+     */
+    c->registerFunction("getCanSocketServer", {}, VarType::fromString("boolean"), NetworkPermission::NetworkPermission_getCanSocketServer);
+
+
 
 }
 
@@ -239,6 +312,32 @@ void NetworkPermission::NetworkPermission_PermissionCheck(Interpreter *interpret
             }
         }
     }
+    else if(ours->name == "can_socket")
+    {
+        bool ours_val = std::stoi(ours->value);
+        bool new_val = std::stoi(_new->value);
+        if (ours_val != new_val)
+        {
+            if (!ours_val && new_val)
+            {
+                // Attempting to create a permission with a true property while our own permission is false. This is illegal
+                throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You cannot escalate the permissions past your own permissions. For the NetworkPermission", interpreter->getStackTraceLog());
+            }
+        }
+    }
+    else if(ours->name == "can_socket_server")
+    {
+        bool ours_val = std::stoi(ours->value);
+        bool new_val = std::stoi(_new->value);
+        if (ours_val != new_val)
+        {
+            if (!ours_val && new_val)
+            {
+                // Attempting to create a permission with a true property while our own permission is false. This is illegal
+                throw SystemException(std::dynamic_pointer_cast<ExceptionObject>(Object::create(interpreter->getClassSystem()->getClassByName("PermissionException"))), "You cannot escalate the permissions past your own permissions. For the NetworkPermission", interpreter->getStackTraceLog());
+            }
+        }
+    }
 }
 
 void NetworkPermission::NetworkPermission_setCanSendEmail(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
@@ -259,6 +358,17 @@ void NetworkPermission::NetworkPermission_setCanLookup(Interpreter *interpreter,
     network_perm_obj->can_lookup->setValue(values[0]);
 }
 
+void NetworkPermission::NetworkPermission_setCanSocket(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
+{
+    std::shared_ptr<NetworkPermission> network_perm_obj = std::dynamic_pointer_cast<NetworkPermission>(object);
+    network_perm_obj->can_socket->setValue(values[0]);
+}
+
+void NetworkPermission::NetworkPermission_setCanSocketServer(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
+{
+    std::shared_ptr<NetworkPermission> network_perm_obj = std::dynamic_pointer_cast<NetworkPermission>(object);
+    network_perm_obj->can_socket_server->setValue(values[0]);
+}
 
 
 void NetworkPermission::NetworkPermission_getCanSendEmail(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
@@ -277,4 +387,16 @@ void NetworkPermission::NetworkPermission_getCanLookup(Interpreter *interpreter,
 {
     std::shared_ptr<NetworkPermission> network_perm_obj = std::dynamic_pointer_cast<NetworkPermission>(object);
     return_value->set(&network_perm_obj->can_lookup->value);
+}
+
+void NetworkPermission::NetworkPermission_getCanSocket(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
+{
+    std::shared_ptr<NetworkPermission> network_perm_obj = std::dynamic_pointer_cast<NetworkPermission>(object);
+    return_value->set(&network_perm_obj->can_socket->value);
+}
+
+void NetworkPermission::NetworkPermission_getCanSocketServer(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
+{
+    std::shared_ptr<NetworkPermission> network_perm_obj = std::dynamic_pointer_cast<NetworkPermission>(object);
+    return_value->set(&network_perm_obj->can_socket_server->value);
 }

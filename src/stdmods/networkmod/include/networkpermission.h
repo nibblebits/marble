@@ -26,7 +26,9 @@ enum
 {
     NETWORK_PERMISSION_EMAIL_PERMISSION_REQUIRED,
     NETWORK_PERMISSION_CURL_PERMISSION_REQUIRED,
-    NETWORK_PERMISSION_LOOKUP_PERMISSION_REQUIRED
+    NETWORK_PERMISSION_LOOKUP_PERMISSION_REQUIRED,
+    NETWORK_PERMISSION_SOCKET_PERMISSION_REQUIRED,
+    NETWORK_PERMISSION_SOCKET_SERVER_PERMISSION_REQUIRED
 };
 
 typedef int NETWORK_PERMISSION_TYPE;
@@ -47,6 +49,8 @@ class NetworkPermission : public PermissionObject
         Variable* can_send_email;
         Variable* can_use_curl;
         Variable* can_lookup;
+        Variable* can_socket;
+        Variable* can_socket_server;
 
         /**
          * Ensures that the calling scope has the network permission
@@ -60,9 +64,14 @@ class NetworkPermission : public PermissionObject
         static void NetworkPermission_setCanSendEmail(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope);
         static void NetworkPermission_setCanUseCurl(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope);
         static void NetworkPermission_setCanLookup(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope);
+        static void NetworkPermission_setCanSocket(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope);
+        static void NetworkPermission_setCanSocketServer(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope);
+
         static void NetworkPermission_getCanSendEmail(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope);
         static void NetworkPermission_getCanUseCurl(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope);
         static void NetworkPermission_getCanLookup(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope);
+        static void NetworkPermission_getCanSocket(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope);
+        static void NetworkPermission_getCanSocketServer(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope);
 
 };
 

@@ -1,3 +1,4 @@
+
 /*
 Marble scripting language interpreter
 Copyright (C) 2018 Daniel McCarthy
@@ -17,35 +18,31 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-#ifndef SOCKETOBJECT_H
-#define SOCKETOBJECT_H
+#ifndef TCPSOCKETSERVEROBJECT_H
+#define TCPSOCKETSERVEROBJECT_H
 
                     
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <netinet/in.h>
-
 #include "object.h"
 #include "modulesystem.h"
-class SocketObject : public Object
+#include "socketobject.h"
+class TcpSocketServerObject : public SocketObject
 {
 public:
-    SocketObject(Class* c);
-    virtual ~SocketObject();
+    TcpSocketServerObject(Class* c);
+    virtual ~TcpSocketServerObject();
     
     static void registerClass(ModuleSystem* moduleSystem);
     static void newInterpreter(Interpreter* interpreter);
+
     virtual std::shared_ptr<Object> newInstance(Class* c);
-    
 
-    // Native Socket methods
-    static void Socket__construct(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
 
-    int sockfd;
-    int family;
-    int type;
-    struct sockaddr_in addr;
+    // Native TcpSocket methods
+    static void TcpSocketServerObject__construct(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
+    static void TcpSocketServerObject_listen(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
+    static void TcpSocketServerObject_accept(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
+
+protected:
 
 };
 #endif

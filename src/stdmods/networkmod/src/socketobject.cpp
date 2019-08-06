@@ -1,40 +1,72 @@
-/*
-Marble scripting language interpreter
-Copyright (C) 2018 Daniel McCarthy
-
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-*/
-
-#include "../include/socketobject.h"
-
-SocketObject::SocketObject(Class* c) : Object(c)
+#include "socketobject.h"
+#include "function.h"
+#include "interpreter.h"
+SocketObject::SocketObject(Class *c) : Object(c)
 {
-
+    this->sockfd = -1;
+    this->family = -1;
+    this->type = -1;
 }
 
 SocketObject::~SocketObject()
 {
+}
+
+void SocketObject::registerClass(ModuleSystem *moduleSystem)
+{
+
+    
+    /// Register a socket exception class
+    /**
+     * pure class SocketException extends Exception
+     * 
+     * This exception is thrown if the there is a problem relating to sockets
+     */
+    Class *exception = moduleSystem->getClassSystem()->registerClass("SocketException", moduleSystem->getClassSystem()->getClassByName("Exception"));
+    /**
+     * @class SocketException
+     * 
+     * Constructs this SocketException
+     */
+    exception->registerFunction("__construct", {}, VarType::fromString("void"), Function::Blank);
+
+    /**
+     * pure class Socket extends Object
+     * 
+     * Base socket class all sockets extend this class
+     */
+    Class* c = moduleSystem->getClassSystem()->registerClass("Socket");
+    c->is_pure = true;
+    c->setDescriptorObject(std::make_shared<SocketObject>(c));
+
+    /**
+     * @class Socket
+     * 
+     * Constructs this pure Socket class
+     * 
+     * function __construct() : void
+     */
+    c->registerFunction("__construct", {}, VarType::fromString("void"), Socket__construct);
 
 }
 
-std::shared_ptr<Object> SocketObject::newInstance(Class* c)
+void SocketObject::newInterpreter(Interpreter *interpreter)
+{
+    Scope *current_scope = interpreter->getCurrentScope();
+    current_scope->createVariable("SOCK_STREAM", 1);
+    current_scope->createVariable("SOCK_DGRAM", 2);
+    current_scope->createVariable("SOCK_RAW", 3);
+    current_scope->createVariable("SOCK_RDM", 4);
+    current_scope->createVariable("SOCK_SEQPACKET", 5);
+
+}
+
+std::shared_ptr<Object> SocketObject::newInstance(Class *c)
 {
     return std::make_shared<SocketObject>(c);
 }
 
-void SocketObject::Socket_connect(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope)
+
+void SocketObject::Socket__construct(Interpreter *interpreter, std::vector<Value> values, Value *return_value, std::shared_ptr<Object> object, Scope *caller_scope)
 {
-    
 }

@@ -17,22 +17,18 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-#ifndef SOCKETOBJECT_H
-#define SOCKETOBJECT_H
+#ifndef UDPSOCKETOBJECT_H
+#define UDPSOCKETOBJECT_H
 
                     
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <netinet/in.h>
-
 #include "object.h"
 #include "modulesystem.h"
-class SocketObject : public Object
+#include "socketobject.h"
+class UdpSocketObject : public SocketObject
 {
 public:
-    SocketObject(Class* c);
-    virtual ~SocketObject();
+    UdpSocketObject(Class* c);
+    virtual ~UdpSocketObject();
     
     static void registerClass(ModuleSystem* moduleSystem);
     static void newInterpreter(Interpreter* interpreter);
@@ -40,12 +36,12 @@ public:
     
 
     // Native Socket methods
-    static void Socket__construct(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
+    static void UdpSocket__construct(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
+    static void UdpSocket_bind(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
+    static void UdpSocket_recv(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
+    static void UdpSocket_send(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
 
-    int sockfd;
-    int family;
-    int type;
-    struct sockaddr_in addr;
+protected:
 
 };
 #endif

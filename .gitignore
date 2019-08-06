@@ -2,6 +2,7 @@
 *.z
 *.o
 *.so
+/.vscode
 /bin
 /docs
 /debs

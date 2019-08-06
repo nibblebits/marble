@@ -17,23 +17,26 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-#ifndef ARRAY_H
-#define ARRAY_H
-#include "object.h"
-class Variable;
-class Array : public Object
+#ifndef REFERENCEVARIABLE_H
+#define REFERENCEVARIABLE_H
+#include <string>
+#include <memory>
+#include "value.h"
+#include "variable.h"
+class Scope;
+class Object;
+class ReferenceVariable : public Variable
 {
 public:
-    Array(Class* c);
-    Array(Class* c, Variable* variables, int count);
-    virtual ~Array();
+    ReferenceVariable(Variable* variable_to_ref, int ref_index=-1);
+    virtual ~ReferenceVariable();
 
-    static Class* registerClass(SystemHandler* systemHandler);
-    static void Array_toString(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
-    static void Array_size(Interpreter* interpreter, std::vector<Value> values, Value* return_value, std::shared_ptr<Object> object, Scope* caller_scope);
+    virtual void setValue(Value value, Interpreter* interpreter);
+    bool isReferencingIndex();
 
-    virtual void setup();
-    Variable* variables;
-    int count;
+    // The index this reference variable is pointing to in the string or array
+    int ref_index;
+
+    Variable* variable_to_ref;
 };
 #endif

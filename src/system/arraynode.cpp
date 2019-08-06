@@ -88,7 +88,9 @@ Value ArrayNode::interpret(Interpreter *interpreter, struct extras extra)
         }
 
         char c = next_elem_value.svalue.at(index_exp.dvalue);
-        return Value(std::to_string(c));
+        Value c_val(std::to_string(c));
+        c_val.holder = next_elem_value.holder->scope->createReferenceVariable(next_elem_value.holder, index_exp.dvalue);
+        return c_val;
     }
     else
     {

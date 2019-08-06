@@ -16,6 +16,8 @@ Permission networkPermission = new @NetworkPermission();
 networkPermission.setCanSendEmail(true);
 networkPermission.setCanUseCurl(true);
 networkPermission.setCanLookup(true);
+networkPermission.setCanSocket(true);
+networkPermission.setCanSocketServer(true);
 allowed_permissions.add(networkPermission);
 
 Permission timeoutPermission = new @TimeoutPermission();
