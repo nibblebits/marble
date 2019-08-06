@@ -41,7 +41,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <curl/curl.h>
 #include <unistd.h>
 
-NetworkModule::NetworkModule() : Module("networkmod", "Network Module", MODULE_TYPE_MARBLE_LIBRARY, "1.0.0", "https://marble.wiki/api/module/networkmod")
+NetworkModule::NetworkModule() : Module("networkmod", "Network Module", MODULE_TYPE_MARBLE_LIBRARY, "1.1.0", "https://marble.wiki/api/module/networkmod")
 {
 }
 
