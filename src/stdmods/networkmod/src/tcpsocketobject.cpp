@@ -74,7 +74,7 @@ void TcpSocketObject::registerClass(ModuleSystem *moduleSystem)
     c->registerFunction("connect", {VarType::fromString("Ipv4Address"), VarType::fromString("number")}, VarType::fromString("void"), TcpSocketObject::TcpSocket_connect);
 
     /**
-     * 
+     * @class TcpSocket
      * Sends the given data string amount to the client
      * data string variable can contains binary data this is fine, null terminator is not monitored, pass correct amount of data to send
      * if this is a text string pass the size of the string in the amount
@@ -82,6 +82,7 @@ void TcpSocketObject::registerClass(ModuleSystem *moduleSystem)
      */
     c->registerFunction("send", {VarType::fromString("string"), VarType::fromString("number")}, VarType::fromString("number"), TcpSocketObject::TcpSocket_send);
     /**
+     * @class TcpSocket
      * Reads the amount of bytes specified from the socket stream as a string
      * function recv(number amount) : string
      */
